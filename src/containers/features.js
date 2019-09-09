@@ -7,14 +7,17 @@ import '../styles/features.css';
 
 const firstGroup = [
     {
+        key: 1,
         icon: faMicrophoneAlt,
         textId: 'Features.one'
     },
     {
+        key: 2,
         icon: faFileAudio,
         textId: 'Features.two'
     },
     {
+        key: 3,
         icon: faLanguage,
         textId: 'Features.three'
     }
@@ -22,14 +25,17 @@ const firstGroup = [
 
 const secondGroup = [
     {
+        key: 4,
         icon: faClock,
         textId: 'Features.four'
     },
     {
+        key: 5,
         icon: faClosedCaptioning,
         textId: 'Features.five'
     },
     {
+        key: 6,
         icon: faFileSignature,
         textId: 'Features.six'
     }
@@ -37,14 +43,17 @@ const secondGroup = [
 
 const thirdGroup = [
     {
+        key: 7,
         icon: faDownload,
         textId: 'Features.seven'
     },
     {
+        key: 8,
         icon: faHandHoldingUsd,
         textId: 'Features.eight'
     },
     {
+        key: 9,
         icon: faUserShield,
         textId: 'Features.nine'
     }
@@ -63,7 +72,7 @@ const Features = (props) => {
                             {
                                 firstGroup.map(item => {
                                     return (
-                                        <li className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
+                                        <li key={ item.key } className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
                                             <FontAwesomeIcon icon={ item.icon } size='5x' color='#007bff' />
                                             <span className='feature-text'>
                                                 <FormattedMessage id={ item.textId } />
@@ -79,7 +88,7 @@ const Features = (props) => {
                             {
                                 secondGroup.map(item => {
                                     return (
-                                        <li className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
+                                        <li key={ item.key } className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
                                             <FontAwesomeIcon icon={ item.icon } size='5x' color='#007bff' />
                                             <span className='feature-text'>
                                                 <FormattedMessage id={ item.textId } />
@@ -95,7 +104,7 @@ const Features = (props) => {
                             {
                                 thirdGroup.map(item => {
                                     return (
-                                        <li className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
+                                        <li key={ item.key } className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
                                             <FontAwesomeIcon icon={ item.icon } size='5x' color='#007bff' />
                                             <span className='feature-text'>
                                                 <FormattedMessage id={ item.textId } />

@@ -3,6 +3,6 @@ import { combineReducers } from 'redux';
 import AppReducer from './app-reducer';
 
 export default combineReducers({
-    language: AppReducer.language,
+    language: AppReducer.setLanguage,
     supportedLanguages: AppReducer.setSupportedLanguages
 })

@@ -23,7 +23,7 @@ class Header extends Component {
         })
     }
 
-    componentWillReceiveProps({ firebaseUserInfo }) {
+    componentDidUpdate({ firebaseUserInfo }) {
         if(_.isEmpty(this.props.firebaseUserInfo) && !_.isEmpty(firebaseUserInfo)) {
             this.props.history.push(`/demo?token=${firebaseUserInfo.token}`);
         }
@@ -33,7 +33,7 @@ class Header extends Component {
         return (
             <div>
                 <Nav>
-                    <Navbar variant="light" expand="lg" bg="light" fixed="top" text-dark className='fixed-top-style'>
+                    <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
                             <Navbar.Brand href="#" onClick={ () => this.props.goToRef('topRef') }>
                                 <img alt='Speech > Text' src={ Logo } className='logo-style' />
