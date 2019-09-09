@@ -1,0 +1,35 @@
+.main-div {
+    height: 500px;
+    padding-top: 120px;
+}
+
+.banner-image {
+    float: center;
+}
+
+.badge-style {
+    margin-right: 10px;
+}
+
+.list-container-style {
+    margin-top: 10px;
+    line-height: 3;
+}
+
+.list-container-card {
+    padding-top: 10px;
+}
+
+.title-style {
+    margin-top: 10px;
+}
+
+.title-name-style {
+    color: gray
+}
+
+.list-text-style {
+    line-height: 1.5;
+    text-align: left;
+    padding-top: 25px;
+}

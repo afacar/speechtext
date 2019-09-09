@@ -1,0 +1,22 @@
+.logo-style {
+    width: 32px;
+}
+
+.logo-text.style {
+    color: black;
+    margin-left: 15px;
+}
+
+.logo-footer-style {
+    color: black;
+    font-size: 9px;
+    float: right;
+}
+
+.demo-button-style {
+    margin-top: -5px;
+}
+
+.fixed-top-style {
+    z-index: 1000;
+}

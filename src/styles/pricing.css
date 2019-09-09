@@ -1,0 +1,27 @@
+.card-pricing-popular {
+    z-index: 1;
+    border: 3px solid #007bff;
+}
+
+.list-unstyled {
+    padding: .5rem 0;
+    color: #6c757d;
+}
+
+.pricing-header-container {
+    height: 100px;
+    line-height: 1;
+}
+
+.pricing-body-container {
+    height: 350px;
+}
+
+.pricing-footer-container {
+    height: 50px;
+    bottom: 0px;
+}
+
+.enterprise-header-style {
+    line-height: .5;
+}

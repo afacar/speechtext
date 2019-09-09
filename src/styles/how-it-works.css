@@ -1,0 +1,17 @@
+.image-style {
+    margin-top: 40px;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #007bff;
+}
+
+.span-style {
+    border: 3px solid #0C62D0;
+    border-radius: 50%;
+    float: left;
+    width: 30px;
+    margin: 10px;
+    font-weight: bolder;
+    color: #0C62D0
+}
