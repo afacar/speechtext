@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import  { withRouter } from 'react-router'
+import  { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import { Nav, Navbar, Container } from 'react-bootstrap';
+import { Nav, Navbar, Container, Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+
 import Logo from '../assets/logo.png';
 import Auth from '../components/auth';
 import '../styles/header.css';
@@ -23,9 +27,15 @@ class Header extends Component {
         })
     }
 
-    componentDidUpdate({ firebaseUserInfo }) {
-        if(_.isEmpty(this.props.firebaseUserInfo) && !_.isEmpty(firebaseUserInfo)) {
-            this.props.history.push(`/demo?token=${firebaseUserInfo.token}`);
+    componentDidMount() {
+        this.setState({
+            user: this.props.user
+        })
+    }
+
+    componentDidUpdate(props) {
+        if(_.isEmpty(this.state.user) && !_.isEmpty(props.user)) {
+            this.props.history.push('/dashboard');
         }
     }
 
@@ -72,6 +82,23 @@ class Header extends Component {
                                         </Nav.Link>
                                     </Nav.Item>
                                     {
+                                        _.isEmpty(this.props.user) && 
+                                        <Nav.Item>
+                                            <Button onClick={() => { this.setState({ showAuth: true }) }}>
+                                                <FontAwesomeIcon icon={ faSignInAlt } className='margin-right-10' />
+                                                <FormattedMessage id="Header.signIn" />
+                                            </Button>
+                                        </Nav.Item>
+                                    }
+                                    {
+                                        !_.isEmpty(this.props.user) &&
+                                        <Nav.Item>
+                                            <Link to='/dashboard' className='dashboard-link nav-link'>
+                                                { this.props.user.displayName }
+                                            </Link>
+                                        </Nav.Item>
+                                    }
+                                    {
                                         // _.isEmpty(this.props.firebaseUserInfo) &&
                                         // <Nav.Item>
                                         //     <Nav.Link href="#demo" onClick={ () => this.setState({ showAuth: true }) }>
@@ -107,9 +134,9 @@ class Header extends Component {
     }
 }
 
-const mapStateToProps = ({ firebaseUserInfo, language }) => {
+const mapStateToProps = ({ user, language }) => {
     return {
-        firebaseUserInfo,
+        user,
         language
     }
 }

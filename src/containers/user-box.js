@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -7,23 +9,40 @@ import {
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-const UserBox = () => {
-    return (
-        <div className='user-box'>
-            <Link to='/profile' className='profile-link'>
-                <p className='profile-name'>
-                    Salih Şentürk
-                    <br />
-                    <span className='profile-subtext'>
-                        <FormattedMessage id='Header.myAccount' />
-                    </span>
-                </p>
-            </Link>
-            <Button variant='outline-danger' size='sm' className='sign-out' alt='Sign out'>
-                <FontAwesomeIcon icon={ faSignOutAlt } />
-            </Button>
-        </div>
-    );
+import { logout } from '../actions';
+import firebase from '../utils/firebase';
+
+class UserBox extends Component {
+    logout = () => {
+        firebase.auth().signOut();
+        this.props.logout();
+        this.props.history.push('/');
+    }
+
+    render() {
+        return (
+            <div className='user-box'>
+                <Link to='/profile' className='profile-link'>
+                    <p className='profile-name'>
+                        { this.props.user.displayName }
+                        <br />
+                        <span className='profile-subtext'>
+                            <FormattedMessage id='Header.myAccount' />
+                        </span>
+                    </p>
+                </Link>
+                <Button variant='outline-danger' size='sm' className='sign-out' alt='Sign out' onClick={ this.logout }>
+                    <FontAwesomeIcon icon={ faSignOutAlt } />
+                </Button>
+            </div>
+        );
+    }
 }
 
-export default UserBox;
+const mapStateToProps = ({ user }) => {
+    return {
+        user
+    }
+}
+
+export default connect(mapStateToProps, { logout })(withRouter(UserBox));

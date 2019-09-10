@@ -20,3 +20,12 @@
 .fixed-top-style {
     z-index: 1000;
 }
+
+.dashboard-link {
+    color: black;
+    font-weight: bold;
+}
+
+.dashboard-link:hover {
+    text-decoration: none;
+}

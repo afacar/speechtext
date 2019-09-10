@@ -11,6 +11,11 @@ import Dashboard from './dashboard';
 import Profile from './profile';
 
 class App extends Component {
+    componentDidMount() {
+        this.props.setLanguage(this.props.language);
+        this.props.setSupportedLanguages(this.props.supportedLanguages);
+    }
+
     render() {
         return (
             <div>

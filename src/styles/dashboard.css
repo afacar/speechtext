@@ -1,0 +1,125 @@
+.drop-zone {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed lightblue;
+    background-color: lightcyan;
+    color: lightslategray;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.highlight {
+    background-color: rgb(188, 185, 236);
+}
+
+.file-input {
+    display: none;
+}
+
+.file-list-container {
+    overflow-y: auto;
+    height: 700px;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.file-list-container .card {
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    border-radius: 0;
+}
+
+.file-container {
+    cursor: pointer;
+}
+
+.file-settings {
+    float: right;
+}
+
+.file-settings .edit {
+    margin-right: 10px;
+}
+
+.file-progress {
+    margin-top: 20px;
+}
+
+.file-progress .progress {
+    height: 5px;
+    width: 90%;
+}
+
+.file-progress.done .progress {
+    width: 100%;
+}
+
+.file-progress .pause-play {
+    float: right;
+    font-size: 12px;
+    margin-top: -9px;
+    cursor: pointer;
+}
+
+.transcription-container {
+    margin-left: -30px;
+    border: 1px solid rgba(0,0,0,.125);
+    height: 780px;
+}
+
+.transcription {
+    padding: 10px;
+    padding-left: 30px;
+}
+
+.transcription-title {
+    width: 100%;
+    height: 80px;
+    border-bottom: 2px solid rgba(0,0,0,.125);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-limits .card {
+    width: 12%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    border: 4px solid rgba(0,0,0,.125);
+    /* padding-left: 30px; */
+    font-size: 12px;
+    margin-top: 100px;
+    float: left;
+    margin-left: 35px;
+}
+
+.user-limits .card-title {
+    border-bottom: 2px solid rgba(0,0,0,.125);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25%;
+}
+
+.user-limits .card-body {
+    align-content: left;
+}
+
+.conversionResult {
+    font-size: 15px;
+    border: thin solid gray;
+    padding: 10px;
+    margin-bottom: 1px;
+}
+
+.conversionTime {
+    font-size: 11px !important;
+    font-weight: bold;
+    color: purple;
+    border-width: 120%;
+}
