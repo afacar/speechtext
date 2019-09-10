@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import _ from 'lodash';
 import { Container, Row, Col } from 'react-bootstrap';
 import '../styles/dashboard.css';
 
@@ -8,6 +11,12 @@ import Transcription from './transcription';
 import UserLimits from './user-limits';
 
 class Dashboard extends Component {
+    componentDidMount() {
+        if(_.isEmpty(this.props.user)) {
+            this.props.history.push('/');
+        }
+    }
+
     render() {
         return (
             <div>
@@ -28,4 +37,10 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+const mapStateToProps = ({ user }) => {
+    return {
+        user
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(Dashboard));

@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import ContentEditable from 'react-contenteditable';
 
 import UserLimits from './user-limits';
+import Player from '../components/player';
 
 class Transcription extends Component {
     render() {
         return (
             <div className='transcription-container'>
                 <div className='transcription-title'>
-                    File Name here!
+                    <Player />
                 </div>
                 <div className='transcription'>
                     <div className='conversionResult'>
