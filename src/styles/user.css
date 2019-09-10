@@ -1,0 +1,30 @@
+.dashboard-container {
+    padding-top: 100px;
+    max-width: 70%;
+}
+
+.user-box {
+    line-height: 1.1;
+    padding-top: 15px;
+}
+
+.profile-subtext {
+    font-size: 12px;
+}
+
+.profile-link {
+    float: left;
+    text-align: right;
+    color: black;
+}
+
+.profile-link:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.sign-out {
+    float: right;
+    margin-left: 15px;
+}
+

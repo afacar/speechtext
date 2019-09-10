@@ -2,7 +2,10 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrophoneAlt, faFileAudio, faLanguage, faClock, faClosedCaptioning, faDownload, faUserShield, faFileSignature, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons';
+import {
+    faMicrophoneAlt, faFileAudio, faLanguage, faClock, faClosedCaptioning,
+    faDownload, faUserShield, faFileSignature, faHandHoldingUsd
+} from '@fortawesome/free-solid-svg-icons';
 import '../styles/features.css';
 
 const firstGroup = [
