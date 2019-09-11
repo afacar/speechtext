@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import ContentEditable from 'react-contenteditable';
+import { Media } from 'react-media-player';
 
 import UserLimits from './user-limits';
-import Player from '../components/player';
+import SpeechTextPlayer from '../components/player';
 
 class Transcription extends Component {
     render() {
         return (
             <div className='transcription-container'>
                 <div className='transcription-title'>
-                    <Player />
+                    <div>
+                        salix.mp3
+                    </div>
+                    <Media>
+                        <SpeechTextPlayer src='https://youtu.be/VOyYwzkQB98' />
+                    </Media>
                 </div>
                 <div className='transcription'>
                     <div className='conversionResult'>
