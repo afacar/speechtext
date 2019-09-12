@@ -9,6 +9,8 @@ import { setLanguage, setSupportedLanguages } from '../actions';
 import Main from './main';
 import Dashboard from './dashboard';
 import Profile from './profile';
+import Privacy from './privacy';
+import Terms from './terms';
 
 class App extends Component {
     componentDidMount() {
@@ -23,6 +25,8 @@ class App extends Component {
                     <Route exact path='/' render={ props => <Main {...props} /> } />
                     <Route path='/dashboard' component={ Dashboard } />
                     <Route path='/profile' component={ Profile } />
+                    <Route path='/privacy' component={ Privacy } />
+                    <Route path='/terms' component={ Terms } />
                 </BrowserRouter>
                 <Alert stack={{ limit: 3 }} timeout={ 5000 } html={ true } effect={ 'slide' } position={ 'top-right' } />
             </div>

@@ -45,7 +45,7 @@ class Header extends Component {
                 <Nav>
                     <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
-                            <Navbar.Brand href="#" onClick={ () => this.props.goToRef('topRef') }>
+                            <Navbar.Brand href="/#" onClick={ () => this.props.goToRef('topRef') }>
                                 <img alt='Speech > Text' src={ Logo } className='logo-style' />
                                 <div style={ { float:'right'} }>
                                     <div className='logo-text-style'>
@@ -61,22 +61,22 @@ class Header extends Component {
                             <Navbar.Toggle />
                             <Navbar.Collapse>
                                 <Nav className="ml-auto">
-                                    <Nav.Item>
-                                        <Nav.Link href="#how-it-works" onClick={ () => this.props.goToRef('howItWorksRef') }>
+                                    <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
+                                        <Nav.Link href="/#how-it-works" onClick={ () => this.props.goToRef('howItWorksRef') }>
                                             <FormattedMessage id="Header.howItWorks" />
                                         </Nav.Link>
                                     </Nav.Item>
-                                    <Nav.Item>
+                                    <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
                                         <Nav.Link href="#features" onClick={ () => this.props.goToRef('featuresRef') }>
                                             <FormattedMessage id="Header.features" />
                                         </Nav.Link>
                                     </Nav.Item>
-                                    <Nav.Item>
+                                    <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
                                         <Nav.Link href="#pricing" onClick={ () => this.props.goToRef('pricingRef') }>
                                             <FormattedMessage id="Header.pricing" />
                                         </Nav.Link>
                                     </Nav.Item>
-                                    <Nav.Item>
+                                    <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
                                         <Nav.Link href="#contact" onClick={ () => this.props.goToRef('contactRef') }>
                                             <FormattedMessage id="Header.contact" />
                                         </Nav.Link>
@@ -98,31 +98,6 @@ class Header extends Component {
                                             </Link>
                                         </Nav.Item>
                                     }
-                                    {
-                                        // _.isEmpty(this.props.firebaseUserInfo) &&
-                                        // <Nav.Item>
-                                        //     <Nav.Link href="#demo" onClick={ () => this.setState({ showAuth: true }) }>
-                                        //         <Button variant="primary" className='demo-button-style'>
-                                        //             <FormattedMessage id="Header.try" />
-                                        //         </Button>
-                                        //     </Nav.Link>
-                                        // </Nav.Item>
-                                    }
-                                    {
-                                        // !_.isEmpty(this.props.firebaseUserInfo) &&
-                                        // <Nav.Item>
-                                        //     <Nav.Link href="#demo" onClick={ () => this.setState({ showAuth: true }) }>
-                                        //         <Link to={`/demo?token=${this.props.firebaseUserInfo.token}`}>
-                                        //             <Button variant="primary" className='demo-button-style'>
-                                        //                 <FormattedMessage id="Header.demo" />
-                                        //             </Button>
-                                        //         </Link>
-                                        //     </Nav.Link>
-                                        // </Nav.Item>
-                                    }
-                                    {/* <Nav.Item>
-                                        <Link to='/demo' className="nav-link text-white">Demo</Link>
-                                    </Nav.Item> */}
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>

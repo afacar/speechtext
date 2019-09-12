@@ -41,3 +41,23 @@
 .margin-right-25 {
     margin-right: 25px;
 }
+
+.privacy-container,
+.terms-container {
+    margin-top: 120px;
+    margin-bottom: 20px;
+    padding: 100px;
+    border: 2px solid lightblue;
+    border-radius: 5px;
+    text-align: justify;
+}
+
+.privacy footer,
+.terms footer {
+    position: relative !important;
+    height: 100px;
+}
+
+.last-update {
+    font-size: 13px;
+}
