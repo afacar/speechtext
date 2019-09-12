@@ -67,12 +67,12 @@ class Header extends Component {
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
-                                        <Nav.Link href="#features" onClick={ () => this.props.goToRef('featuresRef') }>
+                                        <Nav.Link href="/#features" onClick={ () => this.props.goToRef('featuresRef') }>
                                             <FormattedMessage id="Header.features" />
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
-                                        <Nav.Link href="#pricing" onClick={ () => this.props.goToRef('pricingRef') }>
+                                        <Nav.Link href="/#pricing" onClick={ () => this.props.goToRef('pricingRef') }>
                                             <FormattedMessage id="Header.pricing" />
                                         </Nav.Link>
                                     </Nav.Item>

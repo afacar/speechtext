@@ -21,7 +21,7 @@ const Footer = () => {
                     Copyright &copy; SpeechText 2019<br />
                     <div>
                         <Link to='/privacy' className='footer-link'>Privacy Policy</Link>
-                        <Link to='/terms' className='footer-link margin-left-20'>Terms of Use</Link>
+                        <Link to='/terms' className='footer-link margin-left-20'>Terms of Service</Link>
                     </div>
                 </p>
             </div>
