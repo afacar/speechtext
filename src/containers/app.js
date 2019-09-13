@@ -5,7 +5,7 @@ import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
-import { setLanguage, setSupportedLanguages } from '../actions';
+import { setLanguage, setSupportedLanguages, getPlans } from '../actions';
 import Main from './main';
 import Dashboard from './dashboard';
 import Profile from './profile';
@@ -14,6 +14,7 @@ class App extends Component {
     componentDidMount() {
         this.props.setLanguage(this.props.language);
         this.props.setSupportedLanguages(this.props.supportedLanguages);
+        this.props.getPlans();
     }
 
     render() {
@@ -30,4 +31,4 @@ class App extends Component {
     }
 }
 
-export default connect(null, { setLanguage, setSupportedLanguages })(App);
+export default connect(null, { setLanguage, setSupportedLanguages, getPlans })(App);

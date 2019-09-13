@@ -31,7 +31,11 @@ class Auth extends Component {
             
             if(currentUser) {
                 const { uid, displayName, email } = currentUser;
-                that.props.login(uid, displayName, email);
+                that.props.login({
+                    uid,
+                    displayName,
+                    email
+                });
             }
         });
     }

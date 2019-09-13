@@ -29,7 +29,17 @@ const setSupportedLanguages = (state = DEFAULT_SUPPORTED_LANGUAGES, action) => {
     }
 }
 
+const getPlans = (state = [], action) => {
+    switch(action.type) {
+        case Utils.ActionTypes.GET_PLANS:
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
 export default {
     setLanguage,
-    setSupportedLanguages
+    setSupportedLanguages,
+    plans: getPlans
 }

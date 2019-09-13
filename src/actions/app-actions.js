@@ -1,4 +1,5 @@
 import Utils from '../utils';
+const { firestore } = Utils.firebase;
 
 export const setLanguage = (language) => {
     return {
@@ -11,5 +12,25 @@ export const setSupportedLanguages = (languages) => {
     return {
         type: Utils.ActionTypes.SET_SUPPORTED_LANGUAGES,
         payload: languages
+    }
+}
+
+export const getPlans = () => {
+    return dispatch => {
+        firestore().collection('plans')
+        .get()
+        .then(snapshot => {
+            if(snapshot) {
+                var plans = [];
+                snapshot.docs.forEach(doc => plans.push({id: doc.id, ...doc.data()}));
+                dispatch({
+                    type: Utils.ActionTypes.GET_PLANS,
+                    payload: plans
+                });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
 }

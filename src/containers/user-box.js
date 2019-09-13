@@ -20,6 +20,9 @@ class UserBox extends Component {
     }
 
     render() {
+        const { user } = this.props;
+        if(!user) return;
+        const duration = user.currentPlan ? user.currentPlan.durationLimit : 0;
         return (
             <div className='user-box'>
                 <Link to='/profile' className='profile-link'>
@@ -27,7 +30,7 @@ class UserBox extends Component {
                         { this.props.user.displayName }
                         <br />
                         <span className='profile-subtext'>
-                            <FormattedMessage id='Header.myAccount' />
+                            {`${duration} mins left`}
                         </span>
                     </p>
                 </Link>

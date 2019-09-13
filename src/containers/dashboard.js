@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'lodash';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../styles/dashboard.css';
 
+import { getFileList } from '../actions';
+import '../styles/dashboard.css';
 import UserHeader from './user-header';
 import FileList from './file-list';
 import Transcription from './transcription';
@@ -14,6 +15,8 @@ class Dashboard extends Component {
     componentDidMount() {
         if(_.isEmpty(this.props.user)) {
             this.props.history.push('/');
+        } else {
+            this.props.getFileList();
         }
     }
 
@@ -21,7 +24,7 @@ class Dashboard extends Component {
         return (
             <div>
                 <UserHeader />
-                <UserLimits />
+                {/* <UserLimits /> */}
                 <Container className='dashboard-container'>
                     <Row>
                         <Col lg="4" md="4">
@@ -43,4 +46,4 @@ const mapStateToProps = ({ user }) => {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(Dashboard));
+export default connect(mapStateToProps, { getFileList })(withRouter(Dashboard));

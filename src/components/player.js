@@ -70,7 +70,6 @@ class SpeechTextPlayer extends Component {
                     className='player-window'
                     src={ this.props.src }
                     onTimeUpdate={ this.onTimeUpdate }
-                    useAudioObject
                     ref={ this.playerRef }
                 />
             </div>
