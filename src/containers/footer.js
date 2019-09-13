@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import '../styles/footer.css';
@@ -18,6 +19,10 @@ const Footer = () => {
                 </p>
                 <p className="float-right" style={{ paddingTop: '10px' }}>
                     Copyright &copy; SpeechText 2019<br />
+                    <div>
+                        <Link to='/privacy' className='footer-link'>Privacy Policy</Link>
+                        <Link to='/terms' className='footer-link margin-left-20'>Terms of Service</Link>
+                    </div>
                 </p>
             </div>
         </footer>

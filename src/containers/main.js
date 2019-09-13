@@ -30,7 +30,7 @@ const Main = (props) => {
 
     return (
         <div>
-            <Header goToRef={ goToRef } />
+            <Header goToRef={ goToRef } showLinks={ true } />
             <div ref={ refs.topRef }>
                 <Entry />
             </div>
