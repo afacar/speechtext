@@ -85,6 +85,10 @@
     flex-direction: column;
 }
 
+.selected-file-name {
+    margin-top: -10px;
+}
+
 .user-limits .card {
     width: 12%;
     height: 200px;
@@ -123,4 +127,19 @@
     font-weight: bold;
     color: purple;
     border-width: 120%;
+}
+
+.upload-options-container {
+    margin-top: 30px;
+}
+
+.upload-options-filename {
+    padding: 5px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.file-name-edit {
+    width: 90%;
+    float: left;
 }

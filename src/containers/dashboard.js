@@ -12,6 +12,14 @@ import Transcription from './transcription';
 import UserLimits from './user-limits';
 
 class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selectedFile: {}
+        }
+    }
+
     componentDidMount() {
         if(_.isEmpty(this.props.user)) {
             this.props.history.push('/');
@@ -20,18 +28,23 @@ class Dashboard extends Component {
         }
     }
 
+    onFileSelected = (file) => {
+        this.setState({
+            selectedFile: file
+        })
+    }
+
     render() {
         return (
             <div>
                 <UserHeader />
-                {/* <UserLimits /> */}
                 <Container className='dashboard-container'>
                     <Row>
                         <Col lg="4" md="4">
-                            <FileList />
+                            <FileList onFileSelected={ this.onFileSelected } />
                         </Col>
                         <Col lg="8" md="8">
-                            <Transcription />
+                            <Transcription selectedFile={ this.state.selectedFile } />
                         </Col>
                     </Row>
                 </Container>

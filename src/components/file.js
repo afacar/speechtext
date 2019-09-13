@@ -12,9 +12,9 @@ import { updateFile } from '../actions';
 class File extends Component {
     constructor(props) {
         super(props);
-        console.log(props.file.name);
+        
         this.state = {
-            file: {},
+            file: props.file,
             progress: undefined,
             paused: false
         }
@@ -36,8 +36,9 @@ class File extends Component {
                 paused: false
             });
         }
+        console.log(file);
         this.setState({
-            file: this.props.file
+            file
         });
     }
 
@@ -110,7 +111,7 @@ class File extends Component {
             <div className='file-container'>
                 <Card>
                     <Card.Body>
-                        { this.props.file.name }
+                        { this.state.file.name }
                         <span className='file-settings'>
                             <FontAwesomeIcon icon={ faEdit } color='blue' className='edit'  onClick={ this.editFile } />
                             <FontAwesomeIcon icon={ faTrashAlt } color='red' onClick={ this.deleteFile } />

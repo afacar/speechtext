@@ -63,6 +63,10 @@ class FileList extends Component {
         });
     }
 
+    onFileSelected = (index) => {
+        this.props.onFileSelected(this.state.files[index]);
+    }
+
     render() {
         return (
             <div>
@@ -71,11 +75,13 @@ class FileList extends Component {
                     {
                         this.state.files.map((file, index) => {
                             return (
-                                <File
-                                    key={ index }
-                                    file={ file }
-                                    deleteFile={ this.deleteFile }
-                                />
+                                <div onClick={ () => { this.onFileSelected(index) } }>
+                                    <File
+                                        key={ index }
+                                        file={ file }
+                                        deleteFile={ this.deleteFile }
+                                    />
+                                </div>
                             )
                         })
                     }
