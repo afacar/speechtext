@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faEdit, faTrashAlt, faPause, faPlay
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
+import { updateFile } from '../actions';
 
 class File extends Component {
     constructor(props) {
@@ -13,7 +15,7 @@ class File extends Component {
         console.log(props.file.name);
         this.state = {
             file: {},
-            progress: 0,
+            progress: undefined,
             paused: false
         }
     }
@@ -29,19 +31,21 @@ class File extends Component {
     initUploadIfNecessary = file => {
         if(file.file) {
             this.uploadFile(file);
+            this.setState({
+                progress: 0,
+                paused: false
+            });
         }
         this.setState({
-            file: this.props.file,
-            progress: 0,
-            paused: false
+            file: this.props.file
         });
     }
 
     uploadFile = (file) => {
         var that = this;
         const { user } = this.props;
-        const fileExtension = file.name.substr(file.name.lastIndexOf('.'));
-        var storageRef = firebase.storage().ref(`files/${user.uid}/${file.id}.${fileExtension}`);
+        const fileExtension = file.name.substr(file.name.lastIndexOf('.') + 1);
+        var storageRef = firebase.storage().ref(`userfiles/${user.uid}/${file.id}/originalFile/${file.id}.${fileExtension}`);
 
         this.setState({ progress: 0 });
 
@@ -65,6 +69,11 @@ class File extends Component {
             }, () => {
                 uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                     that.setState({ downloadURL, progress: 100 });
+                    file.originalFile.url = downloadURL;
+                    file = _.omit(file, 'file');
+                    that.props.updateFile(file, {
+                        originalFile: file.originalFile
+                    });
                 });
         });
         this.setState({
@@ -86,6 +95,16 @@ class File extends Component {
         this.state.uploadTask.resume();
     }
 
+    editFile = (e) => {
+        e.preventDefault();
+        this.props.editFile(this.state.file.index);
+    }
+
+    deleteFile = (e) => {
+        e.preventDefault();
+        this.props.deleteFile(this.state.file.index);
+    }
+
     render() {
         return (
             <div className='file-container'>
@@ -93,20 +112,23 @@ class File extends Component {
                     <Card.Body>
                         { this.props.file.name }
                         <span className='file-settings'>
-                            <FontAwesomeIcon icon={ faEdit } color='blue' className='edit' />
-                            <FontAwesomeIcon icon={ faTrashAlt } color='red' onClick={ () => this.props.deleteFile(this.state.file.index) } />
+                            <FontAwesomeIcon icon={ faEdit } color='blue' className='edit'  onClick={ this.editFile } />
+                            <FontAwesomeIcon icon={ faTrashAlt } color='red' onClick={ this.deleteFile } />
                         </span>
-                        <div className={ `file-progress ${this.state.progress === 100 ? 'done' : ''}`}>
-                            <ProgressBar striped={ this.state.progress !== 100 } now={ this.state.progress } />
-                            {
-                                this.state.progress !== 100 && !this.state.paused &&
-                                <FontAwesomeIcon icon={ faPause } className='pause-play' onClick={ this.pauseUpload } />
-                            }
-                            {
-                                this.setState.progress !== 100 && this.state.paused &&
-                                <FontAwesomeIcon icon={ faPlay } className='pause-play'  onClick={ this.resumeUpload } />
-                            }
-                        </div>
+                        {
+                            this.state.progress && this.state.progress < 100 &&
+                            <div className={ `file-progress ${this.state.progress === 100 ? 'done' : ''}`}>
+                                <ProgressBar striped={ this.state.progress !== 100 } now={ this.state.progress } />
+                                {
+                                    this.state.progress !== 100 && !this.state.paused &&
+                                    <FontAwesomeIcon icon={ faPause } className='pause-play' onClick={ this.pauseUpload } />
+                                }
+                                {
+                                    this.setState.progress !== 100 && this.state.paused &&
+                                    <FontAwesomeIcon icon={ faPlay } className='pause-play'  onClick={ this.resumeUpload } />
+                                }
+                            </div>
+                        }
                     </Card.Body>
                 </Card>
             </div>
@@ -120,4 +142,4 @@ const mapStateToProps = ({ user }) => {
     }
 }
 
-export default connect(mapStateToProps)(File);
+export default connect(mapStateToProps, { updateFile })(File);

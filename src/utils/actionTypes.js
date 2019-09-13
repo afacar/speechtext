@@ -4,4 +4,4 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const GET_PLANS = 'GET_PLANS';
 export const GET_FILE_LIST = 'GET_FILE_LIST';
-export const INIT_FILE = 'INIT_FILE';
+export const UPDATE_FILE = 'UPDATE_FILE';

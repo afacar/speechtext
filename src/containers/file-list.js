@@ -24,21 +24,33 @@ class FileList extends Component {
     onFileAdded = async (file) => {
         var that = this;
         var { name, size, type } = file;
-        type = type.split('/')[0];
         var fileObj = {
-            name,
-            size,
-            type
+            originalFile: {
+                name,
+                size,
+                type,
+                createDate: new Date()
+            },
+            name
         }
     
-        fileObj.createDate = new Date();
-        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files')
-        .add(fileObj);
+        fileObj.status = 'INITIAL';
+        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').add(fileObj);
         fileObj.file = file;
         fileObj.id = id;
         that.setState({
             files: [fileObj, ...that.state.files]
         });
+    }
+
+    deleteFile = (index) => {
+        var { files } = this.state;
+        // files = files.filter((file, fileIndex) => {
+        //     return fileIndex !== index
+        // });
+        // this.setState({
+        //     files
+        // });
     }
 
     deleteFile = (index) => {
