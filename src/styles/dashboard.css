@@ -134,12 +134,42 @@
 }
 
 .upload-options-filename {
+    height: 30px;
     padding: 5px;
     font-weight: bold;
-    margin-bottom: 30px;
+}
+
+.upload-options-filename label {
+    margin: 5px;
+    cursor: text;
+}
+
+.upload-options-filename span {
+    cursor: pointer;
 }
 
 .file-name-edit {
     width: 90%;
     float: left;
+}
+
+.form-options {
+    margin-top: 50px;
+}
+
+.options-title {
+    padding: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.react-tagsinput-tag {
+    background-color: cornflowerblue !important;
+    color: white !important;
+    border-color: blue !important;
+}
+
+.react-tagsinput--focused {
+    border-color: lightblue !important;
+    border-width: 2px !important;
 }

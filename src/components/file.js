@@ -72,7 +72,9 @@ class File extends Component {
                     that.setState({ downloadURL, progress: 100 });
                     file.originalFile.url = downloadURL;
                     file = _.omit(file, 'file');
+                    file.status = 'UPLOADED';
                     that.props.updateFile(file, {
+                        status: 'UPLOADED',
                         originalFile: file.originalFile
                     });
                 });

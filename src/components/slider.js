@@ -53,12 +53,12 @@ class Slider extends Component {
     }
 
     formatTime = (time) => {
-        time = time.toFixed(0);
-        let seconds = (time % 60).toFixed(0);
-        let minutes = (time / 60).toFixed(0);
-        let hours = (minutes / 60).toFixed(0);
+        time = Math.floor(time);
+        let seconds = Math.floor(time % 60);
+        let minutes = Math.floor(time / 60);
+        let hours = Math.floor(minutes / 60)
         if(hours > 0) {
-            minutes = (minutes % 60).toFixed(0);
+            minutes = Math.floor(minutes % 60);
         }
         if(hours < 10) hours = `0${hours}`;
         if(minutes < 10) minutes = `0${minutes}`;
@@ -67,6 +67,7 @@ class Slider extends Component {
     }
 
     render() {
+        const duration = this.formatTime(this.props.duration);
         return (
             <ReactSlider
                 isEnabled={ true }
@@ -79,7 +80,7 @@ class Slider extends Component {
                 <SliderBar direction={ Direction.HORIZONTAL } value={ this.state.value } />
                 <SliderHandle direction={ Direction.HORIZONTAL } value={ this.state.value } />
                 <span className='player-time'>
-                    {`${this.formatTime(this.state.value * this.props.duration)} / ${this.formatTime(this.props.duration)}`}
+                    {`${this.formatTime(this.state.value * this.props.duration)} / ${duration}`}
                 </span>
             </ReactSlider>
         )
