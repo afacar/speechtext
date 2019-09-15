@@ -28,13 +28,14 @@ class FileList extends Component {
             originalFile: {
                 name,
                 size,
-                type,
                 createDate: new Date()
+            },
+            options: {
+                type
             },
             name
         }
-    
-        fileObj.status = 'INITIAL';
+
         const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').add(fileObj);
         fileObj.file = file;
         fileObj.id = id;
@@ -64,7 +65,12 @@ class FileList extends Component {
     }
 
     onFileSelected = (index) => {
-        this.props.onFileSelected(this.state.files[index]);
+        const { files } = this.state;
+        const selectedFile = files[index];
+        this.props.onFileSelected(selectedFile);
+        this.setState({
+            selectedIndex: index
+        })
     }
 
     render() {
@@ -77,9 +83,12 @@ class FileList extends Component {
                             return (
                                 <div onClick={ () => { this.onFileSelected(index) } }>
                                     <File
-                                        key={ index }
+                                        key={ file.id }
                                         file={ file }
+                                        index={ index }
                                         deleteFile={ this.deleteFile }
+                                        onSelected={ this.onFileSelected }
+                                        isSelected={ this.state.selectedIndex === index }
                                     />
                                 </div>
                             )

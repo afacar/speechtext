@@ -9,13 +9,16 @@ export const getFileList = (state = [], action) => {
         case ActionTypes.UPDATE_FILE:
             const { file } = action.payload;
             var newState = [];
+            var found = false;
             state.forEach(elem => {
                 if(elem.id === file.id) {
                     newState.push(_.clone(file));
+                    found = true;
                 } else {
                     newState.push(elem);
                 }
             });
+            if(!found) newState.push(file);
             return newState;
         default:
             return state;

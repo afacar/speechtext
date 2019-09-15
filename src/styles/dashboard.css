@@ -36,21 +36,41 @@
     cursor: pointer;
 }
 
+.file-container.active .card {
+    background-color: rgb(187, 245, 175);
+    border: 2px solid rgb(12, 185, 6);
+    border-radius: 5px;
+}
+
+.file-container.active .card-body {
+    font-weight: bold;
+}
+
 .file-settings {
     float: right;
 }
 
-.file-settings .edit {
-    margin-right: 10px;
+.file-settings .delete {
+    color: rgb(190, 11, 11);
+    font-size: 15px;
 }
 
 .file-progress {
     margin-top: 20px;
 }
 
+.file-progress span {
+    font-size: 10px;
+    text-align: center;
+}
+
 .file-progress .progress {
     height: 5px;
     width: 90%;
+}
+
+.transcribe-progress {
+    width: 100% !important;
 }
 
 .file-progress.done .progress {
@@ -172,4 +192,23 @@
 .react-tagsinput--focused {
     border-color: lightblue !important;
     border-width: 2px !important;
+}
+
+.react-tagsinput.disabled {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+.file-transcribe-button {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.file-transcribe-button button {
+    background-color: orangered;
+    border-color: orange;
+}
+
+.switch.btn {
+    width: 8%;
 }

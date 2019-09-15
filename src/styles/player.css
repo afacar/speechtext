@@ -1,5 +1,6 @@
 .player-window {
     position: fixed;
+    background-color: black;
     width: 250px;
     height: 250px;
     right: 20px;

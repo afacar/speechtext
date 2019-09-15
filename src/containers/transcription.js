@@ -50,7 +50,7 @@ class Transcription extends Component {
                         { selectedFile.name }
                     </div>
                     <Media>
-                        <SpeechTextPlayer src={ selectedFile.status === 'DONE' ? selectedFile.originalFile.url : 'https://www.youtube.com/watch?v=tgBvKd2q1Vo' } />
+                        <SpeechTextPlayer src={ selectedFile.status === 'DONE' ? selectedFile.originalFile.url : '' } />
                     </Media>
                 </div>
                 <div className='transcription'>
