@@ -24,7 +24,6 @@ class Auth extends Component {
     componentDidMount() {
         var that = this;
         var currentuser = firebase.auth().currentUser;
-        console.log('App mounted with currentuser', currentuser)
         firebase.auth().onAuthStateChanged(user => {
             const currentUser = user ? user: '';
             that.setState({ user: currentUser });

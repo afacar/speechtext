@@ -7,7 +7,7 @@ import {
     faEdit, faTrashAlt, faPause, faPlay
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
-import { updateFile, updateFileState } from '../actions';
+import { addFile, updateFile, updateFileState, updateFileInState } from '../actions';
 
 class File extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ class File extends Component {
     }
 
     initUploadIfNecessary = file => {
-        if(file.file) {
+        if(file.status === 'INITIAL' && file.file) {
             this.uploadFile(file);
             this.setState({
                 progress: 0,
@@ -38,7 +38,7 @@ class File extends Component {
         }
         var progress = this.state.progress;
         if(file.status === 'PROCESSING') {
-            progress = file.transcribedFile.progress;
+            progress = file.transcribedFile ? file.transcribedFile.progress : 0;
         }
         this.setState({
             file,
@@ -56,6 +56,9 @@ class File extends Component {
 
         var uploadTask = storageRef.put(file.file);
         this.props.onSelected(this.props.index);
+
+        file.status = 'UPLOADING';
+        this.props.updateFileInState(file);
         uploadTask.on('state_changed', (snapshot) => {
             var progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             that.setState({ progress });
@@ -72,16 +75,20 @@ class File extends Component {
                 console.log('upload error', error);
                 that.setState({ error })
             }, () => {
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
                     that.setState({ progress: 100 });
                     file.originalFile.filePath = uploadTask.location_.path_;
                     file.originalFile.url = downloadURL;
                     file = _.omit(file, 'file');
-                    that.props.updateFile(file, {
-                        originalFile: file.originalFile
-                    });
+                    file.status = 'UPLOADED';
+                    
+                    if(!_.isEmpty(this.props.selectedFileOptions)) {
+                        file.options = this.props.selectedFileOptions;
+                    }
+
+                    await that.props.addFile(file);
     
-                    that.props.updateFileState(file.id, 'UPLOADED');
+                    // that.props.updateFileState(file.id, 'UPLOADED');
                 });
         });
         this.setState({
@@ -147,7 +154,7 @@ class File extends Component {
                             </div>
                         }
                         {
-                            file.status === 'CONVERTED' && !file.options.autoTranscribe &&
+                            file.status === 'CONVERTED' &&
                             <div className='file-transcribe-button'>
                                 <Button bgColor='orange' onClick={ this.transcribeFile }>
                                     Transcribe
@@ -161,10 +168,12 @@ class File extends Component {
     }
 }
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, selectedFile, selectedFileOptions }) => {
     return {
-        user
+        user,
+        selectedFile,
+        selectedFileOptions
     }
 }
 
-export default connect(mapStateToProps, { updateFile, updateFileState })(File);
+export default connect(mapStateToProps, { addFile, updateFile, updateFileState, updateFileInState })(File);

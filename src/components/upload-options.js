@@ -9,17 +9,16 @@ import { faEdit, faCheck } from '@fortawesome/free-solid-svg-icons';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
-import { updateFile } from '../actions';
+import { updateFile, updateFileState, updateFileInState } from '../actions';
 import Utils from '../utils';
 
 class UploadOptions extends Component {
     constructor(props) {
         super(props);
         
-        var options = props.file.options || {};
-        options.context = options.context || [];
+        var options = props.file ? props.file.options : {};
+        if(!options.context) options.context= [];
         this.state = {
-            file: props.file,
             editFileName: false,
             options
         }
@@ -34,23 +33,22 @@ class UploadOptions extends Component {
         var options = file.options || {};
         options.context = options.context || [];
         this.setState({
-            file,
             options,
+            fileName: file.name,
             editFileName: false
         })
     }
 
     handleFileNameChange = (event) => {
-        var { file } = this.state;
-        file.name = event.target.value;
         this.setState({
-            file
+            fileName: event.target.value
         });
     }
 
     saveFileName = () => {
-        const { file } = this.state;
-        this.props.updateFile(file, { name: file.name });
+        const { file } = this.props;
+        const { fileName } = this.state;
+        this.props.updateFile(file, { name: fileName });
         this.setState({
             editFileName: false
         });
@@ -69,7 +67,7 @@ class UploadOptions extends Component {
     }
 
     renderFileName = () => {
-        const { file } = this.state;
+        const { file } = this.props;
         if(this.state.editFileName) {
             return (
                 <div>
@@ -105,19 +103,27 @@ class UploadOptions extends Component {
         event.preventDefault();
         event.stopPropagation();
         if (form.checkValidity() === true) {
-            const { language } = this.props;
-            var { file, options } = this.state;
+            const { language, file } = this.props;
+            var { options } = this.state;
             if(!options.language) options.language = language;
             options.language = Utils.LanguageMap[options.language];
-            file.options = _.merge(file.options, options); 
-            this.props.updateFile(file, { options: file.options });
+            file.options = _.merge(file.options, options);
+            if(file.status === 'INITIAL') {
+                this.props.updateFileInState(file.id, { options });
+            } else {
+                this.props.updateFile(file, { options: file.options });
+    
+                if(file.status === 'CONVERTED') {
+                    this.props.updateFileState(file.id, 'READY');
+                }
+            }
         }
         this.setState({ validated: true });
     }
 
     render() {
-        const { language, supportedLanguages } = this.props;
-        const { file, options } = this.state;
+        const { language, supportedLanguages, file } = this.props;
+        const { options } = this.state;
         const disabled = file.status === 'PROCESSING' || file.status === 'DONE';
         return (
             <Container className='upload-options-container'>
@@ -144,7 +150,7 @@ class UploadOptions extends Component {
                                     {
                                         supportedLanguages.map(lang => {
                                             return (
-                                                <option value={ lang.key }>
+                                                <option key={ lang.key } value={ lang.key }>
                                                     { lang.value }
                                                 </option>
                                             )
@@ -202,9 +208,12 @@ class UploadOptions extends Component {
                                     onChange={(checked) => this.handleOptionsChange('autoTranscribe', checked) }
                                 />
                             </Form.Group>
-                            <Button type="submit" className='float-right'>
-                                Submit
-                            </Button>
+                            {
+                                !disabled &&
+                                <Button type="submit" className='float-right'>
+                                    Submit
+                                </Button>
+                            }
                         </Card.Body>
                     </Card>
                 </Form>
@@ -213,8 +222,11 @@ class UploadOptions extends Component {
     }
 }
 
-const mapStateToProps = ({ language, supportedLanguages }) => {
-    return { language, supportedLanguages };
+const mapStateToProps = ({ language, supportedLanguages, selectedFile }) => {
+    return {
+        language,
+        supportedLanguages,
+        file: selectedFile };
 }
 
-export default connect(mapStateToProps, { updateFile })(UploadOptions);
+export default connect(mapStateToProps, { updateFile, updateFileState, updateFileInState })(UploadOptions);

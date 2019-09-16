@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import _ from 'lodash';
 import firebase from '../utils/firebase';
-import { getFileList } from '../actions';
+import { getFileList, setFileToUpload, setSelectedFile } from '../actions';
 import Dropzone from '../components/dropzone';
 import File from '../components/file';
 
@@ -14,15 +14,14 @@ class FileList extends Component {
             files: []
         }
     }
-    
+
     componentWillReceiveProps({ files }) {
         this.setState({
             files
-        })
+        });
     }
 
     onFileAdded = async (file) => {
-        var that = this;
         var { name, size, type } = file;
         var fileObj = {
             originalFile: {
@@ -33,15 +32,16 @@ class FileList extends Component {
             options: {
                 type
             },
-            name
+            name,
+            status: 'INITIAL'
         }
 
-        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').add(fileObj);
+        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc();
         fileObj.file = file;
         fileObj.id = id;
-        that.setState({
-            files: [fileObj, ...that.state.files]
-        });
+
+        this.props.setFileToUpload(fileObj);
+        this.props.setSelectedFile(fileObj);
     }
 
     deleteFile = (index) => {
@@ -54,23 +54,20 @@ class FileList extends Component {
         // });
     }
 
-    deleteFile = (index) => {
-        var { files } = this.state;
-        files = files.filter((file, fileIndex) => {
-            return fileIndex !== index
-        });
-        this.setState({
-            files
-        });
-    }
+    // deleteFile = (index) => {
+    //     var { files } = this.props;
+    //     files = files.filter((file, fileIndex) => {
+    //         return fileIndex !== index
+    //     });
+    //     this.setState({
+    //         files
+    //     });
+    // }
 
     onFileSelected = (index) => {
         const { files } = this.state;
         const selectedFile = files[index];
-        this.props.onFileSelected(selectedFile);
-        this.setState({
-            selectedIndex: index
-        })
+        this.props.setSelectedFile(selectedFile);
     }
 
     render() {
@@ -79,16 +76,17 @@ class FileList extends Component {
                 <Dropzone onFileAdded={ this.onFileAdded } />
                 <div className='file-list-container'>
                     {
-                        this.state.files.map((file, index) => {
+                        this.props.files.map((file, index) => {
+                            var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
                             return (
-                                <div onClick={ () => { this.onFileSelected(index) } }>
+                                <div onClick={ () => { this.onFileSelected(index) } } key={ file.id }>
                                     <File
                                         key={ file.id }
                                         file={ file }
                                         index={ index }
                                         deleteFile={ this.deleteFile }
                                         onSelected={ this.onFileSelected }
-                                        isSelected={ this.state.selectedIndex === index }
+                                        isSelected={ isSelected }
                                     />
                                 </div>
                             )
@@ -100,11 +98,12 @@ class FileList extends Component {
     }
 }
 
-const mapStateToProps = ({ user, userFiles }) => {
+const mapStateToProps = ({ user, userFiles, selectedFile }) => {
     return {
         user,
-        files: userFiles
+        files: userFiles,
+        selectedFile
     }
 }
 
-export default connect(mapStateToProps, { getFileList })(FileList);
+export default connect(mapStateToProps, { getFileList, setFileToUpload, setSelectedFile })(FileList);

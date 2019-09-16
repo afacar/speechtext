@@ -5,3 +5,6 @@ export const LOGOUT = 'LOGOUT';
 export const GET_PLANS = 'GET_PLANS';
 export const GET_FILE_LIST = 'GET_FILE_LIST';
 export const UPDATE_FILE = 'UPDATE_FILE';
+export const UPDATE_FILE_IN_STATE = 'UPDATE_FILE_IN_STATE';
+export const SET_FILE_TO_UPLOAD = 'SET_FILE_TO_UPLOAD';
+export const SET_SELECTED_FILE = 'SET_SELECTED_FILE';
