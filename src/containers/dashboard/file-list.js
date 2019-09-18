@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import firebase from '../utils/firebase';
-import { getFileList, setFileToUpload, setSelectedFile } from '../actions';
-import Dropzone from '../components/dropzone';
-import File from '../components/file';
+import firebase from '../../utils/firebase';
+import { getFileList, setFileToUpload, setSelectedFile } from '../../actions';
+import Dropzone from '../../components/dropzone';
+import File from '../../components/file';
 
 class FileList extends Component {
     constructor(props) {

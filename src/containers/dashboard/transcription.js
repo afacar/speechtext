@@ -5,23 +5,25 @@ import Axios from 'axios';
 import ContentEditable from 'react-contenteditable';
 import { Media } from 'react-media-player';
 
-import firebase from '../utils/firebase';
-import SpeechTextPlayer from '../components/player';
-import UploadOptions from '../components/upload-options';
+import firebase from '../../utils/firebase';
+import SpeechTextPlayer from '../../components/player';
+import UploadOptions from '../../components/upload-options';
 
 class Transcription extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            editorData: {}
+            editorData: {},
+            intervalHolder: undefined
         }
     }
 
     componentWillReceiveProps({ selectedFile }) {
         var that = this;
+        var { intervalHolder } = this.state;
+        clearInterval(intervalHolder);
         if(!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
-            const { user } = this.props;
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
@@ -31,15 +33,36 @@ class Transcription extends Component {
             });
         } else {
             this.setState({
-                editorData: {}
+                editorData: {},
+                prevEditorData: {},
+                intervalHolder: undefined
             })
         }
     }
 
+    updateTranscribedFile = () => {
+        const { editorData, prevEditorData } = this.state;
+        const { selectedFile } = this.props;
+        if(!_.isEqual(editorData, prevEditorData)) {
+            this.setState({
+                prevEditorData: editorData
+            });
+            const dataToUpload = editorData
+                .map(({ startTime, endTime, text}) => {
+                    return `${startTime} - ${endTime} \n ${text}---`;
+                })
+                .join('\n');
+            var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
+            storageRef.put(new Blob([dataToUpload]));
+        }
+    }
+
     formatResults = (data) => {
+        var that = this;
         if(data) {
             var splittedData = data.split('---');
             if(!_.isEmpty(splittedData)) {
+                var { intervalHolder } = this.state;
                 var editorData = []
                 var i = 0;
                 splittedData.forEach(line => {
@@ -52,8 +75,14 @@ class Transcription extends Component {
                         text: lines[1]
                     });
                 });
+                if(intervalHolder) clearInterval(intervalHolder);
+                intervalHolder = setInterval(() => {
+                    that.updateTranscribedFile();
+                }, 5000);
                 this.setState({
-                    editorData
+                    editorData,
+                    prevEditorData: editorData,
+                    intervalHolder
                 });
             }
         }
@@ -113,7 +142,9 @@ class Transcription extends Component {
 
     handleChange = (key, value) => {
         var { editorData } = this.state;
+        var prevEditorData = [];
         editorData = editorData.map((data) => {
+            prevEditorData.push({...data});
             if(data.key === key) {
                 data.text = value;
             }
@@ -121,6 +152,7 @@ class Transcription extends Component {
         });
         this.setState({
             editorData,
+            prevEditorData,
             timeToSeek: undefined
         });
     }

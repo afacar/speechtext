@@ -9,8 +9,8 @@ import {
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import { logout } from '../actions';
-import firebase from '../utils/firebase';
+import { logout } from '../../actions';
+import firebase from '../../utils/firebase';
 
 class UserBox extends Component {
     logout = () => {
@@ -22,10 +22,10 @@ class UserBox extends Component {
     render() {
         const { user } = this.props;
         if(!user) return;
-        const duration = user.currentPlan ? user.currentPlan.durationLimit : 0;
+        const duration = user.currentPlan ? user.currentPlan.remainingDuration : 0;
         return (
             <div className='user-box'>
-                <Link to='/profile' className='profile-link'>
+                <Link to='/user' className='profile-link'>
                     <p className='profile-name'>
                         { this.props.user.displayName }
                         <br />

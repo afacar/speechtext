@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
-import Header from './header';
-import Footer from './footer';
+import Header from '../header';
+import Footer from '../footer';
 
 const Privacy = () => {
     return (

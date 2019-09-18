@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Row, Col, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSync, faUpload, faDownload, faEdit } from '@fortawesome/free-solid-svg-icons';
-import '../styles/how-it-works.css';
+import '../../styles/how-it-works.css';
 
 const HowItWorks = (props) => {
     return (

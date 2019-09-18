@@ -1,4 +1,5 @@
-.dashboard-container {
+.dashboard-container,
+.profile-container {
     padding-top: 100px;
     max-width: 70%;
 }
@@ -28,3 +29,35 @@
     margin-left: 15px;
 }
 
+.nav-pills .nav-link.active {
+    background-color: #0C62D0;
+}
+
+.user-tabs {
+    padding-top: 30px;
+    height: 200px;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.user-tab-content-container {
+    border: 1px solid rgba(0,0,0,.125);
+    height: 780px;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.address-title {
+    margin: 5px 20px 0px 20px;
+    border-bottom: none;
+    background-color: white;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.current-plan-title {
+    margin: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid lightgray;
+}

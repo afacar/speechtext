@@ -5,9 +5,9 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
-import Banner from '../assets/banner.png';
-import '../styles/entry.css';
-import Auth from '../components/auth';
+import Banner from '../../assets/banner.png';
+import '../../styles/entry.css';
+import Auth from '../../components/auth';
 
 class Entry extends Component {
     constructor(props) {

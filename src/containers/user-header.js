@@ -8,7 +8,7 @@ import Logo from '../assets/logo.png';
 import '../styles/header.css';
 import '../styles/user.css';
 
-import UserBox from './user-box';
+import UserBox from './dashboard/user-box';
 
 class UserHeader extends Component {
 

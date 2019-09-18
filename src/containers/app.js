@@ -6,11 +6,11 @@ import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 import { setLanguage, setSupportedLanguages, getPlans } from '../actions';
-import Main from './main';
-import Dashboard from './dashboard';
-import Profile from './profile';
-import Privacy from './privacy';
-import Terms from './terms';
+import Main from './landing/main';
+import Dashboard from './dashboard/dashboard';
+import User from './user/user';
+import Privacy from './landing/privacy';
+import Terms from './landing/terms';
 
 class App extends Component {
     componentDidMount() {
@@ -25,7 +25,7 @@ class App extends Component {
                 <BrowserRouter>
                     <Route exact path='/' render={ props => <Main {...props} /> } />
                     <Route path='/dashboard' component={ Dashboard } />
-                    <Route path='/profile' component={ Profile } />
+                    <Route path='/user' component={ User } />
                     <Route path='/privacy' component={ Privacy } />
                     <Route path='/terms' component={ Terms } />
                 </BrowserRouter>

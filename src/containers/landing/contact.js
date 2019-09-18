@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { Container, Form, Col, Card, Button } from 'react-bootstrap';
 import IntlTelInput from 'react-bootstrap-intl-tel-input'
 import Alert from 'react-s-alert';
-import '../styles/contact.css';
+import '../../styles/contact.css';
 
 const serverUrl = 'http://localhost:3001';
 

@@ -4,9 +4,9 @@ import { withRouter } from 'react-router';
 import _ from 'lodash';
 import { Container, Row, Col } from 'react-bootstrap';
 
-import { getFileList } from '../actions';
-import '../styles/dashboard.css';
-import UserHeader from './user-header';
+import { getFileList } from '../../actions';
+import '../../styles/dashboard.css';
+import UserHeader from '../user-header';
 import FileList from './file-list';
 import Transcription from './transcription';
 

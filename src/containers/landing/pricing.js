@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Container, Button } from 'react-bootstrap';
-import '../styles/pricing.css';
+import '../../styles/pricing.css';
 
 const Pricing = (props) => {
     return (
@@ -13,9 +13,11 @@ const Pricing = (props) => {
                 <div className="card card-pricing text-center px-3 mb-4">
                     <span className="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">Demo</span>
                     <div className="bg-transparent card-header pt-4 border-0 pricing-header-container" >
-                        <h1 className="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="15"><span className="price">
-                            <FormattedMessage id="Pricing.Demo.price" />
-                        </span></h1>
+                        <h2 className="h2 font-weight-normal text-primary text-center mb-0" data-pricing-value="15">
+                            <span className="price">
+                                <FormattedMessage id="Pricing.Demo.price" />
+                            </span>
+                        </h2>
                     </div>
                     <div className="card-body pt-0" >
                         <ul className="list-unstyled mb-4 pricing-body-container" >
@@ -39,17 +41,17 @@ const Pricing = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="card card-pricing shadow text-center px-3 mb-4 card-pricing-popular" >
-                    <span className="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">
+                <div className="card card-pricing text-center px-3 mb-4" >
+                    <span className="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white">
                         <FormattedMessage id="Pricing.Standard.title" />
                     </span>
                     <div className="bg-transparent card-header pt-4 border-0 pricing-header-container" >
-                        <h1 className="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="30">
-                            $<span className="price">5</span>
+                        <h2 className="h2 font-weight-normal text-primary text-center mb-0" data-pricing-value="30">
+                            $<span className="price">5,90</span>
                             <span className="h6 text-muted ml-2">/
                                 <FormattedMessage id="Pricing.Standard.timeText" />
                             </span>
-                        </h1>
+                        </h2>
                     </div>
                     <div className="card-body pt-0">
                         <ul className="list-unstyled mb-4 pricing-body-container">
@@ -70,24 +72,24 @@ const Pricing = (props) => {
                             </li>
                         </ul>
                         <div className='pricing-footer-container' >
-                            <Button variant="primary" className="mb-3" onClick={ () => props.goToRef('contactRef') }>
+                            <Button variant="outline-secondary" className="mb-3" onClick={ () => props.goToRef('contactRef') }>
                                 <FormattedMessage id="Pricing.Standard.buttonText" />
                             </Button>
                         </div>
                     </div>
                 </div>
-                <div className="card card-pricing shadow text-center px-3 mb-4" >
+                <div className="card card-pricing shadow text-center px-3 mb-4 card-pricing-popular">
                     <span className="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">
                         <FormattedMessage id="Pricing.Monthly.title" />
                     </span>
                     <div className="bg-transparent card-header pt-4 border-0 pricing-header-container" >
-                        <h1 className="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="30">
-                            $<span className="price">20</span>
+                        <h2 className="h2 font-weight-normal text-primary text-center mb-0" data-pricing-value="30">
+                            $<span className="price">24,90</span>
                             <span className="h6 text-muted ml-2">
                                 / 5
                                 <FormattedMessage id="Pricing.Monthly.timeText" />
                             </span>
-                        </h1>
+                        </h2>
                     </div>
                     <div className="card-body pt-0">
                         <ul className="list-unstyled mb-4 pricing-body-container" >
@@ -108,7 +110,7 @@ const Pricing = (props) => {
                             </li>
                         </ul>
                         <div className='pricing-footer-container' >
-                            <Button variant="outline-secondary" className="mb-3" onClick={ () => props.goToRef('contactRef') }>
+                            <Button variant="primary" className="mb-3" onClick={ () => props.goToRef('contactRef') }>
                                 <FormattedMessage id="Pricing.Monthly.buttonText" />
                             </Button>
                         </div>
@@ -119,11 +121,11 @@ const Pricing = (props) => {
                         <FormattedMessage id="Pricing.Enterprise.title" />
                     </span>
                     <div className="bg-transparent card-header pt-4 border-0 pricing-header-container">
-                        <h1 className="h1 font-weight-normal text-primary text-center mb-0 enterprise-header-style" data-pricing-value="45" >
+                        <h2 className="h2 font-weight-normal text-primary text-center mb-0 enterprise-header-style" data-pricing-value="45" >
                             <span className="h6 text-muted ml-1">
                                 <FormattedMessage id="Pricing.Enterprise.pricingText" />
                             </span>
-                        </h1>
+                        </h2>
                     </div>
                     <div className="card-body pt-0">
                         <ul className="list-unstyled mb-4 pricing-body-container">

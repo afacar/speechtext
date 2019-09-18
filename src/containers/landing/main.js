@@ -1,16 +1,16 @@
 import React, { createRef } from 'react';
 import { Container } from 'react-bootstrap';
-import '../styles/main.css';
+import '../../styles/main.css';
 
-import Header from './header';
+import Header from '../header';
 import Entry from './entry';
 import HowItWorks from './how-it-works';
 import Features from './features';
 import Pricing from './pricing';
 import Contact from './contact';
-import Footer from './footer';
+import Footer from '../footer';
 
-const Main = (props) => {
+const Main = () => {
     const refs = {
         topRef: createRef(),
         aboutRef: createRef(),

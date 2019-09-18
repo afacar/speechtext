@@ -66,8 +66,10 @@ class File extends Component {
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('paused');
+                    break;
                 case firebase.storage.TaskState.RUNNING: // or 'running'
                     console.log('unpaused');
+                    break;
                 default:
                     break;
             }
