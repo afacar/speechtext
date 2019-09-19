@@ -7,6 +7,7 @@ import { Container, Tab, Row, Col, Nav } from 'react-bootstrap';
 import UserHeader from '../user-header';
 import Profile from './profile';
 import Payment from './payment';
+import Plan from './plan';
 
 class User extends Component {
     constructor(props) {
@@ -21,6 +22,13 @@ class User extends Component {
         if(_.isEmpty(this.props.user)) {
             this.props.history.push('/');
         }
+    }
+
+    changeTab = (tabName) => {
+        this.setState({
+            activeTabKey: tabName
+        });
+        this.props.history.push('#' + tabName)
     }
 
     render() {
@@ -49,10 +57,10 @@ class User extends Component {
                                         <Profile />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="payment">
-                                        <Payment />
+                                        <Payment changeTab={ this.changeTab } />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="plan">
-                                        Plans
+                                        <Plan />
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>

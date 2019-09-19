@@ -10,7 +10,7 @@ const styles = {
         borderRadius: 4,
         background: WHITE_SMOKE,
         transition: 'width 0.1s',
-        cursor: true === true ? 'pointer' : 'default',
+        cursor: 'pointer'
     }
 }
 class Slider extends Component {

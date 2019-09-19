@@ -3,9 +3,11 @@ import Utils from '../utils';
 const { ActionTypes } = Utils;
 
 export const getFileList = (state = [], action) => {
+    var found = false;
+    var newState = [];
     switch(action.type) {
         case ActionTypes.GET_FILE_LIST:
-            var newState = _.isEmpty(state) ? action.payload : [];
+            newState = _.isEmpty(state) ? action.payload : [];
             _.each(action.payload, file => {
                 var currentFile =_.find(state, { id: file });
                 newState.push(_.merge(file, currentFile));
@@ -13,8 +15,6 @@ export const getFileList = (state = [], action) => {
             return newState;
         case ActionTypes.UPDATE_FILE:
             const file = action.payload;
-            var newState = [];
-            var found = false;
             state.forEach(elem => {
                 if(elem.id === file.id) {
                     newState.push(_.clone(file));
@@ -27,8 +27,6 @@ export const getFileList = (state = [], action) => {
             return newState;
         case ActionTypes.UPDATE_FILE_IN_STATE:
             const { fileId, data } = action.payload;
-            var newState = [];
-            var found = false;
             state.forEach(elem => {
                 if(elem.id === fileId) {
                     var file = _.merge(elem, data);
