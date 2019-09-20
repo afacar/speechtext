@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Card, ProgressBar, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faEdit, faTrashAlt, faPause, faPlay
+    faTrashAlt, faPause, faPlay
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
 import { addFile, updateFile, updateFileState, updateFileInState } from '../actions';

@@ -37,8 +37,8 @@
 }
 
 .file-container.active .card {
-    background-color: rgb(187, 245, 175);
-    border: 2px solid rgb(12, 185, 6);
+    background-color: rgba(0, 0, 0, .125);
+    border: 4px solid rgba(0,0,0,.125);
     border-radius: 5px;
 }
 

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import firebase from '../../utils/firebase';
 import { getFileList, setFileToUpload, setSelectedFile } from '../../actions';
+
 import Dropzone from '../../components/dropzone';
 import File from '../../components/file';
+import ApprovementPopup from '../../components/approvement-popup';
 
 class FileList extends Component {
     constructor(props) {
@@ -22,6 +25,40 @@ class FileList extends Component {
     }
 
     onFileAdded = async (file) => {
+        var that = this;
+        var media = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
+        media.onloadedmetadata = () => {
+            const { currentPlan } = this.props.user;
+            let fileDurationInSeconds = parseInt(media.duration);
+            let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
+            if(currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
+                that.setState({
+                    selectedFileDuration: fileDurationInMinutes + ' min(s)',
+                    showApprovement: true
+                });
+            } else {
+                this.onFileValidated(file);
+            }
+        };
+        media.src = URL.createObjectURL(file);
+    }
+
+    goToPayment = () => {
+        this.setState({
+            selectedFileDuration: '',
+            showApprovement: false
+        });
+        this.props.history.push('/user#payment');
+    }
+
+    cancelFileUpload = () => {
+        this.setState({
+            selectedFileDuration: '',
+            showApprovement: false
+        });
+    }
+
+    onFileValidated = async (file) => {
         var { name, size, type } = file;
         var fileObj = {
             originalFile: {
@@ -71,6 +108,8 @@ class FileList extends Component {
     }
 
     render() {
+        var { user } = this.props;
+        const currentPlan = user.currentPlan || {};
         return (
             <div>
                 <Dropzone onFileAdded={ this.onFileAdded } />
@@ -93,6 +132,20 @@ class FileList extends Component {
                         })
                     }
                 </div>
+                <ApprovementPopup
+                    show={ this.state.showApprovement }
+                    headerText='Time Limit Reached'
+                    bodyText='You do not have enough credits to upload this file'
+                    bodySubText={
+                        <sub>
+                            <b>Remaining Minutes:</b> { currentPlan.remainingMinutes } <br /><b>File Duration: </b> { this.state.selectedFileDuration }
+                        </sub>
+                    }
+                    handleSuccess={ this.goToPayment }
+                    successButtonVariant='primary'
+                    successButtonText='Go to Payment'
+                    handleCancel={ this.cancelFileUpload }
+                />
             </div>
         )
     }
@@ -106,4 +159,4 @@ const mapStateToProps = ({ user, userFiles, selectedFile }) => {
     }
 }
 
-export default connect(mapStateToProps, { getFileList, setFileToUpload, setSelectedFile })(FileList);
+export default connect(mapStateToProps, { getFileList, setFileToUpload, setSelectedFile })(withRouter(FileList));

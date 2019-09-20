@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import _ from 'lodash';
 import { Card, Form, Accordion, Button } from 'react-bootstrap';
 import IntlTelInput from 'react-bootstrap-intl-tel-input';
 import countryList from 'country-list';
 
+import Alert from 'react-s-alert';
 import { updateProfile } from '../../actions';
 
 class Profile extends Component {
@@ -13,83 +13,144 @@ class Profile extends Component {
         super(props);
 
         this.state = {
-            identityVisible: false
+            identityVisible: false,
+            values: {}
         }
     }
 
-    componentWillReceiveProps({ user }) {
-        if(user.address && user.address.country === 'tr') {
+    initializeValues = (user) => {
+        if(!_.isEmpty(user) && _.isEmpty(this.state.values)) {
+            const { name, surname, email, phoneNumber } = user;
+            var billing = user.Billing || {};
+            const { country, city, zipCode, address, identityNumber } = billing;
+            var values = {
+                name, surname, email, phoneNumber, country, city, zipCode, address, identityNumber
+            }
             this.setState({
-                identityVisible: true
-            });
-        }
-    }
-
-    handlePhoneChange = (args) => {
-        this.props.change('phone', args.callingCode + args.phoneNumber)
-    }
-    
-    handleCountryChange = (e) => {
-        if('tr' === e.target.value) {
-            this.setState({
-                identityVisible: true
+                values
             })
         }
     }
 
+    componentDidMount() {
+        this.initializeValues(this.props.user);
+    }
+
+    componentWillReceiveProps({ user }) {
+        if(user.Billing && user.Billing.country === 'tr') {
+            this.setState({
+                identityVisible: true
+            });
+        }
+        this.initializeValues(user);
+    }
+
+    handlePhoneChange = (data) => {
+        var phoneNumber = data.intlPhoneNumber;
+        var { values } = this.state;
+        values.phoneNumber = phoneNumber;
+        this.setState({
+            values
+        })
+    }
+    
+    handleValueChange = (stateName, value) => {
+        if(stateName === 'country' && 'tr' === value) {
+            this.setState({
+                identityVisible: true
+            })
+        }
+        var { values } = this.state;
+        values[stateName] = value;
+        this.setState({
+            values
+        });
+    }
+
+    handleSubmit = (event) => {
+        const { values } = this.state;
+        const form = event.currentTarget;
+        event.preventDefault();
+        event.stopPropagation();
+        if (form.checkValidity() === true) {
+            if(!values.phoneNumber || values.phoneNumber.length < 10) {
+                Alert.error('Phone number must be minimum 10 digits');
+                return;
+            }
+            this.props.updateProfile(values);
+            Alert.info('Profile info updated successfully.')
+        }
+        this.setState({ validated: true });
+    }
+
     render() {
-        const { handleSubmit, pristine, reset, submitting } = this.props;
+        const { user } = this.props;
+        var defaultPhone = user ? user.phoneNumber : '';
+        var { values } = this.state;
+        if(!values) values = {};
         return (
-            <Form onSubmit={ handleSubmit } initialValues={ this.state.initialValues }>
+            <Form noValidate validated={ this.state.validated } onSubmit={ this.handleSubmit }>
                 <Form.Group>
                     <Form.Label>Name</Form.Label>
-                    <Field
+                    <Form.Control
                         name="name"
-                        component="input"
                         type="text"
                         placeholder="Name"
-                        className='form-control'
+                        value={ values.name || '' }
+                        onChange={ (e) => { this.handleValueChange('name', e.target.value) } }
                         required
                     />
+                    <Form.Control.Feedback type="invalid">
+                        Enter Name
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Surname</Form.Label>
-                    <Field
+                    <Form.Control
                         name="surname"
-                        component="input"
                         type="text"
                         placeholder="Surname"
-                        className='form-control'
+                        value={ values.surname || '' }
+                        onChange={ (e) => { this.handleValueChange('surname', e.target.value) } }
                         required
                     />
+                    <Form.Control.Feedback type="invalid">
+                        Enter Surname
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Email</Form.Label>
-                    <Field
+                    <Form.Control
                         name="email"
-                        component="input"
                         type="email"
                         placeholder="Email"
-                        className='form-control'
+                        value={ values.email || '' }
+                        onChange={ (e) => { this.handleValueChange('email', e.target.value) } }
                         required
                     />
+                    <Form.Control.Feedback type="invalid">
+                        Enter Email
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Phone</Form.Label>
-                    <Field
-                        name="phone"
-                        component={ IntlTelInput }
-                        type="text"
-                        placeholder="Phone"
-                        className='form-control'
-                        props={{
-                            preferredCountries: ['TR', 'US', 'GB'],
-                            defaultCountry: 'TR',
-                            maxLength: "20",
-                            onChange:this.handlePhoneChange
+                    <Form.Label>Phone Number</Form.Label>
+                    <IntlTelInput
+                        fieldName='phoneNumner'
+                        preferredCountries={['TR', 'US', 'GB']}
+                        defaultCountry={'TR'}
+                        maxLength="20"
+                        defaultValue={ defaultPhone }
+                        value={ values.phoneNumber || '' }
+                        onChange={ this.handlePhoneChange }
+                        telInputProps={{
+                            required: true
                         }}
+                        inputClassName='form-control'
                         required
                     />
+                    <Form.Control.Feedback type="invalid">
+                        Enter Phone Number
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Card>
                     <Accordion defaultActiveKey='0'>
@@ -100,60 +161,81 @@ class Profile extends Component {
                             <Card.Body>
                                 <Form.Group>
                                     <Form.Label>Country</Form.Label>
-                                    <Field name='country' component='select' required className='form-control' onChange={ this.handleCountryChange }>
+                                    <Form.Control
+                                        name='country'
+                                        as='select'
+                                        required
+                                        onChange={ (e) => { this.handleValueChange('country', e.target.value) } }
+                                        value={ values.country || '' }
+                                    >
                                         <option />
                                         {
                                             _.map(countryList.getCodeList(), (value, key) => {
-                                                return <option value={ key }>{ value }</option>
+                                                return <option key={ key } value={ key }>{ value }</option>
                                             })
                                         }
-                                    </Field>
+                                    </Form.Control>
+                                    <Form.Control.Feedback type="invalid">
+                                        Select Address Country
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
                                 <Form.Label>City</Form.Label>
-                                    <Field
+                                    <Form.Control
                                         name="city"
-                                        component="input"
                                         type="text"
                                         placeholder="City"
-                                        className='form-control'
+                                        value={ values.city || '' }
+                                        onChange={ (e) => { this.handleValueChange('city', e.target.value) } }
                                         required
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        Enter City
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
                                     <Form.Label>Zip Code</Form.Label>
-                                    <Field
+                                    <Form.Control
                                         name="zipCode"
-                                        component="input"
                                         type="number"
                                         placeholder="Zip Code"
-                                        className='form-control'
+                                        value={ values.zipCode || '' }
+                                        onChange={ (e) => { this.handleValueChange('zipCode', e.target.value) } }
                                         required
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        Enter Zip Code
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
                                     <Form.Label>Address</Form.Label>
-                                    <Field
-                                        name="openAddress"
-                                        component="input"
+                                    <Form.Control
+                                        name="address"
                                         type="textarea"
                                         placeholder="Address"
-                                        className='form-control'
+                                        value={ values.address || '' }
+                                        onChange={ (e) => { this.handleValueChange('address', e.target.value) } }
                                         required
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        Enter Address
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                                 {
                                     this.state.identityVisible &&
                                     <Form.Group>
                                         <Form.Label>Identity Number</Form.Label>
-                                        <Field
+                                        <Form.Control
                                             name="identityNumber"
-                                            component="input"
                                             type="number"
                                             placeholder="Identity Number"
-                                            className='form-control'
+                                            value={ values.identityNumber || '' }
+                                            onChange={ (e) => { this.handleValueChange('identityNumber', e.target.value) } }
                                             required={ this.state.identityVisible }
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            Enter Identification Number
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 }
                             </Card.Body>
@@ -161,59 +243,16 @@ class Profile extends Component {
                     </Accordion>
                 </Card>
                 <br />
-                <Button type="button" disabled={pristine || submitting} className='float-right mx-3' onClick={reset}>Clear Values</Button>
-                <Button type="submit" disabled={pristine || submitting} className='float-right'>Submit</Button>
+                <Button type="submit" className='float-right'>Submit</Button>
             </Form>
         )
     }
 }
 
-const validate = (values) => {
-    const errors = {}
-    if (!values.name) {
-        errors.name = 'Enter Name';
-    }
-    if (!values.surname) {
-        errors.surname = 'Enter Surname';
-    }
-    if (!values.email) {
-        errors.email = 'Enter Email';
-    }
-    if (!values.phone) {
-        errors.phone = 'Enter Phone';
-    }
-    if (!values.country) {
-        errors.country = 'Select Address Country';
-    }
-    if (!values.city) {
-        errors.city = 'Enter City';
-    }
-    if (!values.zipCode) {
-        errors.zipCode = 'Enter Zip Code';
-    }
-    if (!values.openAddress) {
-        errors.openAddress = 'Enter Address';
-    }
-    if (!values.identityNumber) {
-        errors.identityNumber = 'Enter IdentityNumber';
-    }
-    return errors;
-}
-
 const mapStateToProps = ({ user }) => {
-    const { name, surname, email, phone } = user;
-    var address = user.address || {};
-    const { country, city, openAddress, zipCode, identityNumber } = address;
-    var initialValues = { name, surname, email, phone, country, city, openAddress, zipCode, identityNumber };
     return {
-        user,
-        initialValues
+        user
     }
 }
 
-const mapDispatchToProps = (dispatch, /* ownProps */) => ({
-    onSubmit: values => dispatch(updateProfile(values))
-});
-
-const profileForm = reduxForm({ form: 'profile', enableReinitialize: true, validate })(Profile);
-export default connect(mapStateToProps, mapDispatchToProps)(profileForm);
+export default connect(mapStateToProps, { updateProfile })(Profile);
