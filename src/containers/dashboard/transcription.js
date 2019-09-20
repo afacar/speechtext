@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import Axios from 'axios';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import ContentEditable from 'react-contenteditable';
 import { Media } from 'react-media-player';
 
@@ -55,6 +56,57 @@ class Transcription extends Component {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.put(new Blob([dataToUpload]));
         }
+    }
+
+    downloadAsTxt = () => {
+        const { selectedFile } = this.props;
+        const { editorData } = this.state;
+        var textData = '';
+        editorData.forEach(data => {
+            if(data.startTime && data.endTime) {
+                if(data.text) {
+                    data.text = data.text.replace(/---/g, '');
+                }
+                textData += `${data.startTime} - ${data.endTime}\n${data.text}\n`;
+            }
+        });
+    
+        var fileName = selectedFile.name;
+        fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
+        
+        const element = document.createElement("a");
+        const file = new Blob([textData], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = fileName;
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    }
+
+    downloadAsDocx = () => {
+        var { selectedFile, user } = this.props;
+
+        Axios.post('https://us-central1-speechtext-72dfc.cloudfunctions.net/getDocxFile', {
+            fileId: selectedFile.id,
+            uid: user.uid
+        }).then(({ data }) => {
+            var storageRef = firebase.storage().ref(data.filePath);
+            var fileName = selectedFile.name;
+            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
+            var newMetadata = {
+                contentDisposition: `attachment;filename=${fileName}`
+            }
+            storageRef.updateMetadata(newMetadata)
+            .then((metadata) => {
+                console.log(metadata);
+                storageRef.getDownloadURL().then((downloadUrl) => {
+                    const element = document.createElement("a");
+                    element.href = downloadUrl;
+                    element.click();
+                });
+            })
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     formatResults = (data) => {
@@ -112,6 +164,11 @@ class Transcription extends Component {
             });
             return (
                 <div className=''>
+                    <DropdownButton id="dropdown-item-button" title="Download" align='right'>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>as .txt</Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>as .docx</Dropdown.Item>
+                    </DropdownButton>
+                    <br />
                     { data }
                 </div>
             );
