@@ -13,8 +13,9 @@ class User extends Component {
     constructor(props) {
         super(props);
 
+        let hashValue = props.location.hash ? props.location.hash.substr(1) : '';
         this.state = {
-            activeTabKey: props.location.hash ? props.location.hash : 'profile'
+            activeTabKey: hashValue ? hashValue : 'profile'
         }
     }
 

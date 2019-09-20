@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Card, Row, Col, Form, Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import Alert from 'react-s-alert';
 
 import Utils from '../../utils';
 import firebase from '../../utils/firebase';
