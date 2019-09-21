@@ -83,12 +83,13 @@ class Transcription extends Component {
     }
 
     downloadAsDocx = () => {
-        var { selectedFile, user } = this.props;
+        var { selectedFile } = this.props;
 
-        Axios.post('https://us-central1-speechtext-72dfc.cloudfunctions.net/getDocxFile', {
-            fileId: selectedFile.id,
-            uid: user.uid
-        }).then(({ data }) => {
+        var getDocxFile = firebase.functions().httpsCallable('getDocxFile');
+        getDocxFile({ 
+            fileId: selectedFile.id
+        })
+        .then(({ data }) => {
             var storageRef = firebase.storage().ref(data.filePath);
             var fileName = selectedFile.name;
             fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
@@ -97,7 +98,6 @@ class Transcription extends Component {
             }
             storageRef.updateMetadata(newMetadata)
             .then((metadata) => {
-                console.log(metadata);
                 storageRef.getDownloadURL().then((downloadUrl) => {
                     const element = document.createElement("a");
                     element.href = downloadUrl;
@@ -164,9 +164,9 @@ class Transcription extends Component {
             });
             return (
                 <div className=''>
-                    <DropdownButton id="dropdown-item-button" title="Download" align='right'>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>as .txt</Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>as .docx</Dropdown.Item>
+                    <DropdownButton id="dropdown-item-button" title="Download" align='right' alignRight>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>Text Document (.txt)</Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>Word Document (.docx)</Dropdown.Item>
                     </DropdownButton>
                     <br />
                     { data }
