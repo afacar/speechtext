@@ -29,6 +29,7 @@ class FileList extends Component {
         var media = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
         media.onloadedmetadata = () => {
             const { currentPlan } = this.props.user;
+            console.log('onFileAdded media:', media);
             let fileDurationInSeconds = parseInt(media.duration);
             let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
             if(currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
@@ -37,7 +38,7 @@ class FileList extends Component {
                     showApprovement: true
                 });
             } else {
-                this.onFileValidated(file);
+                this.onFileValidated(file, fileDurationInMinutes);
             }
         };
         media.src = URL.createObjectURL(file);
@@ -58,12 +59,14 @@ class FileList extends Component {
         });
     }
 
-    onFileValidated = async (file) => {
+    onFileValidated = async (file, fileDurationInMinutes) => {
+        console.log('onFileValidated file: ', file);
         var { name, size, type } = file;
         var fileObj = {
             originalFile: {
                 name,
                 size,
+                duration: fileDurationInMinutes,
                 createDate: new Date()
             },
             options: {
