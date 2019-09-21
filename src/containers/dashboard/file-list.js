@@ -84,26 +84,6 @@ class FileList extends Component {
         this.props.setSelectedFile(fileObj);
     }
 
-    deleteFile = (index) => {
-        var { files } = this.state;
-        // files = files.filter((file, fileIndex) => {
-        //     return fileIndex !== index
-        // });
-        // this.setState({
-        //     files
-        // });
-    }
-
-    // deleteFile = (index) => {
-    //     var { files } = this.props;
-    //     files = files.filter((file, fileIndex) => {
-    //         return fileIndex !== index
-    //     });
-    //     this.setState({
-    //         files
-    //     });
-    // }
-
     onFileSelected = (index) => {
         const { files } = this.state;
         const selectedFile = files[index];
@@ -126,7 +106,6 @@ class FileList extends Component {
                                         key={ file.id }
                                         file={ file }
                                         index={ index }
-                                        deleteFile={ this.deleteFile }
                                         onSelected={ this.onFileSelected }
                                         isSelected={ isSelected }
                                     />

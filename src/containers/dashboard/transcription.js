@@ -25,6 +25,9 @@ class Transcription extends Component {
         var { intervalHolder } = this.state;
         clearInterval(intervalHolder);
         if(!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
+            this.setState({
+                showSpinner: true
+            })
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
@@ -138,6 +141,9 @@ class Transcription extends Component {
                 });
             }
         }
+        this.setState({
+            showSpinner: false
+        })
     }
 
     renderResults = () => {
@@ -173,6 +179,7 @@ class Transcription extends Component {
                 </div>
             );
         }
+        return false;
     }
 
     transcriptionClicked = (index) => {
@@ -215,13 +222,16 @@ class Transcription extends Component {
     }
     
     renderOptions = () => {
+        const { editorData } = this.state;
         const { selectedFile } = this.props;
-        if(!_.isEmpty(selectedFile) && selectedFile.status !== 'DONE') {
-            return (
-                <UploadOptions
-                    disabled={ selectedFile.status !== 'PROCESSING' }
-                />
-            )
+        if(_.isEmpty(editorData)) {
+            if(!_.isEmpty(selectedFile) && selectedFile.status !== 'DONE') {
+                return (
+                    <UploadOptions
+                        disabled={ selectedFile.status !== 'PROCESSING' }
+                    />
+                )
+            }
         }
     }
 
@@ -242,10 +252,21 @@ class Transcription extends Component {
                         />
                     </Media>
                 </div>
-                <div className='transcription'>
-                    { this.renderResults() }
-                    { this.renderOptions() }
-                </div>
+                {
+                    this.state.showSpinner &&
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                }
+                {
+                    !this.state.showSpinner &&
+                    <div className='transcription'>
+                        { this.renderResults() }
+                        { this.renderOptions() }
+                    </div>
+                }
             </div>
         );
     }

@@ -106,7 +106,9 @@ class UploadOptions extends Component {
             const { language, file } = this.props;
             var { options } = this.state;
             if(!options.language) options.language = language;
-            options.language = Utils.LanguageMap[options.language];
+            if(options.language.indexOf('-') > -1) {
+                options.language = Utils.LanguageMap[options.language];
+            }
             file.options = _.merge(file.options, options);
             if(file.status === 'INITIAL') {
                 this.props.updateFileInState(file.id, { options });
@@ -189,6 +191,7 @@ class UploadOptions extends Component {
                                     disabled= { disabled }
                                     className={ `react-tagsinput ${disabled ? 'disabled' : ''}` }
                                     onChange={ (tags) => this.handleOptionsChange('context', tags) }
+                                    addOnBlur={ true }
                                 />
                             </Form.Group>
                             <br />
