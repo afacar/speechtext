@@ -127,6 +127,8 @@ class UploadOptions extends Component {
         const { language, supportedLanguages, file } = this.props;
         const { options } = this.state;
         const disabled = file.status === 'PROCESSING' || file.status === 'DONE';
+        let selectedLanguage = options.language || language;
+        if(selectedLanguage.indexOf('-') > -1) selectedLanguage = selectedLanguage.substr(0, selectedLanguage.indexOf('-'));
         return (
             <Container className='upload-options-container'>
                 <Container className='upload-options-filename'>
@@ -144,7 +146,7 @@ class UploadOptions extends Component {
                                 </Form.Label>
                                 <Form.Control
                                     as='select'
-                                    defaultValue={ options.language || language }
+                                    defaultValue={ selectedLanguage }
                                     disabled={ disabled }
                                     required
                                     onChange={(e) => this.handleOptionsChange('language', e.target.value)}
