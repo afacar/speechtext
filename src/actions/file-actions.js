@@ -9,7 +9,12 @@ export const getFileList = () => {
         .get();
         if(snapshot && snapshot.docs) {
             var userFiles = [];
-            snapshot.docs.forEach(doc => userFiles.push({id: doc.id, ...doc.data()}));
+            snapshot.docs.forEach(doc => {
+                let data = doc.data();
+                if(data.status !== 'DELETED') {
+                    userFiles.push({id: doc.id, ...doc.data()})
+                }
+            });
             userFiles = _.orderBy(userFiles, 'originalFile.createDate', 'desc');
             dispatch({
                 type: Utils.ActionTypes.GET_FILE_LIST,
@@ -29,7 +34,15 @@ export const getFileList = () => {
             if(snapshot && snapshot.docs) {
                 const { selectedFile } = getState();
                 var userFiles = [];
-                snapshot.docs.forEach(doc => userFiles.push({id: doc.id, ...doc.data()}));
+                var deletedFiles = [];
+                snapshot.docs.forEach(doc => {
+                    let data = doc.data();
+                    if(data.status === 'DELETED') {
+                        deletedFiles.push({id: doc.id, ...doc.data()});
+                    } else {
+                        userFiles.push({id: doc.id, ...doc.data()})
+                    }
+                });
                 userFiles = _.orderBy(userFiles, 'originalFile.createDate', 'desc');
                 dispatch({
                     type: Utils.ActionTypes.GET_FILE_LIST,
@@ -42,6 +55,14 @@ export const getFileList = () => {
                             type: Utils.ActionTypes.SET_SELECTED_FILE,
                             payload: file
                         });
+                    } else {
+                        file =_.find(deletedFiles, { id: selectedFile.id });
+                        if(file) {
+                            dispatch({
+                                type: Utils.ActionTypes.SET_SELECTED_FILE,
+                                payload: {}
+                            });
+                        }
                     }
                 }
             }

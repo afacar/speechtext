@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Card, ProgressBar, Button } from 'react-bootstrap';
+import { Card, ProgressBar, Button, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrashAlt, faPause, faPlay
@@ -119,29 +119,44 @@ class File extends Component {
 
     deleteFile = (e) => {
         e.preventDefault();
-        this.props.deleteFile(this.state.file.index);
+        e.stopPropagation();
+
+        const { file } = this.state;
+        this.props.updateFileState(file.id, 'DELETED');
+        this.setState({ showSpinner: true })
     }
 
     transcribeFile = () => {
         var { file } = this.state;
         if(_.isEmpty(file.options) || !file.options.language) {
             this.props.onSelected(this.props.index);
+        } else {
+            this.props.updateFileState(file.id, 'READY');
         }
     }
 
     render() {
-        const { file, progress, paused } = this.state;
+        const { file, progress, paused, showSpinner } = this.state;
         return (
             <div className={ `file-container ${this.props.isSelected ? 'active' : ''}` }>
                 <Card>
                     <Card.Body>
                         { file.name }
-                        <span className='file-settings'>
-                            {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
-                            <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
-                        </span>
                         {
-                            progress < 100 &&
+                            !showSpinner && file.status !== 'TRANSCRIBING' &&
+                            <span className='file-settings'>
+                                {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
+                                <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
+                            </span>
+                        }
+                        {
+                            showSpinner &&
+                            <div className='float-right'>
+                                <Spinner animation="border" role="status" size='sm' />
+                            </div>
+                        }
+                        {
+                            file.status !== 'DONE' && progress < 100 &&
                             <div className={ 'file-progress' }>
                                 <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
                                 <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
