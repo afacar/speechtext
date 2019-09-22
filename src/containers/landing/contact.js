@@ -6,7 +6,7 @@ import IntlTelInput from 'react-bootstrap-intl-tel-input'
 import Alert from 'react-s-alert';
 import '../../styles/contact.css';
 
-const serverUrl = 'http://localhost:3001';
+const serverUrl = 'https://speechtext.io:3000';
 
 class Contact extends Component {
     constructor(props) {
