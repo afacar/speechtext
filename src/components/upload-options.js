@@ -106,7 +106,7 @@ class UploadOptions extends Component {
             const { language, file } = this.props;
             var { options } = this.state;
             if(!options.language) options.language = language;
-            if(options.language.indexOf('-') > -1) {
+            if(options.language.indexOf('-') == -1) {
                 options.language = Utils.LanguageMap[options.language];
             }
             file.options = _.merge(file.options, options);
