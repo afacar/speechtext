@@ -1,13 +1,14 @@
 .player-window {
     position: fixed;
     background-color: black;
-    width: 250px;
-    height: 250px;
+    width: 13.5%;
+    height: 40%;
     right: 20px;
     top: 100px;
 }
 
 .player-container {
+    width: 95%;
     margin-bottom: -10px;
 }
 
