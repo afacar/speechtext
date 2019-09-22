@@ -176,7 +176,7 @@ class UploadOptions extends Component {
                                     disabled={ disabled }
                                     min='1'
                                     max='10'
-                                    value={ options.speakerCount }
+                                    value={ options.speakerCount || 1 }
                                     onChange={ (e) => this.handleOptionsChange('speakerCount', e.target.value) }
                                 />
                                 <Form.Control.Feedback type="invalid">
