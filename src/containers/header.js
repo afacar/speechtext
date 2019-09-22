@@ -94,7 +94,7 @@ class Header extends Component {
                                         !_.isEmpty(this.props.user) &&
                                         <Nav.Item>
                                             <Link to='/dashboard' className='dashboard-link nav-link'>
-                                                { this.props.user.displayName }
+                                                <FormattedMessage id='Header.dashboard' />
                                             </Link>
                                         </Nav.Item>
                                     }

@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
-import  {withMediaProps, Player } from 'react-media-player';
+import _ from 'lodash';
+import  { withMediaProps, Player } from 'react-media-player';
 import { PlayerIcon } from 'react-player-controls';
 
 import Slider from './slider';
@@ -44,7 +45,8 @@ class SpeechTextPlayer extends Component {
     }
 
     render() {
-        const { media } = this.props;
+        const { media, src, type } = this.props;
+        let disabled = _.isEmpty(src);
         if(!media) {
             return null;
         }
@@ -52,18 +54,18 @@ class SpeechTextPlayer extends Component {
             <div className='player-container'>
                 <div className='player-controls play-resume'>
                     {
-                        !this.props.media.isPlaying &&
-                        <PlayerIcon.Play onClick={ () => this.props.media.play() } />
+                        !media.isPlaying &&
+                        <PlayerIcon.Play onClick={ () => !disabled ? media.play() : null } />
                     }
                     {
-                        this.props.media.isPlaying &&
-                        <PlayerIcon.Pause onClick={ () => this.props.media.pause() } />
+                        media.isPlaying &&
+                        <PlayerIcon.Pause onClick={ () => !disabled ? media.pause() : null } />
                     }
                 </div>
                 <div className='player-controls mute-unmute'>
                     {
-                        !this.props.media.isMuted &&
-                        <PlayerIcon.SoundOn onClick={ () => this.props.media.mute(true) } />
+                        !media.isMuted &&
+                        <PlayerIcon.SoundOn onClick={ () => media.mute(true) } />
                     }
                     {
                         this.props.media.isMuted &&
@@ -78,12 +80,15 @@ class SpeechTextPlayer extends Component {
                         playPause={ this._handlePlayPause }
                     />
                 </div>
-                <Player
-                    className='player-window'
-                    src={ this.props.src }
-                    onTimeUpdate={ this.onTimeUpdate }
-                    ref={ this.playerRef }
-                />
+                {
+                    _.isEmpty(type) && type.startsWith('video') &&
+                    <Player
+                        className='player-window'
+                        src={ this.props.src }
+                        onTimeUpdate={ this.onTimeUpdate }
+                        ref={ this.playerRef }
+                    />
+                }
             </div>
         );
     }

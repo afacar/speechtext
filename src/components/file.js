@@ -143,7 +143,7 @@ class File extends Component {
                     <Card.Body>
                         { file.name }
                         {
-                            !showSpinner && file.status !== 'TRANSCRIBING' &&
+                            !showSpinner && file.status !== 'PROCESSING' &&
                             <span className='file-settings'>
                                 {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
                                 <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
