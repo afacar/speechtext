@@ -67,35 +67,6 @@ class Plan extends Component {
         if(!selectedPlanType) selectedPlanType = currentPlan.type;
         return (
             <Container>
-                <Card>
-                    <Card.Title className='current-plan-title'><b>CurrentPlan :</b> { currentPlan.planName }</Card.Title>
-                    <Card.Body>
-                        <Row>
-                            {
-                                currentPlan.type === 'Demo' &&
-                                <Col lg={6} md={6} sm={6}>
-                                    <Form.Label><b>Duration Limit : </b>{`${!currentPlan.quota || currentPlan.quota === 0 ? '    -' : currentPlan.quota + ' mins'}`}</Form.Label>
-                                </Col>
-                            }
-                            {
-                                currentPlan.type === 'Monthly' &&
-                                <Col lg={6} md={6} sm={6}>
-                                    <Form.Label><b>Expire Date : </b> { Utils.formatExpireDate(currentPlan.expireDate) }</Form.Label>
-                                </Col>
-                            }
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label><b>Remaining Duration : </b>{currentPlan.remainingMinutes} mins</Form.Label>
-                            </Col>
-                            {
-                                currentPlan.pricePerMinute > 0 &&
-                                <Col lg={6} md={6} sm={6}>
-                                    <Form.Label><b>Price Per Minute : </b>$ {currentPlan.pricePerMinute}</Form.Label>
-                                </Col>
-                            }
-                        </Row>
-                    </Card.Body>
-                </Card>
-                <br />
                 <div className="pricing card-deck flex-column flex-md-row user-plan">
                     <div className={`card card-pricing text-center px-3 mb-4 ${selectedPlanType === 'PayAsYouGo' ? 'shadow card-pricing-popular' : ''}`} 
                             onClick={ () => this.setState({ selectedPlanType: 'PayAsYouGo'}) }>
