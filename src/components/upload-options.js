@@ -109,6 +109,7 @@ class UploadOptions extends Component {
             if(options.language.indexOf('-') == -1) {
                 options.language = Utils.LanguageMap[options.language];
             }
+            if(!options.speakerCount) options.speakerCount = 1;
             file.options = _.merge(file.options, options);
             if(file.status === 'INITIAL') {
                 this.props.updateFileInState(file.id, { options });
