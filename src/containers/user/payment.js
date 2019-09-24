@@ -59,7 +59,7 @@ class Payment extends Component {
         const { currentPlan } = this.props.user;
         let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         if(durationInMinutes < 60) {
-            SAlert.error('You must buy at lease 60 minutes!');
+            SAlert.error('You must buy at least 60 minutes!');
         } else {
             let pricePerMinute = parseFloat(currentPlan.pricePerMinute);
             calculatedPrice = (durationInMinutes * pricePerMinute).toFixed(2);

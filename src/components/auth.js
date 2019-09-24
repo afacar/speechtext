@@ -14,9 +14,9 @@ const uiConfig = {
     signInSuccessUrl: '/',
     // We will display Google and Facebook as auth providers.
     signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
     ]
 };
 
@@ -24,15 +24,19 @@ class Auth extends Component {
     componentDidMount() {
         var that = this;
         firebase.auth().onAuthStateChanged(user => {
-            const currentUser = user ? user: '';
+            const currentUser = user ? user : '';
             that.setState({ user: currentUser });
-            
-            if(currentUser) {
-                const { uid, displayName, email } = currentUser;
+
+            if (currentUser) {
+                const { uid, displayName, email, metadata } = currentUser;
+                const { lastSignInTime, creationTime } = metadata;
+                const isNewUser = creationTime === lastSignInTime
+
                 that.props.login({
                     uid,
                     displayName,
-                    email
+                    email,
+                    isNewUser
                 });
             }
         });
@@ -47,7 +51,7 @@ class Auth extends Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FirebaseUIAuth lang={ this.props.language }
+                    <FirebaseUIAuth lang={this.props.language}
                         config={uiConfig}
                         auth={firebase.auth()}
                         firebase={firebase} />

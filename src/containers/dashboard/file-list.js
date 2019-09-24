@@ -25,6 +25,10 @@ class FileList extends Component {
     }
 
     onFileAdded = async (file) => {
+        if (!this.props.emailVerified) {
+            console.log('file-list onFileAdded emailNotVerified so returns;');
+            return;
+        }
         var that = this;
         var media = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
         media.onloadedmetadata = () => {
