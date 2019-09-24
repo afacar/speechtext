@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { Container, Button } from 'react-bootstrap';
@@ -22,8 +23,39 @@ class Pricing extends Component {
         })
     }
 
+    handleBuyNowButton = (selectedType) => {
+        const { user } = this.props;
+        if(_.isEmpty(user)) {
+            this.setState({ showAuth: true });
+        } else if(user.currentPlan) {
+            const { type } = user.currentPlan;
+            if(type === 'Demo') {
+                if(selectedType !== 'Demo') {
+                    this.props.history.push('/user#plan');
+                } else {
+                    this.props.history.push('/dashboard');
+                }
+            } else {
+                if(type !== selectedType) {
+                    this.props.history.push('/user#plan');
+                } else {
+                    this.props.history.push('/user#payment');
+                }
+            }
+        }
+    }
+
     render() {
         const { user, goToRef } = this.props;
+        var DemoButtonText = <FormattedMessage id="Pricing.Demo.buttonText" />;
+        var StandardButtonText = <FormattedMessage id="Pricing.Standard.buttonText" />;
+        var MonthlyButtonText = <FormattedMessage id="Pricing.Monthly.buttonText" />;
+        if(!_.isEmpty(user)) {
+            DemoButtonText = <FormattedMessage id="Pricing.Demo.loggedInButtonText" />;
+            StandardButtonText = <FormattedMessage id="Pricing.Standard.loggedInButtonText" />;
+            MonthlyButtonText = <FormattedMessage id="Pricing.Monthly.loggedInButtonText" />;
+        }
+        
         return (
             <div>
                 <Container className="mb-5 mt-5">
@@ -55,14 +87,11 @@ class Pricing extends Component {
                                         <FormattedMessage id="Pricing.Demo.feature4" />
                                     </li>
                                 </ul>
-                                {
-                                    _.isEmpty(user) &&
-                                    <div className='pricing-footer-container' >
-                                        <Button variant="outline-secondary" className="mb-3 payment-button-style" onClick={ () => this.setState({ showAuth: true }) }>
-                                            <FormattedMessage id="Pricing.Demo.buttonText" />
-                                        </Button>
-                                    </div>
-                                }
+                                <div className='pricing-footer-container' >
+                                    <Button variant="outline-secondary" className="mb-3 payment-button-style" onClick={ () => this.handleBuyNowButton('Demo') }>
+                                        { DemoButtonText }
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                         <div className="card card-pricing text-center px-3 mb-4" >
@@ -95,14 +124,11 @@ class Pricing extends Component {
                                         <FormattedMessage id="Pricing.Standard.feature5" />
                                     </li>
                                 </ul>
-                                {
-                                    _.isEmpty(user) &&
-                                    <div className='pricing-footer-container' >
-                                        <Button variant="outline-secondary" className="mb-3" onClick={ () => this.setState({ showAuth: true }) }>
-                                            <FormattedMessage id="Pricing.Standard.buttonText" />
-                                        </Button>
-                                    </div>
-                                }
+                                <div className='pricing-footer-container' >
+                                    <Button variant="outline-secondary" className="mb-3" onClick={ () => this.handleBuyNowButton('PayAsYouGo') }>
+                                        { StandardButtonText }
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                         <div className="card card-pricing shadow text-center px-3 mb-4 card-pricing-popular">
@@ -136,14 +162,11 @@ class Pricing extends Component {
                                         <FormattedMessage id="Pricing.Monthly.feature5" />
                                     </li>
                                 </ul>
-                                {
-                                    _.isEmpty(user) &&
-                                    <div className='pricing-footer-container' >
-                                        <Button variant="primary" className="mb-3" onClick={ () => this.setState({ showAuth: true }) }>
-                                            <FormattedMessage id="Pricing.Monthly.buttonText" />
-                                        </Button>
-                                    </div>
-                                }
+                                <div className='pricing-footer-container' >
+                                    <Button variant="primary" className="mb-3" onClick={ () => this.handleBuyNowButton('Monthly') }>
+                                        { MonthlyButtonText }
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                         <div className="card card-pricing text-center px-3 mb-4">
@@ -172,14 +195,11 @@ class Pricing extends Component {
                                         <FormattedMessage id="Pricing.Enterprise.feature4" />
                                     </li>
                                 </ul>
-                                {
-                                    _.isEmpty(user) &&
-                                    <div className='pricing-footer-container' >
-                                        <Button variant="outline-secondary" className="mb-3" onClick={ () => goToRef('contactRef') }>
-                                            <FormattedMessage id="Pricing.Enterprise.buttonText" />
-                                        </Button>
-                                    </div>
-                                }
+                                <div className='pricing-footer-container' >
+                                    <Button variant="outline-secondary" className="mb-3" onClick={ () => goToRef('contactRef') }>
+                                        <FormattedMessage id="Pricing.Enterprise.buttonText" />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -197,4 +217,4 @@ const mapStateToProps = ({ user, language }) => {
     }
 }
 
-export default connect(mapStateToProps)(Pricing);
+export default connect(mapStateToProps)(withRouter(Pricing));
