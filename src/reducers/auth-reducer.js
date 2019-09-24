@@ -6,8 +6,6 @@ const auth = (state = {}, action) => {
             return action.payload;
         case Utils.ActionTypes.LOGOUT:
             return action.payload;
-        case Utils.ActionTypes.RESEND:
-            return action.payload;
         default:
             return state;
     }
