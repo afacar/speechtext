@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Utils from '../utils';
-const { firestore, auth } = Utils.firebase;
+const { firestore } = Utils.firebase;
 
 
 export const login = (data) => {
@@ -43,19 +43,6 @@ export const login = (data) => {
 export const logout = () => {
     return {
         type: Utils.ActionTypes.LOGOUT,
-        payload: {}
-    }
-}
-
-export const resendVerificationEmail = async () => {
-    console.log('resendVerificationEmail is called!');
-    let { currentUser } = auth();
-    await currentUser.sendEmailVerification()
-        .then(() => {
-            console.log('auth-actions verification email sent to: ', currentUser.email);
-        })
-    return {
-        type: Utils.ActionTypes.RESEND,
         payload: {}
     }
 }
