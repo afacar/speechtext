@@ -47,9 +47,10 @@ export const logout = () => {
     }
 }
 
-export const resendVerificationEmail = () => {
+export const resendVerificationEmail = async () => {
+    console.log('resendVerificationEmail is called!');
     let { currentUser } = auth();
-    currentUser.sendEmailVerification()
+    await currentUser.sendEmailVerification()
         .then(() => {
             console.log('auth-actions verification email sent to: ', currentUser.email);
         })

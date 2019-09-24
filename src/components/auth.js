@@ -28,7 +28,7 @@ class Auth extends Component {
             that.setState({ user: currentUser });
 
             if (currentUser) {
-                const { uid, displayName, email, emailVerified, metadata } = currentUser;
+                const { uid, displayName, email, metadata } = currentUser;
                 const { lastSignInTime, creationTime } = metadata;
                 const isNewUser = creationTime === lastSignInTime
 
@@ -36,7 +36,6 @@ class Auth extends Component {
                     uid,
                     displayName,
                     email,
-                    emailVerified,
                     isNewUser
                 });
             }
