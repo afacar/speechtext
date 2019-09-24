@@ -9,6 +9,13 @@ const addZeroes = (val) => {
     return val.length === 1 ? '0' + val : val;
 }
 
+const getNameSurname = (displayName) => {
+    var index = displayName.lastIndexOf(' ')
+    var name = index > 1 ? displayName.slice(0, index) : '';
+    var surname = index > 1 ? displayName.slice(index + 1): '';
+    return [name, surname]
+}
+
 export default {
     ActionTypes,
     LanguageMap,
@@ -19,6 +26,7 @@ export default {
     },
     firebase,
     addZeroes,
+    getNameSurname,
     formatExpireDate: (expireDate, language) => {
         if(!expireDate) return null;
         var date = new Date(expireDate.seconds * 1000);

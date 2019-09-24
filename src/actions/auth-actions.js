@@ -14,10 +14,7 @@ export const login = (data) => {
         if (data.isNewUser) {
             const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
             // split name surname here and add to data object
-            const { displayName } = data;
-            var index = displayName.lastIndexOf(' ')
-            var name = index > 1 ? displayName.slice(0, index) : '';
-            var surname = index > 1 ? displayName.slice(index + 1): '';
+            const [name, surname] = Utils.getNameSurname(data.displayName)
             data = { ...data, currentPlan: demoPlan, name, surname };
             data.currentPlan.remainingMinutes = demoPlan.quota;
             delete data.isNewUser;
