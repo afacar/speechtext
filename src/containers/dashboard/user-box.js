@@ -28,7 +28,7 @@ class UserBox extends Component {
         return (
             <div className='user-box'>
                 <Link to={ goToUrlOnClick } className='profile-link'>
-                    <p className='profile-name'>
+                    <div className='profile-name'>
                         {
                             currentPath.startsWith('/dashboard') &&
                             <div>
@@ -49,7 +49,7 @@ class UserBox extends Component {
                                 </span>
                             </div>
                         }
-                    </p>
+                    </div>
                 </Link>
                 <Button variant='outline-danger' size='sm' className='sign-out' alt='Sign out' onClick={ this.logout }>
                     <FontAwesomeIcon icon={ faSignOutAlt } />
