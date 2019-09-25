@@ -256,9 +256,9 @@ class Transcription extends Component {
                 </div>
                 {
                     this.state.showSpinner &&
-                    <div class="d-flex justify-content-center mt-5">
-                        <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading...</span>
+                    <div className="d-flex justify-content-center mt-5">
+                        <div className="spinner-border" role="status">
+                            <span className="sr-only">Loading...</span>
                         </div>
                     </div>
                 }
