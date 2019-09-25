@@ -39,7 +39,8 @@ class Transcription extends Component {
             this.setState({
                 editorData: {},
                 prevEditorData: {},
-                intervalHolder: undefined
+                intervalHolder: undefined,
+                showSpinner: false
             })
         }
     }
