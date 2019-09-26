@@ -11,7 +11,7 @@ const Terms = () => {
             <Header />
             <Container className='terms-container'>
                 <h2 align='center'><b>Terms of Service</b></h2>
-                <p className='last-update'><b>Last Updated: September 12, 2019</b></p>
+                <p className='last-update'><b>Last Updated: September 27, 2019</b></p>
                 <p>
                     SpeechText.io, Inc. (“SpeechText.io,” “we,” “us,” “our”) provides its services (described below) to you through its website 
                     located at SpeechText.io(the “Site”) subject to the following Terms of Service (as amended from time to time, the “Terms of Service”). 
@@ -37,7 +37,11 @@ const Terms = () => {
                     located at&nbsp;<Link to='/privacy'>https://speechtext.io/privacy</Link>. All such terms are hereby incorporated 
                     by reference into these Terms of Service.
                 </p>
-                
+                <p>
+                    SpeechText.io is aimed to provide automated tools and services for assisting people who are doing transcription manually. 
+                    Uploaded file is deciphered / transcribed by automatic speech recognition technology. You understand and agree that it's your 
+                    responsibility to correct and edit recognition errors with the help of integrated editör before using the results of the recognition.
+                </p>
                 <br />
                 <h5><b>Access and Use of the Service</b></h5>
                 <p>
@@ -120,6 +124,22 @@ const Terms = () => {
                     upload for any commercial purposes, any portion of the Service, use of the Service, or access to the Service.
                 </p>
 
+                <br />
+                <h5><b>Refund Policy</b></h5>
+                <p>
+                    When uploading an audio / voice or video file to be transcripted, you are informed about conditions (voice quality, noise level etc.)
+                     at which automatic transcription accuracy will be poor. If the uploaded file doesn't meet requirements for getting accurate 
+                     transcription or is in language that's not supported by our service, you agree that SpeechText.io won’t make a refund. 
+                     If you have made a payment, you are deemed to have used your free trial (demo version) balance and satisfied by our service. 
+                     When user purchases balance, amount worth of unused balance will not be refunded. All other refund claims can be investigated 
+                     contacting SpeechText.io support team. All refunds will be made as adding minutes to user’s balance.
+                </p>
+                <br />
+                <h5><b>Demo Trial</b></h5>
+                <p>
+                    You are provided balance for a free trial (demo) of our service after registration. You should purchase balance when your free trial 
+                    balance is over or you want to transcribe a file with a duration that exceeds your free balance.
+                </p>
                 <br />
                 <h5><b>Intellectual Property Rights </b></h5>
                 <p>
