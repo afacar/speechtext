@@ -36,7 +36,8 @@ class Auth extends Component {
                     uid,
                     displayName,
                     email,
-                    isNewUser
+                    isNewUser,
+                    creationTime: new Date(creationTime),
                 });
             }
         });
