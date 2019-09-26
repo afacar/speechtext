@@ -2,37 +2,40 @@ import _ from 'lodash';
 import Utils from '../utils';
 const { firestore } = Utils.firebase;
 
+
 export const login = (data) => {
     return async (dispatch, getState) => {
         const response = await firestore().collection('users').doc(data.uid).get()
-        .catch(error => {
-            console.log('error');
-        });
-        
-        if(_.isEmpty(response) || _.isEmpty(response.data())) {
+            .catch(error => {
+                console.log('error', error);
+            });
+
+        //_.isEmpty(response) || _.isEmpty(response.data())
+        if (data.isNewUser) {
             const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
-            data = {...data, currentPlan: demoPlan};
+            // split name surname here and add to data object
+            const [name, surname] = Utils.getNameSurname(data.displayName)
+            data = { ...data, currentPlan: demoPlan, name, surname };
             data.currentPlan.remainingMinutes = demoPlan.quota;
-            await firestore().collection('users')
-            .doc(data.uid)
-            .set(data);
+            delete data.isNewUser;
+            await firestore().doc(`users/${data.uid}`).set(data);
         } else {
-            data = response.data();
+            data = !_.isEmpty(response) && !_.isEmpty(response.data()) && response.data();
         }
         dispatch({
             type: Utils.ActionTypes.LOGIN,
             payload: data
         });
-
+        // TOASK: Why do we do 2nd time this
         firestore().collection('users').doc(data.uid).onSnapshot((snapshot) => {
             var data = {};
-            if(snapshot && snapshot.data && snapshot.data()) {
+            if (snapshot && snapshot.data && snapshot.data()) {
                 data = snapshot.data();
             }
             dispatch({
                 type: Utils.ActionTypes.LOGIN,
                 payload: data
-            }); 
+            });
         })
     }
 }

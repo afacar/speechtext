@@ -7,7 +7,7 @@ import '../../styles/how-it-works.css';
 
 const HowItWorks = (props) => {
     return (
-        <Row>
+        <Row className="mb-5 mt-5">
             <Col lg="12">
                 <h4>
                     <FormattedMessage id="HowItWorks.title" />

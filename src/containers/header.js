@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
-import Logo from '../assets/logo.png';
+import LogoContainer from './landing/logo-container';
 import Auth from '../components/auth';
 import '../styles/header.css';
 
@@ -46,17 +46,7 @@ class Header extends Component {
                     <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
                             <Navbar.Brand href="/#" onClick={ () => this.props.goToRef('topRef') }>
-                                <img alt='Speech > Text' src={ Logo } className='logo-style' />
-                                <div style={ { float:'right'} }>
-                                    <div className='logo-text-style'>
-                                        Speech > Text
-                                    </div>
-                                    <small className='logo-footer-style'>
-                                        <FormattedMessage id="Header.subText"
-                                            description="Logo subtext"
-                                        />
-                                    </small>
-                                </div>
+                                <LogoContainer />
                             </Navbar.Brand>
                             <Navbar.Toggle />
                             <Navbar.Collapse>
@@ -77,7 +67,12 @@ class Header extends Component {
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
-                                        <Nav.Link href="#contact" onClick={ () => this.props.goToRef('contactRef') }>
+                                        <Nav.Link href="/#about" onClick={ () => this.props.goToRef('aboutRef') }>
+                                            <FormattedMessage id="Header.aboutUs" />
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item className={ this.props.showLinks ? 'visible' : 'invisible' }>
+                                        <Nav.Link href="/#contact" onClick={ () => this.props.goToRef('contactRef') }>
                                             <FormattedMessage id="Header.contact" />
                                         </Nav.Link>
                                     </Nav.Item>
