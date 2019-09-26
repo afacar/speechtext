@@ -212,3 +212,17 @@
 .switch.btn {
     width: 8%;
 }
+
+.selling-contract-container .modal-body,
+.refund-container .modal-body {
+    max-height: 800px;
+    overflow-y: auto;
+}
+
+ol.selling-contract-list { counter-reset: item }
+.selling-contract-list > li { display: block }
+.selling-contract-list > li:before { content: counters(item, ".") "."; counter-increment: item }
+
+.card-logo {
+    transform: scale(.8);
+}

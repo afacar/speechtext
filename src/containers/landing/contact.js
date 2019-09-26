@@ -62,7 +62,7 @@ class Contact extends Component {
 
     render () {
         return (
-            <Container>
+            <Container className="mb-5 mt-5">
                 <h4>
                     <FormattedMessage id="DemoRequest.title" />
                 </h4>

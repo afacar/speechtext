@@ -1,10 +1,15 @@
+.logo-container {
+    width: 160px;
+    height: 53px;
+}
+
 .logo-style {
     width: 32px;
 }
 
-.logo-text.style {
+.logo-text-style {
     color: black;
-    margin-left: 15px;
+    font-size: 1.25rem;
 }
 
 .logo-footer-style {
