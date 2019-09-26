@@ -58,7 +58,7 @@ const featureList = [
 
 const Features = (props) => {
     return (
-        <Row>
+        <Row className="mb-5 mt-5">
             <Col lg="12" md="12" sm="12" xs="12">
                 <h4>
                     <FormattedMessage id="Features.title" />
