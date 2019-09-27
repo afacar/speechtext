@@ -9,7 +9,7 @@ export const login = (data) => {
             .catch(error => {
                 console.log('error', error);
             });
-
+        const { uid } = data;
         //_.isEmpty(response) || _.isEmpty(response.data())
         if (data.isNewUser) {
             const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
@@ -18,16 +18,16 @@ export const login = (data) => {
             data = { ...data, currentPlan: demoPlan, name, surname };
             data.currentPlan.remainingMinutes = demoPlan.quota;
             delete data.isNewUser;
-            await firestore().doc(`users/${data.uid}`).set(data);
+            await firestore().doc(`users/${uid}`).set(data);
         } else {
-            data = !_.isEmpty(response) && !_.isEmpty(response.data()) && response.data();
+            data = !_.isEmpty(response) && !_.isEmpty(response.data()) ? response.data() : data;
         }
         dispatch({
             type: Utils.ActionTypes.LOGIN,
             payload: data
         });
         // TOASK: Why do we do 2nd time this
-        firestore().collection('users').doc(data.uid).onSnapshot((snapshot) => {
+        firestore().collection('users').doc(uid).onSnapshot((snapshot) => {
             var data = {};
             if (snapshot && snapshot.data && snapshot.data()) {
                 data = snapshot.data();
