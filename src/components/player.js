@@ -80,15 +80,12 @@ class SpeechTextPlayer extends Component {
                         playPause={ this._handlePlayPause }
                     />
                 </div>
-                {
-                    _.isEmpty(type) && type.startsWith('video') &&
-                    <Player
-                        className='player-window'
-                        src={ this.props.src }
-                        onTimeUpdate={ this.onTimeUpdate }
-                        ref={ this.playerRef }
-                    />
-                }
+                <Player
+                    className={ `${type.startsWith('video') ? 'player-window' : 'player'}` }
+                    src={ this.props.src }
+                    onTimeUpdate={ this.onTimeUpdate }
+                    ref={ this.playerRef }
+                />
             </div>
         );
     }

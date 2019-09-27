@@ -173,7 +173,7 @@ class File extends Component {
                         {
                             file.status === 'CONVERTED' &&
                             <div className='file-transcribe-button'>
-                                <Button bgColor='orange' onClick={ this.transcribeFile }>
+                                <Button bg='orange' onClick={ this.transcribeFile }>
                                     Transcribe
                                 </Button>
                             </div>
