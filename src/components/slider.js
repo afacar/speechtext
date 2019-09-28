@@ -9,7 +9,7 @@ const styles = {
         height: 8,
         borderRadius: 4,
         background: WHITE_SMOKE,
-        transition: 'width 0.1s',
+        transition: 'width 0s',
         cursor: 'pointer'
     }
 }
@@ -30,25 +30,31 @@ class Slider extends Component {
     }
 
     onSliderChange = (value) => {
-        this.setState({
-            value
-        });
+        if(this.props.duration > 0.1) {
+            this.setState({
+                value
+            });
+        }
     }
 
     onSliderChangeStart = (value) => {
-        this.props.playPause();
-        this.setState({
-            lastValueStart: value
-        });
+        if(this.props.duration > 0.1) {
+            this.props.playPause();
+            this.setState({
+                lastValueStart: value
+            });
+        }
     }
 
     onSliderChangeEnd = (value) => {
-        this.setState({
-            value
-        });
-        if(value) {
-            this.props.seekTo(value);
-            this.props.playPause();
+        if(this.props.duration > 0.1) {
+            this.setState({
+                value
+            });
+            if(value) {
+                this.props.seekTo(value);
+                this.props.playPause();
+            }
         }
     }
 

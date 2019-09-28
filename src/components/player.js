@@ -18,7 +18,7 @@ class SpeechTextPlayer extends Component {
     }
 
     componentWillReceiveProps({ timeToSeek }) {
-        if(timeToSeek) {
+        if(timeToSeek || timeToSeek === 0) {
             this.seekToTime(timeToSeek);
         }
     }
@@ -34,7 +34,9 @@ class SpeechTextPlayer extends Component {
     }
 
     seekTo = (progress) => {
-        this.props.media.seekTo(this.props.media.duration * progress);
+        var currentTime = this.props.media.duration * progress;
+        this.props.media.seekTo(currentTime);
+        this.props.onTimeChanged(currentTime);
     }
 
     seekToTime = (second) => {

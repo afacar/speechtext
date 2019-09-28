@@ -148,10 +148,10 @@ class Transcription extends Component {
     }
 
     renderResults = () => {
-        const { editorData } = this.state;
+        const { editorData, selectedTextIndex } = this.state;
         if(!_.isEmpty(editorData)) {
             var data = editorData.map((data, index) => {
-                if(data.startTime && data.endTime) {
+                if(!_.isEmpty(data.startTime) && !_.isEmpty(data.endTime)) {
                     return (
                         <div className='conversionResult' key={ index } onClick={ () => this.transcriptionClicked(index) } >
                             <ContentEditable
@@ -160,6 +160,8 @@ class Transcription extends Component {
                                 disabled={ true } // use true to disable edition
                             />
                             <ContentEditable
+                                ref={ (r) => { if(index === selectedTextIndex) this.currentEditableText = r }}
+                                id={ `editable-content-${index}` }
                                 html={ data.text } // innerHTML of the editable div
                                 disabled={ false } // use true to disable edition
                                 onChange={ (e) => { this.handleChange(data.key, e.target.value) }} // handle innerHTML change
@@ -205,6 +207,20 @@ class Transcription extends Component {
         });
     }
 
+    getFormattedTimeInSeconds = (startTime) => {
+        var splittedTime = startTime.trim().split(':');
+        var timeInSeconds = 0;
+        if(splittedTime.length === 3) {
+            timeInSeconds += parseInt(splittedTime[0] * 3600);
+            timeInSeconds += parseInt(splittedTime[1] * 60);
+            timeInSeconds += parseInt(splittedTime[2]);
+        } else if(splittedTime.length === 2) {
+            timeInSeconds += parseInt(splittedTime[0] * 60);
+            timeInSeconds += parseInt(splittedTime[1]);
+        }
+        return timeInSeconds;
+    }
+
     handleChange = (key, value) => {
         var { editorData } = this.state;
         var prevEditorData = [];
@@ -222,6 +238,27 @@ class Transcription extends Component {
         });
     }
     
+    handleTimeChange = (currentTime) => {
+        const { editorData } = this.state;
+        _.each(editorData, (data, index) => {
+            if(data.startTime && data.endTime) {
+                let startTime = this.getFormattedTimeInSeconds(data.startTime);
+                let endTime = this.getFormattedTimeInSeconds(data.endTime);
+                if(startTime <= currentTime && currentTime < endTime) {
+                    this.setState({
+                        selectedTextIndex: index
+                    });
+                    return false;
+                }
+            }
+        })
+        setTimeout(() =>{
+            if(this.currentEditableText) {
+                this.currentEditableText.el.current.focus();
+            }
+        }, 500);
+    }
+
     renderOptions = () => {
         const { editorData } = this.state;
         const { selectedFile } = this.props;
@@ -251,6 +288,7 @@ class Transcription extends Component {
                             src={ selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '' }
                             type={ selectedFile.options ? selectedFile.options.type : '' }
                             timeToSeek={ this.state.timeToSeek }
+                            onTimeChanged={ this.handleTimeChange }
                         />
                     </Media>
                 </div>

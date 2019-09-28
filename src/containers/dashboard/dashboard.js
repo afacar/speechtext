@@ -24,6 +24,7 @@ class Dashboard extends Component {
             const { emailVerified } = auth().currentUser;
             this.setState({ emailVerified })
             this.props.getFileList();
+            localStorage.setItem('location', window.location.pathname);
         }
     }
 
