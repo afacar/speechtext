@@ -35,7 +35,12 @@ class Header extends Component {
 
     componentDidUpdate(props) {
         if(_.isEmpty(this.state.user) && !_.isEmpty(props.user)) {
-            this.props.history.push('/dashboard');
+            var currentLocation = window.location.pathname;
+            var prevLocation = localStorage.getItem('location');
+            var prevLocationWithoutHash = prevLocation.substr(0, prevLocation.indexOf('#'));
+            if(prevLocation && currentLocation !== prevLocation && currentLocation !== prevLocationWithoutHash) {
+                this.props.history.push(prevLocation);
+            }
         }
     }
 
@@ -45,9 +50,11 @@ class Header extends Component {
                 <Nav>
                     <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
-                            <Navbar.Brand href="/#" onClick={ () => this.props.goToRef('topRef') }>
-                                <LogoContainer />
-                            </Navbar.Brand>
+                            <Link to='/'>
+                                <Navbar.Brand>
+                                    <LogoContainer />
+                                </Navbar.Brand>
+                            </Link>
                             <Navbar.Toggle />
                             <Navbar.Collapse>
                                 <Nav className="ml-auto">

@@ -7,12 +7,7 @@ export const getFileList = (state = [], action) => {
     var newState = [];
     switch(action.type) {
         case ActionTypes.GET_FILE_LIST:
-            newState = _.isEmpty(state) ? action.payload : [];
-            _.each(action.payload, file => {
-                var currentFile =_.find(state, { id: file });
-                newState.push(_.merge(file, currentFile));
-            });
-            return newState;
+            return action.payload;
         case ActionTypes.UPDATE_FILE:
             const file = action.payload;
             state.forEach(elem => {

@@ -9,6 +9,7 @@ import '../styles/header.css';
 import '../styles/user.css';
 
 import UserBox from './dashboard/user-box';
+import LogoContainer from './landing/logo-container';
 
 class UserHeader extends Component {
 
@@ -19,17 +20,7 @@ class UserHeader extends Component {
                     <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Link to='/'>
                             <Navbar.Brand>
-                                <img alt='Speech > Text' src={ Logo } className='logo-style' />
-                                <div style={ { float:'right'} }>
-                                    <div className='logo-text-style'>
-                                        Speech > Text
-                                    </div>
-                                    <small className='logo-footer-style'>
-                                        <FormattedMessage id="Header.subText"
-                                            description="Logo subtext"
-                                        />
-                                    </small>
-                                </div>
+                                <LogoContainer />
                             </Navbar.Brand>
                         </Link>
                         <Navbar.Toggle />

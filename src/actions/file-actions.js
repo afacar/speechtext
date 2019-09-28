@@ -3,32 +3,8 @@ import Utils from '../utils';
 const { firestore } = Utils.firebase;
 
 export const getFileList = () => {
-    return async (dispatch, getState) => {
-        const { user, selectedFile } = getState();
-        const snapshot = await firestore().collection('userfiles').doc(user.uid).collection('files')
-        .get();
-        if(snapshot && snapshot.docs) {
-            var userFiles = [];
-            snapshot.docs.forEach(doc => {
-                let data = doc.data();
-                if(data.status !== 'DELETED') {
-                    userFiles.push({id: doc.id, ...doc.data()})
-                }
-            });
-            userFiles = _.orderBy(userFiles, 'originalFile.createDate', 'desc');
-            dispatch({
-                type: Utils.ActionTypes.GET_FILE_LIST,
-                payload: userFiles
-            });
-            if(!_.isEmpty(selectedFile)) {
-                var file =_.find(userFiles, { id: selectedFile.id });
-                dispatch({
-                    type: Utils.ActionTypes.SET_SELECTED_FILE,
-                    payload: file
-                });
-            }
-        }
-
+    return (dispatch, getState) => {
+        const { user } = getState();
         firestore().collection('userfiles').doc(user.uid).collection('files')
         .onSnapshot((snapshot) => {
             if(snapshot && snapshot.docs) {
