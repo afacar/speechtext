@@ -37,7 +37,7 @@ class Header extends Component {
         if(_.isEmpty(this.state.user) && !_.isEmpty(props.user)) {
             var currentLocation = window.location.pathname;
             var prevLocation = localStorage.getItem('location');
-            var prevLocationWithoutHash = prevLocation.substr(0, prevLocation.indexOf('#'));
+            var prevLocationWithoutHash = prevLocation ? prevLocation.substr(0, prevLocation.indexOf('#')) : prevLocation;
             if(prevLocation && currentLocation !== prevLocation && currentLocation !== prevLocationWithoutHash) {
                 this.props.history.push(prevLocation);
             }
