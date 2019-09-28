@@ -11,6 +11,7 @@ import Dashboard from './dashboard/dashboard';
 import User from './user/user';
 import Privacy from './landing/privacy';
 import Terms from './landing/terms';
+import ScrollTop from '../components/scroll-top';
 
 class App extends Component {
     componentDidMount() {
@@ -23,11 +24,13 @@ class App extends Component {
         return (
             <div>
                 <BrowserRouter>
-                    <Route exact path='/' render={ props => <Main {...props} /> } />
-                    <Route path='/dashboard' component={ Dashboard } />
-                    <Route path='/user' component={ User } />
-                    <Route path='/privacy' component={ Privacy } />
-                    <Route path='/terms' component={ Terms } />
+                    <ScrollTop>
+                        <Route exact path='/' render={ props => <Main {...props} /> } />
+                        <Route path='/dashboard' component={ Dashboard } />
+                        <Route path='/user' component={ User } />
+                        <Route path='/privacy' component={ Privacy } />
+                        <Route path='/terms' component={ Terms } />
+                    </ScrollTop>
                 </BrowserRouter>
                 <Alert stack={{ limit: 3 }} timeout={ 5000 } html={ true } effect={ 'slide' } position={ 'top-right' } />
             </div>

@@ -20,6 +20,7 @@ class User extends Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('location', window.location.pathname + window.location.hash);
         if(_.isEmpty(this.props.user)) {
             this.props.history.push('/');
         }
@@ -30,6 +31,7 @@ class User extends Component {
             activeTabKey: tabName
         });
         this.props.history.push('#' + tabName)
+        localStorage.setItem('location', window.location.pathname + window.location.hash);
     }
 
     render() {
