@@ -81,7 +81,7 @@ class SpeechTextPlayer extends Component {
                     />
                 </div>
                 <Player
-                    className={ `${type.startsWith('video') ? 'player-window' : 'player'}` }
+                    className={ `player ${type.startsWith('video') ? 'player-window' : ''}` }
                     src={ this.props.src }
                     onTimeUpdate={ this.onTimeUpdate }
                     ref={ this.playerRef }

@@ -248,7 +248,7 @@ class Transcription extends Component {
                     <Media>
                         <SpeechTextPlayer
                             key={ selectedFile.id }
-                            src={ selectedFile.status === 'DONE' ? selectedFile.originalFile.url : '' }
+                            src={ selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '' }
                             type={ selectedFile.options ? selectedFile.options.type : '' }
                             timeToSeek={ this.state.timeToSeek }
                         />
