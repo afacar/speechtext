@@ -77,6 +77,8 @@ export const updateFileState = (fileId, newState) => {
         const { uid } = getState().user;
         await firestore().collection('userfiles').doc(uid).collection('files').doc(fileId).collection('progress').doc('status')
         .update({ state: newState });
+        await firestore().collection('userfiles').doc(uid).collection('files').doc(fileId)
+        .update({ status: newState });
     }
 }
 
