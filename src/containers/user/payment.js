@@ -18,7 +18,7 @@ class Payment extends Component {
         super(props);
 
         this.state = {
-            duration: 1,
+            duration: 0,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL'
