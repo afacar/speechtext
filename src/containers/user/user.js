@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'lodash';
 import { Container, Tab, Row, Col, Nav } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 
 import UserHeader from '../user-header';
 import Profile from './profile';
@@ -44,10 +45,14 @@ class User extends Component {
                             <Col sm={3} className='user-tabs'>
                                 <Nav variant="pills" className="flex-column">
                                     <Nav.Item>
-                                        <Nav.Link href='#profile' eventKey="profile" onClick={ () => this.setState({ activeTabKey: 'profile' }) } >Profile</Nav.Link>
+                                        <Nav.Link href='#profile' eventKey="profile" onClick={ () => this.setState({ activeTabKey: 'profile' }) } >
+                                            <FormattedMessage id='User.Tabs.profile' />
+                                        </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href='#payment' eventKey="payment" onClick={ () => this.setState({ activeTabKey: 'payment' }) } >Payment</Nav.Link>
+                                        <Nav.Link href='#payment' eventKey="payment" onClick={ () => this.setState({ activeTabKey: 'payment' }) } >
+                                            <FormattedMessage id='User.Tabs.payment' />
+                                        </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link href='#plan' eventKey="plan" onClick={ () => this.setState({ activeTabKey: 'plan' }) } >Plans</Nav.Link>

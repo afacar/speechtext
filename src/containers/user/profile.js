@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Card, Form, Accordion, Button } from 'react-bootstrap';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import IntlTelInput from 'react-bootstrap-intl-tel-input';
 import countryList from 'country-list';
 
@@ -85,55 +86,64 @@ class Profile extends Component {
 
     render() {
         const { user } = this.props;
+        const { formatMessage } = this.props.intl;
         var defaultPhone = user ? user.phoneNumber : '';
         var { values } = this.state;
         if(!values) values = {};
         return (
             <Form noValidate validated={ this.state.validated } onSubmit={ this.handleSubmit }>
                 <Form.Group>
-                    <Form.Label>Name</Form.Label>
+                    <Form.Label>
+                        <FormattedMessage id='Profile.Label.name' />
+                    </Form.Label>
                     <Form.Control
                         name="name"
                         type="text"
-                        placeholder="Name"
+                        placeholder={ formatMessage({ id: 'Profile.Feedback.name' }) }
                         value={ values.name || '' }
                         onChange={ (e) => { this.handleValueChange('name', e.target.value) } }
                         required
                     />
                     <Form.Control.Feedback type="invalid">
-                        Enter Name
+                        <FormattedMessage id='Profile.Feedback.enterName' />
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Surname</Form.Label>
+                    <Form.Label>
+                        <FormattedMessage id='Profile.Label.surname' />
+                    </Form.Label>
                     <Form.Control
                         name="surname"
                         type="text"
-                        placeholder="Surname"
+                        placeholder={ formatMessage({ id: 'Profile.Feedback.surname' }) }
                         value={ values.surname || '' }
                         onChange={ (e) => { this.handleValueChange('surname', e.target.value) } }
                         required
                     />
                     <Form.Control.Feedback type="invalid">
-                        Enter Surname
+                        <FormattedMessage id='Profile.Feedback.enterSurname' />
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>
+                        <FormattedMessage id='Profile.Label.email' />
+                    </Form.Label>
                     <Form.Control
                         name="email"
                         type="email"
-                        placeholder="Email"
+                        placeholder={ formatMessage({ id: 'Profile.Feedback.email' }) }
                         value={ values.email || '' }
                         onChange={ (e) => { this.handleValueChange('email', e.target.value) } }
                         required
                     />
                     <Form.Control.Feedback type="invalid">
-                        Enter Email
+                        <FormattedMessage id='Profile.Feedback.email' />
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Phone Number</Form.Label>
+                    <Form.Label>
+                        <FormattedMessage id='Profile.Label.phoneNumber' />
+                    </Form.Label>
                     <IntlTelInput
                         fieldName='phoneNumner'
                         preferredCountries={['TR', 'US', 'GB']}
@@ -149,18 +159,20 @@ class Profile extends Component {
                         required
                     />
                     <Form.Control.Feedback type="invalid">
-                        Enter Phone Number
+                        <FormattedMessage id='Profile.Feedback.phoneNumber' />
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Card>
                     <Accordion defaultActiveKey='0'>
                         <Accordion.Toggle as={Card.Header} eventKey="0" className='address-title'>
-                            Edit Address
+                            <FormattedMessage id='Profile.Label.editAddress' />
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form.Group>
-                                    <Form.Label>Country</Form.Label>
+                                    <Form.Label>
+                                        <FormattedMessage id='Profile.Label.country' />
+                                    </Form.Label>
                                     <Form.Control
                                         name='country'
                                         as='select'
@@ -176,65 +188,73 @@ class Profile extends Component {
                                         }
                                     </Form.Control>
                                     <Form.Control.Feedback type="invalid">
-                                        Select Address Country
+                                        <FormattedMessage id='Profile.Feedback.country' />
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
-                                <Form.Label>City</Form.Label>
+                                <Form.Label>
+                                    <FormattedMessage id='Profile.Label.city' />
+                                </Form.Label>
                                     <Form.Control
                                         name="city"
                                         type="text"
-                                        placeholder="City"
+                                        placeholder={ formatMessage({ id: 'Profile.Feedback.city' }) }
                                         value={ values.city || '' }
                                         onChange={ (e) => { this.handleValueChange('city', e.target.value) } }
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        Enter City
+                                        <FormattedMessage id='Profile.Feedback.city' />
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Label>Zip Code</Form.Label>
+                                    <Form.Label>
+                                        <FormattedMessage id='Profile.Label.zipCode' />
+                                    </Form.Label>
                                     <Form.Control
                                         name="zipCode"
                                         type="number"
-                                        placeholder="Zip Code"
+                                        placeholder={ formatMessage({ id: 'Profile.Feedback.zipCode' }) }
                                         value={ values.zipCode || '' }
                                         onChange={ (e) => { this.handleValueChange('zipCode', e.target.value) } }
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        Enter Zip Code
+                                        <FormattedMessage id='Profile.Feedback.zipCode' />
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Label>Address</Form.Label>
+                                    <Form.Label>
+                                        <FormattedMessage id='Profile.Label.address' />
+                                    </Form.Label>
                                     <Form.Control
                                         name="address"
                                         type="textarea"
-                                        placeholder="Address"
+                                        placeholder={ formatMessage({ id: 'Profile.Feedback.address' }) }
                                         value={ values.address || '' }
                                         onChange={ (e) => { this.handleValueChange('address', e.target.value) } }
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        Enter Address
+                                        <FormattedMessage id='Profile.Feedback.address' />
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 {
                                     this.state.identityVisible &&
                                     <Form.Group>
-                                        <Form.Label>Identity Number</Form.Label>
+                                        <Form.Label>
+                                            <FormattedMessage id='Profile.Label.identityNumber' />
+                                        </Form.Label>
                                         <Form.Control
                                             name="identityNumber"
                                             type="number"
-                                            placeholder="Identity Number"
+                                            placeholder={ formatMessage({ id: 'Profile.Feedback.identityNumber' }) }
                                             value={ values.identityNumber || '' }
                                             onChange={ (e) => { this.handleValueChange('identityNumber', e.target.value) } }
                                             required={ this.state.identityVisible }
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            Enter Identification Number
+                                            <FormattedMessage id='Profile.Feedback.identityNumber' />
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 }
@@ -243,7 +263,9 @@ class Profile extends Component {
                     </Accordion>
                 </Card>
                 <br />
-                <Button type="submit" className='float-right'>Submit</Button>
+                <Button type="submit" className='float-right'>
+                    <FormattedMessage id='Profile.Button.submit' />
+                </Button>
             </Form>
         )
     }
@@ -255,4 +277,4 @@ const mapStateToProps = ({ user }) => {
     }
 }
 
-export default connect(mapStateToProps, { updateProfile })(Profile);
+export default connect(mapStateToProps, { updateProfile })(injectIntl(Profile));
