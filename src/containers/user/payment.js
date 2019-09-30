@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Container, Card, Form, Row, Col, InputGroup, Button, ResponsiveEmbed, Spinner, Alert as BootstrapAlert } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import publicIp from 'public-ip';
@@ -134,12 +135,16 @@ class Payment extends Component {
         return (
             <div>
                 <BootstrapAlert variant='success'>
-                    Payment is successful.
+                    <FormattedMessage id='Payment.Message.success' />
                 </BootstrapAlert>
-                <Button variant='primary' onClick={ this.initializePage }>Add More Credits</Button>
+                <Button variant='primary' onClick={ this.initializePage }>
+                    <FormattedMessage id='Payment.Message.addMoreCredits' />
+                </Button>
                 <br />
                 <Button variant='link'>
-                    <Link to='/dashboard'>Go to Dashboard</Link>
+                    <Link to='/dashboard'>
+                        <FormattedMessage id='Payment.Message.goToDashboard' />
+                    </Link>
                 </Button>
             </div>
         )
@@ -149,7 +154,7 @@ class Payment extends Component {
         return (
             <div>
                 <BootstrapAlert variant='danger'>
-                    You cannot add credit in Demo plan! <BootstrapAlert.Link href="#" onClick={() => this.props.changeTab('plan')}>Select a Plan</BootstrapAlert.Link> in order to add credits.
+                    <FormattedMessage id='Payment.Error.demoPlan' /> 
                 </BootstrapAlert>
                 {/* <Button variant='primary' onClick={() => this.props.changeTab('plan') }>Select a Plan</Button> */}
             </div>
@@ -164,9 +169,12 @@ class Payment extends Component {
                 return (
                     <div>
                         <BootstrapAlert variant='danger'>
-                            You need to <BootstrapAlert.Link onClick={() => this.props.changeTab('profile')}>Complete Your Profile</BootstrapAlert.Link> in order to make payment!
+                            <FormattedMessage id='Payment.Error.incompleteProfile1' />
+                            <BootstrapAlert.Link onClick={() => this.props.changeTab('profile')}>
+                                <FormattedMessage id='Payment.Error.incompleteProfile2' />
+                            </BootstrapAlert.Link>
+                            <FormattedMessage id='Payment.Error.incompleteProfile3' />
                         </BootstrapAlert>
-                        {/* <Button variant='primary' onClick={() => this.props.changeTab('payment') }>Go to Profile</Button> */}
                     </div>
                 )
             }
@@ -244,6 +252,7 @@ class Payment extends Component {
 
     renderPaymentForm = () => {
         var { currentPlan } = this.props.user;
+        const { formatMessage } = this.props.intl;
         if(!currentPlan) currentPlan = {};
         const { calculatedPrice, duration, durationType, checkoutForm, showSpinner, state, showSellingContract, showRefundContract } = this.state;
         if(state === 'SUCCESS') return null;
@@ -259,7 +268,9 @@ class Payment extends Component {
                 {
                     currentPlan.type === 'PayAsYouGo' &&
                     <Form.Group>
-                        <Form.Label>Usage needed in minutes</Form.Label>
+                        <Form.Label>
+                            <FormattedMessage id='Payment.Label.usageNeeded' />
+                        </Form.Label>
                         <InputGroup className="mb-3">
                             <Form.Control
                                 name='duration'
@@ -271,12 +282,18 @@ class Payment extends Component {
                             />
                             <InputGroup.Append>
                                 <Form.Control as='select' value={ this.state.durationType } onChange={ e => this.setState({ durationType: e.target.value }) }>
-                                    <option key='hours' value='hours'>Hours</option>
-                                    <option key='minutes' value='minutes'>Minutes</option>
+                                    <option key='hours' value='hours'>
+                                        { formatMessage({ id: 'Payment.DurationType.hours' }) }
+                                    </option>
+                                    <option key='minutes' value='minutes'>
+                                        { formatMessage({ id: 'Payment.DurationType.minutes' }) }
+                                    </option>
                                 </Form.Control>
                             </InputGroup.Append>
                             <InputGroup.Append>
-                                <Button variant="primary" onClick={ this.calculatePrice }>Calculate</Button>
+                                <Button variant="primary" onClick={ this.calculatePrice }>
+                                    <FormattedMessage id='Payment.Label.calculate' />
+                                </Button>
                             </InputGroup.Append>
                         </InputGroup>
                     </Form.Group>
@@ -335,39 +352,62 @@ class Payment extends Component {
         )
     }
 
-    render() {
+    renderCurrentPlan = () => {
         var { currentPlan } = this.props.user;
         if(_.isEmpty(currentPlan)) currentPlan = {};
         return (
-            <Container>
-                <Card>
-                    <Card.Title className='current-plan-title'><b>CurrentPlan :</b> { currentPlan.planName }</Card.Title>
-                    <Card.Body>
-                        <Row>
-                            {
-                                currentPlan.type === 'Demo' &&
-                                <Col lg={6} md={6} sm={6}>
-                                    <Form.Label><b>Duration Limit : </b>{`${!currentPlan.quota || currentPlan.quota === 0 ? '-' : currentPlan.quota + ' mins'}`}</Form.Label>
-                                </Col>
-                            }
-                            {
-                                currentPlan.type === 'Monthly' &&
-                                <Col lg={6} md={6} sm={6}>
-                                    <Form.Label><b>Expire Date : </b> { Utils.formatExpireDate(currentPlan.expireDate) }</Form.Label>
-                                </Col>
-                            }
+            <Card>
+                <Card.Title className='current-plan-title'><b>
+                    <FormattedMessage id='Payment.CurrentPlan.title' />
+                </b> { currentPlan.planName }</Card.Title>
+                <Card.Body>
+                    <Row>
+                        {
+                            currentPlan.type === 'Demo' &&
                             <Col lg={6} md={6} sm={6}>
-                                <Form.Label><b>Remaining Duration : </b>{currentPlan.remainingMinutes} mins</Form.Label>
+                                <Form.Label>
+                                    <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
+                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '-' : currentPlan.quota + <FormattedMessage id='Payment.CurrentPlan.durationType' />}`}
+                                </Form.Label>
                             </Col>
-                            {
-                                currentPlan.pricePerMinute > 0 &&
-                                <Col lg={6} md={6} sm={6}>
-                                    <Form.Label><b>Price Per Minute : </b>$ {currentPlan.pricePerMinute}</Form.Label>
-                                </Col>
-                            }
-                        </Row>
-                    </Card.Body>
-                </Card>
+                        }
+                        {
+                            currentPlan.type === 'Monthly' &&
+                            <Col lg={6} md={6} sm={6}>
+                                <Form.Label>
+                                    <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
+                                    { Utils.formatExpireDate(currentPlan.expireDate) }
+                                </Form.Label>
+                            </Col>
+                        }
+                        <Col lg={6} md={6} sm={6}>
+                            <Form.Label>
+                                <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
+                                {currentPlan.remainingMinutes}
+                                <FormattedMessage id='Payment.CurrentPlan.durationType' />
+                            </Form.Label>
+                        </Col>
+                        {
+                            currentPlan.pricePerMinute > 0 &&
+                            <Col lg={6} md={6} sm={6}>
+                                <Form.Label>
+                                    <b><FormattedMessage id='Payment.CurrentPlan.pricePerMinute' /></b>
+                                    $ {currentPlan.pricePerMinute}
+                                </Form.Label>
+                            </Col>
+                        }
+                    </Row>
+                </Card.Body>
+            </Card>
+        )
+    }
+
+    render() {
+        return (
+            <Container>
+                {
+                    this.renderCurrentPlan()
+                }
                 <br />
                 {
                     this.renderPaymentForm()
@@ -387,4 +427,4 @@ const mapStateToProps = ({ user, language }) => {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(Payment));
+export default connect(mapStateToProps)(withRouter(injectIntl(Payment)));

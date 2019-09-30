@@ -1,19 +1,35 @@
 import React from 'react';
+import { FormattedHTMLMessage } from 'react-intl';
 import { Modal, Button } from 'react-bootstrap';
 
 const ApprovementPopup = (props) => {
+    const {
+        show,
+        headerText, bodyText, bodySubText,
+        successButtonVariant, successButton, handleSuccess,
+        cancelButtonVariant, cancelButton, handleCancel } = props;
     return (
         <div>
-            <Modal show={props.show}>
-                <Modal.Header><b>{ props.headerText }</b></Modal.Header>
+            <Modal show={show}>
+                <Modal.Header>
+                    <b>
+                        { headerText.id ? <FormattedHTMLMessage id={ headerText.id } values={ headerText.values || {} } /> : headerText }
+                    </b>
+                </Modal.Header>
                 <Modal.Body>
-                    { props.bodyText }
+                    { bodyText.id ? <FormattedHTMLMessage id={ bodyText.id } values={ bodyText.values || {} } /> : bodyText }
                     <br />
-                    <p>{ props.bodySubText || '' }</p>
+                    <p>
+                        { bodySubText ? (bodySubText.id ? <FormattedHTMLMessage id={ bodySubText.id } values={ bodySubText.values || {} } /> : bodySubText) : '' }
+                    </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant={ props.successButtonVariant || 'success' } onClick={ props.handleSuccess }>{ props.successButtonText || 'Confirm'}</Button>
-                    <Button variant={ props.cancelButtonVariant || 'danger' }  onClick={ props.handleCancel }>{ props.cancelButtonText || 'Cancel'}</Button>
+                    <Button variant={ successButtonVariant || 'success' } onClick={ handleSuccess }>
+                        { successButton ? (successButton.id ? <FormattedHTMLMessage id={ successButton.id } values={ successButton.values || {} } /> : successButton) : 'Confirm'}
+                    </Button>
+                    <Button variant={ cancelButtonVariant || 'danger' } onClick={ handleCancel }>
+                        { cancelButton ? (cancelButton.id ? <FormattedHTMLMessage id={ cancelButton.id } values={ cancelButton.values || {} } /> : cancelButton) : 'Cancel'}
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>

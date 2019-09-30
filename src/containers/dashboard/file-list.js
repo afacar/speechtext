@@ -33,12 +33,11 @@ class FileList extends Component {
         var media = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
         media.onloadedmetadata = () => {
             const { currentPlan } = this.props.user;
-            console.log('onFileAdded media:', media);
             let fileDurationInSeconds = parseInt(media.duration);
             let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
             if(currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
                 that.setState({
-                    selectedFileDuration: fileDurationInMinutes + ' min(s)',
+                    selectedFileDuration: fileDurationInMinutes,
                     showApprovement: true
                 });
             } else {
@@ -64,7 +63,6 @@ class FileList extends Component {
     }
 
     onFileValidated = async (file, fileDurationInMinutes) => {
-        console.log('onFileValidated file: ', file);
         var { name, size, type } = file;
         var fileObj = {
             originalFile: {
@@ -120,16 +118,27 @@ class FileList extends Component {
                 </div>
                 <ApprovementPopup
                     show={ this.state.showApprovement }
-                    headerText='Time Limit Reached'
-                    bodyText='You do not have enough credits to upload this file'
-                    bodySubText={
-                        <sub>
-                            <b>Remaining Minutes:</b> { currentPlan.remainingMinutes } <br /><b>File Duration: </b> { this.state.selectedFileDuration }
-                        </sub>
-                    }
+                    headerText={{
+                        id: 'FileUpload.timeLimit.title'
+                    }}
+                    bodyText={{
+                        id: 'FileUpload.timeLimit.body'
+                    }}
+                    bodySubText={{
+                        id: 'FileUpload.timeLimit.bodySubText',
+                        values: {
+                            remainingMinutes: currentPlan.remainingMinutes,
+                            selectedFileDuration: this.state.selectedFileDuration
+                        }
+                    }}
                     handleSuccess={ this.goToPayment }
                     successButtonVariant='primary'
-                    successButtonText='Go to Payment'
+                    successButton={{
+                        id:'FileUpload.timeLimit.goToPayment'
+                    }}
+                    cancelButton={{
+                        id:'FileUpload.timeLimit.cancel'
+                    }}
                     handleCancel={ this.cancelFileUpload }
                 />
             </div>
