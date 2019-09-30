@@ -62,9 +62,10 @@ class Payment extends Component {
         var calculatedPrice = 0;
         var { duration, durationType } = this.state;
         const { currentPlan } = this.props.user;
+        const { formatMessage } = this.props.intl;
         let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         if(durationInMinutes < 60) {
-            Alert.error('You must buy at least 60 minutes!');
+            Alert.error(formatMessage({ id: 'Payment.Error.durationLength' }));
         } else {
             let pricePerMinute = parseFloat(currentPlan.pricePerMinute);
             calculatedPrice = (durationInMinutes * pricePerMinute).toFixed(2);
@@ -78,22 +79,14 @@ class Payment extends Component {
 
     initializePayment = async () => {
         var that = this;
-        const { language, user } = this.props;
+        const { language, user, intl } = this.props;
         var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted } = this.state;
         if(!sellingContractAccepted) {
-            if(language === 'tr') {
-                Alert.error('Mesafeli Satış Sözleşmesini onaylayınız!');
-            } else {
-                Alert.error('Please accept Online Selling Contract!');
-            }
+            Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
             return;
         }
         if(!refundContractAccepted) {
-            if(language === 'tr') {
-                Alert.error('İptal ve İade Koşullarını onaylayınız!');
-            } else {
-                Alert.error('Please accept Cancel and Refund Policy!');
-            }
+            Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
             return;
         }
         let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
@@ -318,13 +311,15 @@ class Payment extends Component {
                 {
                     calculatedPrice > 0 &&
                     <Form.Group>
-                        <Form.Label><b>{`${currentPlan.type === 'PayAsYouGo' ? 'Calculated ' : '' }Price :`}</b> { `${currentPlan.currency === 'USD' ? '$' : ''} ${calculatedPrice} ${ currentPlan.currency === 'TRY' ? 'TL' : '' }` }</Form.Label>
+                        <Form.Label><b>{ formatMessage({ id: 'Payment.Label.calculatedPrice' }) }</b> { `${currentPlan.currency === 'USD' ? '$' : ''} ${calculatedPrice} ${ currentPlan.currency === 'TRY' ? 'TL' : '' }` }</Form.Label>
                         <br />
                         <div className='mb-3'>
                             <img src={ MasterCardLogo } alt='Master Card' className='card-logo' />
                             <img src={ VisaLogo } alt='Visa' className='card-logo' />
                         </div>
-                        <Button variant='success' onClick={ this.initializePayment }>{ currentPlan.type === 'PayAsYouGo' ? 'Make Payment' : 'Renew Subscription'  }</Button>
+                        <Button variant='success' onClick={ this.initializePayment }>
+                            { currentPlan.type === 'PayAsYouGo' ? formatMessage({ id: 'Payment.Button.makePayment' }) : formatMessage({ id: 'Payment.Button.renewSubscription' }) }
+                        </Button>
                         <div className='float-right d-flex flex-column'>
                             {
                                 this.renderSellingContract()
@@ -357,9 +352,11 @@ class Payment extends Component {
         if(_.isEmpty(currentPlan)) currentPlan = {};
         return (
             <Card>
-                <Card.Title className='current-plan-title'><b>
-                    <FormattedMessage id='Payment.CurrentPlan.title' />
-                </b> { currentPlan.planName }</Card.Title>
+                <Card.Title className='current-plan-title'>
+                    <b>
+                        <FormattedMessage id='Payment.CurrentPlan.title' />
+                    </b>
+                    <FormattedMessage id={`Payment.CurrentPlan.Type.${currentPlan.type}`} /></Card.Title>
                 <Card.Body>
                     <Row>
                         {
