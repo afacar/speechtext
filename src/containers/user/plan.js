@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Container, Button } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Alert from 'react-s-alert';
 
 import firebase from '../../utils/firebase';
@@ -38,14 +38,14 @@ class Plan extends Component {
 
     submitPlanChange = () => {
         const { selectedPlanType } = this.state;
-        const { plans } = this.props;
+        const { plans, intl } = this.props;
         var selectedPlan = _.find(plans, { type: selectedPlanType });
         var fncAddBasket = firebase.functions().httpsCallable('changeUserPlan');
         fncAddBasket({ 
             planId: selectedPlan.planId
         }).then(({ data }) => {
             if(data.success) {
-                Alert.success('You plan changed successfully.');
+                Alert.success(intl.formatMessage({ id: 'Plan.Change.succesMessage' }));
             }
         });
         this.setState({
@@ -173,4 +173,4 @@ const mapStateToProps = ({ user, plans }) => {
     }
 }
 
-export default connect(mapStateToProps)(Plan);
+export default connect(mapStateToProps)(injectIntl(Plan));
