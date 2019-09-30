@@ -5,6 +5,7 @@ import Axios from 'axios';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import ContentEditable from 'react-contenteditable';
 import { Media } from 'react-media-player';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import firebase from '../../utils/firebase';
 import SpeechTextPlayer from '../../components/player';
@@ -150,6 +151,7 @@ class Transcription extends Component {
     renderResults = () => {
         const { editorData, selectedTextIndex } = this.state;
         if(!_.isEmpty(editorData)) {
+            const { formatMessage } = this.props.intl;
             var data = editorData.map((data, index) => {
                 if(!_.isEmpty(data.startTime) && !_.isEmpty(data.endTime)) {
                     return (
@@ -173,9 +175,13 @@ class Transcription extends Component {
             });
             return (
                 <div className=''>
-                    <DropdownButton id="dropdown-item-button" title="Download" align='right' alignRight>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>Text Document (.txt)</Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>Word Document (.docx)</Dropdown.Item>
+                    <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })} align='right' alignRight>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
+                            <FormattedMessage id='Transcription.Download.option1' />
+                        </Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
+                            <FormattedMessage id='Transcription.Download.option2' />
+                        </Dropdown.Item>
                     </DropdownButton>
                     <br />
                     { data }
@@ -316,4 +322,4 @@ const mapStateToProps = ({ user, selectedFile }) => {
     return { user, selectedFile };
 }
 
-export default connect(mapStateToProps)(Transcription);
+export default connect(mapStateToProps)(injectIntl(Transcription));

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 
 class Dropzone extends Component {
     constructor(props) {
@@ -52,7 +53,7 @@ class Dropzone extends Component {
                 onDrop={ this.onDrop }
                 onClick={ this.openFileDialog }
             >
-                Click Here or Drop Files to Upload
+                <FormattedMessage id='Dropzone.text' />
                 <input
                     ref={this.fileInputRef}
                     className='file-input'

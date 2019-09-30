@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
 import { addFile, updateFile, updateFileState, updateFileInState } from '../actions';
+import { FormattedMessage } from 'react-intl';
 
 class File extends Component {
     constructor(props) {
@@ -64,17 +65,14 @@ class File extends Component {
             that.setState({ progress });
         
             switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED: // or 'paused'
-                    console.log('paused');
+                case firebase.storage.TaskState.PAUSED:
                     break;
-                case firebase.storage.TaskState.RUNNING: // or 'running'
-                    console.log('unpaused');
+                case firebase.storage.TaskState.RUNNING:
                     break;
                 default:
                     break;
             }
             }, (error) => {
-                console.log('upload error', error);
                 that.setState({ error })
             }, () => {
                 uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
@@ -171,10 +169,17 @@ class File extends Component {
                             </div>
                         }
                         {
+                            (file.status === 'UPLOADED' || file.status ==='CONVERTING') &&
+                            <div className='float-right'>
+                                <Spinner animation="border" role="status" size='sm' />
+                                <span className='float-right'>Processing...</span>
+                            </div>
+                        }
+                        {
                             file.status === 'CONVERTED' &&
                             <div className='file-transcribe-button'>
                                 <Button bg='orange' onClick={ this.transcribeFile }>
-                                    Transcribe
+                                    <FormattedMessage id='File.Button.transcribe' />
                                 </Button>
                             </div>
                         }

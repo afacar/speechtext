@@ -145,9 +145,19 @@ class Plan extends Component {
                     this.state.showApprovement &&
                     <ApprovementPopup
                         show={ this.state.showApprovement }
-                        headerText='Plan Change Confirmation'
-                        bodyText='You remaining duration will be deleted if you change plan now'
+                        headerText={{
+                            id: 'Plan.Change.confirmationTitle'
+                        }}
+                        bodyText={{
+                            id: 'Plan.Change.confirmationBody'
+                        }}
+                        successButton={{
+                            id: 'Plan.Change.confirm'
+                        }}
                         handleSuccess={ this.submitPlanChange }
+                        cancelButton={{
+                            id: 'Plan.Change.cancel'
+                        }}
                         handleCancel={ this.cancelPlanChange }
                     />
                 }
