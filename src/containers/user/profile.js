@@ -70,16 +70,17 @@ class Profile extends Component {
 
     handleSubmit = (event) => {
         const { values } = this.state;
+        const { formatMessage } = this.props.intl;
         const form = event.currentTarget;
         event.preventDefault();
         event.stopPropagation();
         if (form.checkValidity() === true) {
             if(!values.phoneNumber || values.phoneNumber.length < 10) {
-                Alert.error('Phone number must be minimum 10 digits');
+                Alert.error(formatMessage({ id: 'Profile.Error.phoneNumberLength' }));
                 return;
             }
             this.props.updateProfile(values);
-            Alert.info('Profile info updated successfully.')
+            Alert.info(formatMessage({ id: 'Profile.Info.submitSuccess' }))
         }
         this.setState({ validated: true });
     }
