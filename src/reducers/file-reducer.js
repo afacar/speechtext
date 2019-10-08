@@ -32,11 +32,6 @@ export const getFileList = (state = [], action) => {
                 }
             });
             return newState;
-        case ActionTypes.SET_FILE_TO_UPLOAD:
-            if(!_.isEmpty(action.payload)) {
-                return [action.payload, ...state]
-            }
-            return state;
         default:
             return state;
     }
@@ -46,6 +41,30 @@ export const setSelectedFile = (state = {}, action) => {
     switch(action.type) {
         case ActionTypes.SET_SELECTED_FILE:
             return action.payload;
+        default:
+            return state;
+    }
+}
+
+export const setUploadingFiles = (state = [], action) => {
+    const { fileId } = action.payload || {};
+    switch(action.type) {
+        case ActionTypes.ADD_TO_UPLOADING_FILES:
+            const { fileObj } = action.payload;
+            return [...state, { id: fileId, file: fileObj, progress: 0 }];
+        case ActionTypes.REMOVE_FROM_UPLOADING_FILES:
+            var newState = _.remove(state, (file) => {
+                return fileId !== file.id;
+            });
+            return newState;
+        case ActionTypes.SET_UPLOADING_FILE_PROGRESS:
+            const { progress } = action.payload;
+            return state.map(file => {
+                if(file.id === fileId) {
+                    return {...file, progress };
+                }
+                return {...file};
+            });
         default:
             return state;
     }

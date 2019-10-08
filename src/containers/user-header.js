@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import  { withRouter } from 'react-router'
 import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
-import Logo from '../assets/logo.png';
 import '../styles/header.css';
 import '../styles/user.css';
 

@@ -92,16 +92,30 @@ export const updateFileInState = (fileId, data) => {
     }
 }
 
-export const setFileToUpload = (file) => {
-    return {
-        type: Utils.ActionTypes.SET_FILE_TO_UPLOAD,
-        payload: file
-    }
-}
-
 export const setSelectedFile = (file) => {
     return {
         type: Utils.ActionTypes.SET_SELECTED_FILE,
         payload: file
+    }
+}
+
+export const addToUploadingFiles = (fileId, fileObj) => {
+    return {
+        type: Utils.ActionTypes.ADD_TO_UPLOADING_FILES,
+        payload: { fileId, fileObj }
+    }
+}
+
+export const removeFromUploadingFiles = (fileId) => {
+    return {
+        type: Utils.ActionTypes.REMOVE_FROM_UPLOADING_FILES,
+        payload: { fileId }
+    }
+}
+
+export const setUploadingFileProgress = (fileId, progress) => {
+    return {
+        type: Utils.ActionTypes.SET_UPLOADING_FILE_PROGRESS,
+        payload: { fileId, progress }
     }
 }

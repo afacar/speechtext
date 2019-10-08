@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import firebase from '../../utils/firebase';
-import { getFileList, setFileToUpload, setSelectedFile } from '../../actions';
+import { getFileList, addFile, setSelectedFile, addToUploadingFiles } from '../../actions';
 
 import Dropzone from '../../components/dropzone';
 import File from '../../components/file';
 import ApprovementPopup from '../../components/approvement-popup';
+import UploadOptions from '../../components/upload-options';
 
 class FileList extends Component {
     constructor(props) {
@@ -58,7 +59,8 @@ class FileList extends Component {
     cancelFileUpload = () => {
         this.setState({
             selectedFileDuration: '',
-            showApprovement: false
+            showApprovement: false,
+            showUploadOptions: false
         });
     }
 
@@ -79,11 +81,30 @@ class FileList extends Component {
         }
 
         const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc();
-        fileObj.file = file;
         fileObj.id = id;
+        this.setState({
+            showUploadOptions: true,
+            fileToUpload: fileObj,
+            selectedFile: file
+        })
+    }
 
-        this.props.setFileToUpload(fileObj);
-        this.props.setSelectedFile(fileObj);
+    approveFileUpload = (options) => {
+        var { fileToUpload, selectedFile } = this.state;
+        if(fileToUpload && selectedFile) {
+            fileToUpload.options = {...fileToUpload.options, options};
+    
+            this.props.addFile(fileToUpload);
+            
+            fileToUpload.file = selectedFile;
+            this.props.addToUploadingFiles(fileToUpload.id, selectedFile);
+            this.props.setSelectedFile(fileToUpload);
+            this.setState({
+                showUploadOptions: false,
+                fileToUpload: undefined,
+                selectedFile: undefined
+            });
+        }
     }
 
     onFileSelected = (index) => {
@@ -141,17 +162,27 @@ class FileList extends Component {
                     }}
                     handleCancel={ this.cancelFileUpload }
                 />
+                <UploadOptions
+                    show={ this.state.showUploadOptions }
+                    file={ this.state.fileToUpload }
+                    language={ this.props.language }
+                    supportedLanguages={ this.props.supportedLanguages }
+                    approveFileUpload={ this.approveFileUpload }
+                    cancelFileUpload={ this.cancelFileUpload }
+                />
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ user, userFiles, selectedFile }) => {
+const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLanguages }) => {
     return {
         user,
+        language,
+        supportedLanguages,
         files: userFiles,
         selectedFile
     }
 }
 
-export default connect(mapStateToProps, { getFileList, setFileToUpload, setSelectedFile })(withRouter(FileList));
+export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles })(withRouter(FileList));

@@ -53,13 +53,13 @@
 }
 
 .about-us-container {
-    padding: 0px 200px 100px 0px;
+    /* padding: 0px 100px 100px 100px; */
     text-align: justify;
 }
 
 .about-logo-container {
     float: right;
-    margin-right: 200px;
+    /* margin-right: 100px; */
 }
 
 .privacy footer,
