@@ -310,7 +310,7 @@ class Transcription extends Component {
                     !this.state.showSpinner &&
                     <div className='transcription'>
                         { this.renderResults() }
-                        { this.renderOptions() }
+                        {/* { this.renderOptions() } */}
                     </div>
                 }
             </div>

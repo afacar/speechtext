@@ -86,19 +86,19 @@
 
 .transcription-container {
     margin-left: -30px;
-    border: 1px solid rgba(0,0,0,.125);
-    height: 780px;
 }
 
 .transcription {
     padding: 10px;
     padding-left: 30px;
+    height: 700px;
+    border: 1px solid rgba(0,0,0,.125);
 }
 
 .transcription-title {
     width: 100%;
     height: 80px;
-    border-bottom: 2px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0,0,0,.125);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -115,7 +115,6 @@
     display: flex;
     align-items: center;
     border: 4px solid rgba(0,0,0,.125);
-    /* padding-left: 30px; */
     font-size: 12px;
     margin-top: 100px;
     float: left;
@@ -154,34 +153,25 @@
 }
 
 .upload-options-filename {
-    height: 30px;
+    height: 10%;
     padding: 5px;
+}
+
+.upload-options-filename .name {
     font-weight: bold;
-}
-
-.upload-options-filename label {
-    margin: 5px;
     cursor: text;
+    width: 100%;
+    padding: 8px;
+    border: 1px dashed gray;
 }
 
-.upload-options-filename span {
+/* .upload-options-filename span {
     cursor: pointer;
 }
 
-.file-name-edit {
-    width: 90%;
-    float: left;
-}
-
-.form-options {
-    margin-top: 50px;
-}
-
-.options-title {
-    padding: 20px;
-    font-weight: bold;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
+.upload-options-filename span svg {
+    width: 30px !important;
+} */
 
 .react-tagsinput-tag {
     background-color: cornflowerblue !important;
@@ -225,4 +215,130 @@ ol.selling-contract-list { counter-reset: item }
 
 .card-logo {
     transform: scale(.8);
+}
+
+@media only screen and (max-height: 882px) {
+    .file-list-container {
+        height: 650px !important;
+    }
+
+    .transcription {
+        height: 650px !important;
+    }
+
+    .drop-zone {
+        font-size: 16px !important;
+    }
+
+    .file-settings .delete {
+        font-size: 13px !important;
+    }
+    
+    .file-progress span {
+        font-size: 9px !important;
+    }
+
+    .file-progress .pause-play {
+        font-size: 10px !important;
+    }
+
+    .conversionResult {
+        font-size: 13px !important;
+    }
+    
+    .conversionTime {
+        font-size: 10px !important;
+    }
+
+    .file-container {
+        font-size: 14px !important;
+    }
+
+    .player-time {
+        font-size: 10px !important;
+    }
+}
+
+@media only screen and (max-height: 830px) {
+    .file-list-container {
+        height: 550px !important;
+    }
+
+    .transcription {
+        height: 550px !important;
+    }
+
+    .drop-zone {
+        font-size: 14px !important;
+    }
+
+    .file-settings .delete {
+        font-size: 11px !important;
+    }
+    
+    .file-progress span {
+        font-size: 8px !important;
+    }
+
+    .file-progress .pause-play {
+        font-size: 8px !important;
+    }
+
+    .conversionResult {
+        font-size: 12px !important;
+    }
+    
+    .conversionTime {
+        font-size: 9px !important;
+    }
+
+    .file-container {
+        font-size: 12px !important;
+    }
+
+    .player-time {
+        font-size: 9px !important;
+    }
+}
+
+@media only screen and (max-height: 730px) {
+    .file-list-container {
+        height: 450px !important;
+    }
+
+    .transcription {
+        height: 450px !important;
+    }
+
+    .drop-zone {
+        font-size: 12px !important;
+    }
+
+    .file-settings .delete {
+        font-size: 9px !important;
+    }
+    
+    .file-progress span {
+        font-size: 7px !important;
+    }
+
+    .file-progress .pause-play {
+        font-size: 6px !important;
+    }
+
+    .conversionResult {
+        font-size: 11px !important;
+    }
+    
+    .conversionTime {
+        font-size: 8px !important;
+    }
+
+    .file-container {
+        font-size: 10px !important;
+    }
+
+    .player-time {
+        font-size: 8px !important;
+    }
 }
