@@ -154,34 +154,25 @@
 }
 
 .upload-options-filename {
-    height: 30px;
+    height: 10%;
     padding: 5px;
+}
+
+.upload-options-filename .name {
     font-weight: bold;
-}
-
-.upload-options-filename label {
-    margin: 5px;
     cursor: text;
+    width: 100%;
+    padding: 8px;
+    border: 1px dashed gray;
 }
 
-.upload-options-filename span {
+/* .upload-options-filename span {
     cursor: pointer;
 }
 
-.file-name-edit {
-    width: 90%;
-    float: left;
-}
-
-.form-options {
-    margin-top: 50px;
-}
-
-.options-title {
-    padding: 20px;
-    font-weight: bold;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
+.upload-options-filename span svg {
+    width: 30px !important;
+} */
 
 .react-tagsinput-tag {
     background-color: cornflowerblue !important;

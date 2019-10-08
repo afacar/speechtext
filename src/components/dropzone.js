@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import Alert from 'react-s-alert';
 
 class Dropzone extends Component {
     constructor(props) {
@@ -13,6 +15,13 @@ class Dropzone extends Component {
     }
 
     openFileDialog = () => {
+        const { intl } = this.props;
+        if(!_.isEmpty(this.props.uploadingFiles)) {
+            Alert.error(intl.formatMessage({
+                id: 'Dropzone.multipleFileError'
+            }));
+            return;
+        }
         this.fileInputRef.current.value = '';
         this.fileInputRef.current.click();
     }
@@ -65,4 +74,10 @@ class Dropzone extends Component {
     }
 }
 
-export default Dropzone;
+const mapStateToProps = ({ uploadingFiles }) => {
+    return {
+        uploadingFiles
+    }
+}
+
+export default connect(mapStateToProps)(injectIntl(Dropzone));

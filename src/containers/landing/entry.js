@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import _ from 'lodash';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +26,7 @@ class Entry extends Component {
     }
 
     render() {
+        const { user } = this.props;
         return (
             <div className='main-div' >
                 <Container align="center">
@@ -67,11 +69,14 @@ class Entry extends Component {
                                                 </span>
                                                 <FormattedMessage id="Banner.feature4" />
                                             </li>
-                                            <li className="d-flex align-items-center">
-                                                <Button variant='secondary' className='margin-left-25' onClick={ () => this.setState({ showAuth: true }) } >
-                                                    <FormattedMessage id="Banner.feature5" />
-                                                </Button>
-                                            </li>
+                                            {
+                                                _.isEmpty(user) &&
+                                                <li className="d-flex align-items-center">
+                                                    <Button variant='secondary' className='margin-left-25' onClick={ () => this.setState({ showAuth: true }) } >
+                                                        <FormattedMessage id="Banner.tryForFree" />
+                                                    </Button>
+                                                </li>
+                                            }
                                         </ul>
                                     </Card>
                                 </Col>
@@ -85,9 +90,10 @@ class Entry extends Component {
     }
 }
 
-const mapStateToProps = ({ language }) => {
+const mapStateToProps = ({ language, user }) => {
     return {
-        language
+        language,
+        user
     }
 }
 

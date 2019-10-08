@@ -7,7 +7,7 @@ import {
     faTrashAlt, faPause, faPlay
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
-import { addFile, updateFile, updateFileState, updateFileInState } from '../actions';
+import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
 import { FormattedMessage } from 'react-intl';
 
 class File extends Component {
@@ -25,12 +25,25 @@ class File extends Component {
         this.initUploadIfNecessary(this.props.file);
     }
 
-    componentWillReceiveProps({ file }) {
-        this.initUploadIfNecessary(file);
+    componentWillUpdate({ file, uploadingFiles }) {
+        var fileObj = _.find(uploadingFiles, { id: file.id });
+        if(file.status === 'UPLOADING' && !_.isEmpty(fileObj)) {
+            // this.setState({
+            //     progress: fileObj.progress
+            // });
+            return false;
+        }
+        return true;
     }
 
-    initUploadIfNecessary = file => {
-        if(file.status === 'INITIAL' && file.file) {
+    componentWillReceiveProps({ file, uploadingFiles }) {
+        this.initUploadIfNecessary(file, uploadingFiles);
+    }
+
+    initUploadIfNecessary = (file, uploadingFiles) => {
+        var fileObj = _.find(uploadingFiles, { id: file.id });
+        if(file.status === 'INITIAL' && !_.isEmpty(fileObj)) {
+            file.file = fileObj.file;
             this.uploadFile(file);
             this.setState({
                 progress: 0,
@@ -62,6 +75,7 @@ class File extends Component {
         this.props.updateFileInState(file);
         uploadTask.on('state_changed', (snapshot) => {
             var progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            this.props.setUploadingFileProgress(file.id, progress);
             that.setState({ progress });
         
             switch (snapshot.state) {
@@ -85,9 +99,10 @@ class File extends Component {
                     if(!_.isEmpty(this.props.selectedFileOptions)) {
                         file.options = this.props.selectedFileOptions;
                     }
-
-                    await that.props.addFile(file);
-    
+                    
+                    this.props.removeFromUploadingFiles(file.id);
+                    await this.props.updateFile(file, { originalFile: file.originalFile });
+                    await this.props.updateFileState(file.id, 'UPLOADED');
                     // that.props.updateFileState(file.id, 'UPLOADED');
                 });
         });
@@ -170,9 +185,9 @@ class File extends Component {
                         }
                         {
                             (file.status === 'UPLOADED' || file.status ==='CONVERTING') &&
-                            <div className='float-right'>
+                            <div className='mt-2'>
                                 <Spinner animation="border" role="status" size='sm' />
-                                <span className='float-right'>Processing...</span>
+                                <span className='ml-2'>Processing...</span>
                             </div>
                         }
                         {
@@ -190,12 +205,13 @@ class File extends Component {
     }
 }
 
-const mapStateToProps = ({ user, selectedFile, selectedFileOptions }) => {
+const mapStateToProps = ({ user, selectedFile, selectedFileOptions, uploadingFiles }) => {
     return {
         user,
         selectedFile,
-        selectedFileOptions
+        selectedFileOptions,
+        uploadingFiles
     }
 }
 
-export default connect(mapStateToProps, { addFile, updateFile, updateFileState, updateFileInState })(File);
+export default connect(mapStateToProps, { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress })(File);
