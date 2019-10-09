@@ -57,10 +57,10 @@ class Dashboard extends Component {
                         </Alert>
                     }
                     <Row>
-                        <Col lg="4" md="4">
+                        <Col lg="4" md="4" sm="6" xs="12">
                             <FileList emailVerified={this.state.emailVerified} />
                         </Col>
-                        <Col lg="8" md="8">
+                        <Col lg="8" md="8" sm="6" xs="12">
                             <Transcription />
                         </Col>
                     </Row>
