@@ -158,7 +158,8 @@ class Payment extends Component {
         const { name, surname, email, phoneNumner, Billing } = this.props.user;
         
         if(_.isEmpty(name) || _.isEmpty(surname) || _.isEmpty(email) || _.isEmpty(phoneNumner)) {
-            if(_.isEmpty(Billing) || _.isEmpty(Billing.country) || _.isEmpty(Billing.city) || _.isEmpty(Billing.zipCode) || _.isEmpty(Billing.address) || _.isEmpty(Billing.identityNumber)) {
+            if(_.isEmpty(Billing) || _.isEmpty(Billing.country) || _.isEmpty(Billing.city) || _.isEmpty(Billing.zipCode) || _.isEmpty(Billing.address)
+                || ('tr' === Billing.country && _.isEmpty(Billing.identityNumber))) {
                 return (
                     <div>
                         <BootstrapAlert variant='danger'>
