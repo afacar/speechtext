@@ -7,8 +7,9 @@ export const login = (data) => {
     return async (dispatch, getState) => {
         const response = await firestore().collection('users').doc(data.uid).get()
             .catch(error => {
-                console.log('error', error);
-            });
+                // TODO: GET_USER_PROFILE_ERROR
+                console.log(error);
+            })
         const { uid } = data;
         //_.isEmpty(response) || _.isEmpty(response.data())
         if (data.isNewUser) {
@@ -18,7 +19,11 @@ export const login = (data) => {
             data = { ...data, currentPlan: demoPlan, name, surname };
             data.currentPlan.remainingMinutes = demoPlan.quota;
             delete data.isNewUser;
-            await firestore().doc(`users/${uid}`).set(data);
+            await firestore().doc(`users/${uid}`).set(data)
+                .catch(error => {
+                    // TODO: SET_USER_PROFILE_ERROR
+                    console.log(error);
+                })
         } else {
             data = !_.isEmpty(response) && !_.isEmpty(response.data()) ? response.data() : data;
         }
@@ -36,7 +41,10 @@ export const login = (data) => {
                 type: Utils.ActionTypes.LOGIN,
                 payload: data
             });
-        })
+        }, (error) => {
+            // TODO: GET_USER_PROFILE_ERROR
+            console.log(error)
+        });
     }
 }
 

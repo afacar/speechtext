@@ -14,7 +14,7 @@ class Profile extends Component {
         super(props);
 
         this.state = {
-            identityVisible: false,
+            identityVisible: props.user ? (props.user.Billing ? props.user.Billing.country === 'tr' : false) : false,
             values: {}
         }
     }
@@ -56,9 +56,9 @@ class Profile extends Component {
     }
     
     handleValueChange = (stateName, value) => {
-        if(stateName === 'country' && 'tr' === value) {
+        if(stateName === 'country') {
             this.setState({
-                identityVisible: true
+                identityVisible: 'tr' === value
             })
         }
         var { values } = this.state;
@@ -79,6 +79,7 @@ class Profile extends Component {
                 Alert.error(formatMessage({ id: 'Profile.Error.phoneNumberLength' }));
                 return;
             }
+            if(values.country !== 'tr') delete values.identityNumber;
             this.props.updateProfile(values);
             Alert.info(formatMessage({ id: 'Profile.Info.submitSuccess' }))
         }
