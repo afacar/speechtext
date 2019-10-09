@@ -34,6 +34,10 @@ class Dashboard extends Component {
             .then(() => {
                 this.setState({ isSent: true })
             })
+            .catch(error => {
+                // TODO: VERIFY_EMAIL_ERROR
+                console.log(error);
+            })
     }
 
     render() {

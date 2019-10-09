@@ -18,19 +18,20 @@ export const setSupportedLanguages = (languages) => {
 export const getPlans = () => {
     return dispatch => {
         firestore().collection('plans')
-        .get()
-        .then(snapshot => {
-            if(snapshot) {
-                var plans = [];
-                snapshot.docs.forEach(doc => plans.push({id: doc.id, ...doc.data()}));
-                dispatch({
-                    type: Utils.ActionTypes.GET_PLANS,
-                    payload: plans
-                });
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
+            .get()
+            .then(snapshot => {
+                if (snapshot) {
+                    var plans = [];
+                    snapshot.docs.forEach(doc => plans.push({ id: doc.id, ...doc.data() }));
+                    dispatch({
+                        type: Utils.ActionTypes.GET_PLANS,
+                        payload: plans
+                    });
+                }
+            })
+            .catch(error => {
+                // TODO: GET_PLANS_ERROR
+                console.log(error);
+            })
     }
 }

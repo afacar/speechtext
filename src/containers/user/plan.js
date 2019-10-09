@@ -47,7 +47,11 @@ class Plan extends Component {
             if(data.success) {
                 Alert.success(intl.formatMessage({ id: 'Plan.Change.succesMessage' }));
             }
-        });
+        })
+        .catch(error => {
+            // TODO: CHANGE_USER_PLAN_ERROR
+            console.log(error);
+        })
         this.setState({
             showApprovement: false
         });
