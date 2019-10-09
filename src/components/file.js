@@ -87,6 +87,9 @@ class File extends Component {
                     break;
             }
             }, (error) => {
+                // TODO: UPLOAD_FILE_ERROR
+                // List of Error codes for storage can be found at
+                // https://firebase.google.com/docs/storage/web/handle-errors#handle_error_messages
                 that.setState({ error })
             }, () => {
                 uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {

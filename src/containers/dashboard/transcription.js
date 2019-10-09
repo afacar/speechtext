@@ -35,7 +35,11 @@ class Transcription extends Component {
                 .then(({ data }) => {
                     that.formatResults(data);
                 });
-            });
+            })
+            .catch(error => {
+                // TODO: GET_DOWNLOAD_URL_ERROR
+                console.log(error);
+            })
         } else {
             this.setState({
                 editorData: {},
@@ -59,7 +63,12 @@ class Transcription extends Component {
                 })
                 .join('\n');
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
-            storageRef.put(new Blob([dataToUpload]));
+            storageRef.put(new Blob([dataToUpload]))
+                .then(snapshot => console.log('File uploaded', snapshot))
+                .catch(error => {
+                    // TODO: UPDATE_TRANSCRIBED_FILE_ERROR
+                    console.log(error);
+                });
         }
     }
 
@@ -110,6 +119,7 @@ class Transcription extends Component {
                 });
             })
         }).catch((err) => {
+            // TODO: GET_DOCX_FILE_ERROR
             console.log(err);
         });
     }
