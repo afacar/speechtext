@@ -14,7 +14,13 @@ import firebase from '../../utils/firebase';
 
 class UserBox extends Component {
     logout = () => {
-        firebase.auth().signOut();
+        firebase.auth().signOut()
+            .then(() => {
+                // Sign-out successful.
+            }).catch((error) => {
+                // TODO: SIGNOUT_ERROR
+                console.log(error)
+            });
         this.props.logout();
         this.props.history.push('/');
     }

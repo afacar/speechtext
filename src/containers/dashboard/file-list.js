@@ -36,7 +36,7 @@ class FileList extends Component {
             const { currentPlan } = this.props.user;
             let fileDurationInSeconds = parseInt(media.duration);
             let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
-            if(currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
+            if (currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
                 that.setState({
                     selectedFileDuration: fileDurationInMinutes,
                     showApprovement: true
@@ -80,7 +80,11 @@ class FileList extends Component {
             status: 'INITIAL'
         }
 
-        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc();
+        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc()
+            .catch(error => {
+                // TODO:GET_FILE_ID_ERROR
+                console.log(error);
+            });
         fileObj.id = id;
         this.setState({
             showUploadOptions: true,
@@ -91,11 +95,11 @@ class FileList extends Component {
 
     approveFileUpload = (options) => {
         var { fileToUpload, selectedFile } = this.state;
-        if(fileToUpload && selectedFile) {
-            fileToUpload.options = {...fileToUpload.options, options};
-    
+        if (fileToUpload && selectedFile) {
+            fileToUpload.options = { ...fileToUpload.options, options };
+
             this.props.addFile(fileToUpload);
-            
+
             fileToUpload.file = selectedFile;
             this.props.addToUploadingFiles(fileToUpload.id, selectedFile);
             this.props.setSelectedFile(fileToUpload);
@@ -118,19 +122,19 @@ class FileList extends Component {
         const currentPlan = user.currentPlan || {};
         return (
             <div>
-                <Dropzone onFileAdded={ this.onFileAdded } />
+                <Dropzone onFileAdded={this.onFileAdded} />
                 <div className='file-list-container'>
                     {
                         this.props.files.map((file, index) => {
                             var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
                             return (
-                                <div onClick={ () => { this.onFileSelected(index) } } key={ file.id }>
+                                <div onClick={() => { this.onFileSelected(index) }} key={file.id}>
                                     <File
-                                        key={ file.id }
-                                        file={ file }
-                                        index={ index }
-                                        onSelected={ this.onFileSelected }
-                                        isSelected={ isSelected }
+                                        key={file.id}
+                                        file={file}
+                                        index={index}
+                                        onSelected={this.onFileSelected}
+                                        isSelected={isSelected}
                                     />
                                 </div>
                             )
@@ -138,7 +142,7 @@ class FileList extends Component {
                     }
                 </div>
                 <ApprovementPopup
-                    show={ this.state.showApprovement }
+                    show={this.state.showApprovement}
                     headerText={{
                         id: 'FileUpload.timeLimit.title'
                     }}
@@ -152,23 +156,23 @@ class FileList extends Component {
                             selectedFileDuration: this.state.selectedFileDuration
                         }
                     }}
-                    handleSuccess={ this.goToPayment }
+                    handleSuccess={this.goToPayment}
                     successButtonVariant='primary'
                     successButton={{
-                        id:'FileUpload.timeLimit.goToPayment'
+                        id: 'FileUpload.timeLimit.goToPayment'
                     }}
                     cancelButton={{
-                        id:'FileUpload.timeLimit.cancel'
+                        id: 'FileUpload.timeLimit.cancel'
                     }}
-                    handleCancel={ this.cancelFileUpload }
+                    handleCancel={this.cancelFileUpload}
                 />
                 <UploadOptions
-                    show={ this.state.showUploadOptions }
-                    file={ this.state.fileToUpload }
-                    language={ this.props.language }
-                    supportedLanguages={ this.props.supportedLanguages }
-                    approveFileUpload={ this.approveFileUpload }
-                    cancelFileUpload={ this.cancelFileUpload }
+                    show={this.state.showUploadOptions}
+                    file={this.state.fileToUpload}
+                    language={this.props.language}
+                    supportedLanguages={this.props.supportedLanguages}
+                    approveFileUpload={this.approveFileUpload}
+                    cancelFileUpload={this.cancelFileUpload}
                 />
             </div>
         )
