@@ -27,6 +27,14 @@ class User extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : '';
+        this.setState({
+            activeTabKey: hashValue
+        });
+        localStorage.setItem('location', window.location.pathname + window.location.hash);
+    }
+
     changeTab = (tabName) => {
         this.setState({
             activeTabKey: tabName

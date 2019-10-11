@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { Button, Nav, NavDropdown } from 'react-bootstrap';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { logout } from '../../actions';
 import firebase from '../../utils/firebase';
@@ -26,42 +26,24 @@ class UserBox extends Component {
     }
 
     render() {
-        const { user } = this.props;
-        if(!user) return;
-        const duration = user.currentPlan ? user.currentPlan.remainingMinutes : 0;
-        let currentPath = this.props.history.location.pathname;
-        let goToUrlOnClick = currentPath.startsWith('/dashboard') ? '/user' : '/dashboard';
+        const { formatMessage } = this.props.intl;
         return (
-            <div className='user-box'>
-                <Link to={ goToUrlOnClick } className='profile-link'>
-                    <div className='profile-name'>
-                        {
-                            currentPath.startsWith('/dashboard') &&
-                            <div>
-                                <FormattedMessage id="Header.myAccount" />
-                                <br />
-                                <span className='profile-subtext'>
-                                    <FormattedMessage id="Header.remainingMinutes" values={{ mins: duration}} />
-                                </span>
-                            </div>
-                        }
-                        {
-                            currentPath.startsWith('/user') &&
-                            <div>
-                                <FormattedMessage id="Header.dashboard" />
-                                <br />
-                                <span className='profile-subtext'>
-                                    <FormattedMessage id="Header.remainingMinutes" values={{ mins: duration}} />
-                                </span>
-                            </div>
-                        }
-                    </div>
-                </Link>
-                <Button variant='outline-danger' size='sm' className='sign-out' alt='Sign out' onClick={ this.logout }>
-                    <FontAwesomeIcon icon={ faSignOutAlt } />
-                </Button>
-            </div>
-        );
+            <Nav>
+                <NavDropdown title={ formatMessage({ id: 'UserBox.title' })} id='nav-dropdown' alignRight={ this.props.alignLeft ? false : true } className='userbox-dropdown'>
+                    <Link to='/dashboard' className='dropdown-item'>
+                        Dashboard
+                    </Link>
+                    <Link to='/user#profile' className='dropdown-item'>
+                        <FormattedMessage id='UserBox.profile' />
+                    </Link>
+                    <Link to='/user#payment' className='dropdown-item'>
+                        <FormattedMessage id='UserBox.payment' />
+                    </Link>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item eventKey='0' onClick={ this.logout }>Logout</NavDropdown.Item>
+                </NavDropdown>
+            </Nav>
+        )
     }
 }
 
@@ -71,4 +53,4 @@ const mapStateToProps = ({ user }) => {
     }
 }
 
-export default connect(mapStateToProps, { logout })(withRouter(UserBox));
+export default connect(mapStateToProps, { logout })(withRouter(injectIntl(UserBox)));
