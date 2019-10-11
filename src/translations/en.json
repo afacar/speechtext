@@ -168,5 +168,9 @@
     "Payment.Error.incompleteProfile3": " in order to make payment!",
     "Payment.Error.durationLength": "You must buy at least 60 minutes!",
     "Payment.Error.onlineSellingContract": "İptal ve İade Koşullarını onaylayınız!",
-    "Payment.Error.refundPolicy": "Please accept Cancel and Refund Policy!"
+    "Payment.Error.refundPolicy": "Please accept Cancel and Refund Policy!",
+    "UserBox.title": "My Account",
+    "UserBox.profile": "Profile",
+    "UserBox.payment": "Payment",
+    "UserBox.logout": "Logout"
 }

@@ -342,3 +342,25 @@ ol.selling-contract-list { counter-reset: item }
         font-size: 8px !important;
     }
 }
+
+.userbox-dropdown {
+    font-weight: bold;
+}
+
+.userbox-dropdown .dropdown-menu {
+    background-color: #E4EFFF;
+}
+
+.userbox-dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: -5px;
+}
+
+.dropdown-menu a {
+    color: black;
+}
+
+.dropdown-menu a:hover {
+    text-decoration: none;
+    background-color: lightblue;
+}
