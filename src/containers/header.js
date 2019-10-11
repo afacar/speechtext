@@ -10,6 +10,7 @@ import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 import LogoContainer from './landing/logo-container';
 import Auth from '../components/auth';
+import UserBox from '../containers/dashboard/user-box';
 import '../styles/header.css';
 
 class Header extends Component {
@@ -94,11 +95,7 @@ class Header extends Component {
                                     }
                                     {
                                         !_.isEmpty(this.props.user) &&
-                                        <Nav.Item>
-                                            <Link to='/dashboard' className='dashboard-link nav-link'>
-                                                <FormattedMessage id='Header.dashboard' />
-                                            </Link>
-                                        </Nav.Item>
+                                        <UserBox alignLeft={ true } />
                                     }
                                 </Nav>
                             </Navbar.Collapse>
