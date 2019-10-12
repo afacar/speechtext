@@ -80,11 +80,7 @@ class FileList extends Component {
             status: 'INITIAL'
         }
 
-        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc()
-            .catch(error => {
-                // TODO:GET_FILE_ID_ERROR
-                console.log(error);
-            });
+        const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc();
         fileObj.id = id;
         this.setState({
             showUploadOptions: true,
