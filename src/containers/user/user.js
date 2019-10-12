@@ -62,9 +62,9 @@ class User extends Component {
                                             <FormattedMessage id='User.Tabs.payment' />
                                         </Nav.Link>
                                     </Nav.Item>
-                                    <Nav.Item>
+                                    {/* <Nav.Item>
                                         <Nav.Link href='#plan' eventKey="plan" onClick={ () => this.setState({ activeTabKey: 'plan' }) } >Plans</Nav.Link>
-                                    </Nav.Item>
+                                    </Nav.Item> */}
                                 </Nav>
                             </Col>
                             <Col sm={9} className='user-tab-content-container'>
@@ -75,9 +75,9 @@ class User extends Component {
                                     <Tab.Pane eventKey="payment">
                                         <Payment changeTab={ this.changeTab } />
                                     </Tab.Pane>
-                                    <Tab.Pane eventKey="plan">
+                                    {/* <Tab.Pane eventKey="plan">
                                         <Plan />
-                                    </Tab.Pane>
+                                    </Tab.Pane> */}
                                 </Tab.Content>
                             </Col>
                         </Row>

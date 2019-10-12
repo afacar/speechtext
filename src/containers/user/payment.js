@@ -9,6 +9,7 @@ import publicIp from 'public-ip';
 
 import firebase from '../../utils/firebase';
 import Utils from '../../utils';
+import ApprovementPopup from '../../components/approvement-popup';
 import SellingContract from './selling-contract';
 import RefundContract from './refund-contract';
 import MasterCardLogo from '../../assets/mastercard-logo.png';
@@ -22,7 +23,8 @@ class Payment extends Component {
             duration: 0,
             durationType: 'hours',
             calculatedPrice: 0,
-            state: 'INITIAL'
+            state: 'INITIAL',
+            selectedPlanType: undefined
         }
     }
 
@@ -40,10 +42,15 @@ class Payment extends Component {
     }
 
     componentWillReceiveProps({ user }) {
-        if (user && user.currentPlan && user.currentPlan.type === 'Monthly') {
+        if (user && user.currentPlan) {
             const { currentPlan } = user;
+            if(user.currentPlan.type === 'Monthly') {
+                this.setState({
+                    calculatedPrice: (currentPlan.pricePerMinute * currentPlan.quota).toFixed(2)
+                })
+            }
             this.setState({
-                calculatedPrice: (currentPlan.pricePerMinute * currentPlan.quota).toFixed(2)
+                selectedPlanType: currentPlan.type
             })
         } else {
             this.setState({
@@ -355,16 +362,95 @@ class Payment extends Component {
         )
     }
 
+    changeCurrentPlan = () => {
+        const { user } = this.props;
+        if(user.currentPlan.type !== 'Demo') {
+            this.setState({
+                showApprovement: true
+            });
+        } else {
+            this.submitPlanChange();
+        }
+    }
+
+    submitPlanChange = () => {
+        const { selectedPlanType } = this.state;
+        const { plans, intl } = this.props;
+        var selectedPlan = _.find(plans, { type: selectedPlanType });
+        var fncAddBasket = firebase.functions().httpsCallable('changeUserPlan');
+        fncAddBasket({ 
+            planId: selectedPlan.planId
+        }).then(({ data }) => {
+            if(data.success) {
+                Alert.success(intl.formatMessage({ id: 'Plan.Change.succesMessage' }));
+            }
+        })
+        .catch(error => {
+            // TODO: CHANGE_USER_PLAN_ERROR
+            console.log(error);
+        })
+        this.setState({
+            showApprovement: false
+        });
+    }
+
+    cancelPlanChange = () => {
+        this.setState({
+            showApprovement: false
+        })
+    }
+
+    handleSelectedPlanChange = (planType) => {
+        this.setState({
+            selectedPlanType: planType
+        })
+    }
+
     renderCurrentPlan = () => {
         var { currentPlan } = this.props.user;
+        const { selectedPlanType } = this.state;
         if (_.isEmpty(currentPlan)) currentPlan = {};
         return (
             <Card>
                 <Card.Title className='current-plan-title'>
-                    <b>
-                        <FormattedMessage id='Payment.CurrentPlan.title' />
-                    </b>
-                    <FormattedMessage id={`Payment.CurrentPlan.Type.${currentPlan.type}`} /></Card.Title>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>
+                                <b><FormattedMessage id='Payment.CurrentPlan.title' /></b>
+                            </Form.Label>
+                            <div className='d-flex flex-row'>
+                                <Form.Control
+                                    name='plans'
+                                    as='select'
+                                    onChange={ (e) => { this.handleSelectedPlanChange(e.target.value) } }
+                                    value={ selectedPlanType }
+                                    className={ selectedPlanType && selectedPlanType !== currentPlan.type ? 'plan-selection' : '' }
+                                >
+                                    {
+                                        _.map(this.props.plans, (plan) => {
+                                            let planPrice = 0, priceAmount = '';
+                                            if(plan.type !== 'Demo') {
+                                                planPrice = plan.price ? plan.price.toFixed(2) : null;
+                                                priceAmount = this.props.intl.formatMessage({ id: `Payment.Plan.PlanAmount.${plan.priceAmount}` });
+                                            }
+                                            if(plan.type !== 'Demo' || currentPlan.type === 'Demo') {
+                                                return (<option key={ plan.type } value={ plan.type }>
+                                                    { plan.type === 'Demo' ? plan.planName : `${plan.planName} - $${planPrice} / ${priceAmount}` }
+                                                </option>)
+                                            }
+                                        })
+                                    }
+                                </Form.Control>
+                                {
+                                    selectedPlanType && selectedPlanType !== currentPlan.type &&
+                                    <Button variant='success' className='change-plan-button' onClick={ this.changeCurrentPlan }>
+                                        <FormattedMessage id='Payment.Plan.changePlanButtonText' />
+                                    </Button>
+                                }
+                            </div>
+                        </Form.Group>
+                    </Form>
+                </Card.Title>
                 <Card.Body>
                     <Row>
                         {
@@ -420,15 +506,36 @@ class Payment extends Component {
                 {
                     this.renderSuccess()
                 }
+                {
+                    this.state.showApprovement &&
+                    <ApprovementPopup
+                        show={ this.state.showApprovement }
+                        headerText={{
+                            id: 'Plan.Change.confirmationTitle'
+                        }}
+                        bodyText={{
+                            id: 'Plan.Change.confirmationBody'
+                        }}
+                        successButton={{
+                            id: 'Plan.Change.confirm'
+                        }}
+                        handleSuccess={ this.submitPlanChange }
+                        cancelButton={{
+                            id: 'Plan.Change.cancel'
+                        }}
+                        handleCancel={ this.cancelPlanChange }
+                    />
+                }
             </Container>
         )
     }
 }
 
-const mapStateToProps = ({ user, language }) => {
+const mapStateToProps = ({ user, language, plans }) => {
     return {
         user,
-        language
+        language,
+        plans
     }
 }
 

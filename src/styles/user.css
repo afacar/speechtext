@@ -72,3 +72,11 @@
 .plan-body-container {
     height: 250px;
 }
+
+.plan-selection {
+    width: 80%;
+}
+
+.change-plan-button {
+    margin: auto;
+}

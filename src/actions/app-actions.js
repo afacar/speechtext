@@ -17,7 +17,7 @@ export const setSupportedLanguages = (languages) => {
 
 export const getPlans = () => {
     return dispatch => {
-        firestore().collection('plans')
+        firestore().collection('plans').orderBy('order')
             .get()
             .then(snapshot => {
                 if (snapshot) {
