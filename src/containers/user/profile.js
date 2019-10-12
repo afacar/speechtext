@@ -107,7 +107,7 @@ class Profile extends Component {
                         required
                     />
                     <Form.Control.Feedback type="invalid">
-                        <FormattedMessage id='Profile.Feedback.enterName' />
+                        <FormattedMessage id='Profile.Feedback.name' />
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
@@ -123,7 +123,7 @@ class Profile extends Component {
                         required
                     />
                     <Form.Control.Feedback type="invalid">
-                        <FormattedMessage id='Profile.Feedback.enterSurname' />
+                        <FormattedMessage id='Profile.Feedback.surname' />
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>

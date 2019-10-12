@@ -31,16 +31,12 @@ class Pricing extends Component {
             const { type } = user.currentPlan;
             if(type === 'Demo') {
                 if(selectedType !== 'Demo') {
-                    this.props.history.push('/user#plan');
+                    this.props.history.push('/user#payment');
                 } else {
                     this.props.history.push('/dashboard');
                 }
             } else {
-                if(type !== selectedType) {
-                    this.props.history.push('/user#plan');
-                } else {
-                    this.props.history.push('/user#payment');
-                }
+                this.props.history.push('/user#payment');
             }
         }
     }
