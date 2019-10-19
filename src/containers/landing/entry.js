@@ -32,7 +32,7 @@ class Entry extends Component {
                 <Container align="center">
                     <Row>
                         <Col lg="6">
-                            <img src={ Banner } alt='Speech > Text Banner' className='banner-image' />
+                            <img src={ Banner } title='Speech to Text Transcription' alt='Speech to text Automatic Transcription Editor Banner' className='banner-image' />
                         </Col>
                         <Col lg="6">
                             <Row className='list-container-style'>
