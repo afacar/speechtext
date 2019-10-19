@@ -20,6 +20,7 @@
     "react-dom": "^16.9.0",
     "react-firebaseui-localized": "^1.0.8",
     "react-ga": "^2.6.0",
+    "react-helmet": "^5.2.1",
     "react-intl": "^3.2.1",
     "react-media-player": "^0.7.7",
     "react-player": "^1.12.0",

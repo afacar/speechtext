@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import { Container } from 'react-bootstrap';
+import { Helmet } from "react-helmet";
 import '../../styles/main.css';
 
 import Header from '../header';
@@ -32,29 +33,34 @@ const Main = () => {
 
     return (
         <div>
-            <Header goToRef={ goToRef } showLinks={ true } />
-            <div ref={ refs.topRef }>
+            <Helmet>
+                <meta name="description" content="Transcribe All Audio/Video Records into Text with Speechtext.io" />
+                <title>Speechtext.io | Speech to Text Audio/Video Transcription</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
+            <Header goToRef={goToRef} showLinks={true} />
+            <div ref={refs.topRef}>
                 <Entry />
             </div>
             <Container style={{ marginBottom: '100px' }}>
-                <div ref={ refs.howItWorksRef } className='page-style'>
+                <div ref={refs.howItWorksRef} className='page-style'>
                     <HowItWorks />
                 </div>
                 <hr />
-                <div ref={ refs.featuresRef } className='page-style'>
+                <div ref={refs.featuresRef} className='page-style'>
                     <Features />
                 </div>
                 <hr />
-                <div ref={ refs.pricingRef } className='page-style'>
-                    <Pricing goToRef={ goToRef } />
+                <div ref={refs.pricingRef} className='page-style'>
+                    <Pricing goToRef={goToRef} />
                 </div>
                 <hr />
-                <div ref={ refs.aboutRef } className='page-style'>
+                <div ref={refs.aboutRef} className='page-style'>
                     <AboutUs />
                 </div>
                 <hr />
-                <div ref={ refs.contactRef } className='page-style'>
-                    <Contact goToRef={ goToRef } />
+                <div ref={refs.contactRef} className='page-style'>
+                    <Contact goToRef={goToRef} />
                 </div>
             </Container>
             <Footer />
