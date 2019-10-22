@@ -33,7 +33,10 @@ class Contact extends Component {
         if (form.checkValidity() === true) {
             // Submit Contact Form to db
             this.props.submitContactForm(values)
-            .then((res)=> Alert.success(res))
+            .then((res)=> { 
+                Alert.success(res);
+                that.setState({ validated: false });
+            })
             .catch(err => Alert.error(err))
             
             that.setState({
