@@ -29,6 +29,20 @@ export const login = (data) => {
             type: Utils.ActionTypes.LOGIN,
             payload: data
         });
+
+        firestore().collection('users').doc(uid).onSnapshot((snapshot) => {
+            var data = {};
+            if (snapshot && snapshot.data && snapshot.data()) {
+                data = snapshot.data();
+            }
+            dispatch({
+                type: Utils.ActionTypes.LOGIN,
+                payload: data
+            });
+        }, (error) => {
+            // TODO: GET_USER_PROFILE_ERROR
+            console.log(error)
+        });
     }
 }
 

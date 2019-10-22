@@ -80,3 +80,14 @@
 .change-plan-button {
     margin: auto;
 }
+
+.user-box-remaining {
+    font-weight: normal;
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}

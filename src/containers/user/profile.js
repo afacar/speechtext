@@ -124,7 +124,6 @@ class Profile extends Component {
                         <FormattedMessage id='Profile.Feedback.country' />
                     </Form.Control.Feedback>
                 </Form.Group>
-
                 <Form.Group>
                     <Form.Label>
                         <FormattedMessage id='Profile.Label.address' />

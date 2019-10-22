@@ -170,7 +170,7 @@
     "Payment.Error.durationLength": "60 dakikadan az kredi satın alamazsınız!",
     "Payment.Error.onlineSellingContract": "Mesafeli Satış Sözleşmesini onaylayınız!",
     "Payment.Error.refundPolicy": "Please accept Cancel and Refund Policy!",
-    "UserBox.title": "Hesabım",
+    "UserBox.remainingMinutes": "Kanal: {remainingMinutes} dakika",
     "UserBox.profile": "Profil",
     "UserBox.payment": "Ödeme",
     "UserBox.logout": "Çıkış"

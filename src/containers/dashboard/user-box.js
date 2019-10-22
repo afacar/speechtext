@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-    faSignOutAlt
-} from '@fortawesome/free-solid-svg-icons';
-import { Button, Nav, NavDropdown } from 'react-bootstrap';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { Nav, NavDropdown } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 
 import { logout } from '../../actions';
 import firebase from '../../utils/firebase';
@@ -25,11 +21,24 @@ class UserBox extends Component {
         this.props.history.push('/');
     }
 
+    renderTitle = () => {
+        const { user } = this.props;
+
+        return (
+            <span>
+                { user.displayName }
+                <br />
+                <span className='user-box-remaining'>
+                    <FormattedMessage id='UserBox.remainingMinutes' values={ { remainingMinutes: user.currentPlan ? user.currentPlan.remainingMinutes : 0 } } />
+                </span>
+            </span>
+        )
+    }
+
     render() {
-        const { formatMessage } = this.props.intl;
         return (
             <Nav>
-                <NavDropdown title={ formatMessage({ id: 'UserBox.title' })} id='nav-dropdown' alignRight={ this.props.alignLeft ? false : true } className='userbox-dropdown'>
+                <NavDropdown title={ this.renderTitle() } id='nav-dropdown' alignRight={ this.props.alignLeft ? false : true } className='userbox-dropdown'>
                     <Link to='/dashboard' className='dropdown-item'>
                         Dashboard
                     </Link>
@@ -53,4 +62,4 @@ const mapStateToProps = ({ user }) => {
     }
 }
 
-export default connect(mapStateToProps, { logout })(withRouter(injectIntl(UserBox)));
+export default connect(mapStateToProps, { logout })(withRouter(UserBox));

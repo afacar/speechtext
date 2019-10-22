@@ -455,7 +455,8 @@ class Payment extends Component {
                             <Col lg={6} md={6} sm={6}>
                                 <Form.Label>
                                     <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
-                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '-' : currentPlan.quota + <FormattedMessage id='Payment.CurrentPlan.durationType' />}`}
+                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '0' : currentPlan.quota}`}
+                                    <FormattedMessage id='Payment.CurrentPlan.durationType' />
                                 </Form.Label>
                             </Col>
                         }
