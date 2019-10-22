@@ -14,9 +14,7 @@ export const login = (data) => {
         //_.isEmpty(response) || _.isEmpty(response.data())
         if (data.isNewUser) {
             const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
-            // split name surname here and add to data object
-            const [name, surname] = Utils.getNameSurname(data.displayName)
-            data = { ...data, currentPlan: demoPlan, name, surname };
+            data = { ...data, currentPlan: demoPlan };
             data.currentPlan.remainingMinutes = demoPlan.quota;
             delete data.isNewUser;
             await firestore().doc(`users/${uid}`).set(data)
@@ -31,7 +29,7 @@ export const login = (data) => {
             type: Utils.ActionTypes.LOGIN,
             payload: data
         });
-        // TOASK: Why do we do 2nd time this
+
         firestore().collection('users').doc(uid).onSnapshot((snapshot) => {
             var data = {};
             if (snapshot && snapshot.data && snapshot.data()) {

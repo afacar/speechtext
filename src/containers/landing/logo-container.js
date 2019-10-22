@@ -6,10 +6,10 @@ import Logo from '../../assets/logo.png';
 const LogoContainer = () => {
     return (
         <div className='logo-container'>
-            <img alt='Speech > Text' src={ Logo } className='logo-style' />
-            <div style={ { float:'right'} }>
+            <img alt='Speech to Text Transcripton Logo' src={Logo} className='logo-style' />
+            <div style={{ float: 'right' }}>
                 <div className='logo-text-style'>
-                    Speech > Text
+                    speechtext.io
                 </div>
                 <small className='logo-footer-style'>
                     <FormattedMessage id="Header.subText"

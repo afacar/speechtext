@@ -93,6 +93,7 @@
     padding-left: 30px;
     height: 700px;
     border: 1px solid rgba(0,0,0,.125);
+    overflow-y: auto;
 }
 
 .transcription-title {
