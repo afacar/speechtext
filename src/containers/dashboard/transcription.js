@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import Axios from 'axios';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap';
 import ContentEditable from 'react-contenteditable';
 import { Media } from 'react-media-player';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -97,8 +97,10 @@ class Transcription extends Component {
     }
 
     downloadAsDocx = () => {
+        var that = this;
         var { selectedFile } = this.props;
-
+        this.setState({ showDownloadSpinner: true });
+        
         var getDocxFile = firebase.functions().httpsCallable('getDocxFile');
         getDocxFile({ 
             fileId: selectedFile.id
@@ -116,6 +118,7 @@ class Transcription extends Component {
                     const element = document.createElement("a");
                     element.href = downloadUrl;
                     element.click();
+                    this.setState({ showDownloadSpinner: false });
                 });
             })
         }).catch((err) => {
@@ -185,14 +188,27 @@ class Transcription extends Component {
             });
             return (
                 <div className=''>
-                    <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })} align='right' alignRight>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
-                            <FormattedMessage id='Transcription.Download.option1' />
-                        </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
-                            <FormattedMessage id='Transcription.Download.option2' />
-                        </Dropdown.Item>
-                    </DropdownButton>
+                    <div className='d-flex flex-col justify-content-end align-items-center'>
+                        {
+                            this.state.showDownloadSpinner &&
+                            <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                className='margin-right-5'
+                            />
+                        }
+                        <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
+                            <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
+                                <FormattedMessage id='Transcription.Download.option1' />
+                            </Dropdown.Item>
+                            <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
+                                <FormattedMessage id='Transcription.Download.option2' />
+                            </Dropdown.Item>
+                        </DropdownButton>
+                    </div>
                     <br />
                     { data }
                 </div>

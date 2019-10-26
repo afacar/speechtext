@@ -88,6 +88,6 @@
     justify-content: flex-end;
 }
 
-.dropdown-toggle::after {
+.userbox-dropdown .dropdown-toggle::after {
     display: none;
 }
