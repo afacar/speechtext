@@ -52,13 +52,13 @@ class Contact extends Component {
         return (
             <Container className="mb-5 mt-5">
                 <h4>
-                    <FormattedMessage id="DemoRequest.title" />
+                    <FormattedMessage id="Contact.title" />
                 </h4>
                 <Card className='card-style'>
                     <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit} >
                         <Form.Group controlId="formName">
                             <Form.Label>
-                                <FormattedMessage id="DemoRequest.Form.Label.nameSurname" />
+                                <FormattedMessage id="Contact.Form.Label.nameSurname" />
                             </Form.Label>
                             <Form.Control
                                 required
@@ -68,12 +68,12 @@ class Contact extends Component {
                                 onChange={(e) => { this.handleValueChange('nameSurname', e.target.value) }}
                             />
                             <Form.Control.Feedback type="invalid">
-                                <FormattedMessage id="DemoRequest.Form.Feedback.nameSurname" />
+                                <FormattedMessage id="Contact.Form.Feedback.nameSurname" />
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formEmail">
                             <Form.Label>
-                                <FormattedMessage id="DemoRequest.Form.Label.email" />
+                                <FormattedMessage id="Contact.Form.Label.email" />
                             </Form.Label>
                             <Form.Control
                                 required
@@ -83,13 +83,13 @@ class Contact extends Component {
                                 onChange={(e) => { this.handleValueChange('email', e.target.value) }}
                             />
                             <Form.Control.Feedback type="invalid">
-                                <FormattedMessage id="DemoRequest.Form.Feedback.email" />
+                                <FormattedMessage id="Contact.Form.Feedback.email" />
                             </Form.Control.Feedback>
                         </Form.Group>
                         
                         <Form.Group controlId="formUsageNeeded">
                             <Form.Label>
-                                <FormattedMessage id="DemoRequest.Form.Label.opinions" />
+                                <FormattedMessage id="Contact.Form.Label.opinions" />
                             </Form.Label>
                             <Form.Control
                                 required
@@ -100,11 +100,11 @@ class Contact extends Component {
                                 onChange={(e) => { this.handleValueChange('opinions', e.target.value) }}
                             />
                             <Form.Control.Feedback type="invalid">
-                                <FormattedMessage id="DemoRequest.Form.Feedback.opinions" />
+                                <FormattedMessage id="Contact.Form.Feedback.opinions" />
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Button type="submit" className='submit-button-style'>
-                            <FormattedMessage id="DemoRequest.Form.Button.text" />
+                            <FormattedMessage id="Contact.Form.Button.text" />
                         </Button>
                     </Form>
                 </Card>
