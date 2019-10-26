@@ -139,6 +139,7 @@ class File extends Component {
 
         const { file } = this.state;
         this.props.updateFileState(file.id, 'DELETED');
+        this.props.removeFromUploadingFiles(file.id);
         this.setState({ showSpinner: true })
     }
 
