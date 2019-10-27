@@ -120,9 +120,9 @@ class Payment extends Component {
             })
             firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
                 .onSnapshot((snapshot) => {
-                    if (snapshot && snapshot.data && snapshot.data().status === 'SUCCESS') {
+                    if (snapshot && snapshot.data) {
                         that.setState({
-                            state: 'SUCCESS'
+                            state: snapshot.data().status
                         });
                     }
                 }, (error) => {
@@ -138,7 +138,25 @@ class Payment extends Component {
     }
 
     renderSuccess = () => {
-        if (this.state.state !== 'SUCCESS') return null;
+        if(!this.state.state !== 'SUCCESS' && this.state.state !== 'FAILURE') return null;
+        if (this.state.state !== 'SUCCESS') {
+            return (
+                <div>
+                    <BootstrapAlert variant='danger'>
+                        <FormattedMessage id='Payment.Message.error' />
+                    </BootstrapAlert>
+                    <Button variant='primary' onClick={this.initializePage}>
+                        <FormattedMessage id='Payment.Message.tryAgain' />
+                    </Button>
+                    <br />
+                    <Button variant='link'>
+                        <Link to='/dashboard'>
+                            <FormattedMessage id='Payment.Message.goToDashboard' />
+                        </Link>
+                    </Button>
+                </div>
+            )
+        };
         return (
             <div>
                 <BootstrapAlert variant='success'>
@@ -259,7 +277,7 @@ class Payment extends Component {
         const { formatMessage } = this.props.intl;
         if (!currentPlan) currentPlan = {};
         const { calculatedPrice, duration, durationType, checkoutForm, showSpinner, state, showSellingContract, showRefundContract } = this.state;
-        if (state === 'SUCCESS') return null;
+        if (state === 'SUCCESS' || state === 'FAILURE') return null;
         if (currentPlan.type === 'Demo') {
             return this.renderFormAsDemo();
         }
