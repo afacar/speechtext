@@ -37,7 +37,9 @@ class Payment extends Component {
             basketId: undefined,
             checkoutForm: undefined,
             showSpinner: false,
-            spinnerText: ''
+            spinnerText: '',
+            sellingContractAccepted: false,
+            refundContractAccepted: false
         })
     }
 
@@ -121,8 +123,10 @@ class Payment extends Component {
             firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
                 .onSnapshot((snapshot) => {
                     if (snapshot && snapshot.data) {
+                        let data = snapshot.data();
                         that.setState({
-                            state: snapshot.data().status
+                            state: data.status,
+                            error: data.error
                         });
                     }
                 }, (error) => {
@@ -138,12 +142,16 @@ class Payment extends Component {
     }
 
     renderSuccess = () => {
-        if(!this.state.state !== 'SUCCESS' && this.state.state !== 'FAILURE') return null;
+        if(this.state.state !== 'SUCCESS' && this.state.state !== 'ERROR' && this.state.state !== 'FAILURE') return null;
         if (this.state.state !== 'SUCCESS') {
+            const { formatMessage } = this.props.intl;
+            let errorKey = this.state.error ? this.state.error.key : undefined;
+            let errorDef = _.find(this.props.errorDefinitions, { key: errorKey });
+            let errorMessage = errorKey ?  errorDef.value: formatMessage({ id: 'Payment.Message.error' });
             return (
                 <div>
                     <BootstrapAlert variant='danger'>
-                        <FormattedMessage id='Payment.Message.error' />
+                        { errorMessage }
                     </BootstrapAlert>
                     <Button variant='primary' onClick={this.initializePage}>
                         <FormattedMessage id='Payment.Message.tryAgain' />
@@ -277,7 +285,7 @@ class Payment extends Component {
         const { formatMessage } = this.props.intl;
         if (!currentPlan) currentPlan = {};
         const { calculatedPrice, duration, durationType, checkoutForm, showSpinner, state, showSellingContract, showRefundContract } = this.state;
-        if (state === 'SUCCESS' || state === 'FAILURE') return null;
+        if (state === 'SUCCESS' || state === 'FAILURE' || state === 'ERROR') return null;
         if (currentPlan.type === 'Demo') {
             return this.renderFormAsDemo();
         }
@@ -547,11 +555,12 @@ class Payment extends Component {
     }
 }
 
-const mapStateToProps = ({ user, language, plans }) => {
+const mapStateToProps = ({ user, language, plans, errorDefinitions }) => {
     return {
         user,
         language,
-        plans
+        plans,
+        errorDefinitions
     }
 }
 
