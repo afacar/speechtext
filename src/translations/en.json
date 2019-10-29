@@ -158,6 +158,7 @@
     "Payment.Error.onlineSellingContract": "Please accep Online Selling Contract!",
     "Payment.Error.refundPolicy": "Please accept Cancel and Refund Policy!",
     "UserBox.remainingMinutes": "Remaining: {remainingMinutes} mins",
+    "UserBox.dashboard": "Dashboard",
     "UserBox.profile": "Profile",
     "UserBox.payment": "Payment",
     "UserBox.logout": "Logout"

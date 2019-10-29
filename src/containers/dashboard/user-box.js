@@ -40,7 +40,7 @@ class UserBox extends Component {
             <Nav>
                 <NavDropdown title={ this.renderTitle() } id='nav-dropdown' alignRight={ this.props.alignLeft ? false : true } className='userbox-dropdown'>
                     <Link to='/dashboard' className='dropdown-item'>
-                        Dashboard
+                        <FormattedMessage id='UserBox.dashboard' />
                     </Link>
                     <Link to='/user#profile' className='dropdown-item'>
                         <FormattedMessage id='UserBox.profile' />
