@@ -135,20 +135,6 @@
     align-content: left;
 }
 
-.conversionResult {
-    font-size: 15px;
-    border: thin solid gray;
-    padding: 10px;
-    margin-bottom: 1px;
-}
-
-.conversionTime {
-    font-size: 11px !important;
-    font-weight: bold;
-    color: purple;
-    border-width: 120%;
-}
-
 .upload-options-container {
     margin-top: 30px;
 }
@@ -243,14 +229,6 @@ ol.selling-contract-list { counter-reset: item }
         font-size: 10px !important;
     }
 
-    .conversionResult {
-        font-size: 13px !important;
-    }
-    
-    .conversionTime {
-        font-size: 10px !important;
-    }
-
     .file-container {
         font-size: 14px !important;
     }
@@ -283,14 +261,6 @@ ol.selling-contract-list { counter-reset: item }
 
     .file-progress .pause-play {
         font-size: 8px !important;
-    }
-
-    .conversionResult {
-        font-size: 12px !important;
-    }
-    
-    .conversionTime {
-        font-size: 9px !important;
     }
 
     .file-container {
@@ -327,14 +297,6 @@ ol.selling-contract-list { counter-reset: item }
         font-size: 6px !important;
     }
 
-    .conversionResult {
-        font-size: 11px !important;
-    }
-    
-    .conversionTime {
-        font-size: 8px !important;
-    }
-
     .file-container {
         font-size: 10px !important;
     }
@@ -365,3 +327,11 @@ ol.selling-contract-list { counter-reset: item }
     text-decoration: none;
     background-color: lightblue;
 }
+
+/* [contenteditable=true]:hover {
+    outline: 2px solid #09ACE6;
+}
+
+[contenteditable=true]:focus {
+    outline: 2px solid #036689;
+} */

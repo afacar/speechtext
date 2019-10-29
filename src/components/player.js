@@ -27,10 +27,11 @@ class SpeechTextPlayer extends Component {
         this.props.media.playPause()
     }
 
-    onTimeUpdate = (playerInfo) => {
+    onTimeUpdate = ({ currentTime }) => {
         this.setState({
-            currentTime: playerInfo.currentTime
+            currentTime
         });
+        this.props.onTimeChanged(currentTime);
     }
 
     seekTo = (progress) => {

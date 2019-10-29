@@ -10,6 +10,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import firebase from '../../utils/firebase';
 import SpeechTextPlayer from '../../components/player';
 import UploadOptions from '../../components/upload-options';
+import SpeechTextEditor from '../../components/speech-text-editor';
 
 class Transcription extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class Transcription extends Component {
         }
     }
 
-    componentWillReceiveProps({ selectedFile }) {
+    componentWillReceiveProps = async ({ selectedFile }) => {
         var that = this;
         var { intervalHolder } = this.state;
         clearInterval(intervalHolder);
@@ -29,6 +30,19 @@ class Transcription extends Component {
             this.setState({
                 showSpinner: true
             })
+
+            const fileId = selectedFile.id;
+            const uid = this.props.user.uid;
+            const docPath = `userfiles/${uid}/files/${fileId}/result/transcription`;
+            console.log('Getting doc at:', docPath)
+            let dataSnapshot = await firebase.firestore().doc(docPath).get();
+
+            if(dataSnapshot) {
+                this.setState({
+                    newEditorData: dataSnapshot.data()
+                })
+            }
+
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
@@ -161,8 +175,30 @@ class Transcription extends Component {
         })
     }
 
+    handleWordChange = (index, wordIndex, text) => {
+        var { newEditorData } = this.state;
+        newEditorData.results[index].alternatives[0].words[wordIndex].word = text;
+        this.setState({
+            editedData:{
+                index, wordIndex, text
+            }
+        })
+    }
+
+    renderResultsPlus = (editorData) => {
+        return (
+            <SpeechTextEditor
+                editorData={ editorData }
+                handleWordChange={ this.handleWordChange }
+                suppressContentEditableWarning
+                playerTime={ this.state.playerTime }
+                editorClicked={ this.editorClicked }
+            />
+        );
+    }
+
     renderResults = () => {
-        const { editorData, selectedTextIndex } = this.state;
+        const { editorData, selectedTextIndex, newEditorData } = this.state;
         if(!_.isEmpty(editorData)) {
             const { formatMessage } = this.props.intl;
             var data = editorData.map((data, index) => {
@@ -176,7 +212,7 @@ class Transcription extends Component {
                             />
                             <ContentEditable
                                 ref={ (r) => { if(index === selectedTextIndex) this.currentEditableText = r }}
-                                id={ `editable-content-${index}` }
+                                id={ 'editable-content-' + index }
                                 html={ data.text } // innerHTML of the editable div
                                 disabled={ false } // use true to disable edition
                                 onChange={ (e) => { this.handleChange(data.key, e.target.value) }} // handle innerHTML change
@@ -186,6 +222,10 @@ class Transcription extends Component {
                     )
                 }
             });
+            if(!_.isEmpty(newEditorData) && !_.isEmpty(newEditorData.results)) {
+                data = this.renderResultsPlus(newEditorData.results);
+            }
+
             return (
                 <div className=''>
                     <div className='d-flex flex-col justify-content-end align-items-center'>
@@ -215,6 +255,16 @@ class Transcription extends Component {
             );
         }
         return false;
+    }
+
+    editorClicked = (seconds) => {
+        this.setState({
+            timeToSeek: seconds
+        }, () => {
+            this.setState({
+                timeToSeek: undefined
+            })
+        })
     }
 
     transcriptionClicked = (index) => {
@@ -271,6 +321,16 @@ class Transcription extends Component {
     }
     
     handleTimeChange = (currentTime) => {
+        // currentTime: 19.478
+        let seconds = Math.floor(currentTime);
+        let nanoSeconds = parseInt((currentTime - seconds) * 1000);
+        this.setState({
+            playerTime: {
+                seconds,
+                nanoSeconds
+            }
+        })
+
         const { editorData } = this.state;
         _.each(editorData, (data, index) => {
             if(data.startTime && data.endTime) {

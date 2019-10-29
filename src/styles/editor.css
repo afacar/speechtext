@@ -1,0 +1,47 @@
+.conversionResult {
+    font-size: 15px;
+    border: thin solid gray;
+    padding: 10px;
+    margin-bottom: 1px;
+}
+
+.conversionTime {
+    font-size: 11px !important;
+    font-weight: bold;
+    color: purple;
+    border-width: 120%;
+}
+
+.active-word {
+    background-color: lightblue;
+}
+
+@media only screen and (max-height: 882px) {
+    .conversionResult {
+        font-size: 13px !important;
+    }
+
+    .conversionTime {
+        font-size: 10px !important;
+    }
+}
+
+@media only screen and (max-height: 830px) {
+    .conversionResult {
+        font-size: 12px !important;
+    }
+
+    .conversionTime {
+        font-size: 9px !important;
+    }
+}
+
+@media only screen and (max-height: 730px) {
+    .conversionResult {
+        font-size: 11px !important;
+    }
+
+    .conversionTime {
+        font-size: 8px !important;
+    }
+}
