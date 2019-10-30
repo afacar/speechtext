@@ -27,12 +27,11 @@ class Auth extends Component {
         firebase.auth().onAuthStateChanged(user => {
             const currentUser = user ? user : '';
             that.setState({ user: currentUser });
-
             if (currentUser) {
                 const { uid, displayName, email, metadata } = currentUser;
                 const { lastSignInTime, creationTime } = metadata;
                 const isNewUser = creationTime === lastSignInTime
-
+                console.log(`uid: ${uid} \ndisplayName: ${displayName}\nemail: ${email}`)
                 that.props.login({
                     uid,
                     displayName,
