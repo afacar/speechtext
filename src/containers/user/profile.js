@@ -91,6 +91,7 @@ class Profile extends Component {
                     </Form.Label>
                     <Form.Control
                         name="email"
+                        disabled
                         type="email"
                         placeholder={formatMessage({ id: 'Profile.Feedback.email' })}
                         value={values.email || ''}
