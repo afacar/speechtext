@@ -20,7 +20,7 @@ class Payment extends Component {
         super(props);
 
         this.state = {
-            duration: 0,
+            duration: 1,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL',
@@ -30,7 +30,7 @@ class Payment extends Component {
 
     initializePage = () => {
         this.setState({
-            duration: 0,
+            duration: 1,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL',
