@@ -89,7 +89,7 @@ class Payment extends Component {
     initializePayment = async () => {
         var that = this;
         const { language, user, intl } = this.props;
-        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted } = this.state;
+        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
         if (!sellingContractAccepted) {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
             return;
@@ -98,7 +98,9 @@ class Payment extends Component {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
             return;
         }
-        let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        let durationInMinutes = undefined;
+        if (selectedPlanType === 'PayAsYouGo')
+            durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         this.setState({
             state: 'PAYMENT',
             showSpinner: true,
@@ -142,16 +144,16 @@ class Payment extends Component {
     }
 
     renderSuccess = () => {
-        if(this.state.state !== 'SUCCESS' && this.state.state !== 'ERROR' && this.state.state !== 'FAILURE') return null;
+        if (this.state.state !== 'SUCCESS' && this.state.state !== 'ERROR' && this.state.state !== 'FAILURE') return null;
         if (this.state.state !== 'SUCCESS') {
             const { formatMessage } = this.props.intl;
             let errorKey = this.state.error ? this.state.error.key : undefined;
             let errorDef = _.find(this.props.errorDefinitions, { key: errorKey });
-            let errorMessage = errorKey ?  errorDef.value: formatMessage({ id: 'Payment.Message.error' });
+            let errorMessage = errorKey ? errorDef.value : formatMessage({ id: 'Payment.Message.error' });
             return (
                 <div>
                     <BootstrapAlert variant='danger'>
-                        { errorMessage }
+                        {errorMessage}
                     </BootstrapAlert>
                     <Button variant='primary' onClick={this.initializePage}>
                         <FormattedMessage id='Payment.Message.tryAgain' />
@@ -434,7 +436,7 @@ class Payment extends Component {
         const { selectedPlanType } = this.state;
         if (_.isEmpty(currentPlan)) currentPlan = {};
         return (
-            <Card>
+            <Card style={{ borderWidth: 5, borderColor: '#524636' }}>
                 <Card.Title className='current-plan-title'>
                     <Form>
                         <Form.Group>
@@ -482,14 +484,6 @@ class Payment extends Component {
                                 <Form.Label>
                                     <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
                                     {`${!currentPlan.quota || currentPlan.quota === 0 ? '0' : currentPlan.quota}`}
-                                    <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                                </Form.Label>
-                            </Col>
-                        }
-                        {
-                            currentPlan.type === 'Monthly' &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
                                     <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
                                     {Utils.formatExpireDate(currentPlan.expireDate)}
                                 </Form.Label>
@@ -501,16 +495,11 @@ class Payment extends Component {
                                 {currentPlan.remainingMinutes}
                                 <FormattedMessage id='Payment.CurrentPlan.durationType' />
                             </Form.Label>
+                            <Form.Label>
+                                <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
+                                {Utils.formatExpireDate(currentPlan.expireDate)}
+                            </Form.Label>
                         </Col>
-                        {
-                            currentPlan.pricePerMinute > 0 &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
-                                    <b><FormattedMessage id='Payment.CurrentPlan.pricePerMinute' /></b>
-                                    $ {currentPlan.pricePerMinute}
-                                </Form.Label>
-                            </Col>
-                        }
                     </Row>
                 </Card.Body>
             </Card>
