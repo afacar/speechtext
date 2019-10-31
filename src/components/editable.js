@@ -68,6 +68,14 @@ class Editable extends PureComponent {
         }
     }
 
+    decideClassName = (word, isActive) => {
+        let className = 'editable-content';
+        if(isActive) className += ' active-word';
+        if(word.confidence < 0.9 ) className += ' not-so-confident';
+
+        return className;
+    }
+
     render = () => {
         const { index, wordIndex, isActive, word, changeIndexes } = this.props;
         return (
@@ -83,7 +91,7 @@ class Editable extends PureComponent {
                     onKeyDown={ this.onKeyDown }
                     onFocus={ e => changeIndexes(index, wordIndex) }
                     onBlur={ this.onBlur }
-                    className={ 'editable-content ' + (isActive ? 'active-word' : '') }
+                    className={ this.decideClassName(word, isActive) }
                 >
                     { word.word + ' ' }
                 </span>

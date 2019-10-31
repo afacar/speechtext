@@ -52,6 +52,12 @@
     cursor: text;
 }
 
+.not-so-confident {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+}
+
 .editable-content-wrapper {
     white-space: pre-wrap;
     word-wrap: break-word;
