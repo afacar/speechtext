@@ -33,15 +33,8 @@ class SpeechTextEditor extends Component {
                     if(startTime <= currTime && endTime > currTime) {
                         activeIndex = index;
                         activeWordIndex = wordIndex;
-                    } else {
                         return;
                     }
-                    // if(startTime.seconds <= seconds && (startTime.nanos < nanoSeconds || (endTime.seconds >= seconds && endTime.nanos >= nanoSeconds))) {
-                    //     activeIndex = index;
-                    //     activeWordIndex = wordIndex;
-                    // } else if(startTime.seconds > seconds) {
-                    //     return;
-                    // }
                 })
                 // 6_323-0_12
                 // 7_61-0_11
