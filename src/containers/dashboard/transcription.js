@@ -127,6 +127,37 @@ class Transcription extends Component {
         });
     }
 
+    downloadAsSrt = () => {
+        var that = this;
+        var { selectedFile } = this.props;
+        this.setState({ showDownloadSpinner: true });
+        
+        var getSrtFile = firebase.functions().httpsCallable('getSrtFile');
+        getSrtFile({ 
+            fileId: selectedFile.id
+        })
+        .then(({ data }) => {
+            var storageRef = firebase.storage().ref(data.filePath);
+            var fileName = selectedFile.name.split(' ').join('_');
+            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
+            var newMetadata = {
+                contentDisposition: `attachment;filename=${fileName}`
+            }
+            storageRef.updateMetadata(newMetadata)
+            .then((metadata) => {
+                storageRef.getDownloadURL().then((downloadUrl) => {
+                    const element = document.createElement("a");
+                    element.href = downloadUrl;
+                    element.click();
+                    this.setState({ showDownloadSpinner: false });
+                });
+            })
+        }).catch((err) => {
+            // TODO: GET_SRT_FILE_ERROR
+            console.log(err);
+        });
+    }
+
     formatResults = (data) => {
         var that = this;
         if(data) {
@@ -206,6 +237,9 @@ class Transcription extends Component {
                             </Dropdown.Item>
                             <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
                                 <FormattedMessage id='Transcription.Download.option2' />
+                            </Dropdown.Item>
+                            <Dropdown.Item as="button" onClick={ this.downloadAsSrt }>
+                                <FormattedMessage id='Transcription.Download.option3' />
                             </Dropdown.Item>
                         </DropdownButton>
                     </div>
