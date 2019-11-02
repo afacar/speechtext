@@ -19,6 +19,12 @@ class Transcription extends Component {
         }
     }
 
+    componentWillUnmount() {
+        if(this.state.intervalHolder) {
+            clearInterval(this.state.intervalHolder);
+        }
+    }
+
     componentWillReceiveProps = async ({ selectedFile }) => {
         var that = this;
         var { intervalHolder } = this.state;
