@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import Axios from 'axios';
 import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap';
-import ContentEditable from 'react-contenteditable';
 import { Media } from 'react-media-player';
 import { FormattedMessage, injectIntl } from 'react-intl';
 

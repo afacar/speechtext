@@ -17,7 +17,7 @@ class SpeechTextEditor extends Component {
     componentWillReceiveProps({ editorData, playerTime }) {
         if(!_.isEmpty(playerTime)) {
             const { seconds, nanoSeconds } = playerTime;
-            let activeIndex = -1, activeWordIndex = -1;
+            let playerActiveIndex = -1, playerActiveWordIndex = -1;
             _.each(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
                 _.map(alternative.words, (word, wordIndex) => {
@@ -27,18 +27,23 @@ class SpeechTextEditor extends Component {
                     endTime = parseFloat(endTime.seconds + '.' + endTime.nanos);
 
                     if(startTime <= currTime && endTime > currTime) {
-                        activeIndex = index;
-                        activeWordIndex = wordIndex;
+                        playerActiveIndex = index;
+                        playerActiveWordIndex = wordIndex;
                         return;
                     }
                 })
             });
-            if(activeIndex > -1 && activeWordIndex > -1) {
+            if(playerActiveIndex > -1 && playerActiveWordIndex > -1) {
                 this.setState({
-                    activeIndex,
-                    activeWordIndex
+                    playerActiveIndex,
+                    playerActiveWordIndex
                 })
             }
+        } else {
+            this.setState({
+                playerActiveIndex: 0,
+                playerActiveWordIndex: 0
+            })   
         }
     }
 
@@ -156,8 +161,8 @@ class SpeechTextEditor extends Component {
     }
 
     render() {
-        const { activeIndex, activeWordIndex } = this.state;
-        const { editorData, handleWordChange, isPlaying } = this.props;
+        const { playerActiveIndex, playerActiveWordIndex } = this.state;
+        const { editorData, handleWordChange, isPlaying, playerTime } = this.props;
 
         return (
             _.map(editorData, (data, index) => {
@@ -165,7 +170,7 @@ class SpeechTextEditor extends Component {
     
                 let children = "";
                 children = _.map(alternative.words, (word, wordIndex) => {
-                    let isActive = activeIndex === index && activeWordIndex === wordIndex;
+                    let isActive = playerTime && playerActiveIndex === index && playerActiveWordIndex === wordIndex;
                     return (
                             <Editable
                                 index={ index }

@@ -1,26 +1,10 @@
 import React, { PureComponent } from 'react';
-import ReactDOM from 'react-dom';
 
 const exclusiveKeyCodes = [16, 17, 18, 20, 27, 93, 225, 144];
 const keyPressed = {};
 var lastKeyPressed = undefined;
 
 class Editable extends PureComponent {
-
-    componentDidUpdate() {
-        if(this.props.isActive && document.activeElement !== ReactDOM.findDOMNode(this.editableRef)) {
-            setTimeout(() => {
-                let caretPos = undefined;
-                if(!this.props.isPlaying) {
-                    caretPos = this.getCaretPos();
-                }
-                this.editableRef.focus();
-                if(caretPos) {
-                    this.setCaretPos(caretPos);
-                }
-            }, 10);
-        }
-    }
 
     getCaretPos() {
         let _range = document.getSelection().getRangeAt(0);
@@ -30,16 +14,16 @@ class Editable extends PureComponent {
         return range.toString().length;
     }
 
-    setCaretPos(pos) {
-        // for contentedit field
-        var range = document.createRange();
-        var sel = window.getSelection();
-        range.setStart(this.editableRef.childNodes[0], pos);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        return;
-    }
+    // setCaretPos(pos) {
+    //     // for contentedit field
+    //     var range = document.createRange();
+    //     var sel = window.getSelection();
+    //     range.setStart(this.editableRef.childNodes[0], pos);
+    //     range.collapse(true);
+    //     sel.removeAllRanges();
+    //     sel.addRange(range);
+    //     return;
+    // }
 
     onKeyDown = (e) => {
         lastKeyPressed = e.keyCode;
