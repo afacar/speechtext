@@ -280,6 +280,7 @@ class SpeechTextEditor extends Component {
                     return (
                             <Editable
                                 index={ index }
+                                key={ index + '-' + wordIndex }
                                 wordIndex={ wordIndex }
                                 word={ word }
                                 changeIndexes={ this.changeIndexes }
@@ -302,13 +303,13 @@ class SpeechTextEditor extends Component {
                         </div>
                         <div
                             id={ 'editable-content-' + index }
+                            key={ 'editable-content-' + index }
                             contentEditable='true'
                             disabled={ false }
                             ref={ 'paragraph_' + index }
                         >
                             { children }
                         </div>
-                        <br />
                     </div>
                 )
             })

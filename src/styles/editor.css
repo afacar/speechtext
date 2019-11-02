@@ -3,13 +3,16 @@
     border: thin solid gray;
     padding: 10px;
     margin-bottom: 1px;
+    line-height: 2;
 }
 
 .conversionTime {
-    font-size: 11px !important;
+    font-size: 12px !important;
     font-weight: bold;
-    color: purple;
-    border-width: 120%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 5px 0 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid lightgray;
 }
 
 .active-word {
@@ -17,33 +20,33 @@
 }
 
 @media only screen and (max-height: 882px) {
-    .conversionResult {
+    /* .conversionResult {
         font-size: 13px !important;
     }
 
     .conversionTime {
         font-size: 10px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 830px) {
-    .conversionResult {
+    /* .conversionResult {
         font-size: 12px !important;
     }
 
     .conversionTime {
         font-size: 9px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 730px) {
-    .conversionResult {
+    /* .conversionResult {
         font-size: 11px !important;
     }
 
     .conversionTime {
         font-size: 8px !important;
-    }
+    } */
 }
 
 .editable-content {

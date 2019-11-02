@@ -10,8 +10,10 @@ class Editable extends PureComponent {
     componentDidUpdate() {
         if(this.props.isActive && document.activeElement !== ReactDOM.findDOMNode(this.editableRef)) {
             setTimeout(() => {
+                let caretPos = this.getCaretPos();
                 this.editableRef.focus();
-            }, 100);
+                this.setCaretPos(caretPos);
+            }, 10);
         }
     }
 
@@ -21,6 +23,17 @@ class Editable extends PureComponent {
         range.selectNodeContents(this.editableRef);
         range.setEnd(_range.endContainer, _range.endOffset);
         return range.toString().length;
+    }
+
+    setCaretPos(pos) {
+        // for contentedit field
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.setStart(this.editableRef.childNodes[0], pos);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
     }
 
     onKeyDown = (e) => {

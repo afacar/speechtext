@@ -213,7 +213,7 @@ ol.selling-contract-list { counter-reset: item }
         height: 650px !important;
     }
 
-    .drop-zone {
+    /* .drop-zone {
         font-size: 16px !important;
     }
 
@@ -235,7 +235,7 @@ ol.selling-contract-list { counter-reset: item }
 
     .player-time {
         font-size: 10px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 830px) {
@@ -247,7 +247,7 @@ ol.selling-contract-list { counter-reset: item }
         height: 550px !important;
     }
 
-    .drop-zone {
+    /* .drop-zone {
         font-size: 14px !important;
     }
 
@@ -269,7 +269,7 @@ ol.selling-contract-list { counter-reset: item }
 
     .player-time {
         font-size: 9px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 730px) {
@@ -281,7 +281,7 @@ ol.selling-contract-list { counter-reset: item }
         height: 450px !important;
     }
 
-    .drop-zone {
+    /* .drop-zone {
         font-size: 12px !important;
     }
 
@@ -303,7 +303,7 @@ ol.selling-contract-list { counter-reset: item }
 
     .player-time {
         font-size: 8px !important;
-    }
+    } */
 }
 
 .userbox-dropdown {
