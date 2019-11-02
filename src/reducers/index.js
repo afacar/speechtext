@@ -8,6 +8,7 @@ export default combineReducers({
     supportedLanguages: AppReducer.setSupportedLanguages,
     user: AuthReducer,
     plans: AppReducer.plans,
+    errorDefinitions: AppReducer.errorDefinitions,
     userFiles: getFileList,
     selectedFile: setSelectedFile,
     uploadingFiles: setUploadingFiles

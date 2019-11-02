@@ -12,6 +12,7 @@ const uiConfig = {
     signInFlow: 'popup',
     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
     signInSuccessUrl: '/',
+    credentialHelper: 'none',
     // We will display Google and Facebook as auth providers.
     signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -26,12 +27,11 @@ class Auth extends Component {
         firebase.auth().onAuthStateChanged(user => {
             const currentUser = user ? user : '';
             that.setState({ user: currentUser });
-
             if (currentUser) {
                 const { uid, displayName, email, metadata } = currentUser;
                 const { lastSignInTime, creationTime } = metadata;
                 const isNewUser = creationTime === lastSignInTime
-
+                console.log(`uid: ${uid} \ndisplayName: ${displayName}\nemail: ${email}`)
                 that.props.login({
                     uid,
                     displayName,

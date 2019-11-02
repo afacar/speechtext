@@ -20,7 +20,7 @@ class Payment extends Component {
         super(props);
 
         this.state = {
-            duration: 0,
+            duration: 1,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL',
@@ -30,14 +30,16 @@ class Payment extends Component {
 
     initializePage = () => {
         this.setState({
-            duration: 0,
+            duration: 1,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL',
             basketId: undefined,
             checkoutForm: undefined,
             showSpinner: false,
-            spinnerText: ''
+            spinnerText: '',
+            sellingContractAccepted: false,
+            refundContractAccepted: false
         })
     }
 
@@ -87,7 +89,7 @@ class Payment extends Component {
     initializePayment = async () => {
         var that = this;
         const { language, user, intl } = this.props;
-        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted } = this.state;
+        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
         if (!sellingContractAccepted) {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
             return;
@@ -96,7 +98,9 @@ class Payment extends Component {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
             return;
         }
-        let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        let durationInMinutes = undefined;
+        if (selectedPlanType === 'PayAsYouGo')
+            durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         this.setState({
             state: 'PAYMENT',
             showSpinner: true,
@@ -120,9 +124,11 @@ class Payment extends Component {
             })
             firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
                 .onSnapshot((snapshot) => {
-                    if (snapshot && snapshot.data && snapshot.data().status === 'SUCCESS') {
+                    if (snapshot && snapshot.data) {
+                        let data = snapshot.data();
                         that.setState({
-                            state: 'SUCCESS'
+                            state: data.status,
+                            error: data.error
                         });
                     }
                 }, (error) => {
@@ -138,7 +144,29 @@ class Payment extends Component {
     }
 
     renderSuccess = () => {
-        if (this.state.state !== 'SUCCESS') return null;
+        if (this.state.state !== 'SUCCESS' && this.state.state !== 'ERROR' && this.state.state !== 'FAILURE') return null;
+        if (this.state.state !== 'SUCCESS') {
+            const { formatMessage } = this.props.intl;
+            let errorKey = this.state.error ? this.state.error.key : undefined;
+            let errorDef = _.find(this.props.errorDefinitions, { key: errorKey });
+            let errorMessage = errorKey ? errorDef.value : formatMessage({ id: 'Payment.Message.error' });
+            return (
+                <div>
+                    <BootstrapAlert variant='danger'>
+                        {errorMessage}
+                    </BootstrapAlert>
+                    <Button variant='primary' onClick={this.initializePage}>
+                        <FormattedMessage id='Payment.Message.tryAgain' />
+                    </Button>
+                    <br />
+                    <Button variant='link'>
+                        <Link to='/dashboard'>
+                            <FormattedMessage id='Payment.Message.goToDashboard' />
+                        </Link>
+                    </Button>
+                </div>
+            )
+        };
         return (
             <div>
                 <BootstrapAlert variant='success'>
@@ -259,7 +287,7 @@ class Payment extends Component {
         const { formatMessage } = this.props.intl;
         if (!currentPlan) currentPlan = {};
         const { calculatedPrice, duration, durationType, checkoutForm, showSpinner, state, showSellingContract, showRefundContract } = this.state;
-        if (state === 'SUCCESS') return null;
+        if (state === 'SUCCESS' || state === 'FAILURE' || state === 'ERROR') return null;
         if (currentPlan.type === 'Demo') {
             return this.renderFormAsDemo();
         }
@@ -408,7 +436,7 @@ class Payment extends Component {
         const { selectedPlanType } = this.state;
         if (_.isEmpty(currentPlan)) currentPlan = {};
         return (
-            <Card>
+            <Card className='current-plan-card'>
                 <Card.Title className='current-plan-title'>
                     <Form>
                         <Form.Group>
@@ -456,14 +484,6 @@ class Payment extends Component {
                                 <Form.Label>
                                     <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
                                     {`${!currentPlan.quota || currentPlan.quota === 0 ? '0' : currentPlan.quota}`}
-                                    <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                                </Form.Label>
-                            </Col>
-                        }
-                        {
-                            currentPlan.type === 'Monthly' &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
                                     <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
                                     {Utils.formatExpireDate(currentPlan.expireDate)}
                                 </Form.Label>
@@ -475,16 +495,11 @@ class Payment extends Component {
                                 {currentPlan.remainingMinutes}
                                 <FormattedMessage id='Payment.CurrentPlan.durationType' />
                             </Form.Label>
+                            <Form.Label>
+                                <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
+                                {Utils.formatExpireDate(currentPlan.expireDate)}
+                            </Form.Label>
                         </Col>
-                        {
-                            currentPlan.pricePerMinute > 0 &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
-                                    <b><FormattedMessage id='Payment.CurrentPlan.pricePerMinute' /></b>
-                                    $ {currentPlan.pricePerMinute}
-                                </Form.Label>
-                            </Col>
-                        }
                     </Row>
                 </Card.Body>
             </Card>
@@ -529,11 +544,12 @@ class Payment extends Component {
     }
 }
 
-const mapStateToProps = ({ user, language, plans }) => {
+const mapStateToProps = ({ user, language, plans, errorDefinitions }) => {
     return {
         user,
         language,
-        plans
+        plans,
+        errorDefinitions
     }
 }
 

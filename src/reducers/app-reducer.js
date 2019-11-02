@@ -38,8 +38,18 @@ const getPlans = (state = [], action) => {
     }
 }
 
+const getErrorDefinitions = (state = [], action) => {
+    switch(action.type) {
+        case Utils.ActionTypes.GET_ERROR_DEFINITIONS:
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
 export default {
     setLanguage,
     setSupportedLanguages,
-    plans: getPlans
+    plans: getPlans,
+    errorDefinitions: getErrorDefinitions
 }

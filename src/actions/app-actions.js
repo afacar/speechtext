@@ -69,3 +69,30 @@ export const submitContactForm = (form) => {
 
     }
 }
+
+export const getErrorDefinitions = (language) => {
+    return dispatch => {
+        firestore().collection('error_definitions').doc(language)
+        .get()
+        .then(snapshot => {
+            if (snapshot) {
+                var errorDefinitions = [];
+                var data = snapshot.data();
+                Object.keys(data).forEach(key => {
+                    errorDefinitions.push({
+                        key,
+                        value: data[key]
+                    })
+                })
+                dispatch({
+                    type: Utils.ActionTypes.GET_ERROR_DEFINITIONS,
+                    payload: errorDefinitions
+                });
+            }
+        })
+        .catch(error => {
+            // TODO: GET_PLANS_ERROR
+            console.log(error);
+        })
+    }
+}

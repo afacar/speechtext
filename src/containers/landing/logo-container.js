@@ -1,24 +1,22 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import Logo from '../../assets/logo.png';
+import LogoEn from '../../assets/logo-en.png';
+import LogoTr from '../../assets/logo-tr.png';
 
-const LogoContainer = () => {
-    return (
-        <div className='logo-container'>
-            <img alt='Speech to Text Transcripton Logo' src={Logo} className='logo-style' />
-            <div style={{ float: 'right' }}>
-                <div className='logo-text-style'>
-                    speechtext.io
-                </div>
-                <small className='logo-footer-style'>
-                    <FormattedMessage id="Header.subText"
-                        description="Logo subtext"
-                    />
-                </small>
+class LogoContainer extends Component {
+    render() {
+        const { language } = this.props;
+        return (
+            <div className='logo-container'>
+                <img alt='Speech to Text Transcripton Logo' src={language === 'tr' ? LogoTr : LogoEn } className='logo-style' />
             </div>
-        </div>
-    )
+        )
+    }
 }
 
-export default LogoContainer;
+const mapStateToProps = ({ language }) => {
+    return { language };
+}
+
+export default connect(mapStateToProps)(LogoContainer);
