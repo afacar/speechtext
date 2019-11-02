@@ -53,8 +53,11 @@
 }
 
 .about-us-container {
-    /* padding: 0px 100px 100px 100px; */
     text-align: justify;
+}
+
+.about-us-title {
+    padding-top: 30px;
 }
 
 .about-logo-container {
