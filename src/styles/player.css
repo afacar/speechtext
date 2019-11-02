@@ -39,7 +39,7 @@
 .player-controls svg polygon,
 .player-controls svg path,
 .player-controls svg rect {
-    fill: cornflowerblue;
+    fill: #384d60;
 }
 
 .player-slider {
@@ -51,7 +51,7 @@
     position: absolute;
     width: 16px;
     height: 16px;
-    background: cornflowerblue;
+    background: #384d60;
     border-radius: 50%;
     transform: scale(1);
     transition: transform 0.2s;
@@ -66,7 +66,7 @@
 
 .slider-bar {
     position: absolute;
-    background: cornflowerblue;
+    background: #384d60;
     border-radius: 4px;
 }
 

@@ -1,7 +1,16 @@
 .card-pricing-popular {
     z-index: 1;
-    border: 3px solid #007bff;
+    border: 3px solid #384d60;
 }
+
+.card-pricing > span {
+    background-color: #384d60 !important;
+}
+
+.card-pricing h2 {
+    color: #384d60 !important;
+}
+
 
 .list-unstyled {
     padding: .5rem 0;
@@ -20,6 +29,10 @@
 .pricing-footer-container {
     height: 50px;
     bottom: 0px;
+}
+
+.card-pricing-popular .pricing-footer-container > button {
+    background-color: #384d60 !important;
 }
 
 .enterprise-header-style {
