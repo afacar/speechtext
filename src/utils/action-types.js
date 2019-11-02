@@ -3,6 +3,7 @@ export const SET_SUPPORTED_LANGUAGES = 'SET_SUPPORTED_LANGUAGES';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const GET_PLANS = 'GET_PLANS';
+export const GET_ERROR_DEFINITIONS = 'GET_ERROR_DEFINITIONS';
 export const GET_FILE_LIST = 'GET_FILE_LIST';
 export const UPDATE_FILE = 'UPDATE_FILE';
 export const UPDATE_FILE_IN_STATE = 'UPDATE_FILE_IN_STATE';

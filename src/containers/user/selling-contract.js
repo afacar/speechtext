@@ -16,8 +16,8 @@ class SellingContract extends Component {
         const { user } = this.props;
         let date = new Date();
         let formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-        let address = `${user.Billing.address} ${user.Billing.zipCode} - ${user.Billing.city} / ${getName(user.Billing.country)}`;
-        let displayName = user.name + ' ' + user.surname;
+        let address = `${user.address} / ${getName(user.country)}`;
+        let displayName = user.displayName;
         return (
             <Modal
                 size="lg"

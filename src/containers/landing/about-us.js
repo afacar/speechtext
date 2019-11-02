@@ -9,7 +9,7 @@ const AboutUs = () => {
             <div className='about-logo-container'>
                 <LogoContainer />
             </div>
-            <h4><FormattedMessage id='AboutUs.title' /></h4>
+            <h4 className='about-us-title'><FormattedMessage id='AboutUs.title' /></h4>
             <br /><br />
             <div className='about-us-container'>
                 <p>

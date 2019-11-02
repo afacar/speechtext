@@ -20,7 +20,7 @@ class Payment extends Component {
         super(props);
 
         this.state = {
-            duration: 0,
+            duration: 1,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL',
@@ -30,21 +30,23 @@ class Payment extends Component {
 
     initializePage = () => {
         this.setState({
-            duration: 0,
+            duration: 1,
             durationType: 'hours',
             calculatedPrice: 0,
             state: 'INITIAL',
             basketId: undefined,
             checkoutForm: undefined,
             showSpinner: false,
-            spinnerText: ''
+            spinnerText: '',
+            sellingContractAccepted: false,
+            refundContractAccepted: false
         })
     }
 
     componentWillReceiveProps({ user }) {
         if (user && user.currentPlan) {
             const { currentPlan } = user;
-            if(user.currentPlan.type === 'Monthly') {
+            if (user.currentPlan.type === 'Monthly') {
                 this.setState({
                     calculatedPrice: (currentPlan.pricePerMinute * currentPlan.quota).toFixed(2)
                 })
@@ -87,7 +89,7 @@ class Payment extends Component {
     initializePayment = async () => {
         var that = this;
         const { language, user, intl } = this.props;
-        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted } = this.state;
+        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
         if (!sellingContractAccepted) {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
             return;
@@ -96,7 +98,9 @@ class Payment extends Component {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
             return;
         }
-        let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        let durationInMinutes = undefined;
+        if (selectedPlanType === 'PayAsYouGo')
+            durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         this.setState({
             state: 'PAYMENT',
             showSpinner: true,
@@ -108,7 +112,6 @@ class Payment extends Component {
         fncAddBasket({
             minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
             locale: language,
-            newPlanId: user.currentPlan.id,
             ip,
             basketId
         }).then(({ data }) => {
@@ -121,9 +124,11 @@ class Payment extends Component {
             })
             firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
                 .onSnapshot((snapshot) => {
-                    if (snapshot && snapshot.data && snapshot.data().status === 'SUCCESS') {
+                    if (snapshot && snapshot.data) {
+                        let data = snapshot.data();
                         that.setState({
-                            state: 'SUCCESS'
+                            state: data.status,
+                            error: data.error
                         });
                     }
                 }, (error) => {
@@ -131,15 +136,37 @@ class Payment extends Component {
                     console.log(error)
                 });
         })
-        .catch(error => {
-            // TODO: ADD_TO_BASKET_ERROR
-            // NOTE: This function need to thwrow an error on firebase to catch here!
-            console.log(error)
-        })
+            .catch(error => {
+                // TODO: ADD_TO_BASKET_ERROR
+                // NOTE: This function need to thwrow an error on firebase to catch here!
+                console.log(error)
+            })
     }
 
     renderSuccess = () => {
-        if (this.state.state !== 'SUCCESS') return null;
+        if (this.state.state !== 'SUCCESS' && this.state.state !== 'ERROR' && this.state.state !== 'FAILURE') return null;
+        if (this.state.state !== 'SUCCESS') {
+            const { formatMessage } = this.props.intl;
+            let errorKey = this.state.error ? this.state.error.key : undefined;
+            let errorDef = _.find(this.props.errorDefinitions, { key: errorKey });
+            let errorMessage = errorKey ? errorDef.value : formatMessage({ id: 'Payment.Message.error' });
+            return (
+                <div>
+                    <BootstrapAlert variant='danger'>
+                        {errorMessage}
+                    </BootstrapAlert>
+                    <Button variant='primary' onClick={this.initializePage}>
+                        <FormattedMessage id='Payment.Message.tryAgain' />
+                    </Button>
+                    <br />
+                    <Button variant='link'>
+                        <Link to='/dashboard'>
+                            <FormattedMessage id='Payment.Message.goToDashboard' />
+                        </Link>
+                    </Button>
+                </div>
+            )
+        };
         return (
             <div>
                 <BootstrapAlert variant='success'>
@@ -170,22 +197,19 @@ class Payment extends Component {
     }
 
     validatePayment = () => {
-        const { name, surname, email, phoneNumner, Billing } = this.props.user;
-        if(_.isEmpty(name) || _.isEmpty(surname) || _.isEmpty(email) || _.isEmpty(phoneNumner)) {
-            if(_.isEmpty(Billing) || _.isEmpty(Billing.country) || _.isEmpty(Billing.city) || _.isEmpty(Billing.zipCode) || _.isEmpty(Billing.address)
-                || ('tr' === Billing.country && _.isEmpty(Billing.identityNumber))) {
-                return (
-                    <div>
-                        <BootstrapAlert variant='danger'>
-                            <FormattedMessage id='Payment.Error.incompleteProfile1' />
-                            <BootstrapAlert.Link onClick={() => this.props.changeTab('profile')}>
-                                <FormattedMessage id='Payment.Error.incompleteProfile2' />
-                            </BootstrapAlert.Link>
-                            <FormattedMessage id='Payment.Error.incompleteProfile3' />
-                        </BootstrapAlert>
-                    </div>
-                )
-            }
+        const { displayName, email, country, address } = this.props.user;
+        if (_.isEmpty(displayName) || _.isEmpty(email) || _.isEmpty(country) || _.isEmpty(address)) {
+            return (
+                <div>
+                    <BootstrapAlert variant='danger'>
+                        <FormattedMessage id='Payment.Error.incompleteProfile1' />
+                        <BootstrapAlert.Link onClick={() => this.props.changeTab('profile')}>
+                            <FormattedMessage id='Payment.Error.incompleteProfile2' />
+                        </BootstrapAlert.Link>
+                        <FormattedMessage id='Payment.Error.incompleteProfile3' />
+                    </BootstrapAlert>
+                </div>
+            )
         }
         return {
             success: true
@@ -263,7 +287,7 @@ class Payment extends Component {
         const { formatMessage } = this.props.intl;
         if (!currentPlan) currentPlan = {};
         const { calculatedPrice, duration, durationType, checkoutForm, showSpinner, state, showSellingContract, showRefundContract } = this.state;
-        if (state === 'SUCCESS') return null;
+        if (state === 'SUCCESS' || state === 'FAILURE' || state === 'ERROR') return null;
         if (currentPlan.type === 'Demo') {
             return this.renderFormAsDemo();
         }
@@ -364,7 +388,7 @@ class Payment extends Component {
 
     changeCurrentPlan = () => {
         const { user } = this.props;
-        if(user.currentPlan.type !== 'Demo') {
+        if (user.currentPlan.type !== 'Demo') {
             this.setState({
                 showApprovement: true
             });
@@ -374,21 +398,22 @@ class Payment extends Component {
     }
 
     submitPlanChange = () => {
+        console.log('change user plan')
         const { selectedPlanType } = this.state;
         const { plans, intl } = this.props;
         var selectedPlan = _.find(plans, { type: selectedPlanType });
-        var fncAddBasket = firebase.functions().httpsCallable('changeUserPlan');
-        fncAddBasket({ 
+        var fncChangeUserPlan = firebase.functions().httpsCallable('changeUserPlan');
+        fncChangeUserPlan({
             planId: selectedPlan.planId
         }).then(({ data }) => {
-            if(data.success) {
+            if (data.success) {
                 Alert.success(intl.formatMessage({ id: 'Plan.Change.succesMessage' }));
             }
         })
-        .catch(error => {
-            // TODO: CHANGE_USER_PLAN_ERROR
-            console.log(error);
-        })
+            .catch(error => {
+                // TODO: CHANGE_USER_PLAN_ERROR
+                console.log(error);
+            })
         this.setState({
             showApprovement: false
         });
@@ -411,7 +436,7 @@ class Payment extends Component {
         const { selectedPlanType } = this.state;
         if (_.isEmpty(currentPlan)) currentPlan = {};
         return (
-            <Card>
+            <Card className='current-plan-card'>
                 <Card.Title className='current-plan-title'>
                     <Form>
                         <Form.Group>
@@ -422,20 +447,20 @@ class Payment extends Component {
                                 <Form.Control
                                     name='plans'
                                     as='select'
-                                    onChange={ (e) => { this.handleSelectedPlanChange(e.target.value) } }
-                                    value={ selectedPlanType }
-                                    className={ selectedPlanType && selectedPlanType !== currentPlan.type ? 'plan-selection' : '' }
+                                    onChange={(e) => { this.handleSelectedPlanChange(e.target.value) }}
+                                    value={selectedPlanType}
+                                    className={selectedPlanType && selectedPlanType !== currentPlan.type ? 'plan-selection' : ''}
                                 >
                                     {
                                         _.map(this.props.plans, (plan) => {
                                             let planPrice = 0, priceAmount = '';
-                                            if(plan.type !== 'Demo') {
+                                            if (plan.type !== 'Demo') {
                                                 planPrice = plan.price ? plan.price.toFixed(2) : null;
                                                 priceAmount = this.props.intl.formatMessage({ id: `Payment.Plan.PlanAmount.${plan.priceAmount}` });
                                             }
-                                            if(plan.type !== 'Demo' || currentPlan.type === 'Demo') {
-                                                return (<option key={ plan.type } value={ plan.type }>
-                                                    { plan.type === 'Demo' ? plan.planName : `${plan.planName} - $${planPrice} / ${priceAmount}` }
+                                            if (plan.type !== 'Demo' || currentPlan.type === 'Demo') {
+                                                return (<option key={plan.type} value={plan.type}>
+                                                    {plan.type === 'Demo' ? plan.planName : `${plan.planName} - $${planPrice} / ${priceAmount}`}
                                                 </option>)
                                             }
                                         })
@@ -443,7 +468,7 @@ class Payment extends Component {
                                 </Form.Control>
                                 {
                                     selectedPlanType && selectedPlanType !== currentPlan.type &&
-                                    <Button variant='success' className='change-plan-button' onClick={ this.changeCurrentPlan }>
+                                    <Button variant='success' className='change-plan-button' onClick={this.changeCurrentPlan}>
                                         <FormattedMessage id='Payment.Plan.changePlanButtonText' />
                                     </Button>
                                 }
@@ -458,14 +483,7 @@ class Payment extends Component {
                             <Col lg={6} md={6} sm={6}>
                                 <Form.Label>
                                     <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
-                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '-' : currentPlan.quota + <FormattedMessage id='Payment.CurrentPlan.durationType' />}`}
-                                </Form.Label>
-                            </Col>
-                        }
-                        {
-                            currentPlan.type === 'Monthly' &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
+                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '0' : currentPlan.quota}`}
                                     <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
                                     {Utils.formatExpireDate(currentPlan.expireDate)}
                                 </Form.Label>
@@ -477,16 +495,11 @@ class Payment extends Component {
                                 {currentPlan.remainingMinutes}
                                 <FormattedMessage id='Payment.CurrentPlan.durationType' />
                             </Form.Label>
+                            <Form.Label>
+                                <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
+                                {Utils.formatExpireDate(currentPlan.expireDate)}
+                            </Form.Label>
                         </Col>
-                        {
-                            currentPlan.pricePerMinute > 0 &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
-                                    <b><FormattedMessage id='Payment.CurrentPlan.pricePerMinute' /></b>
-                                    $ {currentPlan.pricePerMinute}
-                                </Form.Label>
-                            </Col>
-                        }
                     </Row>
                 </Card.Body>
             </Card>
@@ -509,7 +522,7 @@ class Payment extends Component {
                 {
                     this.state.showApprovement &&
                     <ApprovementPopup
-                        show={ this.state.showApprovement }
+                        show={this.state.showApprovement}
                         headerText={{
                             id: 'Plan.Change.confirmationTitle'
                         }}
@@ -519,11 +532,11 @@ class Payment extends Component {
                         successButton={{
                             id: 'Plan.Change.confirm'
                         }}
-                        handleSuccess={ this.submitPlanChange }
+                        handleSuccess={this.submitPlanChange}
                         cancelButton={{
                             id: 'Plan.Change.cancel'
                         }}
-                        handleCancel={ this.cancelPlanChange }
+                        handleCancel={this.cancelPlanChange}
                     />
                 }
             </Container>
@@ -531,11 +544,12 @@ class Payment extends Component {
     }
 }
 
-const mapStateToProps = ({ user, language, plans }) => {
+const mapStateToProps = ({ user, language, plans, errorDefinitions }) => {
     return {
         user,
         language,
-        plans
+        plans,
+        errorDefinitions
     }
 }
 

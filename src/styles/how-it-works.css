@@ -3,15 +3,15 @@
     width: 100px;
     margin-left: auto;
     margin-right: auto;
-    color: #007bff;
+    color: #384d60;
 }
 
 .span-style {
-    border: 3px solid #0C62D0;
+    border: 3px solid #384d60;
     border-radius: 50%;
     float: left;
     width: 30px;
     margin: 10px;
     font-weight: bolder;
-    color: #0C62D0
+    color: #384d60
 }

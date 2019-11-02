@@ -1,6 +1,6 @@
 .dashboard-container,
 .profile-container {
-    padding-top: 100px;
+    padding-top: 140px;
     max-width: 70%;
 }
 
@@ -56,6 +56,11 @@
     cursor: pointer;
 }
 
+.current-plan-card {
+    border-width: 5px; 
+    border-color: #524636;
+}
+
 .current-plan-title {
     margin: 20px;
     padding-bottom: 20px;
@@ -79,4 +84,15 @@
 
 .change-plan-button {
     margin: auto;
+}
+
+.user-box-remaining {
+    font-weight: normal;
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.userbox-dropdown .dropdown-toggle::after {
+    display: none;
 }

@@ -1,6 +1,6 @@
 .main-div {
-    height: 500px;
-    padding-top: 120px;
+    min-height: 500px;
+    padding-top: 140px;
 }
 
 .banner-image {
@@ -31,5 +31,4 @@
 .list-text-style {
     line-height: 1.5;
     text-align: left;
-    padding-top: 25px;
 }

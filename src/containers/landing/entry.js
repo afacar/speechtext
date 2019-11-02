@@ -31,10 +31,10 @@ class Entry extends Component {
             <div className='main-div' >
                 <Container align="center">
                     <Row>
-                        <Col lg="6">
-                            <img src={ Banner } alt='Speech > Text Banner' className='banner-image' />
+                        <Col lg="6" md="6" sm="12" xs="12">
+                            <img src={ Banner } title='Speech to Text Transcription' alt='Speech to text Automatic Transcription Editor Banner' className='banner-image' />
                         </Col>
-                        <Col lg="6">
+                        <Col lg="6" md="6" sm="12" xs="12">
                             <Row className='list-container-style'>
                                 <Col lg="12">
                                     <Card className='list-container-card'>
@@ -43,7 +43,7 @@ class Entry extends Component {
                                             <FormattedMessage id="Banner.subText" />
                                         </h4>
                                         <ul>
-                                            <li className="d-flex align-items-center">
+                                            <li className="d-flex">
                                                 <span className='badge-style'>
                                                     <FontAwesomeIcon icon={ faCheck } color='#28a745' />
                                                 </span>
@@ -55,19 +55,25 @@ class Entry extends Component {
                                                 <span className='badge-style'>
                                                     <FontAwesomeIcon icon={ faCheck } color='#28a745' />
                                                 </span>
-                                                <FormattedMessage id="Banner.feature2" />
+                                                <div className='list-text-style'>
+                                                    <FormattedMessage id="Banner.feature2" />
+                                                </div>
                                             </li>
                                             <li className="d-flex align-items-center">
                                                 <span className='badge-style'>
                                                     <FontAwesomeIcon icon={ faCheck } color='#28a745' />
                                                 </span>
-                                                <FormattedMessage id="Banner.feature3" />
+                                                <div className='list-text-style'>
+                                                    <FormattedMessage id="Banner.feature3" />
+                                                </div>
                                             </li>
                                             <li className="d-flex align-items-center">
                                                 <span className='badge-style'>
                                                     <FontAwesomeIcon icon={ faCheck } color='#28a745' />
                                                 </span>
-                                                <FormattedMessage id="Banner.feature4" />
+                                                <div className='list-text-style'>
+                                                    <FormattedMessage id="Banner.feature4" />
+                                                </div>
                                             </li>
                                             {
                                                 _.isEmpty(user) &&
