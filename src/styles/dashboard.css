@@ -365,3 +365,7 @@ ol.selling-contract-list { counter-reset: item }
     text-decoration: none;
     background-color: lightblue;
 }
+
+.transcription #dropdown-item-button {
+    background-color: #384d60;
+}
