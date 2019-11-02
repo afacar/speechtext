@@ -119,8 +119,6 @@ class Transcription extends Component {
     }
 
     downloadAsTxt = () => {
-        that.updateTranscribedFile();
-
         const { selectedFile } = this.props;
         const { editorData } = this.state;
         var textData = '';
@@ -173,8 +171,9 @@ class Transcription extends Component {
         });
     }
 
-    downloadAsSrt = () => {
-        var that = this;
+    downloadAsSrt = async () => {
+        await this.updateTranscribedFile();
+        
         var { selectedFile } = this.props;
         this.setState({ showDownloadSpinner: true });
         
