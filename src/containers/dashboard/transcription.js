@@ -41,14 +41,16 @@ class Transcription extends Component {
 
             if(dataSnapshot) {
                 let editorData = dataSnapshot.data();
-                this.setState({
-                    editorData,
-                    prevEditorData: _.cloneDeep(editorData)
-                }, () => {
-                    intervalHolder = setInterval(() => {
-                        that.updateTranscribedFile();
-                    }, 10000);
-                });
+                if(!_.isEmpty(editorData)) {
+                    this.setState({
+                        editorData,
+                        prevEditorData: _.cloneDeep(editorData)
+                    }, () => {
+                        intervalHolder = setInterval(() => {
+                            that.updateTranscribedFile();
+                        }, 10000);
+                    });
+                }
             }
 
             // var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
@@ -83,14 +85,16 @@ class Transcription extends Component {
         const { selectedFile, user } = this.props;
         const fileId = selectedFile.id;
         const uid = user.uid;
-        // if(!_.isEqual(editorData, prevEditorData)) { // TODO:
-            this.setState({
-                prevEditorData: editorData
-            });
-            
-            const docPath = `userfiles/${uid}/files/${fileId}/result/transcription`;
-            await firebase.firestore().doc(docPath).set(editorData);
-        // }
+        if(!_.isEmpty(editorData)) {
+            // if(!_.isEqual(editorData, prevEditorData)) { // TODO:
+                this.setState({
+                    prevEditorData: editorData
+                });
+                
+                const docPath = `userfiles/${uid}/files/${fileId}/result/transcription`;
+                await firebase.firestore().doc(docPath).set(editorData);
+            // }
+        }
     }
 
     addZero = (value, length) => {
