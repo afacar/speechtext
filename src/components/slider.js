@@ -59,7 +59,8 @@ class Slider extends Component {
     }
 
     formatTime = (time) => {
-        time = Math.floor(time);
+        let timeAsSeconds = Math.floor(time);
+        let nanoSeconds = Math.floor((time - timeAsSeconds) * 1000);
         let seconds = Math.floor(time % 60);
         let minutes = Math.floor(time / 60);
         let hours = Math.floor(minutes / 60)
@@ -69,10 +70,12 @@ class Slider extends Component {
         if(hours < 10) hours = `0${hours}`;
         if(minutes < 10) minutes = `0${minutes}`;
         if(seconds < 10) seconds = `0${seconds}`;
+        if(nanoSeconds < 10) nanoSeconds = `00${nanoSeconds}`;
+        else if(nanoSeconds < 100) nanoSeconds = `0${nanoSeconds}`;
         if(!hours) hours = '00';
         if(!minutes) minutes = '00';
         if(!seconds) seconds = '00';
-        return `${hours}:${minutes}:${seconds}`;
+        return `${hours}:${minutes}:${seconds}.${nanoSeconds}`;
     }
 
     render() {

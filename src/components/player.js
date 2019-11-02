@@ -27,10 +27,11 @@ class SpeechTextPlayer extends Component {
         this.props.media.playPause()
     }
 
-    onTimeUpdate = (playerInfo) => {
+    onTimeUpdate = ({ currentTime }) => {
         this.setState({
-            currentTime: playerInfo.currentTime
+            currentTime
         });
+        this.props.onTimeChanged(currentTime);
     }
 
     seekTo = (progress) => {
@@ -86,6 +87,8 @@ class SpeechTextPlayer extends Component {
                     className={ `player ${type.startsWith('video') ? 'player-window' : ''}` }
                     src={ this.props.src }
                     onTimeUpdate={ this.onTimeUpdate }
+                    onPlay={ this.props.onPlay }
+                    onPause={ this.props.onPause }
                     ref={ this.playerRef }
                 />
             </div>

@@ -100,6 +100,7 @@
     "Transcription.Download.text": "İndir",
     "Transcription.Download.option1": "Metin Formatı (.txt)",
     "Transcription.Download.option2": "Word Formatı (.docx)",
+    "Transcription.Download.option3": "Altyazı Formatı (.srt)",
     "User.Tabs.profile": "Profil Bilgileri",
     "User.Tabs.payment": "Ödeme",
     "Profile.Label.nameSurname": "Ad Soyad",

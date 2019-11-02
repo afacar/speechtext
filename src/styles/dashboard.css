@@ -135,20 +135,6 @@
     align-content: left;
 }
 
-.conversionResult {
-    font-size: 15px;
-    border: thin solid gray;
-    padding: 10px;
-    margin-bottom: 1px;
-}
-
-.conversionTime {
-    font-size: 11px !important;
-    font-weight: bold;
-    color: purple;
-    border-width: 120%;
-}
-
 .upload-options-container {
     margin-top: 30px;
 }
@@ -227,7 +213,7 @@ ol.selling-contract-list { counter-reset: item }
         height: 650px !important;
     }
 
-    .drop-zone {
+    /* .drop-zone {
         font-size: 16px !important;
     }
 
@@ -243,21 +229,13 @@ ol.selling-contract-list { counter-reset: item }
         font-size: 10px !important;
     }
 
-    .conversionResult {
-        font-size: 13px !important;
-    }
-    
-    .conversionTime {
-        font-size: 10px !important;
-    }
-
     .file-container {
         font-size: 14px !important;
     }
 
     .player-time {
         font-size: 10px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 830px) {
@@ -269,7 +247,7 @@ ol.selling-contract-list { counter-reset: item }
         height: 550px !important;
     }
 
-    .drop-zone {
+    /* .drop-zone {
         font-size: 14px !important;
     }
 
@@ -285,21 +263,13 @@ ol.selling-contract-list { counter-reset: item }
         font-size: 8px !important;
     }
 
-    .conversionResult {
-        font-size: 12px !important;
-    }
-    
-    .conversionTime {
-        font-size: 9px !important;
-    }
-
     .file-container {
         font-size: 12px !important;
     }
 
     .player-time {
         font-size: 9px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 730px) {
@@ -311,7 +281,7 @@ ol.selling-contract-list { counter-reset: item }
         height: 450px !important;
     }
 
-    .drop-zone {
+    /* .drop-zone {
         font-size: 12px !important;
     }
 
@@ -327,21 +297,13 @@ ol.selling-contract-list { counter-reset: item }
         font-size: 6px !important;
     }
 
-    .conversionResult {
-        font-size: 11px !important;
-    }
-    
-    .conversionTime {
-        font-size: 8px !important;
-    }
-
     .file-container {
         font-size: 10px !important;
     }
 
     .player-time {
         font-size: 8px !important;
-    }
+    } */
 }
 
 .userbox-dropdown {
