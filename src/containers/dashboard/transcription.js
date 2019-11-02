@@ -119,7 +119,7 @@ class Transcription extends Component {
     }
 
     downloadAsTxt = () => {
-        that.updateTranscribedFile();
+        this.updateTranscribedFile();
 
         const { selectedFile } = this.props;
         const { editorData } = this.state;
