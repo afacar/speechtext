@@ -436,7 +436,7 @@ class Payment extends Component {
         const { selectedPlanType } = this.state;
         if (_.isEmpty(currentPlan)) currentPlan = {};
         return (
-            <Card style={{ borderWidth: 5, borderColor: '#524636' }}>
+            <Card className='current-plan-card'>
                 <Card.Title className='current-plan-title'>
                     <Form>
                         <Form.Group>
