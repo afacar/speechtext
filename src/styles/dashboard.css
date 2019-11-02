@@ -327,11 +327,3 @@ ol.selling-contract-list { counter-reset: item }
     text-decoration: none;
     background-color: lightblue;
 }
-
-/* [contenteditable=true]:hover {
-    outline: 2px solid #09ACE6;
-}
-
-[contenteditable=true]:focus {
-    outline: 2px solid #036689;
-} */

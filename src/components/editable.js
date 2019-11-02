@@ -1,4 +1,4 @@
-import React, { PureComponent, useState } from 'react';
+import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 
 const exclusiveKeyCodes = [16, 17, 18, 20, 27, 93, 225, 144];
@@ -10,9 +10,14 @@ class Editable extends PureComponent {
     componentDidUpdate() {
         if(this.props.isActive && document.activeElement !== ReactDOM.findDOMNode(this.editableRef)) {
             setTimeout(() => {
-                let caretPos = this.getCaretPos();
+                let caretPos = undefined;
+                if(!this.props.isPlaying) {
+                    caretPos = this.getCaretPos();
+                }
                 this.editableRef.focus();
-                this.setCaretPos(caretPos);
+                if(caretPos) {
+                    this.setCaretPos(caretPos);
+                }
             }, 10);
         }
     }
@@ -52,9 +57,7 @@ class Editable extends PureComponent {
         }
     }
 
-    handleChange = (e) => {
-        console.log('editable');
-        const { keyCode } = e;
+    handleChange = ({ keyCode }) => {
         const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
         keyPressed[keyCode] = false;
         if(exclusiveKeyCodes.includes(keyCode)) return;
@@ -67,7 +70,6 @@ class Editable extends PureComponent {
     }
 
     onBlur = () => {
-        console.log('onBlur')
         if(lastKeyPressed === 37 || lastKeyPressed === 39) {
             let { index, wordIndex, changeIndexes } = this.props;
             if(lastKeyPressed === 37) {
@@ -92,10 +94,11 @@ class Editable extends PureComponent {
     render = () => {
         const { index, wordIndex, isActive, word, changeIndexes } = this.props;
         return (
-            <span contentEditable='false' className='editable-content-wrapper'>
+            <span className='editable-content-wrapper' contentEditable='false' suppressContentEditableWarning='true'>
                 <span
                     id={ 'editable-content-' + index + "_" + wordIndex }
                     contentEditable='true'
+                    suppressContentEditableWarning='true'
                     spellCheck='false'
                     tabIndex={ index + wordIndex }
                     ref={(input) => { this.editableRef = input; }} 
