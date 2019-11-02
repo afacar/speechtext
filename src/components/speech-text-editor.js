@@ -167,46 +167,47 @@ class SpeechTextEditor extends Component {
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
-    
-                let children = "";
-                children = _.map(alternative.words, (word, wordIndex) => {
-                    let isActive = playerTime && playerActiveIndex === index && playerActiveWordIndex === wordIndex;
+                if(alternative && alternative.transcript && alternative.startTime && alternative.endTime) {
+                    let children = "";
+                    children = _.map(alternative.words, (word, wordIndex) => {
+                        let isActive = playerTime && playerActiveIndex === index && playerActiveWordIndex === wordIndex;
+                        return (
+                                <Editable
+                                    index={ index }
+                                    key={ index + '-' + wordIndex }
+                                    wordIndex={ wordIndex }
+                                    word={ word }
+                                    changeIndexes={ this.changeIndexes }
+                                    handleWordChange={ handleWordChange }
+                                    isActive={ isActive }
+                                    splitData={ this.splitData }
+                                    mergeData= { this.mergeData }
+                                    isPlaying={ isPlaying }
+                                />
+                        )
+                    });
                     return (
-                            <Editable
-                                index={ index }
-                                key={ index + '-' + wordIndex }
-                                wordIndex={ wordIndex }
-                                word={ word }
-                                changeIndexes={ this.changeIndexes }
-                                handleWordChange={ handleWordChange }
-                                isActive={ isActive }
-                                splitData={ this.splitData }
-                                mergeData= { this.mergeData }
-                                isPlaying={ isPlaying }
-                            />
+                        <div className='conversionResult' key={ index } onClick={ (e) => {} } >
+                            <div
+                                id={ 'conversionTime_' + index }
+                                className='conversionTime'
+                                disabled={ true }
+                            >
+                                { this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime) }
+                            </div>
+                            <div
+                                id={ 'editable-content-' + index }
+                                key={ 'editable-content-' + index }
+                                contentEditable='true'
+                                disabled={ false }
+                                ref={ 'paragraph_' + index }
+                                suppressContentEditableWarning='true'
+                            >
+                                { children }
+                            </div>
+                        </div>
                     )
-                });
-                return (
-                    <div className='conversionResult' key={ index } onClick={ (e) => {} } >
-                        <div
-                            id={ 'conversionTime_' + index }
-                            className='conversionTime'
-                            disabled={ true }
-                        >
-                            { this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime) }
-                        </div>
-                        <div
-                            id={ 'editable-content-' + index }
-                            key={ 'editable-content-' + index }
-                            contentEditable='true'
-                            disabled={ false }
-                            ref={ 'paragraph_' + index }
-                            suppressContentEditableWarning='true'
-                        >
-                            { children }
-                        </div>
-                    </div>
-                )
+                }
             })
         )
     }
