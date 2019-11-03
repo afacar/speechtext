@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 
 const exclusiveKeyCodes = [16, 17, 18, 20, 27, 93, 225, 144];
+const arrowKeyCodes = [37, 38, 39, 40]
 const keyPressed = {};
 var lastKeyPressed = undefined;
 
@@ -44,7 +45,7 @@ class Editable extends PureComponent {
     handleChange = ({ keyCode }) => {
         const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
         keyPressed[keyCode] = false;
-        if(exclusiveKeyCodes.includes(keyCode)) return;
+        if(exclusiveKeyCodes.includes(keyCode) || arrowKeyCodes.includes(keyCode)) return;
         if(keyCode === 9) { // TAB
             changeIndexes(keyPressed[16] ? index - 1 : index + 1, 0);
         } else {
