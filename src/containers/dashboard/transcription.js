@@ -282,7 +282,7 @@ class Transcription extends Component {
 
     renderResults = () => {
         const { editorData } = this.state;
-        if(_.isEmpty(editorData)) return null;
+        if(_.isEmpty(editorData)) return 'Sorry! We could not get any text from the file!';
 
         const { formatMessage } = this.props.intl;
         return (
