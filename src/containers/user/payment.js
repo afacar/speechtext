@@ -494,7 +494,7 @@ class Payment extends Component {
                                 <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
                                 {currentPlan.remainingMinutes}
                                 <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                            </Form.Label>
+                            </Form.Label><br />
                             <Form.Label>
                                 <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
                                 {Utils.formatExpireDate(currentPlan.expireDate)}
