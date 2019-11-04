@@ -12,6 +12,7 @@ import User from './user/user';
 import Privacy from './landing/privacy';
 import Terms from './landing/terms';
 import ScrollTop from '../components/scroll-top';
+import FrequentlyAskedQuestions from './landing/faq';
 
 class App extends Component {
     componentDidMount() {
@@ -31,6 +32,7 @@ class App extends Component {
                         <Route path='/user' component={ User } />
                         <Route path='/privacy' component={ Privacy } />
                         <Route path='/terms' component={ Terms } />
+                        <Route path='/faq' component={ FrequentlyAskedQuestions } />
                     </ScrollTop>
                 </BrowserRouter>
                 <Alert stack={{ limit: 3 }} timeout={ 5000 } html={ true } effect={ 'slide' } position={ 'top-right' } />

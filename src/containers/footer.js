@@ -20,7 +20,8 @@ const Footer = () => {
                 <p className="float-right" style={{ paddingTop: '10px' }}>
                     Copyright &copy; SpeechText 2019<br />
                     <span className="float-right">
-                        <Link to='/privacy' className='footer-link'>Privacy Policy</Link>
+                        <Link to='/faq' className='footer-link'>F.A.Q.</Link>
+                        <Link to='/privacy' className='footer-link margin-left-20'>Privacy Policy</Link>
                         <Link to='/terms' className='footer-link margin-left-20'>Terms of Service</Link>
                     </span>
                 </p>
