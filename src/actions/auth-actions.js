@@ -19,7 +19,7 @@ export const login = (data) => {
 
                 await db.doc(`users/${uid}`).set(userData)
                     .then(res => {
-                        auth().currentUser.sendEmailVerification()
+                        !data.emailVerified && auth().currentUser.sendEmailVerification()
                     })
                     .catch(error => {
                         // TODO: SET_USER_PROFILE_ERROR
