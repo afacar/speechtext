@@ -103,6 +103,7 @@ class SpeechTextEditor extends Component {
             activeWordIndex: 0,
             caretPosition: 0
         });
+        this.props.handleSplitChange()
     }
 
     mergeData = () => {

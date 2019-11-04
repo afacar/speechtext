@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap';
 import { Media } from 'react-media-player';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import Axios from 'axios';
 
 import firebase from '../../utils/firebase';
 import SpeechTextPlayer from '../../components/player';
@@ -14,8 +15,9 @@ class Transcription extends Component {
         super(props);
 
         this.state = {
-            editorData: {},
-            intervalHolder: undefined
+            editorData: null,
+            intervalHolder: undefined,
+            isSaved: true
         }
     }
 
@@ -34,46 +36,34 @@ class Transcription extends Component {
                 showSpinner: true
             })
 
-            const fileId = selectedFile.id;
-            const uid = this.props.user.uid;
-            const docPath = `userfiles/${uid}/files/${fileId}/result/transcription`;
-            let dataSnapshot = await firebase.firestore().doc(docPath).get();
-
-            if(dataSnapshot) {
-                let editorData = dataSnapshot.data();
-                if(!_.isEmpty(editorData)) {
-                    this.setState({
+            var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
+            storageRef.getDownloadURL().then((downloadUrl) => {
+                Axios.get(downloadUrl)
+                .then(({ data }) => {
+                    let editorData = data;
+                    that.setState({
                         editorData,
-                        prevEditorData: _.cloneDeep(editorData)
+                        //prevEditorData: _.cloneDeep(editorData),
+                        showSpinner: false
                     }, () => {
                         intervalHolder = setInterval(() => {
                             that.updateTranscribedFile();
-                        }, 10000);
-                    });
-                }
-            }
-
-            // var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
-            // storageRef.getDownloadURL().then((downloadUrl) => {
-            //     Axios.get(downloadUrl)
-            //     .then(({ data }) => {
-            //         that.formatResults(data);
-            //     });
-            // })
-            // .catch(error => {
-            //     // TODO: GET_DOWNLOAD_URL_ERROR
-            //     console.log(error);
-            // })
+                        }, 20000);
+                    })
+                });
+            })
+            .catch(error => {
+                // TODO: GET_DOWNLOAD_URL_ERROR
+                console.log(error);
+            })
         } else {
             this.setState({
-                editorData: {},
+                editorData: null,
                 prevEditorData: {},
-                intervalHolder: undefined
+                intervalHolder: undefined,
+                showSpinner: false
             })
         }
-        this.setState({
-            showSpinner: false
-        });
     }
 
     componentWillUnmount = async () => {
@@ -81,18 +71,19 @@ class Transcription extends Component {
     }
 
     updateTranscribedFile = async () => {
-        const { editorData, prevEditorData } = this.state;
+        const { editorData, prevEditorData, isSaved } = this.state;
         const { selectedFile, user } = this.props;
-        const fileId = selectedFile.id;
-        const uid = user.uid;
-        if(!_.isEmpty(editorData)) {
-            // if(!_.isEqual(editorData, prevEditorData)) { // TODO:
-                this.setState({
-                    prevEditorData: editorData
+        if(!_.isEmpty(editorData) && !isSaved) {
+            var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
+            storageRef.put(new Blob([JSON.stringify(editorData)]))
+                .then(snapshot => {
+                    this.setState({ isSaved: true })
+                    console.log('File uploaded', snapshot)
+                })
+                .catch(error => {
+                    // TODO: UPDATE_TRANSCRIBED_FILE_ERROR	
+                    console.log(error);	
                 });
-                
-                const docPath = `userfiles/${uid}/files/${fileId}/result/transcription`;
-                await firebase.firestore().doc(docPath).set(editorData);
             // }
         }
     }
@@ -130,7 +121,7 @@ class Transcription extends Component {
         const { selectedFile } = this.props;
         const { editorData } = this.state;
         var textData = '';
-        _.each(editorData.results, data => {
+        _.each(editorData, data => {
             let alternative = data.alternatives[0];
             let { startTime, endTime, transcript } = alternative;
             textData += `${this.formatTime(startTime)} - ${this.formatTime(endTime)}\n${transcript}\n\n`;
@@ -246,28 +237,38 @@ class Transcription extends Component {
     // }
 
     getTranscriptionText = (words) => {
-        let transcriptionText = '';
-        _.each(words, (word, index) => {
-            transcriptionText += (index > 0 ? ' ' : '') + word.word;
-        });
-        return transcriptionText;
+        
+        return words.join(' ');
     }
 
     handleWordChange = (index, wordIndex, text) => {
         var { editorData } = this.state;
-        let prevEditorData = _.cloneDeep(editorData);
-        editorData.results[index].alternatives[0].words[wordIndex].word = text;
-        editorData.results[index].alternatives[0].transcript = this.getTranscriptionText(editorData.results[index].alternatives[0].words);
-
+        // let prevEditorData = _.cloneDeep(editorData);
+        editorData[index].alternatives[0].words[wordIndex].word = text;
+        editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
+        console.log('handleWordChange isSaved', this.state.isSaved)
         this.setState({
             editorData,
-            prevEditorData
+            //prevEditorData,
+            isSaved: false
+        })
+    }
+
+    handleSplitChange = () => {
+        var { editorData, isSaved } = this.state;
+        
+        console.log('handleSplitChange editorData', editorData)
+        console.log('handleSplitChange isSaved', isSaved)
+        this.setState({
+            isSaved: false
         })
     }
 
     renderResults = () => {
         const { editorData } = this.state;
-        if(_.isEmpty(editorData)) return null;
+        console.log('renderResults editorData',editorData)
+        if(editorData === null) return;
+        if(_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio!'
 
         const { formatMessage } = this.props.intl;
         return (
@@ -298,8 +299,9 @@ class Transcription extends Component {
                     </div>
                     <br />
                     <SpeechTextEditor
-                        editorData={ editorData ? editorData.results : [] }
+                        editorData={ editorData ? editorData : [] }
                         handleWordChange={ this.handleWordChange }
+                        handleSplitChange={ this.handleSplitChange }
                         suppressContentEditableWarning
                         playerTime={ this.state.playerTime }
                         editorClicked={ this.editorClicked }

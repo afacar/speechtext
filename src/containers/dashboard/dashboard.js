@@ -14,7 +14,8 @@ const { auth } = Utils.firebase;
 
 class Dashboard extends Component {
     state = {
-        emailVerified: null
+        emailVerified: null,
+        isSent: true
     }
 
     componentDidMount() {
@@ -46,14 +47,11 @@ class Dashboard extends Component {
             <div>
                 <UserHeader />
                 <Container className='dashboard-container'>
-                    {!this.state.emailVerified && 
+                    {!this.state.emailVerified &&
                         <Alert variant='warning'>
-                            {'You need to'} <Alert.Link onClick={this.resendVerificationEmail}>Verify</Alert.Link> {`your email ${user.email}!`}
-                        </Alert>
-                    }
-                    {!this.state.emailVerified && this.state.isSent &&
-                        <Alert variant='warning'>
-                            {`A verification email sent to ${user.email}. Refresh page after verifying your mail.`}
+                            {`We send a verification email to ${user.email}! Refresh page after verifying your mail.`} <br />
+                            {'If you do not recieve it in a few minutes, You can resend from '} 
+                            <Alert.Link onClick={this.resendVerificationEmail}>Here!</Alert.Link> 
                         </Alert>
                     }
                     <Row>
