@@ -1,7 +1,7 @@
 import Utils from '../utils';
 import publicIp from 'public-ip';
 
-const { firestore } = Utils.firebase;
+const { firestore, functions } = Utils.firebase;
 
 export const setLanguage = (language) => {
     return {
@@ -51,11 +51,12 @@ export const submitContactForm = (form) => {
 
             if (numSubmissions > 50)
                 return reject('Too much submission:/ Spam Alert!')
-            
+
             form.createdAt = new Date()
-            
-            firestore().collection('contactSubmissions').doc(ip).collection('submissions')
-                .add(form)
+            var contactUs = functions().httpsCallable('contactUs');
+            const { nameSurname, email, opinions } = form
+            let text = opinions
+            contactUs({ nameSurname, email, text })
                 .then(res => {
                     console.log('The form is submitted!')
                     resolve('Thanks for your inquiry:) We will be in touch soon.')
@@ -73,26 +74,26 @@ export const submitContactForm = (form) => {
 export const getErrorDefinitions = (language) => {
     return dispatch => {
         firestore().collection('error_definitions').doc(language)
-        .get()
-        .then(snapshot => {
-            if (snapshot) {
-                var errorDefinitions = [];
-                var data = snapshot.data();
-                Object.keys(data).forEach(key => {
-                    errorDefinitions.push({
-                        key,
-                        value: data[key]
+            .get()
+            .then(snapshot => {
+                if (snapshot) {
+                    var errorDefinitions = [];
+                    var data = snapshot.data();
+                    Object.keys(data).forEach(key => {
+                        errorDefinitions.push({
+                            key,
+                            value: data[key]
+                        })
                     })
-                })
-                dispatch({
-                    type: Utils.ActionTypes.GET_ERROR_DEFINITIONS,
-                    payload: errorDefinitions
-                });
-            }
-        })
-        .catch(error => {
-            // TODO: GET_PLANS_ERROR
-            console.log(error);
-        })
+                    dispatch({
+                        type: Utils.ActionTypes.GET_ERROR_DEFINITIONS,
+                        payload: errorDefinitions
+                    });
+                }
+            })
+            .catch(error => {
+                // TODO: GET_PLANS_ERROR
+                console.log(error);
+            })
     }
 }
