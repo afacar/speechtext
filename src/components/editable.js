@@ -71,7 +71,7 @@ class Editable extends PureComponent {
     decideClassName = (word, isActive) => {
         let className = 'editable-content';
         if(isActive) className += ' active-word';
-        if(word.confidence < 0.9 ) className += ' not-so-confident';
+        if(word.confidence < 0.6 ) className += ' not-so-confident';
 
         return className;
     }
