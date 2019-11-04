@@ -48,7 +48,7 @@ class Transcription extends Component {
                     }, () => {
                         intervalHolder = setInterval(() => {
                             that.updateTranscribedFile();
-                        }, 10000);
+                        }, 20000);
                     })
                 });
             })
