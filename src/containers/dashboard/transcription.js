@@ -246,10 +246,20 @@ class Transcription extends Component {
         // let prevEditorData = _.cloneDeep(editorData);
         editorData[index].alternatives[0].words[wordIndex].word = text;
         editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
-
+        console.log('handleWordChange isSaved', this.state.isSaved)
         this.setState({
             editorData,
             //prevEditorData,
+            isSaved: false
+        })
+    }
+
+    handleSplitChange = () => {
+        var { editorData, isSaved } = this.state;
+        
+        console.log('handleSplitChange editorData', editorData)
+        console.log('handleSplitChange isSaved', isSaved)
+        this.setState({
             isSaved: false
         })
     }
@@ -291,6 +301,7 @@ class Transcription extends Component {
                     <SpeechTextEditor
                         editorData={ editorData ? editorData : [] }
                         handleWordChange={ this.handleWordChange }
+                        handleSplitChange={ this.handleSplitChange }
                         suppressContentEditableWarning
                         playerTime={ this.state.playerTime }
                         editorClicked={ this.editorClicked }
