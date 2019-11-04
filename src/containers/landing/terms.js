@@ -12,7 +12,7 @@ const Terms = () => {
             <Helmet>
                 <meta name="description" content="Read Terms of Service for Speechtext.io" />
                 <title>Speechtext.io | Terms of Service</title>
-                <link rel="canonical" href="http://mysite.com/example" />
+                <link rel="canonical" href="http://speechtext.io/terms" />
             </Helmet>
             <Header />
             <Container className='terms-container'>

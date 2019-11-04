@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Utils from '../utils';
-const { firestore } = Utils.firebase;
+const { firestore, auth } = Utils.firebase;
 
 const db = firestore();
 
@@ -16,8 +16,11 @@ export const login = (data) => {
                 userData = { ...data, currentPlan: demoPlan };
                 userData.currentPlan.remainingMinutes = demoPlan.quota;
                 delete userData.isNewUser;
-    
+
                 await db.doc(`users/${uid}`).set(userData)
+                    .then(res => {
+                        !data.emailVerified && auth().currentUser.sendEmailVerification()
+                    })
                     .catch(error => {
                         // TODO: SET_USER_PROFILE_ERROR
                         console.log(error);

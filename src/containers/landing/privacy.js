@@ -12,7 +12,7 @@ const Privacy = () => {
             <Helmet>
                 <meta name="description" content="Read Privacy Policy for Speechtext.io" />
                 <title>Speechtext.io | Privacy Policy</title>
-                <link rel="canonical" href="http://mysite.com/example" />
+                <link rel="canonical" href="http://speechtext.io/privacy" />
             </Helmet>
             <Header />
             <Container className='privacy-container'>
