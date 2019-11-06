@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom';
 
 const exclusiveKeyCodes = [16, 17, 18, 20, 27, 93, 225, 144];
 const arrowKeyCodes = [37, 38, 39, 40]
@@ -12,6 +13,7 @@ class Editable extends PureComponent {
         let range = _range.cloneRange();
         range.selectNodeContents(this.editableRef);
         range.setEnd(_range.endContainer, _range.endOffset);
+        console.log('getCaretPos:',range.toString().length)
         return range.toString().length;
     }
 
@@ -44,17 +46,19 @@ class Editable extends PureComponent {
 
     handleChange = ({ keyCode }) => {
         const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
+        console.log(`index: ${index} and wordIndex: ${wordIndex}`)
         keyPressed[keyCode] = false;
         if(exclusiveKeyCodes.includes(keyCode) || arrowKeyCodes.includes(keyCode)) return;
         if(keyCode === 9) { // TAB
             changeIndexes(keyPressed[16] ? index - 1 : index + 1, 0);
         } else {
             let value = document.getSelection().baseNode.data;
-            handleWordChange(index, wordIndex, value.trim());
+            value && handleWordChange(index, wordIndex, value.trim());
         }
     }
 
     onBlur = () => {
+        console.log('onBlur')
         if(lastKeyPressed === 37 || lastKeyPressed === 39) {
             let { index, wordIndex, changeIndexes } = this.props;
             if(lastKeyPressed === 37) {
@@ -98,6 +102,17 @@ class Editable extends PureComponent {
                 </span>
             </span>
         )
+    }
+
+    componentDidUpdate() {
+        const { isFocus } = this.props
+        console.log('EditabledidUpdate and is Focus is:', isFocus)
+        if(isFocus)
+          this.focusDiv();
+    }
+      
+    focusDiv() {
+        ReactDOM.findDOMNode(this.editableRef).focus();
     }
 }
 
