@@ -236,10 +236,7 @@ class Transcription extends Component {
     //     })
     // }
 
-    getTranscriptionText = (words) => {
-        
-        return words.join(' ');
-    }
+    getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
 
     handleWordChange = (index, wordIndex, text) => {
         var { editorData } = this.state;
@@ -274,7 +271,10 @@ class Transcription extends Component {
         return (
             <div className=''>
                     <div className='d-flex flex-col justify-content-end align-items-center'>
-                        {
+                        <div>
+                        {this.state.isSaved? 'Saved!': 'Editing...'}
+                        </div>
+                    {
                             this.state.showDownloadSpinner &&
                             <Spinner
                                 as="span"

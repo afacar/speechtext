@@ -64,13 +64,7 @@ class SpeechTextEditor extends Component {
         this.props.editorClicked(parseFloat(word.startTime.seconds + '.' + word.startTime.nanos));
     }
 
-    getTranscriptionText = (words) => {
-        let transcriptionText = '';
-        _.each(words, (word, index) => {
-            transcriptionText += (index > 0 ? ' ' : '') + word.word;
-        });
-        return transcriptionText;
-    }
+    getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
 
     splitData = (caretPos, wordLength) => {
         let { editorData } = this.props;
