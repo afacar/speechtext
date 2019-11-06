@@ -487,17 +487,6 @@ class Payment extends Component {
                 </Card.Title>
                 <Card.Body>
                     <Row>
-                        {
-                            currentPlan.type === 'Demo' &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
-                                    <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
-                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '0' : currentPlan.quota}`}
-                                    <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
-                                    {Utils.formatExpireDate(currentPlan.expireDate)}
-                                </Form.Label>
-                            </Col>
-                        }
                         <Col lg={6} md={6} sm={6}>
                             <Form.Label>
                                 <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
