@@ -13,8 +13,18 @@ class Editable extends PureComponent {
         let range = _range.cloneRange();
         range.selectNodeContents(this.editableRef);
         range.setEnd(_range.endContainer, _range.endOffset);
-        console.log('getCaretPos:',range.toString().length)
+        console.log('getCaretPos:', range.toString().length)
         return range.toString().length;
+    }
+
+    setCaretPos(pos) {
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.selectNodeContents(this.editableRef);
+        range.setStart(this.editableRef.childNodes[0], pos);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
     }
 
     // setCaretPos(pos) {
@@ -29,17 +39,24 @@ class Editable extends PureComponent {
     // }
 
     onKeyDown = (e) => {
+        const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
+        console.log('onKeyDown:', e.keyCode)
         lastKeyPressed = e.keyCode;
         keyPressed[e.keyCode] = true;
-        if(e.keyCode === 13) {  // Return
+        if (e.keyCode === 13) {  // Return
             e.preventDefault();
             e.stopPropagation();
             this.props.splitData(this.getCaretPos(), this.props.word.word.length);
-        } else if(e.keyCode === 8) {    // Backspace
-            if(this.props.wordIndex === 0 && this.getCaretPos() === 0) {
+        } else if (e.keyCode === 8) {    // Backspace
+            if (wordIndex === 0 && this.getCaretPos() === 0) {
                 e.preventDefault();
                 e.stopPropagation();
                 this.props.mergeData();
+            } else if (wordIndex > 0 && this.getCaretPos() === 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                let newWordIndex = wordIndex - 1
+                changeIndexes(index, newWordIndex);
             }
         }
     }
@@ -48,8 +65,8 @@ class Editable extends PureComponent {
         const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
         console.log(`index: ${index} and wordIndex: ${wordIndex}`)
         keyPressed[keyCode] = false;
-        if(exclusiveKeyCodes.includes(keyCode) || arrowKeyCodes.includes(keyCode)) return;
-        if(keyCode === 9) { // TAB
+        if (exclusiveKeyCodes.includes(keyCode) || arrowKeyCodes.includes(keyCode)) return;
+        if (keyCode === 9) { // TAB
             changeIndexes(keyPressed[16] ? index - 1 : index + 1, 0);
         } else {
             let value = document.getSelection().baseNode.data;
@@ -59,13 +76,13 @@ class Editable extends PureComponent {
 
     onBlur = () => {
         console.log('onBlur')
-        if(lastKeyPressed === 37 || lastKeyPressed === 39) {
+        if (lastKeyPressed === 37 || lastKeyPressed === 39) {
             let { index, wordIndex, changeIndexes } = this.props;
-            if(lastKeyPressed === 37) {
-                if(wordIndex !== 0) {
+            if (lastKeyPressed === 37) {
+                if (wordIndex !== 0) {
                     wordIndex -= 1;
                 }
-            } else if(lastKeyPressed === 39) {
+            } else if (lastKeyPressed === 39) {
                 wordIndex += 1;
             }
             changeIndexes(index, wordIndex);
@@ -74,8 +91,8 @@ class Editable extends PureComponent {
 
     decideClassName = (word, isActive) => {
         let className = 'editable-content';
-        if(isActive) className += ' active-word';
-        if(word.confidence < 0.6 ) className += ' not-so-confident';
+        if (isActive) className += ' active-word';
+        if (word.confidence < 0.6) className += ' not-so-confident';
 
         return className;
     }
@@ -85,35 +102,35 @@ class Editable extends PureComponent {
         return (
             <span className='editable-content-wrapper' contentEditable='false' suppressContentEditableWarning='true'>
                 <span
-                    id={ 'editable-content-' + index + "_" + wordIndex }
+                    id={'editable-content-' + index + "_" + wordIndex}
                     contentEditable='true'
                     suppressContentEditableWarning='true'
                     spellCheck='false'
-                    tabIndex={ index + wordIndex }
-                    ref={(input) => { this.editableRef = input; }} 
-                    onClick={ e => changeIndexes(index, wordIndex) }
-                    onKeyUp={ this.handleChange }
-                    onKeyDown={ this.onKeyDown }
-                    onFocus={ e => changeIndexes(index, wordIndex) }
-                    onBlur={ this.onBlur }
-                    className={ this.decideClassName(word, isActive) }
+                    tabIndex={index + wordIndex}
+                    ref={(input) => { this.editableRef = input; }}
+                    onClick={e => changeIndexes(index, wordIndex)}
+                    onKeyUp={this.handleChange}
+                    onKeyDown={this.onKeyDown}
+                    onFocus={e => changeIndexes(index, wordIndex)}
+                    onBlur={this.onBlur}
+                    className={this.decideClassName(word, isActive)}
                 >
-                    { word.word + ' ' }
+                    {word.word + ' '}
                 </span>
             </span>
         )
     }
 
     componentDidUpdate() {
-        const { isFocus } = this.props
-        console.log('EditabledidUpdate and is Focus is:', isFocus)
-        if(isFocus)
-          this.focusDiv();
+        const { isFocus, word } = this.props
+        console.log('EditableDidUpdate and isFocus is:', isFocus)
+        if (isFocus) {
+            ReactDOM.findDOMNode(this.editableRef).focus();
+            if (lastKeyPressed === 8 || lastKeyPressed === 37) this.setCaretPos(word.word.length)
+        }
+            
     }
-      
-    focusDiv() {
-        ReactDOM.findDOMNode(this.editableRef).focus();
-    }
+
 }
 
 export default Editable;
