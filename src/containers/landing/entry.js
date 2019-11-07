@@ -39,7 +39,7 @@ class Entry extends Component {
                                 <Col lg="12">
                                     <Card className='list-container-card'>
                                         <h4 className='title-style'>
-                                            <span className='title-name-style'>Speech > Text</span>
+                                            <span className='title-name-style'>Speechtext.io</span>
                                             <FormattedMessage id="Banner.subText" />
                                         </h4>
                                         <ul>

@@ -48,6 +48,7 @@ class SpeechTextEditor extends Component {
     }
 
     changeIndexes = (index, wordIndex, changePlayerTime) => {
+        console.log(`changeIndexs index: ${index}, wordIndex: ${wordIndex}, changePlayerTime: ${changePlayerTime}`)
         this.setState({
             activeIndex: index,
             activeWordIndex: wordIndex
@@ -64,13 +65,7 @@ class SpeechTextEditor extends Component {
         this.props.editorClicked(parseFloat(word.startTime.seconds + '.' + word.startTime.nanos));
     }
 
-    getTranscriptionText = (words) => {
-        let transcriptionText = '';
-        _.each(words, (word, index) => {
-            transcriptionText += (index > 0 ? ' ' : '') + word.word;
-        });
-        return transcriptionText;
-    }
+    getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
 
     splitData = (caretPos, wordLength) => {
         let { editorData } = this.props;
@@ -162,7 +157,7 @@ class SpeechTextEditor extends Component {
     }
 
     render() {
-        const { playerActiveIndex, playerActiveWordIndex } = this.state;
+        const { playerActiveIndex, playerActiveWordIndex, activeIndex, activeWordIndex } = this.state;
         const { editorData, handleWordChange, isPlaying, playerTime } = this.props;
 
         return (
@@ -172,6 +167,7 @@ class SpeechTextEditor extends Component {
                     let children = "";
                     children = _.map(alternative.words, (word, wordIndex) => {
                         let isActive = playerTime && playerActiveIndex === index && playerActiveWordIndex === wordIndex;
+                        let isFocus = activeIndex === index && activeWordIndex === wordIndex
                         return (
                                 <Editable
                                     index={ index }
@@ -181,6 +177,7 @@ class SpeechTextEditor extends Component {
                                     changeIndexes={ this.changeIndexes }
                                     handleWordChange={ handleWordChange }
                                     isActive={ isActive }
+                                    isFocus = { isFocus }
                                     splitData={ this.splitData }
                                     mergeData= { this.mergeData }
                                     isPlaying={ isPlaying }

@@ -388,9 +388,14 @@ class Payment extends Component {
 
     changeCurrentPlan = () => {
         const { user } = this.props;
-        if (user.currentPlan.type !== 'Demo') {
+        if (user.currentPlan.type === 'Monthly') {
             this.setState({
                 showApprovement: true
+            });
+        } else if (user.currentPlan.type === 'PayAsYouGo') {
+            this.setState({
+                showApprovement: true,
+                confirmationBody2: true
             });
         } else {
             this.submitPlanChange();
@@ -408,6 +413,8 @@ class Payment extends Component {
         }).then(({ data }) => {
             if (data.success) {
                 Alert.success(intl.formatMessage({ id: 'Plan.Change.succesMessage' }));
+            } else {
+                Alert.error('Some error occured! Please try again later.')
             }
         })
             .catch(error => {
@@ -415,13 +422,15 @@ class Payment extends Component {
                 console.log(error);
             })
         this.setState({
-            showApprovement: false
+            showApprovement: false,
+            confirmationBody2: false
         });
     }
 
     cancelPlanChange = () => {
         this.setState({
-            showApprovement: false
+            showApprovement: false,
+            confirmationBody2: false
         })
     }
 
@@ -478,17 +487,6 @@ class Payment extends Component {
                 </Card.Title>
                 <Card.Body>
                     <Row>
-                        {
-                            currentPlan.type === 'Demo' &&
-                            <Col lg={6} md={6} sm={6}>
-                                <Form.Label>
-                                    <b><FormattedMessage id='Payment.CurrentPlan.durationLimit' /></b>
-                                    {`${!currentPlan.quota || currentPlan.quota === 0 ? '0' : currentPlan.quota}`}
-                                    <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
-                                    {Utils.formatExpireDate(currentPlan.expireDate)}
-                                </Form.Label>
-                            </Col>
-                        }
                         <Col lg={6} md={6} sm={6}>
                             <Form.Label>
                                 <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
@@ -527,7 +525,7 @@ class Payment extends Component {
                             id: 'Plan.Change.confirmationTitle'
                         }}
                         bodyText={{
-                            id: 'Plan.Change.confirmationBody'
+                            id: this.state.confirmationBody2 ? 'Plan.Change.confirmationBody2' : 'Plan.Change.confirmationBody'
                         }}
                         successButton={{
                             id: 'Plan.Change.confirm'
