@@ -8,6 +8,17 @@ var lastKeyPressed = undefined;
 
 class Editable extends PureComponent {
 
+    componentDidUpdate() {
+        const { isFocus, word } = this.props
+        console.log('EditableDidUpdate and isFocus is:', isFocus)
+        if (isFocus) {
+            ReactDOM.findDOMNode(this.editableRef).focus();
+            if (lastKeyPressed === 8 || lastKeyPressed === 37) {
+                this.setCaretPos(word.word.length + 1);
+            }
+        }
+    }
+
     getCaretPos() {
         let _range = document.getSelection().getRangeAt(0);
         let range = _range.cloneRange();
@@ -40,7 +51,6 @@ class Editable extends PureComponent {
 
     onKeyDown = (e) => {
         const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
-        console.log('onKeyDown:', e.keyCode)
         lastKeyPressed = e.keyCode;
         keyPressed[e.keyCode] = true;
         if (e.keyCode === 13) {  // Return
@@ -120,17 +130,6 @@ class Editable extends PureComponent {
             </span>
         )
     }
-
-    componentDidUpdate() {
-        const { isFocus, word } = this.props
-        console.log('EditableDidUpdate and isFocus is:', isFocus)
-        if (isFocus) {
-            ReactDOM.findDOMNode(this.editableRef).focus();
-            if (lastKeyPressed === 8 || lastKeyPressed === 37) this.setCaretPos(word.word.length)
-        }
-            
-    }
-
 }
 
 export default Editable;

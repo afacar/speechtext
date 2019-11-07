@@ -331,3 +331,18 @@ ol.selling-contract-list { counter-reset: item }
 .transcription #dropdown-item-button {
     background-color: #384d60;
 }
+
+.saved-editing-text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    padding-top: 10px;
+}
+
+.saved-editing-text.saved {
+    color: #278227;
+}
+
+.saved-editing-text.editing {
+    color: #bd8700;
+}
