@@ -186,7 +186,7 @@ class SpeechTextEditor extends Component {
                                 ref={'paragraph_' + index}
                                 suppressContentEditableWarning='true'
                             >
-                                <Editable2
+                                <Editable
                                     index={index}
                                     key={index}
                                     transcript={alternative.transcript}

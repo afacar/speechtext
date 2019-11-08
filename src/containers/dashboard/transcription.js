@@ -16,8 +16,7 @@ class Transcription extends Component {
 
         this.state = {
             editorData: null,
-            intervalHolder: undefined,
-            isSaved: true
+            intervalHolder: undefined
         }
     }
 
@@ -226,7 +225,7 @@ class Transcription extends Component {
     handleSplitChange = () => this.setState({ isSaved: false })
 
     renderResults = () => {
-        const { editorData } = this.state;
+        const { editorData, isSaved } = this.state;
         console.log('renderResults editorData',editorData)
         if(editorData === null) return;
         if(_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio!'
@@ -234,11 +233,11 @@ class Transcription extends Component {
         const { formatMessage } = this.props.intl;
         return (
             <div className=''>
+                <div className={ 'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing') }>
+                    { isSaved === undefined ? '' : isSaved ? 'Saved!': 'Editing...' }
+                </div>
                 <div className='d-flex flex-col justify-content-end align-items-center'>
-                    <div>
-                    {this.state.isSaved? 'Saved!': 'Editing...'}
-                    </div>
-                    {
+                {
                         this.state.showDownloadSpinner &&
                         <Spinner
                             as="span"
