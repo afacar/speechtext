@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import Editable from './editable';
 import '../styles/editor.css';
+import Editable2 from './editable2';
 
 class SpeechTextEditor extends Component {
     constructor(props) {
@@ -15,7 +16,7 @@ class SpeechTextEditor extends Component {
     }
 
     componentWillReceiveProps({ editorData, playerTime }) {
-        if(!_.isEmpty(playerTime)) {
+        if (!_.isEmpty(playerTime)) {
             const { seconds, nanoSeconds } = playerTime;
             let playerActiveIndex = -1, playerActiveWordIndex = -1;
             _.each(editorData, (data, index) => {
@@ -26,14 +27,14 @@ class SpeechTextEditor extends Component {
                     startTime = parseFloat(startTime.seconds + '.' + startTime.nanos);
                     endTime = parseFloat(endTime.seconds + '.' + endTime.nanos);
 
-                    if(startTime <= currTime && endTime > currTime) {
+                    if (startTime <= currTime && endTime > currTime) {
                         playerActiveIndex = index;
                         playerActiveWordIndex = wordIndex;
                         return;
                     }
                 })
             });
-            if(playerActiveIndex > -1 && playerActiveWordIndex > -1) {
+            if (playerActiveIndex > -1 && playerActiveWordIndex > -1) {
                 this.setState({
                     playerActiveIndex,
                     playerActiveWordIndex
@@ -43,7 +44,7 @@ class SpeechTextEditor extends Component {
             this.setState({
                 playerActiveIndex: 0,
                 playerActiveWordIndex: 0
-            })   
+            })
         }
     }
 
@@ -53,7 +54,7 @@ class SpeechTextEditor extends Component {
             activeIndex: index,
             activeWordIndex: wordIndex
         }, () => {
-            if(changePlayerTime) {
+            if (changePlayerTime) {
                 this.changePlayerTime(index, wordIndex);
             }
         });
@@ -70,9 +71,9 @@ class SpeechTextEditor extends Component {
     splitData = (caretPos, wordLength) => {
         let { editorData } = this.props;
         const { activeIndex, activeWordIndex } = this.state;
-        
+
         let wordIndex = activeWordIndex;
-        if(caretPos < wordLength / 2) {
+        if (caretPos < wordLength / 2) {
             wordIndex -= 1;
         }
 
@@ -104,8 +105,8 @@ class SpeechTextEditor extends Component {
     mergeData = () => {
         let { editorData } = this.props;
         const { activeIndex } = this.state;
-        
-        if(activeIndex === 0) return;
+
+        if (activeIndex === 0) return;
 
         let prevData = editorData[activeIndex - 1];
         let currentData = editorData[activeIndex];
@@ -128,19 +129,19 @@ class SpeechTextEditor extends Component {
     }
 
     addZero = (value, length) => {
-        if(value === 0) {
+        if (value === 0) {
             return length === 3 ? '000' : '00';
         }
-        if(value < 10) return length === 3 ? '00' : '0' + value.toString();
+        if (value < 10) return length === 3 ? '00' : '0' + value.toString();
         return value;
     }
 
     formatTime = ({ seconds, nanos }) => {
         let formattedTime = '';
-        if(seconds > 60) {
+        if (seconds > 60) {
             let minutes = parseInt(seconds / 60);
             seconds = seconds % 60;
-            if(minutes > 60) {
+            if (minutes > 60) {
                 let hours = parseInt(minutes / 60);
                 minutes = minutes % 60;
                 formattedTime = this.addZero(hours) + ':';
@@ -156,6 +157,10 @@ class SpeechTextEditor extends Component {
         return formattedTime;
     }
 
+    onChange = (data) => {
+        // map between transcription words data and transcription text
+    }
+
     render() {
         const { playerActiveIndex, playerActiveWordIndex, activeIndex, activeWordIndex } = this.state;
         const { editorData, handleWordChange, isPlaying, playerTime } = this.props;
@@ -163,45 +168,31 @@ class SpeechTextEditor extends Component {
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
-                if(alternative && alternative.transcript && alternative.startTime && alternative.endTime) {
-                    let children = "";
-                    children = _.map(alternative.words, (word, wordIndex) => {
-                        let isActive = playerTime && playerActiveIndex === index && playerActiveWordIndex === wordIndex;
-                        let isFocus = activeIndex === index && activeWordIndex === wordIndex
-                        return (
-                                <Editable
-                                    index={ index }
-                                    key={ index + '-' + wordIndex }
-                                    wordIndex={ wordIndex }
-                                    word={ word }
-                                    changeIndexes={ this.changeIndexes }
-                                    handleWordChange={ handleWordChange }
-                                    isActive={ isActive }
-                                    isFocus = { isFocus }
-                                    splitData={ this.splitData }
-                                    mergeData= { this.mergeData }
-                                    isPlaying={ isPlaying }
-                                />
-                        )
-                    });
+                if (alternative && alternative.transcript && alternative.startTime && alternative.endTime) {
                     return (
-                        <div className='conversionResult' key={ index } onClick={ (e) => {} } >
+                        <div className='conversionResult' key={index} onClick={(e) => { }} >
                             <div
-                                id={ 'conversionTime_' + index }
+                                id={'conversionTime_' + index}
                                 className='conversionTime'
-                                disabled={ true }
+                                disabled={true}
                             >
-                                { this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime) }
+                                {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
                             <div
-                                id={ 'editable-content-' + index }
-                                key={ 'editable-content-' + index }
+                                id={'editable-content-' + index}
+                                key={'editable-content-' + index}
                                 contentEditable='true'
-                                disabled={ false }
-                                ref={ 'paragraph_' + index }
+                                disabled={false}
+                                ref={'paragraph_' + index}
                                 suppressContentEditableWarning='true'
                             >
-                                { children }
+                                <Editable2
+                                    index={index}
+                                    key={index}
+                                    transcript={alternative.transcript}
+                                    onChange={this.onChange}
+                                    isPlaying={isPlaying}
+                                />
                             </div>
                         </div>
                     )

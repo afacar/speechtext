@@ -74,6 +74,7 @@ class Transcription extends Component {
         const { editorData, prevEditorData, isSaved } = this.state;
         const { selectedFile, user } = this.props;
         if(!_.isEmpty(editorData) && !isSaved) {
+            return;
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
             storageRef.put(new Blob([JSON.stringify(editorData)]))
                 .then(snapshot => {
@@ -202,48 +203,19 @@ class Transcription extends Component {
         });
     }
 
-    // formatResults = (data) => {
-    //     var that = this;
-    //     if(data) {
-    //         var splittedData = data.split('---');
-    //         if(!_.isEmpty(splittedData)) {
-    //             var { intervalHolder } = this.state;
-    //             var editorData = []
-    //             var i = 0;
-    //             splittedData.forEach(line => {
-    //                 var lines = line.split(' \n ');
-    //                 var times = lines[0].split(' - ');
-    //                 editorData.push({
-    //                     key: i++,
-    //                     startTime: times[0],
-    //                     endTime: times[1],
-    //                     text: lines[1]
-    //                 });
-    //             });
-    //             if(intervalHolder) clearInterval(intervalHolder);
-    //             intervalHolder = setInterval(() => {
-    //                 that.updateTranscribedFile();
-    //             }, 5000);
-    //             this.setState({
-    //                 editorData,
-    //                 prevEditorData: editorData,
-    //                 intervalHolder
-    //             });
-    //         }
-    //     }
-    //     this.setState({
-    //         showSpinner: false
-    //     })
-    // }
-
     getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
 
     handleWordChange = (index, wordIndex, text) => {
+        console.log(`handleWordChange is called...`)
+        console.log(`handleWordChange index: ${index}`)
+        console.log(`handleWordChange wordIndex: ${wordIndex}`)
+        console.log(`handleWordChange text: ${text}`)
+
         var { editorData } = this.state;
         // let prevEditorData = _.cloneDeep(editorData);
-        editorData[index].alternatives[0].words[wordIndex].word = text;
+        if (text) editorData[index].alternatives[0].words[wordIndex].word = text.trim();
+        else editorData[index].alternatives[0].words[wordIndex].word = ''
         editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
-        console.log('handleWordChange isSaved', this.state.isSaved)
         this.setState({
             editorData,
             //prevEditorData,
@@ -251,15 +223,7 @@ class Transcription extends Component {
         })
     }
 
-    handleSplitChange = () => {
-        var { editorData, isSaved } = this.state;
-        
-        console.log('handleSplitChange editorData', editorData)
-        console.log('handleSplitChange isSaved', isSaved)
-        this.setState({
-            isSaved: false
-        })
-    }
+    handleSplitChange = () => this.setState({ isSaved: false })
 
     renderResults = () => {
         const { editorData } = this.state;
@@ -270,106 +234,46 @@ class Transcription extends Component {
         const { formatMessage } = this.props.intl;
         return (
             <div className=''>
-                    <div className='d-flex flex-col justify-content-end align-items-center'>
-                        <div>
-                        {this.state.isSaved? 'Saved!': 'Editing...'}
-                        </div>
-                    {
-                            this.state.showDownloadSpinner &&
-                            <Spinner
-                                as="span"
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                                className='margin-right-5'
-                            />
-                        }
-                        <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
-                            <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
-                                <FormattedMessage id='Transcription.Download.option1' />
-                            </Dropdown.Item>
-                            <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
-                                <FormattedMessage id='Transcription.Download.option2' />
-                            </Dropdown.Item>
-                            <Dropdown.Item as="button" onClick={ this.downloadAsSrt }>
-                                <FormattedMessage id='Transcription.Download.option3' />
-                            </Dropdown.Item>
-                        </DropdownButton>
+                <div className='d-flex flex-col justify-content-end align-items-center'>
+                    <div>
+                    {this.state.isSaved? 'Saved!': 'Editing...'}
                     </div>
-                    <br />
-                    <SpeechTextEditor
-                        editorData={ editorData ? editorData : [] }
-                        handleWordChange={ this.handleWordChange }
-                        handleSplitChange={ this.handleSplitChange }
-                        suppressContentEditableWarning
-                        playerTime={ this.state.playerTime }
-                        editorClicked={ this.editorClicked }
-                        isPlaying={ this.state.isPlaying }
-                    />
+                    {
+                        this.state.showDownloadSpinner &&
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            className='margin-right-5'
+                        />
+                    }
+                    <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
+                            <FormattedMessage id='Transcription.Download.option1' />
+                        </Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
+                            <FormattedMessage id='Transcription.Download.option2' />
+                        </Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsSrt }>
+                            <FormattedMessage id='Transcription.Download.option3' />
+                        </Dropdown.Item>
+                    </DropdownButton>
                 </div>
+                <br />
+                <SpeechTextEditor
+                    editorData={ editorData ? editorData : [] }
+                    handleWordChange={ this.handleWordChange }
+                    handleSplitChange={ this.handleSplitChange }
+                    suppressContentEditableWarning
+                    playerTime={ this.state.playerTime }
+                    editorClicked={ this.editorClicked }
+                    isPlaying={ this.state.isPlaying }
+                />
+            </div>
         );
     }
-
-    // renderResults = () => {
-    //     const { editorData, selectedTextIndex, newEditorData } = this.state;
-    //     if(!_.isEmpty(editorData)) {
-    //         const { formatMessage } = this.props.intl;
-    //         var data = editorData.map((data, index) => {
-    //             if(!_.isEmpty(data.startTime) && !_.isEmpty(data.endTime)) {
-    //                 return (
-    //                     <div className='conversionResult' key={ index } onClick={ () => this.transcriptionClicked(index) } >
-    //                         <ContentEditable
-    //                             className='conversionTime'
-    //                             html={ data.startTime + ' - ' + data.endTime } // innerHTML of the editable div
-    //                             disabled={ true } // use true to disable edition
-    //                         />
-    //                         <ContentEditable
-    //                             ref={ (r) => { if(index === selectedTextIndex) this.currentEditableText = r }}
-    //                             id={ 'editable-content-' + index }
-    //                             html={ data.text } // innerHTML of the editable div
-    //                             disabled={ false } // use true to disable edition
-    //                             onChange={ (e) => { this.handleChange(data.key, e.target.value) }} // handle innerHTML change
-    //                         />
-    //                         <br />
-    //                     </div>
-    //                 )
-    //             }
-    //         });
-    //         if(!_.isEmpty(newEditorData) && !_.isEmpty(newEditorData.results)) {
-    //             data = this.renderResultsPlus(newEditorData.results);
-    //         }
-
-    //         return (
-    //             <div className=''>
-    //                 <div className='d-flex flex-col justify-content-end align-items-center'>
-    //                     {
-    //                         this.state.showDownloadSpinner &&
-    //                         <Spinner
-    //                             as="span"
-    //                             animation="border"
-    //                             size="sm"
-    //                             role="status"
-    //                             aria-hidden="true"
-    //                             className='margin-right-5'
-    //                         />
-    //                     }
-    //                     <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
-    //                         <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
-    //                             <FormattedMessage id='Transcription.Download.option1' />
-    //                         </Dropdown.Item>
-    //                         <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
-    //                             <FormattedMessage id='Transcription.Download.option2' />
-    //                         </Dropdown.Item>
-    //                     </DropdownButton>
-    //                 </div>
-    //                 <br />
-    //                 { data }
-    //             </div>
-    //         );
-    //     }
-    //     return false;
-    // }
 
     editorClicked = (seconds) => {
         this.setState({
@@ -381,59 +285,6 @@ class Transcription extends Component {
         })
     }
 
-    // transcriptionClicked = (index) => {
-    //     const { editorData } = this.state;
-    //     let selectedRow = editorData[index];
-    //     let splittedTime = selectedRow.startTime.trim().split(':');
-    //     var timeToSeek = 0;
-    //     if(splittedTime.length === 3) {
-    //         timeToSeek += parseInt(splittedTime[0] * 3600);
-    //         timeToSeek += parseInt(splittedTime[1] * 60);
-    //         timeToSeek += parseInt(splittedTime[2]);
-    //     } else if(splittedTime.length === 2) {
-    //         timeToSeek += parseInt(splittedTime[0] * 60);
-    //         timeToSeek += parseInt(splittedTime[1]);
-    //     }
-    //     this.setState({
-    //         timeToSeek
-    //     }, () => {
-    //         this.setState({
-    //             timeToSeek: undefined
-    //         })
-    //     });
-    // }
-
-    // getFormattedTimeInSeconds = (startTime) => {
-    //     var splittedTime = startTime.trim().split(':');
-    //     var timeInSeconds = 0;
-    //     if(splittedTime.length === 3) {
-    //         timeInSeconds += parseInt(splittedTime[0] * 3600);
-    //         timeInSeconds += parseInt(splittedTime[1] * 60);
-    //         timeInSeconds += parseInt(splittedTime[2]);
-    //     } else if(splittedTime.length === 2) {
-    //         timeInSeconds += parseInt(splittedTime[0] * 60);
-    //         timeInSeconds += parseInt(splittedTime[1]);
-    //     }
-    //     return timeInSeconds;
-    // }
-
-    // handleChange = (key, value) => {
-    //     var { editorData } = this.state;
-    //     var prevEditorData = [];
-    //     editorData = editorData.map((data) => {
-    //         prevEditorData.push({...data});
-    //         if(data.key === key) {
-    //             data.text = value;
-    //         }
-    //         return data;
-    //     });
-    //     this.setState({
-    //         editorData,
-    //         prevEditorData,
-    //         timeToSeek: undefined
-    //     });
-    // }
-    
     handleTimeChange = (currentTime) => {
         let seconds = Math.floor(currentTime);
         let nanoSeconds = parseInt((currentTime - seconds) * 1000);
@@ -443,28 +294,10 @@ class Transcription extends Component {
                 nanoSeconds
             }
         });
-
-        // const { editorData } = this.state;
-        // _.each(editorData, (data, index) => {
-        //     if(data.startTime && data.endTime) {
-        //         let startTime = this.getFormattedTimeInSeconds(data.startTime);
-        //         let endTime = this.getFormattedTimeInSeconds(data.endTime);
-        //         if(startTime <= currentTime && currentTime < endTime) {
-        //             this.setState({
-        //                 selectedTextIndex: index
-        //             });
-        //             return false;
-        //         }
-        //     }
-        // })
-        // setTimeout(() =>{
-        //     if(this.currentEditableText) {
-        //         this.currentEditableText.el.current.focus();
-        //     }
-        // }, 500);
     }
 
     render() {
+        console.log('Transcription Rendering...')
         var { selectedFile } = this.props;
         if(_.isEmpty(selectedFile)) selectedFile = {};
         return (
