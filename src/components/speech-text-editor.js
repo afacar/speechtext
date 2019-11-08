@@ -188,9 +188,15 @@ class SpeechTextEditor extends Component {
                             >
                                 <Editable
                                     index={index}
-                                    key={index}
-                                    transcript={alternative.transcript}
-                                    onChange={this.onChange}
+                                    key={index + '-' + wordIndex}
+                                    wordIndex={wordIndex}
+                                    word={word}
+                                    changeIndexes={this.changeIndexes}
+                                    handleWordChange={handleWordChange}
+                                    isActive={isActive}
+                                    isFocus={isFocus}
+                                    splitData={this.splitData}
+                                    mergeData={this.mergeData}
                                     isPlaying={isPlaying}
                                 />
                             </div>
