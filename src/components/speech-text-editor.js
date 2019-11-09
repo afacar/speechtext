@@ -156,9 +156,24 @@ class SpeechTextEditor extends Component {
         return formattedTime;
     }
 
+    handleWordChange = (index, wordIndex, text) => {
+        if(!text || _.isEmpty(text.trim())) {
+            let activeWordIndex = wordIndex;
+            activeWordIndex = wordIndex > 0 ? wordIndex - 1 : 0;
+
+            if(activeWordIndex !== wordIndex) {
+                this.setState({
+                    activeWordIndex
+                })
+            }
+        }
+
+        this.props.handleWordChange(index, wordIndex, text);
+    }
+
     render() {
         const { playerActiveIndex, playerActiveWordIndex, activeIndex, activeWordIndex } = this.state;
-        const { editorData, handleWordChange, isPlaying, playerTime } = this.props;
+        const { editorData, isPlaying, playerTime } = this.props;
 
         return (
             _.map(editorData, (data, index) => {
@@ -175,7 +190,7 @@ class SpeechTextEditor extends Component {
                                     wordIndex={ wordIndex }
                                     word={ word }
                                     changeIndexes={ this.changeIndexes }
-                                    handleWordChange={ handleWordChange }
+                                    handleWordChange={ this.handleWordChange }
                                     isActive={ isActive }
                                     isFocus = { isFocus }
                                     splitData={ this.splitData }

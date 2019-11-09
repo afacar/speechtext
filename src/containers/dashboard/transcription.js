@@ -237,14 +237,18 @@ class Transcription extends Component {
     handleWordChange = (index, wordIndex, text) => {
         var { editorData } = this.state;
         // let prevEditorData = _.cloneDeep(editorData);
-        editorData[index].alternatives[0].words[wordIndex].word = text;
-        editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
-        console.log('handleWordChange isSaved', this.state.isSaved)
-        this.setState({
-            editorData,
-            //prevEditorData,
-            isSaved: false
-        })
+        if(!text || _.isEmpty(text.trim())) {
+            editorData[index].alternatives[0].words.splice(wordIndex, 1);
+        } else {
+            editorData[index].alternatives[0].words[wordIndex].word = text;
+            editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
+            console.log('handleWordChange isSaved', this.state.isSaved)
+            this.setState({
+                editorData,
+                //prevEditorData,
+                isSaved: false
+            })
+        }
     }
 
     handleSplitChange = () => {
