@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
 import { Container, Row, Col, Alert } from 'react-bootstrap';
 
-import { getFileList } from '../../actions';
+import { getFileList, updateFileState, removeFromUploadingFiles } from '../../actions';
 import '../../styles/dashboard.css';
 import UserHeader from '../user-header';
 import FileList from './file-list';
@@ -13,9 +13,50 @@ import Utils from '../../utils';
 const { auth } = Utils.firebase;
 
 class Dashboard extends Component {
-    state = {
-        emailVerified: null,
-        isSent: true
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            emailVerified: null,
+            isSent: true,
+            blockNavigation: false
+        }
+    }
+
+    componentDidUpdate() {
+        if(!this.state.blockNavigation && !_.isEmpty(this.props.uploadingFiles)) {
+            this.setState({
+                blockNavigation: true
+            });
+            window.addEventListener('beforeunload', this.beforeUnload);
+        } else if(this.state.blockNavigation && _.isEmpty(this.props.uploadingFiles)) {
+            this.setState({
+                blockNavigation: false
+            });
+            window.removeEventListener('beforeunload', this.beforeUnload);
+        }
+    }
+
+    beforeUnload = e => {
+        e.preventDefault();
+        let message = "If you leave, the uploading files will be lost!";
+        e.returnValue = message;
+        return message;
+    }
+
+    clearUploadingFiles = (e) => {
+        setTimeout({}, 1000);
+        if(!_.isEmpty(this.props.uploadingFiles)) {
+            e.preventDefault();
+            _.each(this.props.uploadingFiles, file => {
+                this.props.updateFileState(file.id, 'DELETED');
+                this.props.removeFromUploadingFiles(file.id);
+            })
+        }
+    }
+
+    componentWillUnmount() {
+        this.clearUploadingFiles();
     }
 
     componentDidMount() {
@@ -63,15 +104,22 @@ class Dashboard extends Component {
                         </Col>
                     </Row>
                 </Container>
+                <React.Fragment>
+                    <Prompt
+                        when={this.state.blockNavigation}
+                        message='If you leave, the uplading file will be lost. Are you sure?'
+                    />
+                </React.Fragment>
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, uploadingFiles }) => {
     return {
-        user
+        user,
+        uploadingFiles
     }
 }
 
-export default connect(mapStateToProps, { getFileList })(withRouter(Dashboard));
+export default connect(mapStateToProps, { getFileList, updateFileState, removeFromUploadingFiles })(withRouter(Dashboard));

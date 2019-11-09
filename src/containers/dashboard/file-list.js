@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import firebase from '../../utils/firebase';
-import { getFileList, addFile, setSelectedFile, addToUploadingFiles } from '../../actions';
+import { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles } from '../../actions';
 
 import Dropzone from '../../components/dropzone';
 import File from '../../components/file';
@@ -19,7 +19,14 @@ class FileList extends Component {
         }
     }
 
-    componentWillReceiveProps({ files }) {
+    componentWillReceiveProps({ files, uploadingFiles }) {
+        if(!_.isEmpty(files)) {
+            _.each(files, file => {
+                if((file.status === 'INITIAL' || file.status === 'UPLOADING') && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { 'id': file.id })))) {
+                    this.props.updateFileState(file.id, 'DELETED');
+                }
+            })
+        }
         this.setState({
             files
         });
@@ -175,14 +182,15 @@ class FileList extends Component {
     }
 }
 
-const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLanguages }) => {
+const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLanguages, uploadingFiles }) => {
     return {
         user,
         language,
         supportedLanguages,
         files: userFiles,
-        selectedFile
+        selectedFile,
+        uploadingFiles
     }
 }
 
-export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles })(withRouter(FileList));
+export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })(withRouter(FileList));
