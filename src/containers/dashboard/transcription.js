@@ -20,7 +20,8 @@ class Transcription extends Component {
         }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = async () => {
+        await this.updateTranscribedFile();
         if(this.state.intervalHolder) {
             clearInterval(this.state.intervalHolder);
         }
@@ -63,10 +64,6 @@ class Transcription extends Component {
                 showSpinner: false
             })
         }
-    }
-
-    componentWillUnmount = async () => {
-        await this.updateTranscribedFile();
     }
 
     updateTranscribedFile = async () => {
