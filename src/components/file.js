@@ -152,8 +152,21 @@ class File extends Component {
         }
     }
 
+    getErrorMessage = (file) => {
+        const { errorDefinitions } = this.props;
+        if(file.status !== 'ERROR') return '';
+        if(_.isEmpty(errorDefinitions) || _.isEmpty(file.error)) return "An error occured during transcription!";
+        let error = _.find(errorDefinitions, { key: file.error.key });
+        if(!_.isEmpty(error)) {
+            return error.value;
+        }
+        return '';
+    }
+
     render() {
         const { file, progress, paused, showSpinner } = this.state;
+
+        let errorText = this.getErrorMessage(file);
         return (
             <div className={ `file-container ${this.props.isSelected ? 'active' : ''}` }>
                 <Card>
@@ -195,11 +208,9 @@ class File extends Component {
                             </div>
                         }
                         {
-                            file.status === 'CONVERTED' &&
-                            <div className='file-transcribe-button'>
-                                <Button bg='orange' onClick={ this.transcribeFile }>
-                                    <FormattedMessage id='File.Button.transcribe' />
-                                </Button>
+                            file.status === 'ERROR' &&
+                            <div className='file-error-text'>
+                                { !_.isEmpty(errorText) ? errorText : 'An error occured during transcription!' }
                             </div>
                         }
                     </Card.Body>
@@ -209,12 +220,13 @@ class File extends Component {
     }
 }
 
-const mapStateToProps = ({ user, selectedFile, selectedFileOptions, uploadingFiles }) => {
+const mapStateToProps = ({ user, selectedFile, selectedFileOptions, uploadingFiles, errorDefinitions }) => {
     return {
         user,
         selectedFile,
         selectedFileOptions,
-        uploadingFiles
+        uploadingFiles,
+        errorDefinitions
     }
 }
 

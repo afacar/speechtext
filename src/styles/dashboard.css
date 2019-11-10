@@ -176,14 +176,12 @@
     opacity: 1;
 }
 
-.file-transcribe-button {
-    text-align: center;
-    margin-top: 5px;
-}
-
-.file-transcribe-button button {
-    background-color: orangered;
-    border-color: orange;
+.file-error-text {
+    margin-top: 10px;
+    color: red;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: italic;
 }
 
 .switch.btn {
