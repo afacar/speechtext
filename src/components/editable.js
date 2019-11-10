@@ -50,7 +50,7 @@ class Editable extends PureComponent {
     // }
 
     onKeyDown = (e) => {
-        const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
+        const { index, wordIndex, changeIndexes } = this.props;
         lastKeyPressed = e.keyCode;
         keyPressed[e.keyCode] = true;
         if (e.keyCode === 13) {  // Return

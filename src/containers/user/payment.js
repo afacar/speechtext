@@ -253,9 +253,9 @@ class Payment extends Component {
                 />
                 <p>
                     {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
-                    <a href='' onClick={this.sellingContractClicked}>
+                    <Button variant='link' onClick={this.sellingContractClicked}>
                         {this.props.language === 'tr' ? 'Mesafeli Satış Sözleşmesi' : 'Online Selling Contract'}
-                    </a>
+                    </Button>
                     {this.props.language === 'tr' ? "'ni okudum ve onaylıyorum." : ''}
                 </p>
             </div>
@@ -273,9 +273,9 @@ class Payment extends Component {
                 />
                 <p>
                     {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
-                    <a href='' onClick={this.refundContractClicked}>
+                    <Button variant='link' onClick={this.refundContractClicked}>
                         {this.props.language === 'tr' ? 'İptal ve İade Koşulları' : 'Cancel and Refund Policy'}
-                    </a>
+                    </Button>
                     {this.props.language === 'tr' ? "'nı okudum ve onaylıyorum." : ''}
                 </p>
             </div>

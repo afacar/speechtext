@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Card, ProgressBar, Button, Spinner } from 'react-bootstrap';
+import { Card, ProgressBar, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrashAlt, faPause, faPlay
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
 import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
-import { FormattedMessage } from 'react-intl';
 
 class File extends Component {
     constructor(props) {
