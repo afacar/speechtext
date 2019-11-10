@@ -47,7 +47,7 @@ class Dashboard extends Component {
     clearUploadingFiles = (e) => {
         setTimeout({}, 1000);
         if(!_.isEmpty(this.props.uploadingFiles)) {
-            e.preventDefault();
+            if(e) e.preventDefault();
             _.each(this.props.uploadingFiles, file => {
                 this.props.updateFileState(file.id, 'DELETED');
                 this.props.removeFromUploadingFiles(file.id);
