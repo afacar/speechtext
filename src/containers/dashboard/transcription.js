@@ -67,8 +67,8 @@ class Transcription extends Component {
     }
 
     updateTranscribedFile = async () => {
-        const { editorData, prevEditorData, isSaved } = this.state;
-        const { selectedFile, user } = this.props;
+        const { editorData, isSaved } = this.state;
+        const { selectedFile } = this.props;
         if(!_.isEmpty(editorData) && !isSaved) {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
             storageRef.put(new Blob([JSON.stringify(editorData)]))
@@ -271,7 +271,7 @@ class Transcription extends Component {
         return (
             <div className=''>
                 <div className={ 'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing') }>
-                    { isSaved == undefined ? '' : isSaved ? 'Saved!': 'Editing...' }
+                    { isSaved === undefined ? '' : isSaved ? 'Saved!': 'Editing...' }
                 </div>
                 <div className='d-flex flex-col justify-content-end align-items-center'>
                 {
