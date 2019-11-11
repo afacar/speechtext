@@ -16,12 +16,12 @@ class Transcription extends Component {
 
         this.state = {
             editorData: null,
-            intervalHolder: undefined,
-            isSaved: true
+            intervalHolder: undefined
         }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = async () => {
+        await this.updateTranscribedFile();
         if(this.state.intervalHolder) {
             clearInterval(this.state.intervalHolder);
         }
@@ -66,13 +66,9 @@ class Transcription extends Component {
         }
     }
 
-    componentWillUnmount = async () => {
-        await this.updateTranscribedFile();
-    }
-
     updateTranscribedFile = async () => {
-        const { editorData, prevEditorData, isSaved } = this.state;
-        const { selectedFile, user } = this.props;
+        const { editorData, isSaved } = this.state;
+        const { selectedFile } = this.props;
         if(!_.isEmpty(editorData) && !isSaved) {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
             storageRef.put(new Blob([JSON.stringify(editorData)]))
@@ -236,22 +232,23 @@ class Transcription extends Component {
     //     })
     // }
 
-    getTranscriptionText = (words) => {
-        
-        return words.join(' ');
-    }
+    getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
 
     handleWordChange = (index, wordIndex, text) => {
         var { editorData } = this.state;
         // let prevEditorData = _.cloneDeep(editorData);
-        editorData[index].alternatives[0].words[wordIndex].word = text;
-        editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
-        console.log('handleWordChange isSaved', this.state.isSaved)
-        this.setState({
-            editorData,
-            //prevEditorData,
-            isSaved: false
-        })
+        if(!text || _.isEmpty(text.trim())) {
+            editorData[index].alternatives[0].words.splice(wordIndex, 1);
+        } else {
+            editorData[index].alternatives[0].words[wordIndex].word = text;
+            editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
+            console.log('handleWordChange isSaved', this.state.isSaved)
+            this.setState({
+                editorData,
+                //prevEditorData,
+                isSaved: false
+            })
+        }
     }
 
     handleSplitChange = () => {
@@ -265,7 +262,7 @@ class Transcription extends Component {
     }
 
     renderResults = () => {
-        const { editorData } = this.state;
+        const { editorData, isSaved } = this.state;
         console.log('renderResults editorData',editorData)
         if(editorData === null) return;
         if(_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio!'
@@ -273,40 +270,43 @@ class Transcription extends Component {
         const { formatMessage } = this.props.intl;
         return (
             <div className=''>
-                    <div className='d-flex flex-col justify-content-end align-items-center'>
-                        {
-                            this.state.showDownloadSpinner &&
-                            <Spinner
-                                as="span"
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                                className='margin-right-5'
-                            />
-                        }
-                        <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
-                            <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
-                                <FormattedMessage id='Transcription.Download.option1' />
-                            </Dropdown.Item>
-                            <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
-                                <FormattedMessage id='Transcription.Download.option2' />
-                            </Dropdown.Item>
-                            <Dropdown.Item as="button" onClick={ this.downloadAsSrt }>
-                                <FormattedMessage id='Transcription.Download.option3' />
-                            </Dropdown.Item>
-                        </DropdownButton>
-                    </div>
-                    <br />
-                    <SpeechTextEditor
-                        editorData={ editorData ? editorData : [] }
-                        handleWordChange={ this.handleWordChange }
-                        handleSplitChange={ this.handleSplitChange }
-                        suppressContentEditableWarning
-                        playerTime={ this.state.playerTime }
-                        editorClicked={ this.editorClicked }
-                        isPlaying={ this.state.isPlaying }
-                    />
+                <div className={ 'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing') }>
+                    { isSaved === undefined ? '' : isSaved ? 'Saved!': 'Editing...' }
+                </div>
+                <div className='d-flex flex-col justify-content-end align-items-center'>
+                {
+                        this.state.showDownloadSpinner &&
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            className='margin-right-5'
+                        />
+                    }
+                    <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
+                            <FormattedMessage id='Transcription.Download.option1' />
+                        </Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
+                            <FormattedMessage id='Transcription.Download.option2' />
+                        </Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={ this.downloadAsSrt }>
+                            <FormattedMessage id='Transcription.Download.option3' />
+                        </Dropdown.Item>
+                    </DropdownButton>
+                </div>
+                <br />
+                <SpeechTextEditor
+                    editorData={ editorData ? editorData : [] }
+                    handleWordChange={ this.handleWordChange }
+                    handleSplitChange={ this.handleSplitChange }
+                    suppressContentEditableWarning
+                    playerTime={ this.state.playerTime }
+                    editorClicked={ this.editorClicked }
+                    isPlaying={ this.state.isPlaying }
+                />
                 </div>
         );
     }

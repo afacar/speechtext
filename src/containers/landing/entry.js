@@ -31,15 +31,15 @@ class Entry extends Component {
             <div className='main-div' >
                 <Container align="center">
                     <Row>
-                        <Col lg="6" md="6" sm="12" xs="12">
+                        <Col lg="6" md="12" sm="12" xs="12">
                             <img src={ Banner } title='Speech to Text Transcription' alt='Speech to text Automatic Transcription Editor Banner' className='banner-image' />
                         </Col>
-                        <Col lg="6" md="6" sm="12" xs="12">
+                        <Col lg="6" md="12" sm="12" xs="12">
                             <Row className='list-container-style'>
                                 <Col lg="12">
                                     <Card className='list-container-card'>
                                         <h4 className='title-style'>
-                                            <span className='title-name-style'>Speech > Text</span>
+                                            <span className='title-name-style'>Speechtext.io</span>
                                             <FormattedMessage id="Banner.subText" />
                                         </h4>
                                         <ul>

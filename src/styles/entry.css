@@ -4,7 +4,7 @@
 }
 
 .banner-image {
-    float: center;
+    align-self: center;
 }
 
 .badge-style {
@@ -31,4 +31,20 @@
 .list-text-style {
     line-height: 1.5;
     text-align: left;
+}
+
+@media only screen and (max-width: 730px) {
+    .banner-image {
+        height: 250px !important;
+        margin-top: 50px;
+    }
+
+    .list-container-card li {
+        margin-left: -25px;
+        margin-right: 5px;
+    }
+
+    .list-container-card li > div {
+        padding-top: 12px;
+    }
 }

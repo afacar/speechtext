@@ -31,7 +31,6 @@ class Auth extends Component {
                 const { uid, displayName, email, emailVerified, metadata } = currentUser;
                 const { lastSignInTime, creationTime } = metadata;
                 const isNewUser = creationTime === lastSignInTime
-                console.log(`uid: ${uid} \ndisplayName: ${displayName}\nemail: ${email}`)
                 that.props.login({
                     uid,
                     displayName,

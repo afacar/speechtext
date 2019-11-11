@@ -230,7 +230,7 @@ class SellingContract extends Component {
                             <p>
                                 İşbu sözleşmeden doğan uyuşmazlıklarda şikayet ve itirazlar, aşağıdaki kanunda belirtilen parasal sınırlar dâhilinde tüketicinin yerleşim yerinin bulunduğu veya tüketici işleminin yapıldığı yerdeki tüketici sorunları hakem heyetine veya tüketici mahkemesine yapılacaktır. Parasal sınıra ilişkin bilgiler aşağıdadır:
                             </p>
-                            <p>
+                            <div>
                                 01/01/2017 tarihinden itibaren geçerli olmak üzere, 2017 yılı için tüketici hakem heyetlerine yapılacak başvurularda değeri:
                                 <ol type='a'>
                                     <li>
@@ -247,7 +247,7 @@ class SellingContract extends Component {
                                     </li>
                                 </ol>
                                 İşbu Sözleşme ticari amaçlarla yapılmaktadır.
-                            </p>
+                            </div>
                         </li>
                         <li>
                             YÜRÜRLÜK

@@ -8,7 +8,6 @@ import { FormattedMessage } from 'react-intl';
 import UserHeader from '../user-header';
 import Profile from './profile';
 import Payment from './payment';
-import Plan from './plan';
 
 class User extends Component {
     constructor(props) {
@@ -43,22 +42,28 @@ class User extends Component {
         localStorage.setItem('location', window.location.pathname + window.location.hash);
     }
 
+    onSelectTab = (key) => {
+        this.setState({
+            activeTabKey: key
+        })
+    }
+
     render() {
         return (
             <div>
                 <UserHeader />
                 <Container className='profile-container'>
-                    <Tab.Container id="left-tabs-example" activeKey={ this.state.activeTabKey }>
+                    <Tab.Container id="left-tabs-example" activeKey={ this.state.activeTabKey } onSelect={ this.onSelectTab }>
                         <Row>
                             <Col sm={3} className='user-tabs'>
                                 <Nav variant="pills" className="flex-column">
                                     <Nav.Item>
-                                        <Nav.Link href='#profile' eventKey="profile" onClick={ () => this.setState({ activeTabKey: 'profile' }) } >
+                                        <Nav.Link href='#profile' eventKey="profile">
                                             <FormattedMessage id='User.Tabs.profile' />
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href='#payment' eventKey="payment" onClick={ () => this.setState({ activeTabKey: 'payment' }) } >
+                                        <Nav.Link href='#payment' eventKey="payment">
                                             <FormattedMessage id='User.Tabs.payment' />
                                         </Nav.Link>
                                     </Nav.Item>

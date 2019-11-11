@@ -1,10 +1,8 @@
 import React from 'react';
 import { Container, Accordion, Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Header from '../header';
 import Footer from '../footer';
-import { FormattedMessage } from 'react-intl';
 
 const FrequentlyAskedQuestions = (props) => {
     localStorage.setItem('location', window.location.pathname);
@@ -76,7 +74,7 @@ const FrequentlyAskedQuestions = (props) => {
                         </Card.Header>
                         <Accordion.Collapse eventKey="4">
                             <Card.Body>
-                                For that case, you should consider our enterprise plans that offer better price and extra functionalities. To get the best offers you can contact us at <a href='mailto:support@speechtext.io' target='_blank'>support@speechtext.io</a>. We will be happy to hear from you.
+                                For that case, you should consider our enterprise plans that offer better price and extra functionalities. To get the best offers you can contact us at <a href='mailto:support@speechtext.io' target='_blank' rel="noopener noreferrer">support@speechtext.io</a>. We will be happy to hear from you.
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -88,7 +86,7 @@ const FrequentlyAskedQuestions = (props) => {
                         </Card.Header>
                         <Accordion.Collapse eventKey="5">
                             <Card.Body>
-                                We currently support English, Turkish, Arabic, Russian and Spanish. If your language isn’t listed, please contact us (<a href='mailto:support@speechtext.io' target='_blank'>support@speechtext.io</a>). We will be ready to help for transcribing in your language.
+                                We currently support English, Turkish, Arabic, Russian and Spanish. If your language isn’t listed, please contact us (<a href='mailto:support@speechtext.io' target='_blank' rel="noopener noreferrer">support@speechtext.io</a>). We will be ready to help for transcribing in your language.
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -121,7 +119,7 @@ const FrequentlyAskedQuestions = (props) => {
                                         Popular video file formats: *.mp4, *.wma, *.mov, and *.avi
                                     </li>
                                 </ul>
-                                If your file format isn’t listed, please feel free to contact us (<a href='mailto:support@speechtext.io' target='_blank'>support@speechtext.io</a>).
+                                If your file format isn’t listed, please feel free to contact us (<a href='mailto:support@speechtext.io' target='_blank' rel="noopener noreferrer">support@speechtext.io</a>).
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -157,7 +155,7 @@ const FrequentlyAskedQuestions = (props) => {
                         </Card.Header>
                         <Accordion.Collapse eventKey="10">
                             <Card.Body>
-                                Yes you can export your transcripted files in .txt, .srt, .docx formats. If you need another file format, please contact us at <a href='mailto:support@speechtext.io' target='_blank'>support@speechtext.io</a>. 
+                                Yes you can export your transcripted files in .txt, .srt, .docx formats. If you need another file format, please contact us at <a href='mailto:support@speechtext.io' target='_blank' rel="noopener noreferrer">support@speechtext.io</a>. 
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>

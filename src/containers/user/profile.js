@@ -11,7 +11,7 @@ import { updateProfile } from '../../actions';
 class Profile extends Component {
     constructor(props) {
         super(props);
-        console.log('profile constructor with props:', props)
+
         this.state = {
             values: {}
         }
@@ -28,11 +28,6 @@ class Profile extends Component {
     componentDidMount() {
         this.initializeValues(this.props.user);
     }
-
- /*    componentWillReceiveProps({ user }) {
-        console.log('profilecomponentWillReceiveProps with user:', user)
-        this.initializeValues(user);
-    } */
 
     handlePhoneChange = (data) => {
         var phoneNumber = data.intlPhoneNumber;
