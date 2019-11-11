@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 
 import Editable from './editable';
 import '../styles/editor.css';
@@ -15,40 +16,40 @@ class SpeechTextEditor extends Component {
         }
     }
 
-    componentWillReceiveProps({ editorData, playerTime }) {
-        if (!_.isEmpty(playerTime)) {
-            const { seconds, nanoSeconds } = playerTime;
-            let playerActiveIndex = -1, playerActiveWordIndex = -1;
-            _.each(editorData, (data, index) => {
-                let alternative = data.alternatives[0];
-                _.map(alternative.words, (word, wordIndex) => {
-                    let { startTime, endTime } = word;
-                    let currTime = parseFloat(seconds + '.' + nanoSeconds);
-                    startTime = parseFloat(startTime.seconds + '.' + startTime.nanos);
-                    endTime = parseFloat(endTime.seconds + '.' + endTime.nanos);
-
-                    if (startTime <= currTime && endTime > currTime) {
-                        playerActiveIndex = index;
-                        playerActiveWordIndex = wordIndex;
-                        return;
-                    }
-                })
-            });
-            if (playerActiveIndex > -1 && playerActiveWordIndex > -1) {
+    /*     componentWillReceiveProps({ editorData, playerTime }) {
+            if (!_.isEmpty(playerTime)) {
+                const { seconds, nanoSeconds } = playerTime;
+                let playerActiveIndex = -1, playerActiveWordIndex = -1;
+                _.each(editorData, (data, index) => {
+                    let alternative = data.alternatives[0];
+                    _.map(alternative.words, (word, wordIndex) => {
+                        let { startTime, endTime } = word;
+                        let currTime = parseFloat(seconds + '.' + nanoSeconds);
+                        startTime = parseFloat(startTime.seconds + '.' + startTime.nanos);
+                        endTime = parseFloat(endTime.seconds + '.' + endTime.nanos);
+    
+                        if (startTime <= currTime && endTime > currTime) {
+                            playerActiveIndex = index;
+                            playerActiveWordIndex = wordIndex;
+                            return;
+                        }
+                    })
+                });
+                if (playerActiveIndex > -1 && playerActiveWordIndex > -1) {
+                    this.setState({
+                        playerActiveIndex,
+                        playerActiveWordIndex
+                    })
+                }
+            } else {
                 this.setState({
-                    playerActiveIndex,
-                    playerActiveWordIndex
+                    playerActiveIndex: 0,
+                    playerActiveWordIndex: 0
                 })
             }
-        } else {
-            this.setState({
-                playerActiveIndex: 0,
-                playerActiveWordIndex: 0
-            })
-        }
-    }
+        } */
 
-    changeIndexes = (index, wordIndex, changePlayerTime) => {
+    /* changeIndexes = (index, wordIndex, changePlayerTime) => {
         console.log(`changeIndexs index: ${index}, wordIndex: ${wordIndex}, changePlayerTime: ${changePlayerTime}`)
         this.setState({
             activeIndex: index,
@@ -58,7 +59,7 @@ class SpeechTextEditor extends Component {
                 this.changePlayerTime(index, wordIndex);
             }
         });
-    }
+    } */
 
     changePlayerTime = (index, wordIndex) => {
         const { editorData } = this.props;
@@ -99,7 +100,7 @@ class SpeechTextEditor extends Component {
             activeWordIndex: 0,
             caretPosition: 0
         });
-        this.props.handleSplitChange()
+        //this.props.handleSplitChange()
     }
 
     mergeData = () => {
@@ -152,18 +153,15 @@ class SpeechTextEditor extends Component {
         } else {
             formattedTime += '00:00:';
         }
-        formattedTime += this.addZero(seconds) + '.' + this.addZero(nanos, 3);
+        formattedTime += this.addZero(seconds) + ',' + this.addZero(nanos, 3);
 
         return formattedTime;
     }
 
-    onChange = (data) => {
-        // map between transcription words data and transcription text
-    }
-
     render() {
-        const { playerActiveIndex, playerActiveWordIndex, activeIndex, activeWordIndex } = this.state;
-        const { editorData, handleWordChange, isPlaying, playerTime } = this.props;
+        let { /* playerActiveIndex, playerActiveWordIndex, */ activeIndex, activeWordIndex } = this.state;
+        const { editorData, handleWordChange, isPlaying, handleTimeChange, handleEditorChange } = this.props;
+        let { playerActiveWordIndex, playerActiveIndex, playerTime } = handleTimeChange
 
         return (
             _.map(editorData, (data, index) => {
@@ -186,26 +184,26 @@ class SpeechTextEditor extends Component {
                                 ref={'paragraph_' + index}
                                 suppressContentEditableWarning='true'
                             >
-                                <Editable
+                                <Editable2
                                     index={index}
-                                    key={index + '-' + wordIndex}
-                                    wordIndex={wordIndex}
-                                    word={word}
-                                    changeIndexes={this.changeIndexes}
-                                    handleWordChange={handleWordChange}
-                                    isActive={isActive}
-                                    isFocus={isFocus}
+                                    key={index}
+                                    transcript={alternative}
                                     splitData={this.splitData}
                                     mergeData={this.mergeData}
-                                    isPlaying={isPlaying}
+                                    handleEditorChange={handleEditorChange}
                                 />
                             </div>
                         </div>
                     )
+
                 }
             })
         )
     }
 }
 
-export default SpeechTextEditor;
+const mapStateToProps = ({ handleTimeChange, playerStatus }) => {
+    return { handleTimeChange, playerStatus };
+}
+
+export default connect(mapStateToProps)(SpeechTextEditor);

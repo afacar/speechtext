@@ -9,6 +9,7 @@ import Axios from 'axios';
 import firebase from '../../utils/firebase';
 import SpeechTextPlayer from '../../components/player';
 import SpeechTextEditor from '../../components/speech-text-editor';
+import { handleTimeChange, isPlaying } from "../../actions";
 
 class Transcription extends Component {
     constructor(props) {
@@ -27,14 +28,17 @@ class Transcription extends Component {
     }
 
     componentWillReceiveProps = async ({ selectedFile }) => {
+        console.log('TranscriptionWillReceiveProps', selectedFile)
         var that = this;
         var { intervalHolder } = this.state;
+        this.props.isPlaying(false)
         clearInterval(intervalHolder);
         if(!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
+            //this.props.handleTimeChange(null, -1);
             this.setState({
                 showSpinner: true
             })
-
+            // this.props.getEditorDate()
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
@@ -49,6 +53,7 @@ class Transcription extends Component {
                             that.updateTranscribedFile();
                         }, 20000);
                     })
+                    //this.props.handleTimeChange(editorData, -1);
                 });
             })
             .catch(error => {
@@ -62,6 +67,7 @@ class Transcription extends Component {
                 intervalHolder: undefined,
                 showSpinner: false
             })
+            //this.props.handleTimeChange(null, -1);
         }
     }
 
@@ -74,7 +80,7 @@ class Transcription extends Component {
         const { selectedFile, user } = this.props;
         if(!_.isEmpty(editorData) && !isSaved) {
             return;
-            var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
+            /* var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
             storageRef.put(new Blob([JSON.stringify(editorData)]))
                 .then(snapshot => {
                     this.setState({ isSaved: true })
@@ -84,7 +90,7 @@ class Transcription extends Component {
                     // TODO: UPDATE_TRANSCRIBED_FILE_ERROR	
                     console.log(error);	
                 });
-            // }
+            // } */
         }
     }
 
@@ -204,17 +210,12 @@ class Transcription extends Component {
 
     getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
 
-    handleWordChange = (index, wordIndex, text) => {
-        console.log(`handleWordChange is called...`)
-        console.log(`handleWordChange index: ${index}`)
-        console.log(`handleWordChange wordIndex: ${wordIndex}`)
-        console.log(`handleWordChange text: ${text}`)
-
+    handleEditorChange = (index, words) => {
+        console.log(`handleEditorChange is called with index ${index} and words >`, words)
         var { editorData } = this.state;
         // let prevEditorData = _.cloneDeep(editorData);
-        if (text) editorData[index].alternatives[0].words[wordIndex].word = text.trim();
-        else editorData[index].alternatives[0].words[wordIndex].word = ''
-        editorData[index].alternatives[0].transcript = this.getTranscriptionText(editorData[index].alternatives[0].words);
+        editorData[index].alternatives[0].words = words;
+        editorData[index].alternatives[0].transcript = this.getTranscriptionText(words);
         this.setState({
             editorData,
             //prevEditorData,
@@ -228,7 +229,7 @@ class Transcription extends Component {
         const { editorData, isSaved } = this.state;
         console.log('renderResults editorData',editorData)
         if(editorData === null) return;
-        if(_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio!'
+        if(_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
 
         const { formatMessage } = this.props.intl;
         return (
@@ -237,7 +238,7 @@ class Transcription extends Component {
                     { isSaved === undefined ? '' : isSaved ? 'Saved!': 'Editing...' }
                 </div>
                 <div className='d-flex flex-col justify-content-end align-items-center'>
-                {
+                    {
                         this.state.showDownloadSpinner &&
                         <Spinner
                             as="span"
@@ -263,8 +264,8 @@ class Transcription extends Component {
                 <br />
                 <SpeechTextEditor
                     editorData={ editorData ? editorData : [] }
-                    handleWordChange={ this.handleWordChange }
-                    handleSplitChange={ this.handleSplitChange }
+                    handleEditorChange={ this.handleEditorChange }
+                    //handleSplitChange={ this.handleSplitChange }
                     suppressContentEditableWarning
                     playerTime={ this.state.playerTime }
                     editorClicked={ this.editorClicked }
@@ -284,7 +285,7 @@ class Transcription extends Component {
         })
     }
 
-    handleTimeChange = (currentTime) => {
+/*     handleTimeChange = (currentTime) => {
         let seconds = Math.floor(currentTime);
         let nanoSeconds = parseInt((currentTime - seconds) * 1000);
         this.setState({
@@ -293,7 +294,7 @@ class Transcription extends Component {
                 nanoSeconds
             }
         });
-    }
+    } */
 
     render() {
         console.log('Transcription Rendering...')
@@ -311,9 +312,10 @@ class Transcription extends Component {
                             src={ selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '' }
                             type={ selectedFile.options ? selectedFile.options.type : '' }
                             timeToSeek={ this.state.timeToSeek }
-                            onTimeChanged={ this.handleTimeChange }
-                            onPlay={ () => this.setState({ isPlaying: true }) }
-                            onPause={ () => this.setState({ isPlaying: false }) }
+                            editorData= { this.state.editorData }
+                            //onTimeChanged={ this.handleTimeChange }
+                            //onPlay={ () => this.setState({ isPlaying: true }) }
+                            //onPause={ () => this.setState({ isPlaying: false }) }
                         />
                     </Media>
                 </div>
@@ -340,4 +342,4 @@ const mapStateToProps = ({ user, selectedFile }) => {
     return { user, selectedFile };
 }
 
-export default connect(mapStateToProps)(injectIntl(Transcription));
+export default connect(mapStateToProps, { handleTimeChange, isPlaying })(injectIntl(Transcription));
