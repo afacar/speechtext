@@ -210,30 +210,6 @@ ol.selling-contract-list { counter-reset: item }
     .transcription {
         height: 650px !important;
     }
-
-    /* .drop-zone {
-        font-size: 16px !important;
-    }
-
-    .file-settings .delete {
-        font-size: 13px !important;
-    }
-    
-    .file-progress span {
-        font-size: 9px !important;
-    }
-
-    .file-progress .pause-play {
-        font-size: 10px !important;
-    }
-
-    .file-container {
-        font-size: 14px !important;
-    }
-
-    .player-time {
-        font-size: 10px !important;
-    } */
 }
 
 @media only screen and (max-height: 830px) {
@@ -244,30 +220,6 @@ ol.selling-contract-list { counter-reset: item }
     .transcription {
         height: 550px !important;
     }
-
-    /* .drop-zone {
-        font-size: 14px !important;
-    }
-
-    .file-settings .delete {
-        font-size: 11px !important;
-    }
-    
-    .file-progress span {
-        font-size: 8px !important;
-    }
-
-    .file-progress .pause-play {
-        font-size: 8px !important;
-    }
-
-    .file-container {
-        font-size: 12px !important;
-    }
-
-    .player-time {
-        font-size: 9px !important;
-    } */
 }
 
 @media only screen and (max-height: 730px) {
@@ -278,30 +230,6 @@ ol.selling-contract-list { counter-reset: item }
     .transcription {
         height: 450px !important;
     }
-
-    /* .drop-zone {
-        font-size: 12px !important;
-    }
-
-    .file-settings .delete {
-        font-size: 9px !important;
-    }
-    
-    .file-progress span {
-        font-size: 7px !important;
-    }
-
-    .file-progress .pause-play {
-        font-size: 6px !important;
-    }
-
-    .file-container {
-        font-size: 10px !important;
-    }
-
-    .player-time {
-        font-size: 8px !important;
-    } */
 }
 
 .userbox-dropdown {
