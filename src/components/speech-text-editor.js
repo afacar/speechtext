@@ -12,8 +12,18 @@ class SpeechTextEditor extends Component {
 
         this.state = {
             activeIndex: -1,
-            activeWordIndex: -1
+            activeWordIndex: -1,
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!_.isEqual(this.props.editorData, nextProps.editorData)) {
+            console.log('SpeechTExtEditor shouldupdate thhis.Props', this.props)
+            console.log('SpeechTExtEditor shouldupdate nextProps', nextProps)
+            console.log()
+            return true
+        }
+        return false
     }
 
     /*     componentWillReceiveProps({ editorData, playerTime }) {
@@ -67,9 +77,9 @@ class SpeechTextEditor extends Component {
         this.props.editorClicked(parseFloat(word.startTime.seconds + '.' + word.startTime.nanos));
     }
 
-    getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
+    getTranscriptionText = (words) => words.map((theword, i) => theword.word ? theword.word : '').join(' ')
 
-    splitData = (caretPos, wordLength) => {
+/*     splitData = (caretPos, wordLength) => {
         let { editorData } = this.props;
         const { activeIndex, activeWordIndex } = this.state;
 
@@ -101,9 +111,9 @@ class SpeechTextEditor extends Component {
             caretPosition: 0
         });
         //this.props.handleSplitChange()
-    }
+    } */
 
-    mergeData = () => {
+ /*    mergeData = () => {
         let { editorData } = this.props;
         const { activeIndex } = this.state;
 
@@ -127,7 +137,7 @@ class SpeechTextEditor extends Component {
             activeWordIndex: prevWordLength,
             caretPosition: 0
         });
-    }
+    } */
 
     addZero = (value, length) => {
         if (value === 0) {
@@ -159,10 +169,8 @@ class SpeechTextEditor extends Component {
     }
 
     render() {
-        let { /* playerActiveIndex, playerActiveWordIndex, */ activeIndex, activeWordIndex } = this.state;
-        const { editorData, handleWordChange, isPlaying, handleTimeChange, handleEditorChange } = this.props;
-        let { playerActiveWordIndex, playerActiveIndex, playerTime } = handleTimeChange
-
+        const { editorData, handleEditorChange, splitData, mergeData } = this.props;
+        console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
@@ -179,17 +187,15 @@ class SpeechTextEditor extends Component {
                             <div
                                 id={'editable-content-' + index}
                                 key={'editable-content-' + index}
-                                contentEditable='true'
                                 disabled={false}
                                 ref={'paragraph_' + index}
-                                suppressContentEditableWarning='true'
                             >
                                 <Editable2
                                     index={index}
                                     key={index}
                                     transcript={alternative}
-                                    splitData={this.splitData}
-                                    mergeData={this.mergeData}
+                                    splitData={splitData}
+                                    mergeData={mergeData}
                                     handleEditorChange={handleEditorChange}
                                 />
                             </div>

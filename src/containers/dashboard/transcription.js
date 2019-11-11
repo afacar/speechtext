@@ -22,10 +22,21 @@ class Transcription extends Component {
     }
 
     componentWillUnmount() {
-        if(this.state.intervalHolder) {
+        if (this.state.intervalHolder) {
             clearInterval(this.state.intervalHolder);
         }
     }
+
+ /*    shouldComponentUpdate(nextProps, nextState) {
+        const { editorData } = this.state
+        let length = editorData ? editorData.length : 0 
+        let newLength = nextState.editorData ? nextState.editorData.length : 0 
+        console.log(`Transcription shouldUpdate length ${length} and newLength ${newLength}`)
+
+        if (length !== newLength)
+            return true
+        return false
+    } */
 
     componentWillReceiveProps = async ({ selectedFile }) => {
         console.log('TranscriptionWillReceiveProps', selectedFile)
@@ -33,7 +44,7 @@ class Transcription extends Component {
         var { intervalHolder } = this.state;
         this.props.isPlaying(false)
         clearInterval(intervalHolder);
-        if(!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
+        if (!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
             //this.props.handleTimeChange(null, -1);
             this.setState({
                 showSpinner: true
@@ -42,24 +53,25 @@ class Transcription extends Component {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
-                .then(({ data }) => {
-                    let editorData = data;
-                    that.setState({
-                        editorData,
-                        //prevEditorData: _.cloneDeep(editorData),
-                        showSpinner: false
-                    }, () => {
-                        intervalHolder = setInterval(() => {
-                            that.updateTranscribedFile();
-                        }, 20000);
-                    })
-                    //this.props.handleTimeChange(editorData, -1);
-                });
+                    .then(({ data }) => {
+                        let editorData = data;
+                        that.setState({
+                            editorData,
+                            //prevEditorData: _.cloneDeep(editorData),
+                            showSpinner: false
+                        }, () => {
+                            intervalHolder = setInterval(() => {
+                                that.updateTranscribedFile();
+                            }, 20000);
+                        })
+                        console.log('this.state.editorData is fetched', this.state.editorData)
+                        //this.props.handleTimeChange(editorData, -1);
+                    });
             })
-            .catch(error => {
-                // TODO: GET_DOWNLOAD_URL_ERROR
-                console.log(error);
-            })
+                .catch(error => {
+                    // TODO: GET_DOWNLOAD_URL_ERROR
+                    console.log(error);
+                })
         } else {
             this.setState({
                 editorData: null,
@@ -78,7 +90,7 @@ class Transcription extends Component {
     updateTranscribedFile = async () => {
         const { editorData, prevEditorData, isSaved } = this.state;
         const { selectedFile, user } = this.props;
-        if(!_.isEmpty(editorData) && !isSaved) {
+        if (!_.isEmpty(editorData) && !isSaved) {
             return;
             /* var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
             storageRef.put(new Blob([JSON.stringify(editorData)]))
@@ -95,19 +107,19 @@ class Transcription extends Component {
     }
 
     addZero = (value, length) => {
-        if(value === 0) {
+        if (value === 0) {
             return length === 3 ? '000' : '00';
         }
-        if(value < 10) return length === 3 ? '00' : '0' + value.toString();
+        if (value < 10) return length === 3 ? '00' : '0' + value.toString();
         return value;
     }
 
     formatTime = ({ seconds, nanos }) => {
         let formattedTime = '';
-        if(seconds > 60) {
+        if (seconds > 60) {
             let minutes = parseInt(seconds / 60);
             seconds = seconds % 60;
-            if(minutes > 60) {
+            if (minutes > 60) {
                 let hours = parseInt(minutes / 60);
                 minutes = minutes % 60;
                 formattedTime = this.addZero(hours) + ':';
@@ -132,12 +144,12 @@ class Transcription extends Component {
             let { startTime, endTime, transcript } = alternative;
             textData += `${this.formatTime(startTime)} - ${this.formatTime(endTime)}\n${transcript}\n\n`;
         });
-    
+
         var fileName = selectedFile.name;
         fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
-        
+
         const element = document.createElement("a");
-        const file = new Blob([textData], {type: 'text/plain'});
+        const file = new Blob([textData], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
         element.download = fileName;
         document.body.appendChild(element); // Required for this to work in FireFox
@@ -146,66 +158,66 @@ class Transcription extends Component {
 
     downloadAsDocx = async () => {
         await this.updateTranscribedFile();
-        
+
         var { selectedFile } = this.props;
         this.setState({ showDownloadSpinner: true });
-        
+
         var getDocxFile = firebase.functions().httpsCallable('getDocxFile');
-        getDocxFile({ 
+        getDocxFile({
             fileId: selectedFile.id
         })
-        .then(({ data }) => {
-            var storageRef = firebase.storage().ref(data.filePath);
-            var fileName = selectedFile.name;
-            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
-            var newMetadata = {
-                contentDisposition: `attachment;filename=${fileName}`
-            }
-            storageRef.updateMetadata(newMetadata)
-            .then(() => {
-                storageRef.getDownloadURL().then((downloadUrl) => {
-                    const element = document.createElement("a");
-                    element.href = downloadUrl;
-                    element.click();
-                    this.setState({ showDownloadSpinner: false });
-                });
-            })
-        }).catch((err) => {
-            // TODO: GET_DOCX_FILE_ERROR
-            console.log(err);
-        });
+            .then(({ data }) => {
+                var storageRef = firebase.storage().ref(data.filePath);
+                var fileName = selectedFile.name;
+                fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
+                var newMetadata = {
+                    contentDisposition: `attachment;filename=${fileName}`
+                }
+                storageRef.updateMetadata(newMetadata)
+                    .then(() => {
+                        storageRef.getDownloadURL().then((downloadUrl) => {
+                            const element = document.createElement("a");
+                            element.href = downloadUrl;
+                            element.click();
+                            this.setState({ showDownloadSpinner: false });
+                        });
+                    })
+            }).catch((err) => {
+                // TODO: GET_DOCX_FILE_ERROR
+                console.log(err);
+            });
     }
 
     downloadAsSrt = async () => {
         await this.updateTranscribedFile();
-        
+
         var { selectedFile } = this.props;
         this.setState({ showDownloadSpinner: true });
-        
+
         var getSrtFile = firebase.functions().httpsCallable('getSrtFile');
-        getSrtFile({ 
+        getSrtFile({
             fileId: selectedFile.id
         })
-        .then(({ data }) => {
-            var storageRef = firebase.storage().ref(data.filePath);
-            var fileName = selectedFile.name.split(' ').join('_');
-            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
-            var newMetadata = {
-                contentDisposition: `attachment;filename=${fileName}`
-            }
-            storageRef.updateMetadata(newMetadata)
-            .then((metadata) => {
-                storageRef.getDownloadURL().then((downloadUrl) => {
-                    const element = document.createElement("a");
-                    element.href = downloadUrl;
-                    element.click();
-                    this.setState({ showDownloadSpinner: false });
-                });
-            })
-        }).catch((err) => {
-            // TODO: GET_SRT_FILE_ERROR
-            console.log(err);
-        });
+            .then(({ data }) => {
+                var storageRef = firebase.storage().ref(data.filePath);
+                var fileName = selectedFile.name.split(' ').join('_');
+                fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
+                var newMetadata = {
+                    contentDisposition: `attachment;filename=${fileName}`
+                }
+                storageRef.updateMetadata(newMetadata)
+                    .then((metadata) => {
+                        storageRef.getDownloadURL().then((downloadUrl) => {
+                            const element = document.createElement("a");
+                            element.href = downloadUrl;
+                            element.click();
+                            this.setState({ showDownloadSpinner: false });
+                        });
+                    })
+            }).catch((err) => {
+                // TODO: GET_SRT_FILE_ERROR
+                console.log(err);
+            });
     }
 
     getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
@@ -223,19 +235,77 @@ class Transcription extends Component {
         })
     }
 
-    handleSplitChange = () => this.setState({ isSaved: false })
+    splitData = (activeIndex, activeWordIndex, caretPos, wordLength) => {
+        const { editorData } = this.state;
+
+        let wordIndex = activeWordIndex;
+        if (caretPos < wordLength / 2) {
+            wordIndex -= 1;
+        }
+
+        let firstSplittedData = editorData[activeIndex];
+        let secondSplittedData = _.cloneDeep(firstSplittedData);
+
+        let endWord = firstSplittedData.alternatives[0].words[wordIndex];
+        firstSplittedData.alternatives[0].endTime = endWord.endTime;
+        firstSplittedData.alternatives[0].words.splice(wordIndex + 1);
+        firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
+
+        let startWord = secondSplittedData.alternatives[0].words[wordIndex + 1];
+        secondSplittedData.alternatives[0].startTime = startWord.startTime;
+        secondSplittedData.alternatives[0].words.splice(0, wordIndex + 1);
+        secondSplittedData.alternatives[0].transcript = this.getTranscriptionText(secondSplittedData.alternatives[0].words);
+
+        editorData[activeIndex] = firstSplittedData;
+        editorData.splice(activeIndex + 1, 0, secondSplittedData);
+
+        this.setState({
+            editorData,
+            activeIndex: activeIndex + 1,
+            activeWordIndex: 0,
+            caretPosition: 0,
+            isSaved: false
+        });
+        //this.props.handleSplitChange()
+    }
+
+    mergeData = (activeIndex) => {
+        const { editorData } = this.state;
+
+        if (activeIndex === 0) return;
+
+        let prevData = editorData[activeIndex - 1];
+        let currentData = editorData[activeIndex];
+        let prevWordLength = prevData.alternatives[0].words.length;
+
+        prevData.alternatives[0].words = prevData.alternatives[0].words.concat(currentData.alternatives[0].words);
+        let wordLength = prevData.alternatives[0].words.length;
+        prevData.alternatives[0].endTime = prevData.alternatives[0].words[wordLength - 1].endTime;
+        prevData.alternatives[0].transcript = this.getTranscriptionText(prevData.alternatives[0].words);
+
+        editorData[activeIndex - 1] = prevData;
+        editorData.splice(activeIndex, 1);
+
+        this.setState({
+            editorData,
+            activeIndex: activeIndex - 1,
+            activeWordIndex: prevWordLength,
+            caretPosition: 0,
+            isSaved: false,
+        });
+    }
 
     renderResults = () => {
         const { editorData, isSaved } = this.state;
-        console.log('renderResults editorData',editorData)
-        if(editorData === null) return;
-        if(_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
+        console.log('renderResults editorData', editorData)
+        if (editorData === null) return;
+        if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
 
         const { formatMessage } = this.props.intl;
         return (
             <div className=''>
-                <div className={ 'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing') }>
-                    { isSaved === undefined ? '' : isSaved ? 'Saved!': 'Editing...' }
+                <div className={'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing')}>
+                    {isSaved === undefined ? '' : isSaved ? 'Saved!' : 'Editing...'}
                 </div>
                 <div className='d-flex flex-col justify-content-end align-items-center'>
                     {
@@ -249,27 +319,29 @@ class Transcription extends Component {
                             className='margin-right-5'
                         />
                     }
-                    <DropdownButton id="dropdown-item-button" title={ formatMessage({ id:'Transcription.Download.text' })}>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsTxt }>
+                    <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })}>
+                        <Dropdown.Item as="button" onClick={this.downloadAsTxt}>
                             <FormattedMessage id='Transcription.Download.option1' />
                         </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsDocx }>
+                        <Dropdown.Item as="button" onClick={this.downloadAsDocx}>
                             <FormattedMessage id='Transcription.Download.option2' />
                         </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={ this.downloadAsSrt }>
+                        <Dropdown.Item as="button" onClick={this.downloadAsSrt}>
                             <FormattedMessage id='Transcription.Download.option3' />
                         </Dropdown.Item>
                     </DropdownButton>
                 </div>
                 <br />
                 <SpeechTextEditor
-                    editorData={ editorData ? editorData : [] }
-                    handleEditorChange={ this.handleEditorChange }
-                    //handleSplitChange={ this.handleSplitChange }
+                    key={Math.random()}
+                    editorData={editorData ? editorData : []}
+                    handleEditorChange={this.handleEditorChange}
+                    splitData={this.splitData}
+                    mergeData={this.mergeData}
                     suppressContentEditableWarning
-                    playerTime={ this.state.playerTime }
-                    editorClicked={ this.editorClicked }
-                    isPlaying={ this.state.isPlaying }
+                    playerTime={this.state.playerTime}
+                    editorClicked={this.editorClicked}
+                    isPlaying={this.state.isPlaying}
                 />
             </div>
         );
@@ -285,37 +357,37 @@ class Transcription extends Component {
         })
     }
 
-/*     handleTimeChange = (currentTime) => {
-        let seconds = Math.floor(currentTime);
-        let nanoSeconds = parseInt((currentTime - seconds) * 1000);
-        this.setState({
-            playerTime: {
-                seconds,
-                nanoSeconds
-            }
-        });
-    } */
+    /*     handleTimeChange = (currentTime) => {
+            let seconds = Math.floor(currentTime);
+            let nanoSeconds = parseInt((currentTime - seconds) * 1000);
+            this.setState({
+                playerTime: {
+                    seconds,
+                    nanoSeconds
+                }
+            });
+        } */
 
     render() {
         console.log('Transcription Rendering...')
         var { selectedFile } = this.props;
-        if(_.isEmpty(selectedFile)) selectedFile = {};
+        if (_.isEmpty(selectedFile)) selectedFile = {};
         return (
             <div className='transcription-container'>
                 <div className='transcription-title'>
                     <div className='selected-file-name'>
-                        { selectedFile.name }
+                        {selectedFile.name}
                     </div>
                     <Media>
                         <SpeechTextPlayer
-                            key={ selectedFile.id }
-                            src={ selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '' }
-                            type={ selectedFile.options ? selectedFile.options.type : '' }
-                            timeToSeek={ this.state.timeToSeek }
-                            editorData= { this.state.editorData }
-                            //onTimeChanged={ this.handleTimeChange }
-                            //onPlay={ () => this.setState({ isPlaying: true }) }
-                            //onPause={ () => this.setState({ isPlaying: false }) }
+                            key={selectedFile.id}
+                            src={selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : ''}
+                            type={selectedFile.options ? selectedFile.options.type : ''}
+                            timeToSeek={this.state.timeToSeek}
+                            editorData={this.state.editorData}
+                        //onTimeChanged={ this.handleTimeChange }
+                        //onPlay={ () => this.setState({ isPlaying: true }) }
+                        //onPause={ () => this.setState({ isPlaying: false }) }
                         />
                     </Media>
                 </div>
@@ -330,7 +402,7 @@ class Transcription extends Component {
                 {
                     !this.state.showSpinner &&
                     <div className='transcription'>
-                        { this.renderResults() }
+                        {this.renderResults()}
                     </div>
                 }
             </div>
