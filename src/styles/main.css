@@ -88,3 +88,20 @@
 .last-update {
     font-size: 13px;
 }
+
+@media only screen and (max-height: 882px) {
+    .privacy-container,
+    .terms-container,
+    .faq-container {
+        padding: 30px;
+    }
+}
+
+
+@media only screen and (max-height: 730px) {
+    .privacy-container,
+    .terms-container,
+    .faq-container {
+        padding: 20px;
+    }
+}
