@@ -184,8 +184,6 @@ class Editable2 extends React.Component {
                 id={'editable-content-' + index}
                 onKeyUp={this.onKeyUp}
                 onKeyDown={this.onKeyDown}
-                onInput={this.onInput}
-                onChange={this.onChange}
                 contentEditable='true'
                 suppressContentEditableWarning='true'
             >

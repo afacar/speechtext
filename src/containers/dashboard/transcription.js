@@ -49,7 +49,8 @@ class Transcription extends Component {
             this.setState({
                 showSpinner: true
             })
-            // this.props.getEditorDate()
+            // Todo: this.props.getEditorDate(selectedFile)
+            // editorDataAll: { fileId: editorData, fileId2: editorData...}
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
@@ -333,7 +334,7 @@ class Transcription extends Component {
                 </div>
                 <br />
                 <SpeechTextEditor
-                    key={Math.random()}
+                    key={editorData.length}
                     editorData={editorData ? editorData : []}
                     handleEditorChange={this.handleEditorChange}
                     splitData={this.splitData}
