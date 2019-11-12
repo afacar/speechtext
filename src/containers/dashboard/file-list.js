@@ -49,7 +49,7 @@ class FileList extends Component {
                     showApprovement: true
                 });
             } else {
-                this.onFileValidated(file, fileDurationInMinutes);
+                this.onFileValidated(file, fileDurationInMinutes, media.duration);
             }
         };
         media.src = URL.createObjectURL(file);
@@ -71,13 +71,14 @@ class FileList extends Component {
         });
     }
 
-    onFileValidated = async (file, fileDurationInMinutes) => {
+    onFileValidated = async (file, fileDurationInMinutes, durationInNanoSeconds) => {
         var { name, size, type } = file;
         var fileObj = {
             originalFile: {
                 name,
                 size,
                 duration: fileDurationInMinutes,
+                originalDuration: durationInNanoSeconds,
                 createDate: new Date()
             },
             options: {

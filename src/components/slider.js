@@ -75,7 +75,7 @@ class Slider extends Component {
         if(!hours) hours = '00';
         if(!minutes) minutes = '00';
         if(!seconds) seconds = '00';
-        return `${hours}:${minutes}:${seconds}.${nanoSeconds}`;
+        return `${hours}:${minutes}:${seconds}.${nanoSeconds || '000'}`;
     }
 
     render() {
