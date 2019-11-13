@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import _ from 'lodash';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Carousel, Row, Col, Card, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import Banner from '../../assets/banner.png';
+import Banner1 from '../../assets/banner-1.jpg';
+import Banner2 from '../../assets/banner-2.jpg';
+import Banner3 from '../../assets/banner-3.jpg';
 import '../../styles/entry.css';
 import Auth from '../../components/auth';
 
@@ -30,7 +33,7 @@ class Entry extends Component {
         return (
             <div className='main-div' >
                 <Container align="center">
-                    <Row>
+                    {/* <Row>
                         <Col lg="6" md="12" sm="12" xs="12">
                             <img src={ Banner } title='Speech to Text Transcription' alt='Speech to text Automatic Transcription Editor Banner' className='banner-image' />
                         </Col>
@@ -88,7 +91,30 @@ class Entry extends Component {
                                 </Col>
                             </Row>
                         </Col>
-                    </Row>
+                    </Row> */}
+                    <Carousel nextIcon={<span aria-hidden="true" className="carousel-control-next-icon" />}>
+                        <Carousel.Item>
+                            <img
+                                className="d-block w-100"
+                                src={ Banner1 }
+                                alt="State of Art"
+                            />
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <img
+                                className="d-block w-100"
+                                src={ Banner2 }
+                                alt="Integrated Editor"
+                            />
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <img
+                                className="d-block w-100"
+                                src={ Banner3 }
+                                alt="Best Price"
+                            />
+                        </Carousel.Item>
+                    </Carousel>
                 </Container>
                 <Auth language={ this.props.language } show={ this.state.showAuth } handleClose={ this.handleClose } />
             </div>
