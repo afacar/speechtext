@@ -27,16 +27,16 @@ class Transcription extends Component {
         }
     }
 
- /*    shouldComponentUpdate(nextProps, nextState) {
-        const { editorData } = this.state
-        let length = editorData ? editorData.length : 0 
-        let newLength = nextState.editorData ? nextState.editorData.length : 0 
-        console.log(`Transcription shouldUpdate length ${length} and newLength ${newLength}`)
-
-        if (length !== newLength)
-            return true
-        return false
-    } */
+    /*    shouldComponentUpdate(nextProps, nextState) {
+           const { editorData } = this.state
+           let length = editorData ? editorData.length : 0 
+           let newLength = nextState.editorData ? nextState.editorData.length : 0 
+           console.log(`Transcription shouldUpdate length ${length} and newLength ${newLength}`)
+   
+           if (length !== newLength)
+               return true
+           return false
+       } */
 
     componentWillReceiveProps = async ({ selectedFile }) => {
         console.log('TranscriptionWillReceiveProps', selectedFile)
@@ -221,7 +221,7 @@ class Transcription extends Component {
             });
     }
 
-    getTranscriptionText = (words) => words.map((theword, i) => theword.word).join(' ')
+    getTranscriptionText = (words) => words.filter((theword, i) => theword.word.length > 0).map(theword => theword.word).join(' ')
 
     handleEditorChange = (index, words) => {
         console.log(`handleEditorChange is called with index ${index} and words >`, words)
@@ -259,7 +259,7 @@ class Transcription extends Component {
 
         editorData[activeIndex] = firstSplittedData;
         editorData.splice(activeIndex + 1, 0, secondSplittedData);
-
+        console.log('After split new editorData>', editorData)
         this.setState({
             editorData,
             activeIndex: activeIndex + 1,
@@ -268,6 +268,19 @@ class Transcription extends Component {
             isSaved: false
         });
         //this.props.handleSplitChange()
+    }
+
+    changeActiveIndex = (activeIndex, activeWordIndex, caretPosition) => {
+        const { editorData } = this.state
+        if (activeWordIndex === -1) {
+            let len = editorData[activeIndex].alternatives[0].words.length
+            activeWordIndex = len - 1
+        }
+        if (caretPosition === -1) {
+            caretPosition = editorData[activeIndex].alternatives[0].words[activeWordIndex].word.length + 1
+        }
+        console.log(`changeActiveIndex activeIndex: ${activeIndex} activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition}`)
+        this.setState({ activeIndex, activeWordIndex, caretPosition })
     }
 
     mergeData = (activeIndex) => {
@@ -286,6 +299,7 @@ class Transcription extends Component {
 
         editorData[activeIndex - 1] = prevData;
         editorData.splice(activeIndex, 1);
+        console.log('After merge new editorData>', editorData)
 
         this.setState({
             editorData,
@@ -297,7 +311,7 @@ class Transcription extends Component {
     }
 
     renderResults = () => {
-        const { editorData, isSaved } = this.state;
+        const { editorData, isSaved, activeIndex, activeWordIndex, caretPosition } = this.state;
         console.log('renderResults editorData', editorData)
         if (editorData === null) return;
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
@@ -334,8 +348,12 @@ class Transcription extends Component {
                 </div>
                 <br />
                 <SpeechTextEditor
-                    key={editorData.length}
+                    key={editorData.length + '' + activeIndex}
                     editorData={editorData ? editorData : []}
+                    activeWordIndex={activeWordIndex}
+                    activeIndex={activeIndex}
+                    caretPosition={caretPosition}
+                    changeActiveIndex={this.changeActiveIndex}
                     handleEditorChange={this.handleEditorChange}
                     splitData={this.splitData}
                     mergeData={this.mergeData}

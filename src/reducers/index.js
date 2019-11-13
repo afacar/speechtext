@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import AppReducer from './app-reducer';
 import AuthReducer from './auth-reducer';
 import { getFileList, setSelectedFile, setUploadingFiles } from './file-reducer';
-import { handleTimeChange, getPlayerStatus } from "./editor-reducer";
+import { handleTimeChange, getPlayerStatus, setEditorFocus } from "./editor-reducer";
 
 export default combineReducers({
     language: AppReducer.setLanguage,
@@ -15,4 +15,5 @@ export default combineReducers({
     uploadingFiles: setUploadingFiles,
     handleTimeChange: handleTimeChange,
     playerStatus: getPlayerStatus,
+    editorFocus: setEditorFocus
 })

@@ -2,9 +2,9 @@ import _ from 'lodash';
 import Utils from '../utils';
 const { ActionTypes } = Utils;
 
-export const handleEditorChange = (state = {}, action) => {
+export const setEditorFocus = (state = {}, action) => {
     switch(action.type) {
-        case ActionTypes.HANDLE_TIME_CHANGE:
+        case ActionTypes.EDITOR_FOCUS:
             return action.payload;
         default:
             return state;

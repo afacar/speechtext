@@ -1,13 +1,13 @@
 import _ from 'lodash'
 import Utils from '../utils';
 
-export const handleEditorChange = (oldEditorData, neweditorData) => {
-    console.log('handleEditorChange ')
+export const setEditorFocus = (activeIndex, activeWordIndex, caretPosition) => {
+    console.log('setEditorFocus ')
     return (dispatch, getState) => {
         // Burda kaldik
         dispatch({
-            type: Utils.ActionTypes.HANDLE_TIME_CHANGE,
-            payload: { }
+            type: Utils.ActionTypes.EDITOR_FOCUS,
+            payload: { activeIndex, activeWordIndex, caretPosition }
         })
     }
 }
