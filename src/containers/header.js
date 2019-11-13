@@ -51,7 +51,7 @@ class Header extends Component {
                 <Nav>
                     <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
-                            <Link to='/'>
+                            <Link to='/' onClick={ () => this.props.goToRef('topRef') }>
                                 <Navbar.Brand>
                                     <LogoContainer />
                                 </Navbar.Brand>
