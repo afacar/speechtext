@@ -27,17 +27,6 @@ class Transcription extends Component {
         }
     }
 
-    /*    shouldComponentUpdate(nextProps, nextState) {
-           const { editorData } = this.state
-           let length = editorData ? editorData.length : 0 
-           let newLength = nextState.editorData ? nextState.editorData.length : 0 
-           console.log(`Transcription shouldUpdate length ${length} and newLength ${newLength}`)
-   
-           if (length !== newLength)
-               return true
-           return false
-       } */
-
     componentWillReceiveProps = async ({ selectedFile }) => {
         console.log('TranscriptionWillReceiveProps', selectedFile)
         var that = this;
@@ -264,11 +253,13 @@ class Transcription extends Component {
         console.log('After split new editorData>', editorData)
         this.setState({
             editorData,
-            activeIndex: activeIndex + 1,
+            /* activeIndex: activeIndex + 1,
             activeWordIndex: 0,
-            caretPosition: 0,
+            caretPosition: 0, */
             isSaved: false
         });
+        this.props.setEditorFocus(activeIndex + 1, 0, 0)
+
         //this.props.handleSplitChange()
     }
 
@@ -282,7 +273,9 @@ class Transcription extends Component {
             caretPosition = editorData[activeIndex].alternatives[0].words[activeWordIndex].word.length + 1
         }
         console.log(`changeActiveIndex activeIndex: ${activeIndex} activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition}`)
-        this.setState({ activeIndex, activeWordIndex, caretPosition })
+        this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
+
+        //this.setState({ activeIndex, activeWordIndex, caretPosition })
     }
 
     mergeData = (activeIndex) => {
@@ -305,11 +298,13 @@ class Transcription extends Component {
 
         this.setState({
             editorData,
-            activeIndex: activeIndex - 1,
+            /* activeIndex: activeIndex - 1,
             activeWordIndex: prevWordLength,
-            caretPosition: 0,
+            caretPosition: 0, */
             isSaved: false,
         });
+        this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
+
     }
 
     renderResults = () => {

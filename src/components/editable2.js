@@ -14,26 +14,42 @@ class Editable2 extends React.Component {
     isDelActive = true
 
     shouldComponentUpdate(nextProps, nextStates) {
-        const { index, activeWordIndex, editorFocus, activeIndex } = this.props;
-        console.log(`Editable${index} shouldUpdate this.props `, this.props)
-        console.log(`Editable${index} shouldUpdate nextProps `, nextProps)
-        const { playerActiveIndex } = nextProps.handleTimeChange
-        if (editorFocus.activeIndex === nextProps.editorFocus.activeIndex && editorFocus.activeWordIndex === nextProps.editorFocus.activeWordIndex && index !== playerActiveIndex) {
-            console.log(`Editable${index} should NOT UPDATE`)
-            return false
-        }
-        if (index === playerActiveIndex) {
-            this.isEditorClean = false
-            console.log(`Editable${index} should UPDATE due to playerActiveIndex`)
-            return true
-        } else if (editorFocus.activeWordIndex !== nextProps.editorFocus.activeWordIndex) {
-            console.log(`Editable${index} should UPDATE due to activeWordIndex change`)
-            return true
-        } else if (!this.isEditorClean) {
-            console.log(`Editable${index} should UPDATE due to isEditorClean`)
+        const { index, editorFocus, handleTimeChange } = this.props;
+        console.log(`Editable${index}ShouldUpdate props `, this.props, nextProps)
+        const { playerActiveIndex, playerActiveWordIndex } = nextProps.handleTimeChange
+        const nextEditorFocus = nextProps.editorFocus
+        const isActiveEditor = index === playerActiveIndex || index === nextEditorFocus.activeIndex
+        const isActiveEditorChanged = editorFocus.activeIndex !== nextEditorFocus.activeIndex
+        const isActiveWordChanged = isActiveEditorChanged || editorFocus.activeWordIndex !== nextEditorFocus.activeWordIndex
+        const isEditing = editorFocus.caretPosition !== nextEditorFocus.caretPosition
+        const isPlayingEditor = index === playerActiveIndex
+        const isPlayingWordChanged = handleTimeChange.playerActiveWordIndex !== playerActiveWordIndex
+        console.log('isEditorClean: ', this.isEditorClean)
+        console.log('isActiveEditor: ', isActiveEditor)
+        if (!this.isEditorClean && !isActiveEditor) {
+            console.log(`Editable${index} UPDATES due to cleaning!`)
             this.isEditorClean = true
             return true
         }
+        if (!isActiveEditor) {
+            console.log(`Editor${index} SHOULD NOT UPDATE DUE TO INACTIVITY`)
+            return false
+        }
+        if (!isActiveWordChanged && !isEditing) {
+            console.log(`Editable${index} SHOULD NOT UPDATE DUE TO SAME activeIndex and activeWordIndex`)
+            return false
+        }
+        if (isActiveWordChanged || isEditing) {
+            this.isEditorClean = false
+            console.log(`Editable${index} UPDATES DUE TO activeWordChange or editing`)
+            return true
+        }
+        if (isPlayingEditor && isPlayingWordChanged) {
+            this.isEditorClean = false
+            console.log(`Editable${index} UPDATES DUE TO playerActiveWordIndex change`)
+            return true
+        }
+
         console.log(`Editable${index} should NOT UPDATE due to false`)
         return false
     }
@@ -48,20 +64,20 @@ class Editable2 extends React.Component {
         let text = sel.focusNode.innerText || sel.focusNode.textContent
         let id = sel.focusNode.nodeName !== 'SPAN' ? sel.focusNode.parentNode.id : sel.focusNode.id
         let wordIndex = parseInt(id)
-        console.log(`onKeyDown text is ${text} wordIndex ${wordIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
-        console.log(`typeof(index): ${typeof (index)} `)
-        console.log(`typeof(wordIndex): ${typeof (wordIndex)} `)
-        console.log(`typeof(offset): ${typeof (offset)} `)
+        let spanIndex = this.getSpanById(wordIndex).index
+        let len = this.editableRef.childElementCount
+        console.log(`onKeyDown text is ${text} wordIndex ${wordIndex} spanIndex ${spanIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
+
         switch (e.keyCode) {
             case KEYCODES.BACKSPACE:
                 console.log('backspace pressed at index?', index)
-                if (index > 0 && wordIndex === 0 && offset === 0) {
+                if (index > 0 && spanIndex === 0 && offset === 0) {
                     console.log('Merge with prev paragraphs!')
                     e.preventDefault()
                     e.stopPropagation()
                     this.isBackSpaceActive = false
                     mergeData(index)
-                } else if (index === 0 && wordIndex === 0 && offset === 0) {
+                } else if (index === 0 && spanIndex === 0 && offset === 0) {
                     console.log(`onKeyDown do nothin!!!`)
                     this.isBackSpaceActive = false
                     e.preventDefault()
@@ -72,20 +88,20 @@ class Editable2 extends React.Component {
                 console.log('Enter pressed')
                 e.preventDefault()
                 e.stopPropagation()
-                if (wordIndex > 0 && wordIndex < transcript.words.length - 1) {
+                if (spanIndex > 0 && spanIndex < len - 1) {
                     console.log('Split paragraphs!')
-                    splitData(index, wordIndex, offset, text.length)
+                    splitData(index, spanIndex, offset, text.length)
                 }
                 break;
             case KEYCODES.DEL:
                 console.log('Delete pressed')
-                if (!isLastEditable && wordIndex === transcript.words.length - 1 && offset === text.length) {
+                if (!isLastEditable && spanIndex === len - 1 && offset === text.length) {
                     e.preventDefault()
                     e.stopPropagation()
                     console.log('Merge with next pressed')
                     this.isDelActive = false
                     mergeData(index + 1)
-                } else if (isLastEditable && wordIndex === transcript.words.length - 1 && offset === text.length) {
+                } else if (isLastEditable && spanIndex === len - 1 && offset === text.length) {
                     console.log('onKeyDown do nothig')
                     this.isDelActive = false
                     e.preventDefault()
@@ -94,7 +110,7 @@ class Editable2 extends React.Component {
                 break;
             case KEYCODES.LEFT:
             case KEYCODES.UP:
-                if (index > 0 && wordIndex === 0 && offset === 0) {
+                if (index > 0 && spanIndex === 0 && offset === 0) {
                     console.log('LEFT OR UP pressed GO UP')
                     e.preventDefault()
                     e.stopPropagation()
@@ -103,7 +119,7 @@ class Editable2 extends React.Component {
                 break;
             case KEYCODES.RIGHT:
             case KEYCODES.DOWN:
-                if (!isLastEditable && wordIndex === transcript.words.length - 1 && offset === text.length) {
+                if (!isLastEditable && spanIndex === len - 1 && offset === text.length) {
                     console.log('RIGHT OR DOWN pressed GO DOWN')
                     e.preventDefault()
                     e.stopPropagation()
@@ -182,6 +198,35 @@ class Editable2 extends React.Component {
         handleEditorChange(index, words, activeWordIndex, caretPosition)
     }
 
+    formatTime = ({ seconds, nanos }) => {
+        let formattedTime = '';
+        if (seconds > 60) {
+            let minutes = parseInt(seconds / 60);
+            seconds = seconds % 60;
+            if (minutes > 60) {
+                let hours = parseInt(minutes / 60);
+                minutes = minutes % 60;
+                formattedTime = this.addZero(hours) + ':';
+            } else {
+                formattedTime = '00:';
+            }
+            formattedTime += this.addZero(minutes) + ':';
+        } else {
+            formattedTime += '00:00:';
+        }
+        formattedTime += this.addZero(seconds) + '.' + this.addZero(nanos, 3);
+
+        return formattedTime;
+    }
+
+    addZero = (value, length) => {
+        if (value === 0) {
+            return length === 3 ? '000' : '00';
+        }
+        if (value < 10) return length === 3 ? '00' : '0' + value.toString();
+        return value;
+    }
+
     onChange = (e) => {
         console.log('onChange e', e)
     }
@@ -212,7 +257,7 @@ class Editable2 extends React.Component {
     }
 
     render = () => {
-        const { index, transcript, handleTimeChange, editorFocus, activeIndex, activeWordIndex } = this.props;
+        const { index, transcript, handleTimeChange, editorFocus } = this.props;
         let { playerActiveIndex, playerActiveWordIndex } = handleTimeChange
         console.log(`Editable ${index} renders!`)
         let words = transcript.words.map((word, wordIndex) => {
@@ -229,6 +274,7 @@ class Editable2 extends React.Component {
                     id={wordIndex}
                     contentEditable='true'
                     suppressContentEditableWarning='true'
+                    title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
                 >
                     {word.word ? word.word + ' ' : ''}
                 </span>
@@ -260,7 +306,15 @@ class Editable2 extends React.Component {
         var el = this.editableRef
         var range = document.createRange();
         var sel = window.getSelection();
-        let node = el.childNodes[wordIndex]
+        // TODO: get node with ID not wordIndex
+        let { node } = this.getSpanById(wordIndex)
+        node = node ? node : this.editableRef.childNodes[wordIndex]
+        console.log('node--', node)
+        if (!node.firstChild) {
+            console.log('firstChild empty so adding text to it')
+            node.textContent = ' '
+        }
+        console.log('node1--', node)
         console.log('node.firstChild ', node.firstChild)
         range.setStart(node.firstChild, caretPos);
         range.collapse(true);
@@ -268,32 +322,46 @@ class Editable2 extends React.Component {
         sel.addRange(range);
     }
 
+    getSpanById = (wordIndex) => {
+        let spans = this.editableRef.childNodes
+        for (let i = 0; i < spans.length; i++) {
+            if (parseInt(spans[i].id) === wordIndex) return { node: spans[i], index: i }
+        }
+        return { node: null, index: null }
+    }
+
     componentDidMount() {
-        const { index, transcript, handleTimeChange, activeIndex, editorFocus, activeWordIndex, caretPosition } = this.props;
-        console.log(`Editable ${index} didMount`)
-        let { playerActiveIndex, playerActiveWordIndex } = handleTimeChange
-        console.log(`activeIndex: ${activeIndex} playerActiveIndex: ${playerActiveIndex}`)
+        const { index, handleTimeChange, editorFocus } = this.props;
+        console.log(`Editable${index}DidMount with editorFocus ;`, editorFocus)
+        let { playerActiveIndex } = handleTimeChange
+        const { activeIndex, activeWordIndex, caretPosition } = editorFocus
+        console.log(`...activeIndex: ${activeIndex} playerActiveIndex: ${playerActiveIndex}`)
         let isPlaying = index === playerActiveIndex
-        let isEditing = index === editorFocus.activeIndex
+        let isEditing = index === activeIndex
         if (isEditing) {
             ReactDOM.findDOMNode(this.editableRef).focus();
-            this.setCaretPos(editorFocus.activeWordIndex, editorFocus.caretPosition);
+            this.isEditorClean = false
+            this.setCaretPos(activeWordIndex, caretPosition);
         } else if (isPlaying) {
+            this.isEditorClean = false
             ReactDOM.findDOMNode(this.editableRef).focus();
         }
     }
 
     componentDidUpdate() {
-        const { index, transcript, handleTimeChange, editorFocus } = this.props;
-        let { playerActiveIndex, playerActiveWordIndex } = handleTimeChange
-        console.log(`Editable ${index} DidUpdate`)
-        console.log(`activeIndex: ${editorFocus.activeIndex} playerActiveIndex: ${playerActiveIndex}`)
+        const { index, handleTimeChange, editorFocus } = this.props;
+        let { playerActiveIndex } = handleTimeChange
+        const { activeIndex, activeWordIndex, caretPosition } = editorFocus
+        console.log(`Editable${index}DidUpdate`)
+        console.log(`...activeIndex: ${activeIndex} playerActiveIndex: ${playerActiveIndex}`)
         let isPlaying = index === playerActiveIndex
-        let isEditing = index === editorFocus.activeIndex
+        let isEditing = index === activeIndex
         if (isEditing) {
             ReactDOM.findDOMNode(this.editableRef).focus();
-            this.setCaretPos(editorFocus.activeWordIndex, editorFocus.caretPosition);
-        } else if (editorFocus.activeIndex < 0 && isPlaying) {
+            this.isEditorClean = false
+            this.setCaretPos(activeWordIndex, caretPosition);
+        } else if (activeIndex < 0 && isPlaying) {
+            this.isEditorClean = false
             ReactDOM.findDOMNode(this.editableRef).focus();
         }
     }
