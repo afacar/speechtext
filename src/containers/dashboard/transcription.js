@@ -9,7 +9,7 @@ import Axios from 'axios';
 import firebase from '../../utils/firebase';
 import SpeechTextPlayer from '../../components/player';
 import SpeechTextEditor from '../../components/speech-text-editor';
-import { handleTimeChange, isPlaying } from "../../actions";
+import { handleTimeChange, isPlaying, setEditorFocus } from "../../actions";
 
 class Transcription extends Component {
     constructor(props) {
@@ -223,7 +223,7 @@ class Transcription extends Component {
 
     getTranscriptionText = (words) => words.filter((theword, i) => theword.word.length > 0).map(theword => theword.word).join(' ')
 
-    handleEditorChange = (index, words) => {
+    handleEditorChange = (index, words, activeWordIndex, caretPosition) => {
         console.log(`handleEditorChange is called with index ${index} and words >`, words)
         var { editorData } = this.state;
         // let prevEditorData = _.cloneDeep(editorData);
@@ -234,6 +234,8 @@ class Transcription extends Component {
             //prevEditorData,
             isSaved: false
         })
+
+        this.props.setEditorFocus(index, activeWordIndex, caretPosition)
     }
 
     splitData = (activeIndex, activeWordIndex, caretPos, wordLength) => {
@@ -433,4 +435,4 @@ const mapStateToProps = ({ user, selectedFile }) => {
     return { user, selectedFile };
 }
 
-export default connect(mapStateToProps, { handleTimeChange, isPlaying })(injectIntl(Transcription));
+export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus })(injectIntl(Transcription));

@@ -12,21 +12,29 @@ class Editable2 extends React.Component {
     isEditorClean = true
     isBackSpaceActive = true
     isDelActive = true
-    
+
     shouldComponentUpdate(nextProps, nextStates) {
-        const { index } = this.props;
+        const { index, activeWordIndex, editorFocus, activeIndex } = this.props;
+        console.log(`Editable${index} shouldUpdate this.props `, this.props)
+        console.log(`Editable${index} shouldUpdate nextProps `, nextProps)
         const { playerActiveIndex } = nextProps.handleTimeChange
-        if (!_.isEqual(this.props.transcript, nextProps.transcript)) {
-            console.log('Editable2 should render? this.props.transcript', this.props.transcript)
-            console.log('Editable2 should render? nextProps.transcript', nextProps.transcript)
-            return true
-        } else if (index === playerActiveIndex) {
+        if (editorFocus.activeIndex === nextProps.editorFocus.activeIndex && editorFocus.activeWordIndex === nextProps.editorFocus.activeWordIndex && index !== playerActiveIndex) {
+            console.log(`Editable${index} should NOT UPDATE`)
+            return false
+        }
+        if (index === playerActiveIndex) {
             this.isEditorClean = false
+            console.log(`Editable${index} should UPDATE due to playerActiveIndex`)
+            return true
+        } else if (editorFocus.activeWordIndex !== nextProps.editorFocus.activeWordIndex) {
+            console.log(`Editable${index} should UPDATE due to activeWordIndex change`)
             return true
         } else if (!this.isEditorClean) {
+            console.log(`Editable${index} should UPDATE due to isEditorClean`)
             this.isEditorClean = true
             return true
         }
+        console.log(`Editable${index} should NOT UPDATE due to false`)
         return false
     }
 
@@ -115,7 +123,7 @@ class Editable2 extends React.Component {
 
         console.log('onKeyUp!', keyCode)
 
-        const { index, transcript, handleEditorChange, isLastEditable } = this.props;
+        const { index, transcript, handleEditorChange } = this.props;
         let words = _.cloneDeep(transcript.words)
         words = words.map((word, i) => {
             word.word = ''
@@ -128,8 +136,8 @@ class Editable2 extends React.Component {
         let offset = sel.focusOffset
         let text = sel.focusNode.innerText || sel.focusNode.textContent
         let id = sel.focusNode.nodeName !== 'SPAN' ? sel.focusNode.parentNode.id : sel.focusNode.id
-        let wordIndex = parseInt(id)
-        console.log(`onKeyUp text is ${text} wordIndex ${wordIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
+        let activeWordIndex = parseInt(id)
+        console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
 
         switch (keyCode) {
             case KEYCODES.BACKSPACE:
@@ -170,7 +178,8 @@ class Editable2 extends React.Component {
                 words[wordIndex].word = newWord
         }
         console.log(`transcript object final`, words)
-        handleEditorChange(index, words)
+        let caretPosition = offset
+        handleEditorChange(index, words, activeWordIndex, caretPosition)
     }
 
     onChange = (e) => {
@@ -193,25 +202,29 @@ class Editable2 extends React.Component {
         console.log('onInput e is', e)
     }
 
-    decideClassName = (word, isActive) => {
+    decideClassName = (word, isActive, isPlaying) => {
         let className = 'editable-content';
         if (isActive) className += ' active-word';
+        if (isPlaying) className += ' playing-word';
         if (word.confidence < 0.6) className += ' not-so-confident';
 
         return className;
     }
 
     render = () => {
-        const { index, transcript, handleTimeChange } = this.props;
+        const { index, transcript, handleTimeChange, editorFocus, activeIndex, activeWordIndex } = this.props;
         let { playerActiveIndex, playerActiveWordIndex } = handleTimeChange
         console.log(`Editable ${index} renders!`)
         let words = transcript.words.map((word, wordIndex) => {
             let isActive = false
+            let isPlaying = false
             if (index === playerActiveIndex && wordIndex === playerActiveWordIndex)
+                isPlaying = true
+            if (index === editorFocus.activeIndex && wordIndex === editorFocus.activeWordIndex)
                 isActive = true
             return (
                 <span
-                    className={this.decideClassName(word, isActive)}
+                    className={this.decideClassName(word, isActive, isPlaying)}
                     key={wordIndex}
                     id={wordIndex}
                     contentEditable='true'
@@ -256,39 +269,39 @@ class Editable2 extends React.Component {
     }
 
     componentDidMount() {
-        const { index, transcript, handleTimeChange, activeIndex, activeWordIndex, caretPosition } = this.props;
+        const { index, transcript, handleTimeChange, activeIndex, editorFocus, activeWordIndex, caretPosition } = this.props;
         console.log(`Editable ${index} didMount`)
         let { playerActiveIndex, playerActiveWordIndex } = handleTimeChange
         console.log(`activeIndex: ${activeIndex} playerActiveIndex: ${playerActiveIndex}`)
         let isPlaying = index === playerActiveIndex
-        let isEditing = index === activeIndex
+        let isEditing = index === editorFocus.activeIndex
         if (isEditing) {
             ReactDOM.findDOMNode(this.editableRef).focus();
-            this.setCaretPos(activeWordIndex, caretPosition);
+            this.setCaretPos(editorFocus.activeWordIndex, editorFocus.caretPosition);
         } else if (isPlaying) {
             ReactDOM.findDOMNode(this.editableRef).focus();
         }
     }
 
-/*     componentDidUpdate() {
-        const { index, transcript, handleTimeChange, activeIndex, activeWordIndex, caretPosition } = this.props;
+    componentDidUpdate() {
+        const { index, transcript, handleTimeChange, editorFocus } = this.props;
         let { playerActiveIndex, playerActiveWordIndex } = handleTimeChange
         console.log(`Editable ${index} DidUpdate`)
-        console.log(`activeIndex: ${activeIndex} playerActiveIndex: ${playerActiveIndex}`)
+        console.log(`activeIndex: ${editorFocus.activeIndex} playerActiveIndex: ${playerActiveIndex}`)
         let isPlaying = index === playerActiveIndex
-        let isEditing = index === activeIndex
+        let isEditing = index === editorFocus.activeIndex
         if (isEditing) {
             ReactDOM.findDOMNode(this.editableRef).focus();
-            this.setCaretPos(activeWordIndex, caretPosition);
-        } else if (activeIndex < 0 && isPlaying) {
+            this.setCaretPos(editorFocus.activeWordIndex, editorFocus.caretPosition);
+        } else if (editorFocus.activeIndex < 0 && isPlaying) {
             ReactDOM.findDOMNode(this.editableRef).focus();
         }
-    } */
+    }
 
 }
 
-const mapStateToProps = ({ handleTimeChange, playerStatus }) => {
-    return { handleTimeChange, playerStatus };
+const mapStateToProps = ({ handleTimeChange, playerStatus, editorFocus }) => {
+    return { handleTimeChange, playerStatus, editorFocus };
 }
 
 export default connect(mapStateToProps)(Editable2);
