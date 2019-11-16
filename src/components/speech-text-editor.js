@@ -16,59 +16,15 @@ class SpeechTextEditor extends Component {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+/*     shouldComponentUpdate(nextProps, nextState) {
+        console.log('SpeechTextEditorShouldUpdate?')
         if (!_.isEqual(this.props.editorData, nextProps.editorData)) {
-            console.log('SpeechTExtEditor shouldupdate thhis.Props', this.props)
+            console.log('SpeechTExtEditor shouldupdate this.Props', this.props)
             console.log('SpeechTExtEditor shouldupdate nextProps', nextProps)
             console.log()
             return true
         }
         return false
-    }
-
-    /*     componentWillReceiveProps({ editorData, playerTime }) {
-            if (!_.isEmpty(playerTime)) {
-                const { seconds, nanoSeconds } = playerTime;
-                let playerActiveIndex = -1, playerActiveWordIndex = -1;
-                _.each(editorData, (data, index) => {
-                    let alternative = data.alternatives[0];
-                    _.map(alternative.words, (word, wordIndex) => {
-                        let { startTime, endTime } = word;
-                        let currTime = parseFloat(seconds + '.' + nanoSeconds);
-                        startTime = parseFloat(startTime.seconds + '.' + startTime.nanos);
-                        endTime = parseFloat(endTime.seconds + '.' + endTime.nanos);
-    
-                        if (startTime <= currTime && endTime > currTime) {
-                            playerActiveIndex = index;
-                            playerActiveWordIndex = wordIndex;
-                            return;
-                        }
-                    })
-                });
-                if (playerActiveIndex > -1 && playerActiveWordIndex > -1) {
-                    this.setState({
-                        playerActiveIndex,
-                        playerActiveWordIndex
-                    })
-                }
-            } else {
-                this.setState({
-                    playerActiveIndex: 0,
-                    playerActiveWordIndex: 0
-                })
-            }
-        } */
-
-    /* changeIndexes = (index, wordIndex, changePlayerTime) => {
-        console.log(`changeIndexs index: ${index}, wordIndex: ${wordIndex}, changePlayerTime: ${changePlayerTime}`)
-        this.setState({
-            activeIndex: index,
-            activeWordIndex: wordIndex
-        }, () => {
-            if (changePlayerTime) {
-                this.changePlayerTime(index, wordIndex);
-            }
-        });
     } */
 
     changePlayerTime = (index, wordIndex) => {
@@ -78,66 +34,6 @@ class SpeechTextEditor extends Component {
     }
 
     getTranscriptionText = (words) => words.map((theword, i) => theword.word ? theword.word : '').join(' ')
-
-    /*     splitData = (caretPos, wordLength) => {
-            let { editorData } = this.props;
-            const { activeIndex, activeWordIndex } = this.state;
-    
-            let wordIndex = activeWordIndex;
-            if (caretPos < wordLength / 2) {
-                wordIndex -= 1;
-            }
-    
-            let firstSplittedData = editorData[activeIndex];
-            let secondSplittedData = _.cloneDeep(firstSplittedData);
-    
-            let endWord = firstSplittedData.alternatives[0].words[wordIndex];
-            firstSplittedData.alternatives[0].endTime = endWord.endTime;
-            firstSplittedData.alternatives[0].words.splice(wordIndex + 1);
-            firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
-    
-            let startWord = secondSplittedData.alternatives[0].words[wordIndex + 1];
-            secondSplittedData.alternatives[0].startTime = startWord.startTime;
-            secondSplittedData.alternatives[0].words.splice(0, wordIndex + 1);
-            secondSplittedData.alternatives[0].transcript = this.getTranscriptionText(secondSplittedData.alternatives[0].words);
-    
-            editorData[activeIndex] = firstSplittedData;
-            editorData.splice(activeIndex + 1, 0, secondSplittedData);
-    
-            this.setState({
-                editorData,
-                activeIndex: activeIndex + 1,
-                activeWordIndex: 0,
-                caretPosition: 0
-            });
-            //this.props.handleSplitChange()
-        } */
-
-    /*    mergeData = () => {
-           let { editorData } = this.props;
-           const { activeIndex } = this.state;
-   
-           if (activeIndex === 0) return;
-   
-           let prevData = editorData[activeIndex - 1];
-           let currentData = editorData[activeIndex];
-           let prevWordLength = prevData.alternatives[0].words.length;
-   
-           prevData.alternatives[0].words = prevData.alternatives[0].words.concat(currentData.alternatives[0].words);
-           let wordLength = prevData.alternatives[0].words.length;
-           prevData.alternatives[0].endTime = prevData.alternatives[0].words[wordLength - 1].endTime;
-           prevData.alternatives[0].transcript = this.getTranscriptionText(prevData.alternatives[0].words);
-   
-           editorData[activeIndex - 1] = prevData;
-           editorData.splice(activeIndex, 1);
-   
-           this.setState({
-               editorData,
-               activeIndex: activeIndex - 1,
-               activeWordIndex: prevWordLength,
-               caretPosition: 0
-           });
-       } */
 
     addZero = (value, length) => {
         if (value === 0) {
@@ -169,7 +65,7 @@ class SpeechTextEditor extends Component {
     }
 
     render() {
-        const { editorData, handleEditorChange, splitData, mergeData, activeWordIndex, activeIndex, caretPosition, changeActiveIndex } = this.props;
+        const { editorData, handleEditorChange, splitData, mergeData, changeActiveIndex } = this.props;
         console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {
@@ -198,9 +94,9 @@ class SpeechTextEditor extends Component {
                                     mergeData={mergeData}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
-                                    activeIndex={activeIndex}
-                                    activeWordIndex={activeWordIndex}
-                                    caretPosition={caretPosition}
+                                    //activeIndex={activeIndex}
+                                    //activeWordIndex={activeWordIndex}
+                                    //caretPosition={caretPosition}
                                     changeActiveIndex={changeActiveIndex}
                                 />
                             </div>

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Utils from '../utils';
 
 export const setEditorFocus = (activeIndex, activeWordIndex, caretPosition) => {
-    console.log('setEditorFocus ')
+    console.log(`setEditorFocus activeIndex ${activeIndex} activeWordIndex ${activeWordIndex} caretPosition ${caretPosition}`)
     return (dispatch, getState) => {
         // Burda kaldik
         dispatch({

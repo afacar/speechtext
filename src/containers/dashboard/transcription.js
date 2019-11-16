@@ -17,6 +17,7 @@ class Transcription extends Component {
 
         this.state = {
             editorData: null,
+            numOfWords: '',
             intervalHolder: undefined
         }
     }
@@ -44,6 +45,7 @@ class Transcription extends Component {
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
                     .then(({ data }) => {
+                        this.props.setEditorFocus(-1, -1, -1)
                         let editorData = data;
                         that.setState({
                             editorData,
@@ -55,7 +57,7 @@ class Transcription extends Component {
                             }, 20000);
                         })
                         console.log('this.state.editorData is fetched', this.state.editorData)
-                        //this.props.handleTimeChange(editorData, -1);
+                        this.props.handleTimeChange(data, -1);
                     });
             })
                 .catch(error => {
@@ -212,26 +214,27 @@ class Transcription extends Component {
 
     getTranscriptionText = (words) => words.filter((theword, i) => theword.word.length > 0).map(theword => theword.word).join(' ')
 
-    handleEditorChange = (index, words, activeWordIndex, caretPosition) => {
+    handleEditorChange = (index, words) => {
         console.log(`handleEditorChange is called with index ${index} and words >`, words)
         var { editorData } = this.state;
-        // let prevEditorData = _.cloneDeep(editorData);
         editorData[index].alternatives[0].words = words;
-        editorData[index].alternatives[0].transcript = this.getTranscriptionText(words);
+        let transcript = this.getTranscriptionText(words);
+        editorData[index].alternatives[0].transcript = transcript
+        const numOfWords = transcript.split(' ').length
         this.setState({
             editorData,
-            //prevEditorData,
+            numOfWords,
             isSaved: false
         })
 
-        this.props.setEditorFocus(index, activeWordIndex, caretPosition)
+        //this.props.setEditorFocus(index, activeWordIndex, caretPosition)
     }
 
     splitData = (activeIndex, activeWordIndex, caretPos, wordLength) => {
         const { editorData } = this.state;
 
         let wordIndex = activeWordIndex;
-        if (caretPos < wordLength / 2) {
+        if (caretPos <= wordLength / 2) {
             wordIndex -= 1;
         }
 
@@ -274,8 +277,6 @@ class Transcription extends Component {
         }
         console.log(`changeActiveIndex activeIndex: ${activeIndex} activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition}`)
         this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
-
-        //this.setState({ activeIndex, activeWordIndex, caretPosition })
     }
 
     mergeData = (activeIndex) => {
@@ -308,7 +309,7 @@ class Transcription extends Component {
     }
 
     renderResults = () => {
-        const { editorData, isSaved, activeIndex, activeWordIndex, caretPosition } = this.state;
+        const { editorData, isSaved, numOfWords } = this.state;
         console.log('renderResults editorData', editorData)
         if (editorData === null) return;
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
@@ -345,11 +346,8 @@ class Transcription extends Component {
                 </div>
                 <br />
                 <SpeechTextEditor
-                    key={editorData.length + '' + activeIndex}
+                    key={editorData.length + '' + numOfWords}
                     editorData={editorData ? editorData : []}
-                    activeWordIndex={activeWordIndex}
-                    activeIndex={activeIndex}
-                    caretPosition={caretPosition}
                     changeActiveIndex={this.changeActiveIndex}
                     handleEditorChange={this.handleEditorChange}
                     splitData={this.splitData}
@@ -372,17 +370,6 @@ class Transcription extends Component {
             })
         })
     }
-
-    /*     handleTimeChange = (currentTime) => {
-            let seconds = Math.floor(currentTime);
-            let nanoSeconds = parseInt((currentTime - seconds) * 1000);
-            this.setState({
-                playerTime: {
-                    seconds,
-                    nanoSeconds
-                }
-            });
-        } */
 
     render() {
         console.log('Transcription Rendering...')
