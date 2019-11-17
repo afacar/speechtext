@@ -4,10 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import '../styles/footer.css';
 
-const isMobile = window.innerWidth <= 780;
 const Footer = () => {
     return (
-        <footer className={ `bg-dark ${!isMobile ? 'fixed-bottom' : ''}` }>
+        <footer className='bg-dark'>
             <div className="container">
                 <a href="https://www.google.com/maps/dir//39.8986893,32.7742932/@39.8987893,32.7722978,17z" target="_blank" rel="noopener noreferrer"
                     className="float-left text-white">
