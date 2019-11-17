@@ -13,6 +13,7 @@ import Privacy from './landing/privacy';
 import Terms from './landing/terms';
 import ScrollTop from '../components/scroll-top';
 import FrequentlyAskedQuestions from './landing/faq';
+import Evaluate from './../components/evaluation-popup';
 
 class App extends Component {
     componentDidMount() {
@@ -33,6 +34,8 @@ class App extends Component {
                         <Route path='/privacy' component={ Privacy } />
                         <Route path='/terms' component={ Terms } />
                         <Route path='/faq' component={ FrequentlyAskedQuestions } />
+                        <Route path='/feedback/:fileInfo' component={ Evaluate } />
+                        <Route exact path='/feedback' component={ Evaluate } />
                     </ScrollTop>
                 </BrowserRouter>
                 <Alert stack={{ limit: 3 }} timeout={ 5000 } html={ true } effect={ 'slide' } position={ 'top-right' } />
