@@ -32,22 +32,14 @@ class Editable extends PureComponent {
         var range = document.createRange();
         var sel = window.getSelection();
         range.selectNodeContents(this.editableRef);
+        console.log('setCaretPos pos:', pos)
+        console.log('setCaretPos this.editableRef.childNodes[0]:', this.editableRef.childNodes[0])
+        if(this.editableRef.childNodes[0] === undefined) return;
         range.setStart(this.editableRef.childNodes[0], pos);
         range.collapse(true);
         sel.removeAllRanges();
         sel.addRange(range);
     }
-
-    // setCaretPos(pos) {
-    //     // for contentedit field
-    //     var range = document.createRange();
-    //     var sel = window.getSelection();
-    //     range.setStart(this.editableRef.childNodes[0], pos);
-    //     range.collapse(true);
-    //     sel.removeAllRanges();
-    //     sel.addRange(range);
-    //     return;
-    // }
 
     onKeyDown = (e) => {
         const { index, wordIndex, changeIndexes } = this.props;
@@ -71,16 +63,18 @@ class Editable extends PureComponent {
         }
     }
 
-    handleChange = ({ keyCode }) => {
+    onKeyUp = ({ keyCode }) => {
         const { index, wordIndex, changeIndexes, handleWordChange } = this.props;
-        console.log(`index: ${index} and wordIndex: ${wordIndex}`)
+        console.log(`onKeyUp index: ${index} and wordIndex: ${wordIndex}`)
+        console.log(`onKeyUp keyCode: ${keyCode}`)
         keyPressed[keyCode] = false;
         if (exclusiveKeyCodes.includes(keyCode) || arrowKeyCodes.includes(keyCode)) return;
         if (keyCode === 9) { // TAB
             changeIndexes(keyPressed[16] ? index - 1 : index + 1, 0);
         } else {
             let value = document.getSelection().baseNode.data;
-            value && handleWordChange(index, wordIndex, value.trim());
+            console.log(`onKeyUp else value : ${value}`)
+            handleWordChange(index, wordIndex, value);
         }
     }
 
@@ -108,6 +102,7 @@ class Editable extends PureComponent {
     }
 
     render = () => {
+        console.log('Editable Rendering...')
         const { index, wordIndex, isActive, word, changeIndexes } = this.props;
         return (
             <span className='editable-content-wrapper' contentEditable='false' suppressContentEditableWarning='true'>
@@ -119,7 +114,7 @@ class Editable extends PureComponent {
                     tabIndex={index + wordIndex}
                     ref={(input) => { this.editableRef = input; }}
                     onClick={e => changeIndexes(index, wordIndex)}
-                    onKeyUp={this.handleChange}
+                    onKeyUp={this.onKeyUp}
                     onKeyDown={this.onKeyDown}
                     onFocus={e => changeIndexes(index, wordIndex)}
                     onBlur={this.onBlur}
@@ -130,6 +125,7 @@ class Editable extends PureComponent {
             </span>
         )
     }
+
 }
 
 export default Editable;
