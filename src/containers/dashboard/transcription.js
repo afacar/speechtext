@@ -380,7 +380,7 @@ class Transcription extends Component {
                         <SpeechTextPlayer
                             key={selectedFile.id}
                             src={selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : ''}
-                            duration={selectedFile.originalFile && selectedFile.originalFile.originalDuration ? selectedFile.originalFile.originalDuration : undefined}
+                            duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
                             type={selectedFile.options ? selectedFile.options.type : ''}
                             timeToSeek={this.state.timeToSeek}
                             editorData={this.state.editorData}
