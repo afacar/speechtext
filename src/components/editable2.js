@@ -195,11 +195,22 @@ class Editable2 extends React.Component {
         let sel = document.getSelection()
         console.log('onKeyUp sel>', sel)
         let offset = sel.focusOffset
-        let text = sel.focusNode.innerText || sel.focusNode.textContent
-        let id = sel.focusNode.nodeName !== 'SPAN' ? sel.focusNode.parentNode.id : sel.focusNode.id
-        // Handle when whole text selected and replaced with char
-        // In which case it is returning text node instead of span
+        let text = sel.focusNode.innerText || sel.focusNode.textContent || ' '
+        let isNodeSpan = sel.focusNode.parentNode.nodeName === 'SPAN'
+        let id = isNodeSpan ? sel.focusNode.parentNode.id : 0
         let activeWordIndex = parseInt(id)
+        if (!isNodeSpan) {
+            console.log('OnKeyUp node is not inside a span so Create span with activeWordIndex and append to childNodes')
+            let newSpan = document.createElement('span')
+            newSpan.id = activeWordIndex 
+            newSpan.tabIndex = activeWordIndex 
+            newSpan.innerText = text 
+            let word = { confidence: 1 }
+            newSpan.className = this.decideClassName(word, true, false)
+            console.log('newSpan is ready onKeyUp', newSpan)
+            if (sel.focusNode.nodeName !== 'DIV' && this.editableRef.contains(sel.focusNode)) this.editableRef.removeChild(sel.focusNode)
+            this.editableRef.appendChild(newSpan)
+        }
         console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and words.length is ${transcript.words.length} and textLen is ${text.length}`)
 
         let children = this.editableRef.childNodes
@@ -208,6 +219,7 @@ class Editable2 extends React.Component {
         console.log('children.length=', children.length)
         console.log('words.length=', words.length)
         for (let i = 0; i < len; i++) {
+            // TODO: Check for missing spans and create newSpans to append  
             let child = children[i];
             let wordIndex = parseInt(child.id);
             let newWord = child.innerText.trim()

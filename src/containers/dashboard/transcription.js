@@ -83,8 +83,7 @@ class Transcription extends Component {
         const { editorData, prevEditorData, isSaved } = this.state;
         const { selectedFile, user } = this.props;
         if (!_.isEmpty(editorData) && !isSaved) {
-            return;
-            /* var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);	
+            var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             storageRef.put(new Blob([JSON.stringify(editorData)]))
                 .then(snapshot => {
                     this.setState({ isSaved: true })
@@ -92,9 +91,8 @@ class Transcription extends Component {
                 })
                 .catch(error => {
                     // TODO: UPDATE_TRANSCRIBED_FILE_ERROR	
-                    console.log(error);	
+                    console.log(error);
                 });
-            // } */
         }
     }
 
