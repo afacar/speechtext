@@ -47,6 +47,7 @@ class Transcription extends Component {
                 Axios.get(downloadUrl)
                     .then(({ data }) => {
                         this.props.setEditorFocus(-1, -1, -1)
+                        this.props.handleTimeChange(data, -1);
                         let editorData = data;
                         that.setState({
                             editorData,
@@ -58,7 +59,6 @@ class Transcription extends Component {
                             }, 20000);
                         })
                         console.log('this.state.editorData is fetched', this.state.editorData)
-                        this.props.handleTimeChange(data, -1);
                     });
             })
                 .catch(error => {
