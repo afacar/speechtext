@@ -353,7 +353,7 @@ class Transcription extends Component {
                     splitData={this.splitData}
                     mergeData={this.mergeData}
                     suppressContentEditableWarning
-                    playerTime={this.state.playerTime}
+                    //playerTime={this.state.playerTime}
                     editorClicked={this.editorClicked}
                     isPlaying={this.state.isPlaying}
                 />
@@ -388,9 +388,6 @@ class Transcription extends Component {
                             type={selectedFile.options ? selectedFile.options.type : ''}
                             timeToSeek={this.state.timeToSeek}
                             editorData={this.state.editorData}
-                        //onTimeChanged={ this.handleTimeChange }
-                        //onPlay={ () => this.setState({ isPlaying: true }) }
-                        //onPause={ () => this.setState({ isPlaying: false }) }
                         />
                     </Media>
                 </div>

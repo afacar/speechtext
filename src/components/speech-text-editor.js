@@ -70,7 +70,7 @@ class SpeechTextEditor extends Component {
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
-                if (alternative && alternative.transcript && alternative.startTime && alternative.endTime) {
+                if (alternative && alternative.startTime && alternative.endTime) {
                     return (
                         <div className='conversionResult' key={index} onClick={(e) => { }} >
                             <div
@@ -109,8 +109,4 @@ class SpeechTextEditor extends Component {
     }
 }
 
-const mapStateToProps = ({ handleTimeChange, playerStatus }) => {
-    return { handleTimeChange, playerStatus };
-}
-
-export default connect(mapStateToProps)(SpeechTextEditor);
+export default SpeechTextEditor;
