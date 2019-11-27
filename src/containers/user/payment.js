@@ -43,7 +43,15 @@ class Payment extends Component {
         })
     }
 
+    componentDidMount() {
+        this.setUserPlan(this.props.user);
+    }
+
     componentWillReceiveProps({ user }) {
+        this.setUserPlan(user)
+    }
+
+    setUserPlan = (user) => {
         if (user && user.currentPlan) {
             const { currentPlan } = user;
             if (user.currentPlan.type === 'Monthly') {

@@ -45,13 +45,19 @@ class Header extends Component {
         }
     }
 
+    logoClicked = () => {
+        if(this.props.goToRef) {
+            this.props.goToRef('topRef');
+        }
+    }
+
     render() {
         return (
             <div>
                 <Nav>
                     <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
-                            <Link to='/' onClick={ () => this.props.goToRef('topRef') }>
+                            <Link to='/' onClick={ this.logoClicked }>
                                 <Navbar.Brand>
                                     <LogoContainer />
                                 </Navbar.Brand>

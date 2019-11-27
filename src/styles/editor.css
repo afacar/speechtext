@@ -17,6 +17,11 @@
 }
 
 .active-word {
+    border-width: 1;
+    background-color: lightgrey;
+}
+
+.playing-word {
     background-color: lightblue;
 }
 

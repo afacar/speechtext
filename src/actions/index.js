@@ -3,3 +3,4 @@ export * from './user-actions';
 export * from './app-actions';
 export * from './file-actions';
 export * from './evaluation-actions';
+export * from './editor-actions';

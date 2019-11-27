@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Container, Carousel } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 
-import Banner1 from '../../assets/banner-1.jpg';
-import Banner2 from '../../assets/banner-2.jpg';
-import Banner3 from '../../assets/banner-3.jpg';
+import Banner1 from '../../assets/banner-1.png';
+import Banner2 from '../../assets/banner-2.png';
+import Banner3 from '../../assets/banner-3.png';
 import '../../styles/entry.css';
 import Auth from '../../components/auth';
 
@@ -26,7 +27,7 @@ class Entry extends Component {
     render() {
         return (
             <div className='main-div' >
-                <Container align="center">
+                <Container align="center" className='banner'>
                     <Carousel nextIcon={<span aria-hidden="true" className="carousel-control-next-icon" />}>
                         <Carousel.Item>
                             <img
@@ -34,6 +35,9 @@ class Entry extends Component {
                                 src={ Banner1 }
                                 alt="State of Art"
                             />
+                            <div className='centered'>
+                                <FormattedMessage id='Banner.feature1' />
+                            </div>
                         </Carousel.Item>
                         <Carousel.Item>
                             <img
@@ -41,6 +45,11 @@ class Entry extends Component {
                                 src={ Banner2 }
                                 alt="Integrated Editor"
                             />
+                            <div className='centered'>
+                                <FormattedMessage id='Banner.feature2' />
+                                <br />
+                                <FormattedMessage id='Banner.feature3' />
+                            </div>
                         </Carousel.Item>
                         <Carousel.Item>
                             <img
@@ -48,6 +57,9 @@ class Entry extends Component {
                                 src={ Banner3 }
                                 alt="Best Price"
                             />
+                            <div className='centered'>
+                                <FormattedMessage id='Banner.feature4' />
+                            </div>
                         </Carousel.Item>
                     </Carousel>
                 </Container>
