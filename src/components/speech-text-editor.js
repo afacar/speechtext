@@ -16,16 +16,12 @@ class SpeechTextEditor extends Component {
         }
     }
 
-/*     shouldComponentUpdate(nextProps, nextState) {
-        console.log('SpeechTextEditorShouldUpdate?')
-        if (!_.isEqual(this.props.editorData, nextProps.editorData)) {
-            console.log('SpeechTExtEditor shouldupdate this.Props', this.props)
-            console.log('SpeechTExtEditor shouldupdate nextProps', nextProps)
-            console.log()
-            return true
-        }
+    shouldComponentUpdate(nextProps, nextState) {
+        let prevLength = this.props.editorData.length
+        let nextLength = nextProps.editorData.length
+        if (prevLength !== nextLength) return true
         return false
-    } */
+    }
 
     changePlayerTime = (index, wordIndex) => {
         const { editorData } = this.props;
@@ -64,20 +60,20 @@ class SpeechTextEditor extends Component {
         return formattedTime;
     }
 
-    handleWordChange = (index, wordIndex, text) => {
-        if(!text || _.isEmpty(text.trim())) {
-            let activeWordIndex = wordIndex;
-            activeWordIndex = wordIndex > 0 ? wordIndex - 1 : 0;
-
-            if(activeWordIndex !== wordIndex) {
-                this.setState({
-                    activeWordIndex
-                })
+    /*     handleWordChange = (index, wordIndex, text) => {
+            if(!text || _.isEmpty(text.trim())) {
+                let activeWordIndex = wordIndex;
+                activeWordIndex = wordIndex > 0 ? wordIndex - 1 : 0;
+    
+                if(activeWordIndex !== wordIndex) {
+                    this.setState({
+                        activeWordIndex
+                    })
+                }
             }
-        }
-
-        this.props.handleWordChange(index, wordIndex, text);
-    }
+    
+            this.props.handleWordChange(index, wordIndex, text);
+        } */
 
     render() {
         const { editorData, handleEditorChange, splitData, mergeData, changeActiveIndex } = this.props;
@@ -109,10 +105,10 @@ class SpeechTextEditor extends Component {
                                     mergeData={mergeData}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
-                                    //activeIndex={activeIndex}
-                                    //activeWordIndex={activeWordIndex}
-                                    //caretPosition={caretPosition}
-                                    changeActiveIndex={changeActiveIndex}
+                                //activeIndex={activeIndex}
+                                //activeWordIndex={activeWordIndex}
+                                //caretPosition={caretPosition}
+                                //changeActiveIndex={changeActiveIndex}
                                 />
                             </div>
                         </div>

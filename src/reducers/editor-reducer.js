@@ -14,6 +14,7 @@ export const setEditorFocus = (state = {}, action) => {
 export const handleTimeChange = (state = {}, action) => {
     switch(action.type) {
         case ActionTypes.HANDLE_TIME_CHANGE:
+            console.log('reducer payload', action.payload)
             return action.payload;
         default:
             return state;

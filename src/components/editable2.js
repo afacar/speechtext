@@ -15,6 +15,7 @@ class Editable2 extends React.Component {
     isBackSpaceActive = true
     isDelActive = true
     lastCaretPosition = null
+    lastActiveWordIndex = null
     isEditing = false
     isPlaying = false
     isFocused = false
@@ -30,34 +31,57 @@ class Editable2 extends React.Component {
         this.isEditing = index === nextEditor.activeIndex
         this.isPlaying = index === nextProps.playerActiveIndex
 
-        const isEditingWordChanged = this.isEditing && thisEditor.activeWordIndex !== nextEditor.activeWordIndex
+        const isEditingWordChanged = this.isEditing && !_.isEqual(thisEditor, nextEditor)
         const isPlayingWordChanged = this.isPlaying && this.props.playerActiveWordIndex !== nextProps.playerActiveWordIndex
-        console.log('this.isEditorClean: ', this.isEditorClean)
-        console.log('this.isEditing: ', this.isEditing)
-        console.log('this.isPlaying: ', this.isPlaying)
 
-        if (!this.isEditorClean && !this.isEditing && !this.isPlaying) {
+        if (isEditingWordChanged) {
+            this.isEditorClean = false
+            this.lastActiveWordIndex = nextEditor.activeWordIndex
+            this.lastCaretPosition = nextEditor.caretPosition
+            console.log(`Editable${index} DOESNT UPDATES DUE TO EditingWordChanged`)
+            if (this.lastActiveWordIndex !== null) {
+                this.setCaretPos(this.lastActiveWordIndex, this.lastCaretPosition);
+                this.lastActiveWordIndex = null
+                this.lastCaretPosition = null
+            }
+        }
+        /*
+        if (this.isEditing && !this.isFocused) {
+            console.log(`Editable${index} DOESNT UPDATES IN ORDER TO FOCUS`)
+            return false
+        } */
+        if (!this.isEditorClean && !this.isFocused && !this.isPlaying) {
             console.log(`Editable${index} UPDATES due to cleaning!`)
             this.isEditorClean = true
-            return true
+            if (this.lastPlayingWordIndex > -1 && this.getSpanIndexById(this.lastPlayingWordIndex) > -1) {
+                this.editableRef.childNodes[this.getSpanIndexById(this.lastPlayingWordIndex)].style["background-color"] = null;
+            }
         }
         if (isPlayingWordChanged) {
             this.isEditorClean = false
-            console.log(`Editable${index} UPDATES DUE TO PlayingWordChanged`)
-            return true
-        }
-        if (isEditingWordChanged) {
-            this.isEditorClean = false
-            console.log(`Editable${index} UPDATES DUE TO EditingWordChanged`)
-            return true
-        }
-        if (this.isEditing && !this.isFocused) {
-            console.log(`Editable${index} UPDATES IN ORDER TO FOCUS`)
-            return true
+            console.log(`Editable${index} PlayingWordChanged`)
+            if (this.props.playerActiveWordIndex > -1 && this.getSpanIndexById(this.props.playerActiveWordIndex) > -1) {
+                this.editableRef.childNodes[this.getSpanIndexById(this.props.playerActiveWordIndex)].style["background-color"] = null;
+            }
+            if (nextProps.playerActiveWordIndex > -1 && this.getSpanIndexById(nextProps.playerActiveWordIndex) > -1) {
+                this.editableRef.childNodes[this.getSpanIndexById(nextProps.playerActiveWordIndex)].style["background-color"] = "lightgreen";
+                this.lastPlayingWordIndex = this.getSpanIndexById(nextProps.playerActiveWordIndex)
+            }
+
+            return false
         }
 
         console.log(`Editable${index} SHOULD NOT UPDATE DUE TO NO REASON`)
         return false
+    }
+
+    getSpanIndexById = (wordIndex) => {
+        let id = wordIndex + ''
+        var childNodes = this.editableRef.childNodes
+        for (let i = 0; i < childNodes.length; i++) {
+            if (childNodes[i].id === id) return i
+        }
+        return -1
     }
 
     onKeyDown = (e) => {
@@ -73,7 +97,8 @@ class Editable2 extends React.Component {
         let lastIndex = parseInt(this.editableRef.lastElementChild.id)
         //console.log(`onKeyDown text is ${text} wordIndex ${wordIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
         this.lastCaretPosition = offset
-
+        this.lastActiveWordIndex = wordIndex
+        //this.setCaretPos(wordIndex, offset)
         //setEditorFocus(index, wordIndex, offset)
 
         if (![8, 13, 46, 35, 36, 37, 38, 39, 40].includes(e.keyCode)) return;
@@ -86,6 +111,7 @@ class Editable2 extends React.Component {
                         e.preventDefault()
                         e.stopPropagation()
                         this.isBackSpaceActive = false
+                        setEditorFocus(index - 1, -1, -1)
                         mergeData(index)
                     } else if (index === 0) {
                         console.log(`onKeyDown do nothin!!!`)
@@ -103,6 +129,7 @@ class Editable2 extends React.Component {
                 if (wordIndex > firstIndex && wordIndex < lastIndex) {
                     console.log('Split paragraphs!')
                     splitData(index, wordIndex, offset, text.length)
+                    setEditorFocus(index + 1, 0, 0)
                     return;
                 }
                 break;
@@ -114,6 +141,8 @@ class Editable2 extends React.Component {
                     console.log('Merge with next pressed')
                     this.isDelActive = false
                     mergeData(index + 1)
+                    // ??
+                    setEditorFocus(index, wordIndex, offset)
                     return;
                 } else if (isLastEditable && wordIndex === lastIndex && offset === text.length) {
                     console.log('onKeyDown do nothig')
@@ -129,7 +158,8 @@ class Editable2 extends React.Component {
                     console.log('LEFT OR UP pressed GO UP')
                     e.preventDefault()
                     e.stopPropagation()
-                    changeActiveIndex(index - 1, -1, -1)
+                    setEditorFocus(index - 1, -1, -1)
+                    //changeActiveIndex(index - 1, -1, -1)
                     return;
                 }
                 break;
@@ -139,7 +169,8 @@ class Editable2 extends React.Component {
                     console.log('RIGHT OR DOWN pressed GO DOWN')
                     e.preventDefault()
                     e.stopPropagation()
-                    changeActiveIndex(index + 1, 0, 0)
+                    this.props.setEditorFocus(index + 1, 0, 0)
+                    //changeActiveIndex(index + 1, 0, 0)
                     return;
                 }
                 break;
@@ -156,7 +187,7 @@ class Editable2 extends React.Component {
 
         if (exclusiveKeyCodes.includes(keyCode)) return;
 
-        console.log('onKeyUp!', keyCode)
+        //console.log('onKeyUp!', keyCode)
 
         const { index, transcript, handleEditorChange } = this.props;
         let words = _.cloneDeep(transcript.words)
@@ -164,7 +195,7 @@ class Editable2 extends React.Component {
             word.word = ''
             return word
         })
-        console.log('onKeyUp PrevWords!', words)
+        //console.log('onKeyUp PrevWords!', words)
 
         switch (keyCode) {
             case KEYCODES.BACKSPACE:
@@ -193,18 +224,18 @@ class Editable2 extends React.Component {
         }
 
         let sel = document.getSelection()
-        console.log('onKeyUp sel>', sel)
+        //console.log('onKeyUp sel>', sel)
         let offset = sel.focusOffset
         let text = sel.focusNode.innerText || sel.focusNode.textContent || ' '
         let isNodeSpan = sel.focusNode.parentNode.nodeName === 'SPAN'
         let id = isNodeSpan ? sel.focusNode.parentNode.id : 0
         let activeWordIndex = parseInt(id)
         if (!isNodeSpan) {
-            console.log('OnKeyUp node is not inside a span so Create span with activeWordIndex and append to childNodes')
+            //console.log('OnKeyUp node is not inside a span so Create span with activeWordIndex and append to childNodes')
             let newSpan = document.createElement('span')
-            newSpan.id = activeWordIndex 
-            newSpan.tabIndex = activeWordIndex 
-            newSpan.innerText = text 
+            newSpan.id = activeWordIndex
+            newSpan.tabIndex = activeWordIndex
+            newSpan.innerText = text
             let word = { confidence: 1 }
             newSpan.className = this.decideClassName(word, true, false)
             console.log('newSpan is ready onKeyUp', newSpan)
@@ -214,10 +245,10 @@ class Editable2 extends React.Component {
         console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and words.length is ${transcript.words.length} and textLen is ${text.length}`)
 
         let children = this.editableRef.childNodes
-        console.log('onKeyUp children:', children)
+        //console.log('onKeyUp children:', children)
         let len = children.length
-        console.log('children.length=', children.length)
-        console.log('words.length=', words.length)
+        //console.log('children.length=', children.length)
+        //console.log('words.length=', words.length)
         for (let i = 0; i < len; i++) {
             // TODO: Check for missing spans and create newSpans to append  
             let child = children[i];
@@ -227,9 +258,9 @@ class Editable2 extends React.Component {
                 words[wordIndex].word = newWord
         }
 
-        console.log(`transcript object final`, words)
-        this.lastCaretPosition = offset
-        this.props.setEditorFocus(index, activeWordIndex, this.lastCaretPosition)
+        //console.log(`transcript object final`, words)
+        //this.lastCaretPosition = offset
+        //this.props.setEditorFocus(index, activeWordIndex, this.lastCaretPosition)
         handleEditorChange(index, words)
     }
 
@@ -267,18 +298,19 @@ class Editable2 extends React.Component {
     }
 
     onClick = (e) => {
-        console.log(`Editable${this.props.index} onClick`)
-        let sel = document.getSelection()
-        let parent = document.parentNode
-        let text = sel.focusNode.innerText || sel.focusNode.textContent
-        let id = sel.focusNode.nodeName !== 'SPAN' ? sel.focusNode.parentNode.id : sel.focusNode.id
-        let activeWordIndex = parseInt(id)
+        //console.log(`Editable${this.props.index} onClick`)
+        //let { focusNode, focusOffset } = document.getSelection()
+        //let id = focusNode.parentNode.nodeName === 'SPAN' ? focusNode.parentNode.id : 0
+        //let activeWordIndex = parseInt(id)
+        //this.lastActiveWordIndex = activeWordIndex
+        //this.lastCaretPositio = focusOffset
         //this.props.setEditorFocus(this.props.index, activeWordIndex, sel.focusOffset)
     }
 
     onFocus = (e) => {
         console.log(`Editable${this.props.index} onFocus`)
         this.isFocused = true
+        this.isEditing = true
     }
 
     onBlur = (e) => {
@@ -312,7 +344,7 @@ class Editable2 extends React.Component {
 
             return (
                 <span
-                    className={this.decideClassName(word, isActive, isPlaying)}
+                    //className={this.decideClassName(word, isActive, isPlaying)}
                     key={wordIndex}
                     tabIndex={index}
                     id={wordIndex}
@@ -353,7 +385,13 @@ class Editable2 extends React.Component {
         console.log('setCaretPos caretPos', caretPos)
         if (wordIndex === null) return
         let childNodes = this.editableRef.childNodes
-
+        if (wordIndex === -1) {
+            wordIndex = childNodes.length - 1
+            console.log('wordIndex ', wordIndex)
+            console.log(' childNodes[wordIndex] ', childNodes[wordIndex])
+            caretPos = caretPos === -1 ? childNodes[wordIndex].textContent.length : caretPos
+            console.log('calculated caretPos is', caretPos)
+        }
         let node = childNodes[wordIndex]
         if (!node) {
             // Create span with wordIndex and append to childNodes
@@ -391,10 +429,10 @@ class Editable2 extends React.Component {
         const { activeIndex, activeWordIndex, caretPosition } = editorFocus
         this.isEditing = index === activeIndex
         this.isPlaying = index === playerActiveIndex
-        console.log(`...this.isEditing: ${this.isEditing} this.isPlaying: ${this.isPlaying} `)
+        console.log(`...this.isEditing ${this.isEditing} this.isFocused: ${this.isFocused} this.isPlaying: ${this.isPlaying} `)
 
         if (this.isEditing) {
-            ReactDOM.findDOMNode(this.editableRef).focus();
+            !this.isFocused && this.editableRef.focus();
             this.isEditorClean = false
             console.log(`Setting caret to ${activeWordIndex}-${caretPosition}`)
             this.setCaretPos(activeWordIndex, caretPosition);
@@ -404,17 +442,12 @@ class Editable2 extends React.Component {
     componentDidUpdate() {
         const { index, editorFocus } = this.props;
         const { activeWordIndex, caretPosition } = editorFocus
-        console.log(`Editable${index}DidUpdate`)
-        console.log(`...this.isEditing: ${this.isEditing} this.isPlaying: ${this.isPlaying}`)
-        console.log(`...activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition} this.lastCaretPosition ${this.lastCaretPosition}`)
-
+        console.log(`Editable${index}DidUpdate isEditing ${this.isEditing} isFocused ${this.isFocused} isPlaying ${this.isPlaying}`)
+        console.log(`...activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition}`)
+        console.log(`this.lastActiveWordIndex ${this.lastActiveWordIndex} this.lastCaretPosition ${this.lastCaretPosition}`)
         if (this.isEditing) {
             this.isEditorClean = false
-            if (!this.isPlaying) {
-                this.setCaretPos(activeWordIndex, caretPosition);
-            } else {
-                //this.setCaretPos(activeWordIndex, this.lastCaretPosition);
-            }
+
         }
     }
 

@@ -46,7 +46,7 @@ class Transcription extends Component {
             storageRef.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
                     .then(({ data }) => {
-                        this.props.setEditorFocus(-1, -1, -1)
+                        //this.props.setEditorFocus(-1, -1, -1)
                         this.props.handleTimeChange(data, -1);
                         let editorData = data;
                         that.setState({
@@ -210,7 +210,7 @@ class Transcription extends Component {
     getTranscriptionText = (words) => words.filter((theword, i) => theword.word.length > 0).map(theword => theword.word).join(' ')
 
     handleEditorChange = (index, words) => {
-        console.log(`handleEditorChange is called with index ${index} and words >`, words)
+        //console.log(`handleEditorChange is called with index ${index} and words >`, words)
         var { editorData } = this.state;
         editorData[index].alternatives[0].words = words;
         let transcript = this.getTranscriptionText(words);
@@ -251,17 +251,12 @@ class Transcription extends Component {
         console.log('After split new editorData>', editorData)
         this.setState({
             editorData,
-            /* activeIndex: activeIndex + 1,
-            activeWordIndex: 0,
-            caretPosition: 0, */
             isSaved: false
         });
-        this.props.setEditorFocus(activeIndex + 1, 0, 0)
-
-        //this.props.handleSplitChange()
+        //this.props.setEditorFocus(activeIndex + 1, 0, 0)
     }
 
-    changeActiveIndex = (activeIndex, activeWordIndex, caretPosition) => {
+/*     changeActiveIndex = (activeIndex, activeWordIndex, caretPosition) => {
         const { editorData } = this.state
         if (activeWordIndex === -1) {
             let len = editorData[activeIndex].alternatives[0].words.length
@@ -271,8 +266,8 @@ class Transcription extends Component {
             caretPosition = editorData[activeIndex].alternatives[0].words[activeWordIndex].word.length + 1
         }
         console.log(`changeActiveIndex activeIndex: ${activeIndex} activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition}`)
-        this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
-    }
+        //this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
+    } */
 
     mergeData = (activeIndex) => {
         const { editorData } = this.state;
@@ -299,7 +294,7 @@ class Transcription extends Component {
             caretPosition: 0, */
             isSaved: false,
         });
-        this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
+        //this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
 
     }
 
@@ -308,7 +303,6 @@ class Transcription extends Component {
         console.log('renderResults editorData', editorData)
         if (editorData === null) return;
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
-
         const { formatMessage } = this.props.intl;
         return (
             <div className=''>
@@ -341,16 +335,16 @@ class Transcription extends Component {
                 </div>
                 <br />
                 <SpeechTextEditor
-                    key={editorData.length + '' + numOfWords}
+                    key={editorData.length}
                     editorData={editorData ? editorData : []}
-                    changeActiveIndex={this.changeActiveIndex}
+                    //changeActiveIndex={this.changeActiveIndex}
                     handleEditorChange={this.handleEditorChange}
                     splitData={this.splitData}
                     mergeData={this.mergeData}
-                    suppressContentEditableWarning
+                    //suppressContentEditableWarning
                     //playerTime={this.state.playerTime}
                     editorClicked={this.editorClicked}
-                    isPlaying={this.state.isPlaying}
+                    //isPlaying={this.state.isPlaying}
                 />
             </div>
         );

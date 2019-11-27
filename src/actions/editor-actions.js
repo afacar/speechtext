@@ -12,6 +12,8 @@ export const setEditorFocus = (activeIndex, activeWordIndex, caretPosition) => {
     }
 }
 
+let lastPlayerIndex = ''
+
 export const handleTimeChange = (editorData, currentTime) => {
     return (dispatch, getState) => {
         let seconds = Math.floor(currentTime);
@@ -37,10 +39,15 @@ export const handleTimeChange = (editorData, currentTime) => {
             });
 
         }
-        dispatch({
-            type: Utils.ActionTypes.HANDLE_TIME_CHANGE,
-            payload: { playerTime, playerActiveIndex, playerActiveWordIndex }
-        })
+        let playerIndex = playerActiveIndex + '-' + playerActiveWordIndex
+        if (playerIndex !== lastPlayerIndex) {
+            console.log('actions playerIndex is dispatched', playerIndex)
+            lastPlayerIndex = playerIndex
+            dispatch({
+                type: Utils.ActionTypes.HANDLE_TIME_CHANGE,
+                payload: { playerTime, playerActiveIndex, playerActiveWordIndex }
+            })
+        }
     }
 }
 
