@@ -81,7 +81,7 @@ class SpeechTextPlayer extends Component {
                 <div className='player-slider'>
                     <Slider
                         value={ this.state.currentTime / this.props.media.duration }
-                        duration={ this.props.duration }
+                        duration={ this.props.media.duration }
                         seekTo={ this.seekTo }
                         playPause={ this._handlePlayPause }
                     />
