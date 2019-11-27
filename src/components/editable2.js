@@ -64,7 +64,7 @@ class Editable2 extends React.Component {
                 this.editableRef.childNodes[this.getSpanIndexById(this.props.playerActiveWordIndex)].style["background-color"] = null;
             }
             if (nextProps.playerActiveWordIndex > -1 && this.getSpanIndexById(nextProps.playerActiveWordIndex) > -1) {
-                this.editableRef.childNodes[this.getSpanIndexById(nextProps.playerActiveWordIndex)].style["background-color"] = "lightgreen";
+                this.editableRef.childNodes[this.getSpanIndexById(nextProps.playerActiveWordIndex)].style["background-color"] = '#a2f2f2';
                 this.lastPlayingWordIndex = this.getSpanIndexById(nextProps.playerActiveWordIndex)
             }
 
