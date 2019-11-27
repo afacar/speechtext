@@ -187,7 +187,7 @@ class Transcription extends Component {
         })
             .then(({ data }) => {
                 var storageRef = firebase.storage().ref(data.filePath);
-                var fileName = selectedFile.name.split(' ').join('_');
+                var fileName = selectedFile.name.replace(',', '').split(' ').join('_');
                 fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
                 var newMetadata = {
                     contentDisposition: `attachment;filename=${fileName}`
