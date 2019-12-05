@@ -1,10 +1,28 @@
 .conversionResult {
     font-size: 15px;
-    border: thin solid gray;
+    border-left: 1px solid rgb(63, 63, 63);
+    border-right: 1px solid rgb(63, 63, 63);
     padding: 10px;
-    margin-bottom: 5px;
     line-height: 2;
-    box-shadow: 0px 0px 3px 0px;
+    box-shadow: 0px 0px 0px 0px;
+}
+
+.first-conversionResult {
+    font-size: 15px;
+    border-top: 1px solid rgb(63, 63, 63);
+    border-left: 1px solid rgb(63, 63, 63);
+    border-right: 1px solid rgb(63, 63, 63);
+    padding: 10px;
+    line-height: 2;
+}
+
+.last-conversionResult {
+    font-size: 15px;
+    border-left: 1px solid rgb(63, 63, 63);
+    border-right: 1px solid rgb(63, 63, 63);
+    border-bottom: 1px solid rgb(63, 63, 63);
+    padding: 10px;
+    line-height: 2;
 }
 
 .conversionTime {
@@ -59,12 +77,18 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     cursor: text;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 17px;
 }
 
 .not-so-confident {
     text-decoration: underline;
     text-decoration-style: wavy;
     text-decoration-color: red;
+}
+
+.fixed-word {
+    background-color: lightgreen;
 }
 
 .editable-content-wrapper {

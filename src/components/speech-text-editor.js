@@ -82,14 +82,15 @@ class SpeechTextEditor extends Component {
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
                 if (alternative && alternative.startTime && alternative.endTime) {
+                    let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult': 'conversionResult'
                     return (
-                        <div className='conversionResult' key={index} onClick={(e) => { }} >
+                        <div className={className} key={index} onClick={(e) => { }} >
                             <div
                                 id={'conversionTime_' + index}
                                 className='conversionTime'
                                 disabled={true}
                             >
-                                {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
+                                {'Speaker: ' + alternative.words[0].speakerTag} {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
                             <div
                                 id={'editable-content-' + index}
@@ -105,10 +106,6 @@ class SpeechTextEditor extends Component {
                                     mergeData={mergeData}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
-                                //activeIndex={activeIndex}
-                                //activeWordIndex={activeWordIndex}
-                                //caretPosition={caretPosition}
-                                //changeActiveIndex={changeActiveIndex}
                                 />
                             </div>
                         </div>
