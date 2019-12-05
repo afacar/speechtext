@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Container, Card, Form, Row, Col, InputGroup, Button, ResponsiveEmbed, Spinner, Alert as BootstrapAlert } from 'react-bootstrap';
+import { Container, Card, Form, Row, Col, InputGroup, Button, ResponsiveEmbed, Modal, Spinner, Alert as BootstrapAlert } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import publicIp from 'public-ip';
 
@@ -124,12 +124,15 @@ class Payment extends Component {
             basketId
         }).then(({ data }) => {
             const { basketId, checkoutForm } = data;
+            console.log('checkout result', checkoutForm)
             that.setState({
                 basketId,
                 checkoutForm,
                 showSpinner: false,
                 spinnerText: ''
             })
+            checkoutForm && checkoutForm.paymentPageUrl && this.setState({ showCheckoutForm: true })
+
             firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
                 .onSnapshot((snapshot) => {
                     if (snapshot && snapshot.data) {
@@ -386,12 +389,21 @@ class Payment extends Component {
                 }
                 {
                     checkoutForm && checkoutForm.paymentPageUrl &&
-                    <ResponsiveEmbed>
-                        <embed src={checkoutForm.paymentPageUrl} />
-                    </ResponsiveEmbed>
+                    <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
+                        <Modal.Body>
+                            <ResponsiveEmbed>
+                                <embed src={checkoutForm.paymentPageUrl} />
+                            </ResponsiveEmbed>
+                        </Modal.Body>
+                    </Modal>
                 }
             </div>
         )
+    }
+    
+    onHide = () => {
+        console.log('onHide')
+        this.setState({ showCheckoutForm: false })
     }
 
     changeCurrentPlan = () => {
