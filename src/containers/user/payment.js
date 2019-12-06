@@ -14,6 +14,7 @@ import SellingContract from './selling-contract';
 import RefundContract from './refund-contract';
 import MasterCardLogo from '../../assets/mastercard-logo.png';
 import VisaLogo from '../../assets/visa-logo.png';
+import { DemoCard, StandardCard, MonthlyCard, StandardPaymentCard } from '../../components/pricing-cards';
 
 class Payment extends Component {
     constructor(props) {
@@ -22,7 +23,7 @@ class Payment extends Component {
         this.state = {
             duration: 1,
             durationType: 'hours',
-            calculatedPrice: 0,
+            calculatedPrice: 5.88,
             state: 'INITIAL',
             selectedPlanType: undefined
         }
@@ -32,7 +33,7 @@ class Payment extends Component {
         this.setState({
             duration: 1,
             durationType: 'hours',
-            calculatedPrice: 0,
+            calculatedPrice: 5.88,
             state: 'INITIAL',
             basketId: undefined,
             checkoutForm: undefined,
@@ -70,17 +71,19 @@ class Payment extends Component {
     }
 
     durationChanged = (e) => {
-        this.setState({
-            duration: e.target.value
-        })
+        if (e.target.value >= 1) {
+            this.setState({ duration: e.target.value })
+            this.calculatePrice(e.target.value)
+        }
     }
 
-    calculatePrice = () => {
+    calculatePrice = (duration) => {
         var calculatedPrice = 0;
-        var { duration, durationType } = this.state;
+        //var { duration, durationType } = this.state;
         const { currentPlan } = this.props.user;
         const { formatMessage } = this.props.intl;
-        let durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        let durationInMinutes = parseFloat(duration) * 60;
+        console.log('durationInMinutes', durationInMinutes)
         if (durationInMinutes < 60) {
             Alert.error(formatMessage({ id: 'Payment.Error.durationLength' }));
         } else {
@@ -98,17 +101,17 @@ class Payment extends Component {
         var that = this;
         const { language, user, intl } = this.props;
         var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
-        if (!sellingContractAccepted) {
+        /* if (!sellingContractAccepted) {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
             return;
         }
         if (!refundContractAccepted) {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
             return;
-        }
+        } */
         let durationInMinutes = undefined;
         if (selectedPlanType === 'PayAsYouGo')
-            durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+            durationInMinutes = parseFloat(duration) * 60 ;
         this.setState({
             state: 'PAYMENT',
             showSpinner: true,
@@ -139,7 +142,8 @@ class Payment extends Component {
                         let data = snapshot.data();
                         that.setState({
                             state: data.status,
-                            error: data.error
+                            error: data.error,
+                            showCheckoutForm: data.status === 'SUCCESS' ? false : true
                         });
                     }
                 }, (error) => {
@@ -228,6 +232,7 @@ class Payment extends Component {
     }
 
     sellingContractClicked = (e) => {
+        console.log('sellingContractClicked')
         e.preventDefault();
         e.stopPropagation();
 
@@ -235,6 +240,7 @@ class Payment extends Component {
     }
 
     refundContractClicked = (e) => {
+        console.log('refundContractClicked')
         e.preventDefault();
         e.stopPropagation();
 
@@ -253,45 +259,63 @@ class Payment extends Component {
         })
     }
 
-    renderSellingContract = () => {
+    renderContract = () => {
         return (
-            <div className='d-flex flex-row'>
-                <Form.Check
-                    name='sellingContractAccepted'
-                    type='checkbox'
-                    value={this.state.sellingContractAccepted}
-                    onClick={() => this.setState({ sellingContractAccepted: !this.state.sellingContractAccepted })}
-                />
+            <div className='d-flex flex-row contract-text text-center' style={{ fontSize:'small' }}>
                 <p>
-                    {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
-                    <Button variant='link' onClick={this.sellingContractClicked}>
-                        {this.props.language === 'tr' ? 'Mesafeli Satış Sözleşmesi' : 'Online Selling Contract'}
-                    </Button>
-                    {this.props.language === 'tr' ? "'ni okudum ve onaylıyorum." : ''}
+                    {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
+                    <span style={{ color:'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
+                        {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
+                    </span>
+                    {this.props.language !== 'tr' ? ' and ' : ' ve '}
+                    <span style={{ color:'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
+                        {this.props.language === 'tr' ? 'İade Koşulları' : 'Refund Policy'}
+                    </span>
+                    {/* this.props.language === 'tr' ? "'ini kabul ediyorum." : '' */}
                 </p>
             </div>
         )
     }
 
-    renderRefundContract = () => {
-        return (
-            <div className='d-flex flex-wor'>
-                <Form.Check
-                    name='refundContractAccepted'
-                    type='checkbox'
-                    value={this.state.refundContractAccepted}
-                    onClick={() => this.setState({ refundContractAccepted: !this.state.refundContractAccepted })}
-                />
-                <p>
-                    {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
-                    <Button variant='link' onClick={this.refundContractClicked}>
-                        {this.props.language === 'tr' ? 'İptal ve İade Koşulları' : 'Cancel and Refund Policy'}
-                    </Button>
-                    {this.props.language === 'tr' ? "'nı okudum ve onaylıyorum." : ''}
-                </p>
-            </div>
-        )
-    }
+    /*     renderSellingContract = () => {
+            return (
+                <div className='d-flex flex-row'>
+                    <Form.Check
+                        name='sellingContractAccepted'
+                        type='checkbox'
+                        value={this.state.sellingContractAccepted}
+                        onClick={() => this.setState({ sellingContractAccepted: !this.state.sellingContractAccepted })}
+                    />
+                    <p>
+                        {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
+                        <Button variant='link' onClick={this.sellingContractClicked}>
+                            {this.props.language === 'tr' ? 'Mesafeli Satış Sözleşmesi' : 'Online Selling Contract'}
+                        </Button>
+                        {this.props.language === 'tr' ? "'ni okudum ve onaylıyorum." : ''}
+                    </p>
+                </div>
+            )
+        } */
+
+    /*     renderRefundContract = () => {
+            return (
+                <div className='d-flex flex-wor'>
+                    <Form.Check
+                        name='refundContractAccepted'
+                        type='checkbox'
+                        value={this.state.refundContractAccepted}
+                        onClick={() => this.setState({ refundContractAccepted: !this.state.refundContractAccepted })}
+                    />
+                    <p>
+                        {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
+                        <Button variant='link' onClick={this.refundContractClicked}>
+                            {this.props.language === 'tr' ? 'İptal ve İade Koşulları' : 'Cancel and Refund Policy'}
+                        </Button>
+                        {this.props.language === 'tr' ? "'nı okudum ve onaylıyorum." : ''}
+                    </p>
+                </div>
+            )
+        } */
 
     renderPaymentForm = () => {
         var { currentPlan } = this.props.user;
@@ -372,10 +396,7 @@ class Payment extends Component {
                         </Button>
                         <div className='float-right d-flex flex-column'>
                             {
-                                this.renderSellingContract()
-                            }
-                            {
-                                this.renderRefundContract()
+                                this.renderContract()
                             }
                         </div>
                     </Form.Group>
@@ -400,7 +421,7 @@ class Payment extends Component {
             </div>
         )
     }
-    
+
     onHide = () => {
         console.log('onHide')
         this.setState({ showCheckoutForm: false })
@@ -525,14 +546,32 @@ class Payment extends Component {
     }
 
     render() {
+        const { checkoutForm, showSpinner } = this.state
         return (
             <Container>
-                {
-                    this.renderCurrentPlan()
-                }
+                <div className="pricing card-deck flex-column flex-md-row mb-3">
+                    <StandardPaymentCard
+                        duration={this.state.duration}
+                        price={this.state.calculatedPrice}
+                        durationChanged={this.durationChanged}
+                        handleBuy={this.initializePayment}
+                        showSpinner={this.state.showSpinner}
+                        renderContract={this.renderContract}
+                        currentPlan={this.props.user.currentPlan}
+                    />
+                    <MonthlyCard user={this.props.user} />
+                </div>
                 <br />
+                
                 {
-                    this.renderPaymentForm()
+                    checkoutForm && checkoutForm.paymentPageUrl &&
+                    <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
+                        <Modal.Body>
+                            <ResponsiveEmbed>
+                                <embed src={checkoutForm.paymentPageUrl} />
+                            </ResponsiveEmbed>
+                        </Modal.Body>
+                    </Modal>
                 }
                 {
                     this.renderSuccess()
