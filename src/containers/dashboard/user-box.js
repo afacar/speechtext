@@ -25,9 +25,6 @@ class UserBox extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('beforeunload', () => {
-        });
-
         if(_.isEmpty(this.props.user)) {
             const loginInfo = read_cookie('speechtext-dev-login');
             if(!_.isEmpty(loginInfo)) {
