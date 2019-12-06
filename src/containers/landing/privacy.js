@@ -6,7 +6,6 @@ import Header from '../header';
 import Footer from '../footer';
 
 const Privacy = () => {
-    localStorage.setItem('location', window.location.pathname);
     return (
         <div className='privacy'>
             <Helmet>

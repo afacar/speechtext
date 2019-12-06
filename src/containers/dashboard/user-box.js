@@ -4,8 +4,10 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Nav, NavDropdown } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import _ from 'lodash';
+import { read_cookie, delete_cookie } from 'sfcookies';
 
-import { logout } from '../../actions';
+import { login, logout } from '../../actions';
 import firebase from '../../utils/firebase';
 
 class UserBox extends Component {
@@ -18,7 +20,22 @@ class UserBox extends Component {
                 console.log(error)
             });
         this.props.logout();
+        delete_cookie('speechtext-dev-login');
         this.props.history.push('/');
+    }
+
+    componentDidMount() {
+        window.addEventListener('beforeunload', () => {
+        });
+
+        if(_.isEmpty(this.props.user)) {
+            const loginInfo = read_cookie('speechtext-dev-login');
+            if(!_.isEmpty(loginInfo)) {
+                this.props.login(loginInfo);
+            } else {
+                this.props.history.push('/');
+            }
+        }
     }
 
     renderTitle = () => {
@@ -62,4 +79,4 @@ const mapStateToProps = ({ user }) => {
     }
 }
 
-export default connect(mapStateToProps, { logout })(withRouter(UserBox));
+export default connect(mapStateToProps, { login, logout })(withRouter(UserBox));

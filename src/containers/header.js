@@ -34,17 +34,6 @@ class Header extends Component {
         })
     }
 
-    componentDidUpdate(props) {
-        if(_.isEmpty(this.state.user) && !_.isEmpty(props.user)) {
-            var currentLocation = window.location.pathname;
-            var prevLocation = localStorage.getItem('location');
-            var prevLocationWithoutHash = prevLocation ? prevLocation.substr(0, prevLocation.indexOf('#')) : prevLocation;
-            if(prevLocation && currentLocation !== prevLocation && currentLocation !== prevLocationWithoutHash) {
-                this.props.history.push(prevLocation);
-            }
-        }
-    }
-
     logoClicked = () => {
         if(this.props.goToRef) {
             this.props.goToRef('topRef');
