@@ -6,7 +6,6 @@ import Header from '../header';
 import Footer from '../footer';
 
 const Terms = () => {
-    localStorage.setItem('location', window.location.pathname);
     return (
         <div className='terms'>
             <Helmet>

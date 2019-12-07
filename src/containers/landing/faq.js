@@ -5,7 +5,6 @@ import Header from '../header';
 import Footer from '../footer';
 
 const FrequentlyAskedQuestions = (props) => {
-    localStorage.setItem('location', window.location.pathname);
     return (
         <div>
             <Helmet>

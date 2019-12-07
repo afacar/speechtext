@@ -29,6 +29,12 @@ class Profile extends Component {
         this.initializeValues(this.props.user);
     }
 
+    componentWillReceiveProps({ user }) {
+        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            this.initializeValues(user);
+        }
+    }
+
     handlePhoneChange = (data) => {
         var phoneNumber = data.intlPhoneNumber;
         var { values } = this.state;
