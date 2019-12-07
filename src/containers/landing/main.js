@@ -28,7 +28,6 @@ const Main = () => {
             behavior: 'smooth',
             block: 'start',
         });
-        localStorage.setItem('location', window.location.pathname + window.location.hash);
     }
 
     return (

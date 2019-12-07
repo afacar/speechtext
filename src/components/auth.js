@@ -5,6 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { Modal } from 'react-bootstrap';
 import Utils from '../utils';
 import FirebaseUIAuth from "react-firebaseui-localized";
+import { bake_cookie } from 'sfcookies';
+import { withRouter } from 'react-router';
 
 const { firebase } = Utils;
 const uiConfig = {
@@ -31,14 +33,20 @@ class Auth extends Component {
                 const { uid, displayName, email, emailVerified, metadata } = currentUser;
                 const { lastSignInTime, creationTime } = metadata;
                 const isNewUser = creationTime === lastSignInTime
-                that.props.login({
+                const loginInfo = {
                     uid,
                     displayName,
                     email,
                     isNewUser,
                     emailVerified,
                     creationTime: new Date(creationTime),
-                });
+                };
+                that.props.login(loginInfo);
+
+                bake_cookie(process.env.REACT_APP_LOGIN_INFO_NAME, loginInfo);
+                if(isNewUser) {
+                    this.props.history.push('/dashboard');
+                }
             }
         });
     }
@@ -62,4 +70,4 @@ class Auth extends Component {
     }
 }
 
-export default connect(null, { login })(Auth);
+export default connect(null, { login })(withRouter(Auth));
