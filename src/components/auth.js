@@ -42,7 +42,7 @@ class Auth extends Component {
                 };
                 that.props.login(loginInfo);
 
-                bake_cookie('speechtext-dev-login', loginInfo);
+                bake_cookie(process.env.REACT_APP_LOGIN_INFO_NAME, loginInfo);
                 if(isNewUser) {
                     this.props.history.push('/dashboard');
                 }

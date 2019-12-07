@@ -1,13 +1,13 @@
 import firebase from 'firebase';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB3WVII6cEAbOz-k0U0i0KcmseIxKYAUpo",
-  authDomain: "speechtext-72dfc.firebaseapp.com",
-  databaseURL: "https://speechtext-72dfc.firebaseio.com",
-  projectId: "speechtext-72dfc",
-  storageBucket: "gs://speechtext-72dfc.appspot.com",
-  messagingSenderId: "282156468695",
-  appId: "1:282156468695:web:257c6a6595b6d7eb65a392"
+    apiKey: process.env.REACT_APP_FIREBASE.API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE.AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_FIREBASE.DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE.PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE.STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE.MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE.APP_ID
 };
 
 firebase.initializeApp(firebaseConfig);
