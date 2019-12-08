@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Accordion, Card, Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 
 import Header from '../header';
 import Footer from '../footer';
