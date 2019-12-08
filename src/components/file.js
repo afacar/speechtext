@@ -185,7 +185,7 @@ class File extends Component {
                             </div>
                         }
                         {
-                            file.status !== 'DONE' && progress < 100 &&
+                            file.status !== 'DONE' && file.status !== 'ERROR' && progress < 100 &&
                             <div className={ 'file-progress' }>
                                 <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
                                 <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
