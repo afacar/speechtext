@@ -25,7 +25,7 @@ const uiConfig = {
 
 class Auth extends Component {
 
-    render() {
+  render() {
         return (
             <Modal show={this.props.show} onHide={this.props.handleClose}>
                 <Modal.Header closeButton>

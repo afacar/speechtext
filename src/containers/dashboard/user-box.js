@@ -20,13 +20,13 @@ class UserBox extends Component {
                 console.log(error)
             });
         this.props.logout();
-        delete_cookie('speechtext-dev-login');
+        delete_cookie(process.env.REACT_APP_LOGIN_INFO_NAME);
         this.props.history.push('/');
     }
 
     componentDidMount() {
         if(_.isEmpty(this.props.user)) {
-            const loginInfo = read_cookie('speechtext-dev-login');
+            const loginInfo = read_cookie(process.env.REACT_APP_LOGIN_INFO_NAME);
             if(!_.isEmpty(loginInfo)) {
                 this.props.login(loginInfo);
             } else {
