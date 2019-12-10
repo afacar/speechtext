@@ -118,6 +118,11 @@ class Payment extends Component {
             spinnerText: 'Initializing...'
         });
 
+        if (!user.country) {
+            this.setState({ infoForm: true })
+            return
+        }
+
         var ip = await publicIp.v4();
         var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
         fncAddBasket({
@@ -480,7 +485,7 @@ class Payment extends Component {
         })
     }
 
-    renderCurrentPlan = () => {
+/*     renderCurrentPlan = () => {
         var { currentPlan } = this.props.user;
         const { selectedPlanType } = this.state;
         if (_.isEmpty(currentPlan)) currentPlan = {};
@@ -542,10 +547,11 @@ class Payment extends Component {
                 </Card.Body>
             </Card>
         )
-    }
+    } */
 
     render() {
         const { checkoutForm, showSpinner } = this.state
+        const { user } = this.props;
         return (
             <Container>
                 <div className="pricing card-deck flex-column flex-md-row mb-3">
@@ -556,26 +562,24 @@ class Payment extends Component {
                         handleBuy={this.initializePayment}
                         showSpinner={this.state.showSpinner}
                         renderContract={this.renderContract}
-                        currentPlan={this.props.user.currentPlan}
-                    />
-                    <MonthlyPaymentCard
-                        duration={5}
-                        price={24.9}
-                        handleBuy={this.initializePayment}
-                        showSpinner={this.state.showSpinner}
-                        renderContract={this.renderContract}
-                        currentPlan={this.props.user.currentPlan}
+                        currentPlan={user.currentPlan}
                     />
                 </div>
                 <br />
 
                 {
-                    checkoutForm && checkoutForm.paymentPageUrl &&
-                    <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
+                    checkoutForm && <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
                         <Modal.Body>
                             <ResponsiveEmbed>
                                 <embed src={checkoutForm.paymentPageUrl} />
                             </ResponsiveEmbed>
+                        </Modal.Body>
+                    </Modal>
+                }
+                {
+                    <Modal show={this.state.infoForm} onHide={this.onHide}>
+                        <Modal.Body>
+                            Selam dunya
                         </Modal.Body>
                     </Modal>
                 }

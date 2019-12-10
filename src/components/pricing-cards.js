@@ -133,7 +133,7 @@ class StandardPaymentCard extends Component {
     })
   }
 
-  renderContract = () => {
+  renderTerms = () => {
     return (
       <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
         <p>
@@ -225,7 +225,7 @@ class StandardPaymentCard extends Component {
               <Col>
                 <span className='mb-3'>
                   <img src={MasterVisaLogo} alt='Master Card' className='card-logo' />
-                  {this.renderContract()}
+                  {this.renderTerms()}
 
                 </span>
               </Col>
