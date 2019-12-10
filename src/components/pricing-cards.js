@@ -254,6 +254,138 @@ class StandardPaymentCard extends Component {
   }
 }
 
+class MonthlyPaymentCard extends Component {
+  state = {
+    showSellingContract: false,
+    showRefundContract: false
+  }
+
+  sellingContractClicked = (e) => {
+    console.log('sellingContractClicked')
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.setState({ showSellingContract: true });
+  }
+
+  refundContractClicked = (e) => {
+    console.log('refundContractClicked')
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.setState({ showRefundContract: true });
+  }
+
+  handleSellingContractVisibility = () => {
+    this.setState({
+      showSellingContract: !this.state.showSellingContract
+    })
+  }
+
+  handleRefundContractVisibility = () => {
+    this.setState({
+      showRefundContract: !this.state.showRefundContract
+    })
+  }
+
+  renderContract = () => {
+    return (
+      <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
+        <p>
+          {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
+          <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
+            {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
+          </span>
+          {this.props.language !== 'tr' ? ' and ' : ' ve '}
+          <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
+            {this.props.language === 'tr' ? 'İade Koşulları' : 'Refund Policy'}
+          </span>
+          {/* this.props.language === 'tr' ? "'ini kabul ediyorum." : '' */}
+        </p>
+      </div>
+    )
+  }
+
+  render() {
+    var { currentPlan } = this.props;
+    if (_.isEmpty(currentPlan)) currentPlan = {};
+    const { showSellingContract, showRefundContract } = this.state
+    return (
+      <div className="card card-pricing shadow text-center px-3 mb-4 card-pricing-popular">
+        <span className="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">
+          <FormattedMessage id="Pricing.Monthly.title" />
+        </span>
+        <div className="bg-transparent card-header pt-4 border-0 pricing-header-container" >
+          <h2 className="h2 font-weight-normal text-primary text-center mb-0" data-pricing-value="30">
+            $<span className="price">24,90</span>
+            <span className="h6 text-muted ml-2">
+              / 5 <FormattedMessage id="Pricing.Monthly.timeText" />
+            </span>
+          </h2>
+        </div>
+        <div className="card-body pt-0">
+          <ul className="list-unstyled mb-4 pricing-body-container" >
+            <li className='list-unstyled'>
+              <FormattedMessage id="Pricing.Monthly.feature1" />
+            </li>
+            <li className='list-unstyled'>
+              <FormattedMessage id="Pricing.Monthly.feature2" />
+            </li>
+            <li className='list-unstyled'>
+              <FormattedMessage id="Pricing.Monthly.feature3" />
+            </li>
+            <li className='list-unstyled'>
+              <FormattedMessage id="Pricing.Monthly.feature4" />
+            </li>
+            <li className='list-unstyled'>
+              <FormattedMessage id="Pricing.Monthly.feature5" />
+            </li>
+          </ul>
+          <div className='pricing-footer-container' >
+            <Container>
+              <Row>
+                <Col>
+                  <Button variant="outline-secondary" className="mb-3" onClick={() => this.props.handleBuy(5)}>
+                    <FormattedMessage id="Pricing.Monthly.loggedInButtonText" />
+                    {
+                      this.props.showSpinner && <Spinner size='sm' animation='grow' role="status" />
+                    }
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <span className='mb-3'>
+                    <img src={MasterVisaLogo} alt='Master Card' className='card-logo' />
+                    {this.renderContract()}
+                  </span>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        </div>
+        {
+          showSellingContract &&
+          <SellingContract
+            show={showSellingContract}
+            handleVisibility={this.handleSellingContractVisibility}
+            duration={this.props.duration}
+            durationType={this.props.durationType}
+            calculatedPrice={this.props.price}
+          />
+        }
+        {
+          showRefundContract &&
+          <RefundContract
+            show={showRefundContract}
+            handleVisibility={this.handleRefundContractVisibility}
+          />
+        }
+      </div>
+    )
+  }
+}
+
 class MonthlyCard extends Component {
 
   render() {
@@ -346,4 +478,4 @@ class EnterpriseCard extends Component {
   }
 }
 
-export { DemoCard, StandardCard, MonthlyCard, EnterpriseCard, StandardPaymentCard }
+export { DemoCard, StandardCard, MonthlyCard, EnterpriseCard, StandardPaymentCard, MonthlyPaymentCard }
