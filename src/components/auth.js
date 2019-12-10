@@ -24,32 +24,6 @@ const uiConfig = {
 };
 
 class Auth extends Component {
-    componentDidMount() {
-        var that = this;
-        firebase.auth().onAuthStateChanged(user => {
-            const currentUser = user ? user : '';
-            that.setState({ user: currentUser });
-            if (currentUser) {
-                const { uid, displayName, email, emailVerified, metadata } = currentUser;
-                const { lastSignInTime, creationTime } = metadata;
-                const isNewUser = creationTime === lastSignInTime
-                const loginInfo = {
-                    uid,
-                    displayName,
-                    email,
-                    isNewUser,
-                    emailVerified,
-                    creationTime: new Date(creationTime),
-                };
-                that.props.login(loginInfo);
-
-                bake_cookie('speechtext-dev-login', loginInfo);
-                if(isNewUser) {
-                    this.props.history.push('/dashboard');
-                }
-            }
-        });
-    }
 
     render() {
         return (
