@@ -9,6 +9,7 @@
     "axios": "^0.19.0",
     "bootstrap-switch-button-react": "^1.1.0",
     "country-list": "^2.2.0",
+    "env-cmd": "^10.0.1",
     "firebase": "^6.6.0",
     "intl-pluralrules": "^1.0.3",
     "lodash": "^4.17.15",
@@ -38,6 +39,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:test": "env-cmd -f .env.test react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
