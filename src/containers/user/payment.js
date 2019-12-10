@@ -14,7 +14,7 @@ import SellingContract from './selling-contract';
 import RefundContract from './refund-contract';
 import MasterCardLogo from '../../assets/mastercard-logo.png';
 import VisaLogo from '../../assets/visa-logo.png';
-import { DemoCard, StandardCard, MonthlyCard, StandardPaymentCard } from '../../components/pricing-cards';
+import { DemoCard, StandardCard, MonthlyCard, StandardPaymentCard, MonthlyPaymentCard } from '../../components/pricing-cards';
 
 class Payment extends Component {
     constructor(props) {
@@ -97,7 +97,7 @@ class Payment extends Component {
         })
     }
 
-    initializePayment = async () => {
+    initializePayment = async (monthlyDuration) => {
         var that = this;
         const { language, user, intl } = this.props;
         var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
@@ -109,9 +109,9 @@ class Payment extends Component {
             Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
             return;
         } */
-        let durationInMinutes = undefined;
-        if (selectedPlanType === 'PayAsYouGo')
-            durationInMinutes = parseFloat(duration) * 60 ;
+        let durationInMinutes = (monthlyDuration > 0) ? parseFloat(monthlyDuration) * 60 : parseFloat(duration) * 60;
+        console.log(`monthlyDuration: `, monthlyDuration)
+        console.log(`duration: ${duration} durationInMinutes: ${durationInMinutes}`)
         this.setState({
             state: 'PAYMENT',
             showSpinner: true,
@@ -261,14 +261,14 @@ class Payment extends Component {
 
     renderContract = () => {
         return (
-            <div className='d-flex flex-row contract-text text-center' style={{ fontSize:'small' }}>
+            <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
                 <p>
                     {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
-                    <span style={{ color:'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
                         {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
                     </span>
                     {this.props.language !== 'tr' ? ' and ' : ' ve '}
-                    <span style={{ color:'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
                         {this.props.language === 'tr' ? 'İade Koşulları' : 'Refund Policy'}
                     </span>
                     {/* this.props.language === 'tr' ? "'ini kabul ediyorum." : '' */}
@@ -444,7 +444,6 @@ class Payment extends Component {
     }
 
     submitPlanChange = () => {
-        console.log('change user plan')
         const { selectedPlanType } = this.state;
         const { plans, intl } = this.props;
         var selectedPlan = _.find(plans, { type: selectedPlanType });
@@ -559,10 +558,17 @@ class Payment extends Component {
                         renderContract={this.renderContract}
                         currentPlan={this.props.user.currentPlan}
                     />
-                    <MonthlyCard user={this.props.user} />
+                    <MonthlyPaymentCard
+                        duration={5}
+                        price={24.9}
+                        handleBuy={this.initializePayment}
+                        showSpinner={this.state.showSpinner}
+                        renderContract={this.renderContract}
+                        currentPlan={this.props.user.currentPlan}
+                    />
                 </div>
                 <br />
-                
+
                 {
                     checkoutForm && checkoutForm.paymentPageUrl &&
                     <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
