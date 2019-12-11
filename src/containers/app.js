@@ -37,7 +37,8 @@ class App extends Component {
                 const { uid, displayName, email, emailVerified, metadata } = currentUser;
                 const { lastSignInTime, creationTime } = metadata;
                 const isNewUser = creationTime === lastSignInTime
-                let sinceLogin = new Date().getTime() - new Date(lastSignInTime).getTime() 
+                let now = new Date()
+                let sinceLogin = now.getTime() - new Date(lastSignInTime).getTime() 
                 console.log('sinceLogin:', sinceLogin) 
                 const loginInfo = {
                     uid,
@@ -50,7 +51,7 @@ class App extends Component {
                 that.props.login(loginInfo);
 
                 bake_cookie('speechtext-dev-login', loginInfo);
-                if(sinceLogin < 3500) {
+                if(sinceLogin < 4500) {
                     // Redirect new user to dashboard 
                     this.props.history.push('/dashboard')
                 }
