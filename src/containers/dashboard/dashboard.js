@@ -17,9 +17,23 @@ class Dashboard extends Component {
         super(props);
         
         this.state = {
-            emailVerified: null,
+            emailVerified: true,
             isSent: true,
             blockNavigation: false
+        }
+    }
+
+    componentWillUnmount() {
+        this.clearUploadingFiles();
+    }
+
+    componentDidMount() {
+        this.checkEmailVerified(this.props.user);
+    }
+
+    componentWillReceiveProps({ user }) {
+        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            this.checkEmailVerified(user);
         }
     }
 
@@ -55,18 +69,11 @@ class Dashboard extends Component {
         }
     }
 
-    componentWillUnmount() {
-        this.clearUploadingFiles();
-    }
-
-    componentDidMount() {
-        if (_.isEmpty(this.props.user)) {
-            this.props.history.push('/');
-        } else {
+    checkEmailVerified = (user) => {
+        if (!_.isEmpty(user)) {
             const { emailVerified } = auth().currentUser;
             this.setState({ emailVerified })
             this.props.getFileList();
-            localStorage.setItem('location', window.location.pathname);
         }
     }
 

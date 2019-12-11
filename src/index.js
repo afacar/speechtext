@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { IntlProvider } from 'react-intl';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import reducers from './reducers';
 import Utils from './utils';
@@ -20,7 +21,9 @@ const store = createStore(reducers, composeEnhancers(
 const Root = () => (
     <Provider store={ store }>
         <IntlProvider locale={ currentLanguage } messages={messages[currentLanguage]} >
-            <App language={ currentLanguage } supportedLanguages={ supportedLanguages } />
+            <BrowserRouter>
+                <App language={ currentLanguage } supportedLanguages={ supportedLanguages } />
+            </BrowserRouter>
         </IntlProvider>
     </Provider>
 );

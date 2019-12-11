@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
+import { FormattedMessage } from 'react-intl';
 import '../styles/footer.css';
 
 const Footer = () => {
@@ -20,7 +21,7 @@ const Footer = () => {
                 <p className="float-right" style={{ paddingTop: '10px' }}>
                     Copyright &copy; SpeechText 2019<br />
                     <span className="float-right">
-                        <Link to='/faq' className='footer-link'>F.A.Q.</Link>
+                        <Link to='/faq' className='footer-link'><FormattedMessage id="Footer.faq" /></Link>
                         <Link to='/privacy' className='footer-link margin-left-20'>Privacy Policy</Link>
                         <Link to='/terms' className='footer-link margin-left-20'>Terms of Service</Link>
                     </span>

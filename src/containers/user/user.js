@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import _ from 'lodash';
 import { Container, Tab, Row, Col, Nav } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
@@ -19,19 +18,11 @@ class User extends Component {
         }
     }
 
-    componentDidMount() {
-        localStorage.setItem('location', window.location.pathname + window.location.hash);
-        if(_.isEmpty(this.props.user)) {
-            this.props.history.push('/');
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : '';
         this.setState({
             activeTabKey: hashValue
         });
-        localStorage.setItem('location', window.location.pathname + window.location.hash);
     }
 
     changeTab = (tabName) => {
@@ -39,7 +30,6 @@ class User extends Component {
             activeTabKey: tabName
         });
         this.props.history.push('#' + tabName)
-        localStorage.setItem('location', window.location.pathname + window.location.hash);
     }
 
     onSelectTab = (key) => {

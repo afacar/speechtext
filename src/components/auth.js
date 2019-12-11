@@ -5,6 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { Modal } from 'react-bootstrap';
 import Utils from '../utils';
 import FirebaseUIAuth from "react-firebaseui-localized";
+import { bake_cookie } from 'sfcookies';
+import { withRouter } from 'react-router';
 
 const { firebase } = Utils;
 const uiConfig = {
@@ -22,28 +24,8 @@ const uiConfig = {
 };
 
 class Auth extends Component {
-    componentDidMount() {
-        var that = this;
-        firebase.auth().onAuthStateChanged(user => {
-            const currentUser = user ? user : '';
-            that.setState({ user: currentUser });
-            if (currentUser) {
-                const { uid, displayName, email, emailVerified, metadata } = currentUser;
-                const { lastSignInTime, creationTime } = metadata;
-                const isNewUser = creationTime === lastSignInTime
-                that.props.login({
-                    uid,
-                    displayName,
-                    email,
-                    isNewUser,
-                    emailVerified,
-                    creationTime: new Date(creationTime),
-                });
-            }
-        });
-    }
 
-    render() {
+  render() {
         return (
             <Modal show={this.props.show} onHide={this.props.handleClose}>
                 <Modal.Header closeButton>
@@ -62,4 +44,4 @@ class Auth extends Component {
     }
 }
 
-export default connect(null, { login })(Auth);
+export default connect(null, { login })(withRouter(Auth));

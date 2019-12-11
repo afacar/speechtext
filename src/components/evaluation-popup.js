@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { FormattedHTMLMessage } from 'react-intl';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import Rating from 'react-rating';
 
