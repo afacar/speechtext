@@ -1,6 +1,8 @@
 .main-div {
-    min-height: 500px;
+    min-height: 100vh;
     padding-top: 140px;
+    background-image: url("../assets/banner-1.png");
+    background-size: cover;
 }
 
 .banner {
@@ -12,8 +14,8 @@
 
 .banner .centered {
     position: absolute;
-    top: 70%;
-    left: 50%;
+    top: 65%;
+    left: 62%;
     transform: translate(-50%, -50%);
     width: 60%;
 }
@@ -46,4 +48,8 @@
     .banner .centered {
         width: 80%
     }
+}
+
+.banner .fade {
+    transition: opacity .5s linear;
 }
