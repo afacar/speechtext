@@ -7,11 +7,15 @@ import { Nav, Navbar, Container, Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-
+import { login } from "../actions";
 import LogoContainer from './landing/logo-container';
 import Auth from '../components/auth';
 import UserBox from '../containers/dashboard/user-box';
 import '../styles/header.css';
+
+import Utils from '../utils';
+import { bake_cookie } from 'sfcookies';
+const { firebase } = Utils;
 
 class Header extends Component {
     constructor(props) {
@@ -32,6 +36,36 @@ class Header extends Component {
         this.setState({
             user: this.props.user
         })
+
+        var that = this;
+        firebase.auth().onAuthStateChanged(user => {
+            const currentUser = user ? user : '';
+            that.setState({ user: currentUser });
+            if (currentUser) {
+                console.log('currentUser at header....')
+                const { uid, displayName, email, emailVerified, metadata } = currentUser;
+                const { lastSignInTime, creationTime } = metadata;
+                const isNewUser = creationTime === lastSignInTime
+                let now = new Date()
+                let sinceLogin = now.getTime() - new Date(lastSignInTime).getTime() 
+                console.log('sinceLogin:', sinceLogin) 
+                const loginInfo = {
+                    uid,
+                    displayName,
+                    email,
+                    isNewUser,
+                    emailVerified,
+                    creationTime: new Date(creationTime),
+                };
+                that.props.login(loginInfo);
+
+                bake_cookie('speechtext-dev-login', loginInfo);
+                if(sinceLogin < 4500) {
+                    // Redirect new user to dashboard 
+                    this.props.history.push('/dashboard')
+                }
+            }
+        });
     }
 
     logoClicked = () => {
@@ -110,4 +144,4 @@ const mapStateToProps = ({ user, language }) => {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps, { login })(withRouter(Header));
