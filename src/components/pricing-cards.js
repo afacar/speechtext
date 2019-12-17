@@ -152,7 +152,7 @@ class StandardPaymentCard extends Component {
   }
 
   render() {
-    var { currentPlan } = this.props;
+    var { currentPlan, unitPrice } = this.props;
     if (_.isEmpty(currentPlan)) currentPlan = {};
     const { showSellingContract, showRefundContract } = this.state
     return (
@@ -162,7 +162,7 @@ class StandardPaymentCard extends Component {
         </span>
         <div className="bg-transparent card-header pt-4 border-0 pricing-header-container" >
           <h2 className="h2 font-weight-normal text-primary text-center mb-0" data-pricing-value="30">
-            $<span className="price">5,90</span>
+            $<span className="price">{unitPrice}</span>
             <span className="h6 text-muted ml-2">/
               <FormattedMessage id="Pricing.Standard.timeText" />
             </span>
