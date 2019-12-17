@@ -240,6 +240,7 @@ class StandardPaymentCard extends Component {
             duration={this.props.duration}
             durationType={this.props.durationType}
             calculatedPrice={this.props.price}
+            unitPrice={this.props.unitPrice}
           />
         }
         {
@@ -372,6 +373,7 @@ class MonthlyPaymentCard extends Component {
             duration={this.props.duration}
             durationType={this.props.durationType}
             calculatedPrice={this.props.price}
+            unitPrice={this.props.unitPrice}
           />
         }
         {
