@@ -104,7 +104,7 @@ class SellingContract extends Component {
                                     <p>
                                         Ürün Açıklaması: { user.currentPlan.planName }<br />
                                         Adet: { this.calculateAmount() }<br />
-                                        Birim Fiyatı: ¢{ user.currentPlan.pricePerMinute }<br />
+                                        Birim Fiyatı: ${ this.props.unitPrice }<br />
                                         Toplam (KDV Dahil): ${ this.props.calculatedPrice }<br />
                                         
                                         Ödeme Şekli ve Planı: Online Kredi Kartı<br />
