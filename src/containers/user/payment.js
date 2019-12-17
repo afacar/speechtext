@@ -10,6 +10,7 @@ import publicIp from 'public-ip';
 import firebase from '../../utils/firebase';
 import Utils from '../../utils';
 import ApprovementPopup from '../../components/approvement-popup';
+import CheckOutModal from '../../components/check-out-modal';
 import SellingContract from './selling-contract';
 import RefundContract from './refund-contract';
 import MasterCardLogo from '../../assets/mastercard-logo.png';
@@ -39,7 +40,11 @@ class Payment extends Component {
             showSpinner: false,
             spinnerText: '',
             sellingContractAccepted: false,
-            refundContractAccepted: false
+            refundContractAccepted: false,
+            showCheckOutForm: false, // new
+            loading: false,
+            errorMessage: '',
+            disabled: false
         })
     }
 
@@ -115,40 +120,47 @@ class Payment extends Component {
             spinnerText: 'Initializing...'
         });
 
-        var ip = await publicIp.v4();
-        var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
-        fncAddBasket({
-            minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
-            locale: language,
-            ip,
-            basketId
-        }).then(({ data }) => {
-            const { basketId, checkoutForm } = data;
-            that.setState({
-                basketId,
-                checkoutForm,
-                showSpinner: false,
-                spinnerText: ''
-            })
-            firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
-                .onSnapshot((snapshot) => {
-                    if (snapshot && snapshot.data) {
-                        let data = snapshot.data();
-                        that.setState({
-                            state: data.status,
-                            error: data.error
-                        });
-                    }
-                }, (error) => {
-                    // TODO: GET_PAYMENT_RESULT_ERROR
-                    console.log(error)
-                });
+
+        this.setState({
+            showCheckOutForm: true,
+            showSpinner: false,
+            spinnerText: ''
         })
-            .catch(error => {
-                // TODO: ADD_TO_BASKET_ERROR
-                // NOTE: This function need to thwrow an error on firebase to catch here!
-                console.log(error)
-            })
+
+        // var ip = await publicIp.v4();
+        // var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
+        // fncAddBasket({
+        //     minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
+        //     locale: language,
+        //     ip,
+        //     basketId
+        // }).then(({ data }) => {
+        //     const { basketId, checkoutForm } = data;
+        //     that.setState({
+        //         basketId,
+        //         checkoutForm,
+        //         showSpinner: false,
+        //         spinnerText: ''
+        //     })
+        //     firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
+        //         .onSnapshot((snapshot) => {
+        //             if (snapshot && snapshot.data) {
+        //                 let data = snapshot.data();
+        //                 that.setState({
+        //                     state: data.status,
+        //                     error: data.error
+        //                 });
+        //             }
+        //         }, (error) => {
+        //             // TODO: GET_PAYMENT_RESULT_ERROR
+        //             console.log(error)
+        //         });
+        // })
+        //     .catch(error => {
+        //         // TODO: ADD_TO_BASKET_ERROR
+        //         // NOTE: This function need to thwrow an error on firebase to catch here!
+        //         console.log(error)
+        //     })
     }
 
     renderSuccess = () => {
@@ -512,9 +524,139 @@ class Payment extends Component {
         )
     }
 
+    showCheckOutForm = () => {
+        this.setState({
+            showCheckOutForm: true
+        })
+    }
+
+    closeCheckOutForm = () => {
+        if (!this.state.loading) {
+            this.setState({
+                showCheckOutForm: false
+            })
+        }
+    }
+
+    startPayment = async (obj) => {
+        //TODO add payment function
+        console.log("Start payment called", obj)
+        const { values, cardNumber, expiry, cvc } = obj;
+        var card = {
+            cardHolderName: values.displayName,
+            cardNumber: cardNumber.replace(/\s/g, ''),
+            expireMonth: expiry.substring(0, 2),
+            expireYear: expiry.substring(5, 7),
+            cvc
+        }
+        console.log("Card", card)
+        var that = this;
+        const { language, user, intl } = this.props;
+        console.log("User", user);
+        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
+        if (!sellingContractAccepted) {
+            Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
+            return;
+        }
+        if (!refundContractAccepted) {
+            Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
+            return;
+        }
+        let durationInMinutes = undefined;
+        if (selectedPlanType === 'PayAsYouGo')
+            durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        this.setState({
+            state: 'PAYMENT',
+            loading: true,
+            disabled: true,
+            showCheckOutForm: true,
+        });
+
+        var ip = await publicIp.v4();
+        var fncAddBasket = firebase.functions().httpsCallable('addToBasketSecondary');
+        fncAddBasket({
+            minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
+            locale: language,
+            ip,
+            basketId,
+            card
+        }).then(({ data }) => {
+            const { basketId, result, error } = data;
+            console.log("Data", data);
+            let errorMessage = '';
+            if (error)
+                errorMessage = error.errorMessage;
+            else if (result && result.status === 'failure') {
+                errorMessage = "Bilinmedik Hata Oluştu"
+            }
+            that.setState({
+                basketId,
+                result,
+                state: result ? result.status : error.status,
+                errorMessage,
+                loading: false,
+                spinnerText: '',
+                disabled: false,
+            })
+            setTimeout(() => {
+                this.initializePage();
+            }, 2500)
+            // firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
+            //     .onSnapshot((snapshot) => {
+            //         if (snapshot && snapshot.data) {
+            //             let data = snapshot.data();
+            //             that.setState({
+            //                 error: data.error
+            //             });
+            //         }
+            //     }, (error) => {
+            //         // TODO: GET_PAYMENT_RESULT_ERROR
+            //         console.log(error)
+            //     });
+        })
+            .catch(error => {
+                // TODO: ADD_TO_BASKET_ERROR
+                // NOTE: This function need to thwrow an error on firebase to catch here!
+                console.log("Error burada\n" + error)
+                this.setState({
+                    state: 'failure',
+                    errorMessage: 'Bilinmedik Hata Oluştu'
+                })
+                setTimeout(() => {
+                    this.initializePage();
+                }, 2500)
+            })
+    }
+
+    toggleSubmit = (flag) =>{
+        this.setState({
+            disabled: flag
+        })
+    }
+
     render() {
+        const { showCheckOutForm, calculatedPrice, duration, durationType } = this.state;
+
+        // rph -> rate per hour
+        const rph = this.props.user.currentPlan ? this.props.user.currentPlan.price : 0;
         return (
             <Container>
+                {
+                    <div>
+                        <CheckOutModal show={showCheckOutForm}
+                            handleClose={this.closeCheckOutForm}
+                            calculatedPrice={calculatedPrice}
+                            startPayment={this.startPayment}
+                            duration={duration}
+                            durationType={durationType}
+                            rph={rph}
+                            errorMessage={this.state.errorMessage}
+                            loading={this.state.loading}
+                            disabled={this.state.disabled}
+                            state={this.state.state}
+                            toggleSubmit={this.toggleSubmit} />
+                    </div>
+                }
                 {
                     this.renderCurrentPlan()
                 }
@@ -560,3 +702,4 @@ const mapStateToProps = ({ user, language, plans, errorDefinitions }) => {
 }
 
 export default connect(mapStateToProps)(withRouter(injectIntl(Payment)));
+
