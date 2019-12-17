@@ -3,18 +3,13 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Container, Card, Form, Row, Col, InputGroup, Button, ResponsiveEmbed, Modal, Spinner, Alert as BootstrapAlert } from 'react-bootstrap';
+import { Container, Button, ResponsiveEmbed, Modal, Spinner, Alert as BootstrapAlert } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import publicIp from 'public-ip';
 
 import firebase from '../../utils/firebase';
-import Utils from '../../utils';
 import ApprovementPopup from '../../components/approvement-popup';
-import SellingContract from './selling-contract';
-import RefundContract from './refund-contract';
-import MasterCardLogo from '../../assets/mastercard-logo.png';
-import VisaLogo from '../../assets/visa-logo.png';
-import { DemoCard, StandardCard, MonthlyCard, StandardPaymentCard, MonthlyPaymentCard } from '../../components/pricing-cards';
+import { StandardPaymentCard } from '../../components/pricing-cards';
 
 class Payment extends Component {
     constructor(props) {
@@ -23,7 +18,8 @@ class Payment extends Component {
         this.state = {
             duration: 1,
             durationType: 'hours',
-            calculatedPrice: 5.88,
+            unitPrice: 9,
+            calculatedPrice: 0,
             state: 'INITIAL',
             selectedPlanType: undefined
         }
@@ -33,7 +29,7 @@ class Payment extends Component {
         this.setState({
             duration: 1,
             durationType: 'hours',
-            calculatedPrice: 5.88,
+            calculatedPrice: this.props.plans.standard.hourPrice[1],
             state: 'INITIAL',
             basketId: undefined,
             checkoutForm: undefined,
@@ -45,29 +41,20 @@ class Payment extends Component {
     }
 
     componentDidMount() {
-        this.setUserPlan(this.props.user);
-    }
-
-    componentWillReceiveProps({ user }) {
-        this.setUserPlan(user)
-    }
-
-    setUserPlan = (user) => {
-        if (user && user.currentPlan) {
-            const { currentPlan } = user;
-            if (user.currentPlan.type === 'Monthly') {
-                this.setState({
-                    calculatedPrice: (currentPlan.pricePerMinute * currentPlan.quota).toFixed(2)
-                })
-            }
-            this.setState({
-                selectedPlanType: currentPlan.type
-            })
-        } else {
-            this.setState({
-                calculatedPrice: 0
-            })
-        }
+        //this.setUserPlan(this.props.user);
+        const { plans } = this.props
+        this.setState({
+            duration: 1,
+            durationType: 'hours',
+            calculatedPrice: plans.standard ? plans.standard.hourPrice : 9,
+            state: 'INITIAL',
+            basketId: undefined,
+            checkoutForm: undefined,
+            showSpinner: false,
+            spinnerText: '',
+            sellingContractAccepted: false,
+            refundContractAccepted: false
+        })
     }
 
     durationChanged = (e) => {
@@ -78,40 +65,42 @@ class Payment extends Component {
     }
 
     calculatePrice = (duration) => {
-        var calculatedPrice = 0;
-        //var { duration, durationType } = this.state;
-        const { currentPlan } = this.props.user;
+        let calculatedPrice = 0;
+        const { pricePerHour, minPricePerHour } = this.props.plans;
         const { formatMessage } = this.props.intl;
-        let durationInMinutes = parseFloat(duration) * 60;
-        console.log('durationInMinutes', durationInMinutes)
-        if (durationInMinutes < 60) {
+        let unitPrice = this.calculateStandardPrice(pricePerHour, minPricePerHour, duration)
+        if (duration < 1) {
             Alert.error(formatMessage({ id: 'Payment.Error.durationLength' }));
+        } else if (duration <= 50) {
+            calculatedPrice = unitPrice * duration;
         } else {
-            let pricePerMinute = parseFloat(currentPlan.pricePerMinute);
-            calculatedPrice = (durationInMinutes * pricePerMinute).toFixed(2);
+            unitPrice = minPricePerHour;
+            calculatedPrice = unitPrice * duration;
         }
         this.setState({
             calculatedPrice,
+            unitPrice,
             state: 'INITIAL',
             checkoutForm: undefined
         })
     }
 
-    initializePayment = async (monthlyDuration) => {
+    calculateStandardPrice = (pricePerHour, minPricePerHour, hours) => {
+        // Calculates unit price/hour based on base price and hours
+        if (hours <= 0)
+            return 0
+        if (hours >= 50)
+            return minPricePerHour
+        const numOf5s = parseInt(hours / 5)
+        const price = pricePerHour - numOf5s * 0.5
+        return price
+    }
+
+    initializePayment = async () => {
         var that = this;
         const { language, user, intl } = this.props;
-        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
-        /* if (!sellingContractAccepted) {
-            Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
-            return;
-        }
-        if (!refundContractAccepted) {
-            Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
-            return;
-        } */
-        let durationInMinutes = (monthlyDuration > 0) ? parseFloat(monthlyDuration) * 60 : parseFloat(duration) * 60;
-        console.log(`monthlyDuration: `, monthlyDuration)
-        console.log(`duration: ${duration} durationInMinutes: ${durationInMinutes}`)
+        var { duration, basketId } = this.state;
+
         this.setState({
             state: 'PAYMENT',
             showSpinner: true,
@@ -126,20 +115,23 @@ class Payment extends Component {
         var ip = await publicIp.v4();
         var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
         fncAddBasket({
-            minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
+            hours: duration,
             locale: language,
             ip,
             basketId
         }).then(({ data }) => {
-            const { basketId, checkoutForm } = data;
+            const { basketId, checkoutForm, error } = data;
             console.log('checkout result', checkoutForm)
+            console.log('checkout error', error)
             that.setState({
                 basketId,
                 checkoutForm,
+                error,
+                showCheckoutForm: true,
                 showSpinner: false,
                 spinnerText: ''
             })
-            checkoutForm && checkoutForm.paymentPageUrl && this.setState({ showCheckoutForm: true })
+            if (checkoutForm || error) this.setState({ showCheckoutForm: true })
 
             firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
                 .onSnapshot((snapshot) => {
@@ -156,11 +148,6 @@ class Payment extends Component {
                     console.log(error)
                 });
         })
-            .catch(error => {
-                // TODO: ADD_TO_BASKET_ERROR
-                // NOTE: This function need to thwrow an error on firebase to catch here!
-                console.log(error)
-            })
     }
 
     renderSuccess = () => {
@@ -203,37 +190,6 @@ class Payment extends Component {
                 </Button>
             </div>
         )
-    }
-
-    renderFormAsDemo = () => {
-        return (
-            <div>
-                <BootstrapAlert variant='danger'>
-                    <FormattedMessage id='Payment.Error.demoPlan' />
-                </BootstrapAlert>
-                {/* <Button variant='primary' onClick={() => this.props.changeTab('plan') }>Select a Plan</Button> */}
-            </div>
-        )
-    }
-
-    validatePayment = () => {
-        const { displayName, email, country, address } = this.props.user;
-        if (_.isEmpty(displayName) || _.isEmpty(email) || _.isEmpty(country) || _.isEmpty(address)) {
-            return (
-                <div>
-                    <BootstrapAlert variant='danger'>
-                        <FormattedMessage id='Payment.Error.incompleteProfile1' />
-                        <BootstrapAlert.Link onClick={() => this.props.changeTab('profile')}>
-                            <FormattedMessage id='Payment.Error.incompleteProfile2' />
-                        </BootstrapAlert.Link>
-                        <FormattedMessage id='Payment.Error.incompleteProfile3' />
-                    </BootstrapAlert>
-                </div>
-            )
-        }
-        return {
-            success: true
-        }
     }
 
     sellingContractClicked = (e) => {
@@ -282,291 +238,30 @@ class Payment extends Component {
         )
     }
 
-    /*     renderSellingContract = () => {
-            return (
-                <div className='d-flex flex-row'>
-                    <Form.Check
-                        name='sellingContractAccepted'
-                        type='checkbox'
-                        value={this.state.sellingContractAccepted}
-                        onClick={() => this.setState({ sellingContractAccepted: !this.state.sellingContractAccepted })}
-                    />
-                    <p>
-                        {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
-                        <Button variant='link' onClick={this.sellingContractClicked}>
-                            {this.props.language === 'tr' ? 'Mesafeli Satış Sözleşmesi' : 'Online Selling Contract'}
-                        </Button>
-                        {this.props.language === 'tr' ? "'ni okudum ve onaylıyorum." : ''}
-                    </p>
-                </div>
-            )
-        } */
-
-    /*     renderRefundContract = () => {
-            return (
-                <div className='d-flex flex-wor'>
-                    <Form.Check
-                        name='refundContractAccepted'
-                        type='checkbox'
-                        value={this.state.refundContractAccepted}
-                        onClick={() => this.setState({ refundContractAccepted: !this.state.refundContractAccepted })}
-                    />
-                    <p>
-                        {this.props.language !== 'tr' ? 'I read and accepted ' : ''}
-                        <Button variant='link' onClick={this.refundContractClicked}>
-                            {this.props.language === 'tr' ? 'İptal ve İade Koşulları' : 'Cancel and Refund Policy'}
-                        </Button>
-                        {this.props.language === 'tr' ? "'nı okudum ve onaylıyorum." : ''}
-                    </p>
-                </div>
-            )
-        } */
-
-    renderPaymentForm = () => {
-        var { currentPlan } = this.props.user;
-        const { formatMessage } = this.props.intl;
-        if (!currentPlan) currentPlan = {};
-        const { calculatedPrice, duration, durationType, checkoutForm, showSpinner, state, showSellingContract, showRefundContract } = this.state;
-        if (state === 'SUCCESS' || state === 'FAILURE' || state === 'ERROR') return null;
-        if (currentPlan.type === 'Demo') {
-            return this.renderFormAsDemo();
-        }
-        var validationResult = this.validatePayment();
-        if (!validationResult.success) {
-            return validationResult;
-        }
-        return (
-            <div>
-                {
-                    currentPlan.type === 'PayAsYouGo' &&
-                    <Form.Group>
-                        <Form.Label>
-                            <FormattedMessage id='Payment.Label.usageNeeded' />
-                        </Form.Label>
-                        <InputGroup className="mb-3">
-                            <Form.Control
-                                name='duration'
-                                placeholder="Duration needed"
-                                aria-label="Duration needed"
-                                type='number'
-                                value={duration}
-                                onChange={this.durationChanged}
-                            />
-                            <InputGroup.Append>
-                                <Form.Control as='select' value={this.state.durationType} onChange={e => this.setState({ durationType: e.target.value })}>
-                                    <option key='hours' value='hours'>
-                                        {formatMessage({ id: 'Payment.DurationType.hours' })}
-                                    </option>
-                                    <option key='minutes' value='minutes'>
-                                        {formatMessage({ id: 'Payment.DurationType.minutes' })}
-                                    </option>
-                                </Form.Control>
-                            </InputGroup.Append>
-                            <InputGroup.Append>
-                                <Button variant="primary" onClick={this.calculatePrice}>
-                                    <FormattedMessage id='Payment.Label.calculate' />
-                                </Button>
-                            </InputGroup.Append>
-                        </InputGroup>
-                    </Form.Group>
-                }
-                {
-                    showSellingContract &&
-                    <SellingContract
-                        show={showSellingContract}
-                        handleVisibility={this.handleSellingContractVisibility}
-                        duration={duration}
-                        durationType={durationType}
-                        calculatedPrice={calculatedPrice}
-                    />
-                }
-                {
-                    showRefundContract &&
-                    <RefundContract
-                        show={showRefundContract}
-                        handleVisibility={this.handleRefundContractVisibility}
-                    />
-                }
-                {
-                    calculatedPrice > 0 &&
-                    <Form.Group>
-                        <Form.Label><b>{formatMessage({ id: 'Payment.Label.calculatedPrice' })}</b> {`${currentPlan.currency === 'USD' ? '$' : ''} ${calculatedPrice} ${currentPlan.currency === 'TRY' ? 'TL' : ''}`}</Form.Label>
-                        <br />
-                        <div className='mb-3'>
-                            <img src={MasterCardLogo} alt='Master Card' className='card-logo' />
-                            <img src={VisaLogo} alt='Visa' className='card-logo' />
-                        </div>
-                        <Button variant='success' onClick={this.initializePayment}>
-                            {currentPlan.type === 'PayAsYouGo' ? formatMessage({ id: 'Payment.Button.makePayment' }) : formatMessage({ id: 'Payment.Button.renewSubscription' })}
-                        </Button>
-                        <div className='float-right d-flex flex-column'>
-                            {
-                                this.renderContract()
-                            }
-                        </div>
-                    </Form.Group>
-                }
-                {
-                    showSpinner &&
-                    <div>
-                        <Spinner animation="border" role="status" />
-                        &nbsp;<span>{this.state.spinnerText}</span>
-                    </div>
-                }
-                {
-                    checkoutForm && checkoutForm.paymentPageUrl &&
-                    <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
-                        <Modal.Body>
-                            <ResponsiveEmbed>
-                                <embed src={checkoutForm.paymentPageUrl} />
-                            </ResponsiveEmbed>
-                        </Modal.Body>
-                    </Modal>
-                }
-            </div>
-        )
-    }
-
     onHide = () => {
         console.log('onHide')
         this.setState({ showCheckoutForm: false })
     }
 
-    changeCurrentPlan = () => {
-        const { user } = this.props;
-        if (user.currentPlan.type === 'Monthly') {
-            this.setState({
-                showApprovement: true
-            });
-        } else if (user.currentPlan.type === 'PayAsYouGo') {
-            this.setState({
-                showApprovement: true,
-                confirmationBody2: true
-            });
-        } else {
-            this.submitPlanChange();
-        }
-    }
-
-    submitPlanChange = () => {
-        const { selectedPlanType } = this.state;
-        const { plans, intl } = this.props;
-        var selectedPlan = _.find(plans, { type: selectedPlanType });
-        var fncChangeUserPlan = firebase.functions().httpsCallable('changeUserPlan');
-        fncChangeUserPlan({
-            planId: selectedPlan.planId
-        }).then(({ data }) => {
-            if (data.success) {
-                Alert.success(intl.formatMessage({ id: 'Plan.Change.succesMessage' }));
-            } else {
-                Alert.error('Some error occured! Please try again later.')
-            }
-        })
-            .catch(error => {
-                // TODO: CHANGE_USER_PLAN_ERROR
-                console.log(error);
-            })
-        this.setState({
-            showApprovement: false,
-            confirmationBody2: false
-        });
-    }
-
-    cancelPlanChange = () => {
-        this.setState({
-            showApprovement: false,
-            confirmationBody2: false
-        })
-    }
-
-    handleSelectedPlanChange = (planType) => {
-        this.setState({
-            selectedPlanType: planType
-        })
-    }
-
-/*     renderCurrentPlan = () => {
-        var { currentPlan } = this.props.user;
-        const { selectedPlanType } = this.state;
-        if (_.isEmpty(currentPlan)) currentPlan = {};
-        return (
-            <Card className='current-plan-card'>
-                <Card.Title className='current-plan-title'>
-                    <Form>
-                        <Form.Group>
-                            <Form.Label>
-                                <b><FormattedMessage id='Payment.CurrentPlan.title' /></b>
-                            </Form.Label>
-                            <div className='d-flex flex-row'>
-                                <Form.Control
-                                    name='plans'
-                                    as='select'
-                                    onChange={(e) => { this.handleSelectedPlanChange(e.target.value) }}
-                                    value={selectedPlanType}
-                                    className={selectedPlanType && selectedPlanType !== currentPlan.type ? 'plan-selection' : ''}
-                                >
-                                    {
-                                        _.map(this.props.plans, (plan) => {
-                                            let planPrice = 0, priceAmount = '';
-                                            if (plan.type !== 'Demo') {
-                                                planPrice = plan.price ? plan.price.toFixed(2) : null;
-                                                priceAmount = this.props.intl.formatMessage({ id: `Payment.Plan.PlanAmount.${plan.priceAmount}` });
-                                            }
-                                            if (plan.type !== 'Demo' || currentPlan.type === 'Demo') {
-                                                return (<option key={plan.type} value={plan.type}>
-                                                    {plan.type === 'Demo' ? plan.planName : `${plan.planName} - $${planPrice} / ${priceAmount}`}
-                                                </option>)
-                                            }
-                                        })
-                                    }
-                                </Form.Control>
-                                {
-                                    selectedPlanType && selectedPlanType !== currentPlan.type &&
-                                    <Button variant='success' className='change-plan-button' onClick={this.changeCurrentPlan}>
-                                        <FormattedMessage id='Payment.Plan.changePlanButtonText' />
-                                    </Button>
-                                }
-                            </div>
-                        </Form.Group>
-                    </Form>
-                </Card.Title>
-                <Card.Body>
-                    <Row>
-                        <Col lg={6} md={6} sm={6}>
-                            <Form.Label>
-                                <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
-                                {currentPlan.remainingMinutes}
-                                <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                            </Form.Label><br />
-                            <Form.Label>
-                                <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
-                                {Utils.formatExpireDate(currentPlan.expireDate)}
-                            </Form.Label>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
-        )
-    } */
 
     render() {
-        const { checkoutForm, showSpinner } = this.state
+        const { checkoutForm, duration, unitPrice, calculatedPrice, error, showSpinner } = this.state
         const { user } = this.props;
         return (
             <Container>
                 <div className="pricing card-deck flex-column flex-md-row mb-3">
                     <StandardPaymentCard
-                        duration={this.state.duration}
-                        price={this.state.calculatedPrice}
+                        duration={duration}
+                        unitPrice={unitPrice}
+                        price={calculatedPrice}
                         durationChanged={this.durationChanged}
                         handleBuy={this.initializePayment}
-                        showSpinner={this.state.showSpinner}
+                        showSpinner={showSpinner}
                         renderContract={this.renderContract}
                         currentPlan={user.currentPlan}
                     />
                 </div>
                 <br />
-
                 {
                     checkoutForm && <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
                         <Modal.Body>
@@ -577,9 +272,10 @@ class Payment extends Component {
                     </Modal>
                 }
                 {
-                    <Modal show={this.state.infoForm} onHide={this.onHide}>
+                    error && <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
+                        <Modal.Header>Some error happened!</Modal.Header>
                         <Modal.Body>
-                            Selam dunya
+                            {error.errorMessage}
                         </Modal.Body>
                     </Modal>
                 }
