@@ -11,6 +11,8 @@ import firebase from '../../utils/firebase';
 import ApprovementPopup from '../../components/approvement-popup';
 import { StandardPaymentCard } from '../../components/pricing-cards';
 import CheckOutModal from '../../components/check-out-modal';
+import ContactFormModal from '../../components/contact-form-modal';
+
 import SellingContract from './selling-contract';
 import RefundContract from './refund-contract';
 import MasterCardLogo from '../../assets/mastercard-logo.png';
@@ -46,6 +48,7 @@ class Payment extends Component {
             loading: false,
             errorMessage: '',
             disabled: true,
+            showContactForm: false,
         })
     }
 
@@ -67,11 +70,17 @@ class Payment extends Component {
     }
 
     durationChanged = (e) => {
-        if (e.target.value >= 1) {
+        console.log(e)
+        if (!e.target) {
+            this.setState({ duration: e })
+            this.calculatePrice(e)
+        }
+        else {
             this.setState({ duration: e.target.value })
             this.calculatePrice(e.target.value)
         }
     }
+
 
     calculatePrice = (duration) => {
         let calculatedPrice = 0;
@@ -294,10 +303,18 @@ class Payment extends Component {
     }
 
 
-    showCheckOutForm = () => {
-        this.setState({
-            showCheckOutForm: true
-        })
+    showForm = () => {
+        console.log("Duration" + this.state.duration)
+        if (parseInt(this.state.duration) >= 50) {
+            this.setState({
+                showContactForm: true
+            })
+        }
+        else {
+            this.setState({
+                showCheckOutForm: true
+            })
+        }
     }
 
     closeCheckOutForm = () => {
@@ -306,6 +323,12 @@ class Payment extends Component {
                 showCheckOutForm: false
             })
         }
+    }
+
+    closeContactForm = () => {
+        this.setState({
+            showContactForm: false
+        })
     }
 
     startPayment = async (obj) => {
@@ -405,7 +428,7 @@ class Payment extends Component {
     }
 
     render() {
-        const { showCheckOutForm, duration, durationType, unitPrice, calculatedPrice, error, showSpinner } = this.state
+        const { showCheckOutForm, duration, durationType, unitPrice, calculatedPrice, error, showSpinner, showContactForm } = this.state
         const { user } = this.props;
         // rph -> rate per hour
         const rph = this.props.user.currentPlan ? this.props.user.currentPlan.price : 0;
@@ -417,7 +440,7 @@ class Payment extends Component {
                         unitPrice={unitPrice}
                         price={calculatedPrice}
                         durationChanged={this.durationChanged}
-                        handleBuy={this.showCheckOutForm}
+                        handleBuy={this.showForm}
                         showSpinner={showSpinner}
                         renderContract={this.renderContract}
                         currentPlan={user.currentPlan}
@@ -438,6 +461,13 @@ class Payment extends Component {
                             disabled={this.state.disabled}
                             state={this.state.state}
                             toggleSubmit={this.toggleSubmit} />
+                    </div>
+                }
+                {
+                    <div>
+                        <ContactFormModal show={showContactForm}
+                            handleClose={this.closeContactForm}
+                            closeContactForm={this.closeContactForm} />
                     </div>
                 }
                 {
