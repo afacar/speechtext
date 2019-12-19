@@ -186,7 +186,6 @@ class StandardPaymentCard extends Component {
             </Row>
             <Row>
               <PricingSlider />
-
             </Row>
             <Row>
               <Col lg='6'>
