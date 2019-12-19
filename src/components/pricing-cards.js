@@ -6,6 +6,7 @@ import SellingContract from '../containers/user/selling-contract';
 import RefundContract from '../containers/user/refund-contract';
 import Utils from '../utils'
 import _ from 'lodash';
+import PricingSlider from './pricing-slider';
 
 class DemoCard extends Component {
 
@@ -182,6 +183,10 @@ class StandardPaymentCard extends Component {
                   {Utils.formatExpireDate(currentPlan.expireDate)}
                 </Form.Label>
               </Col>
+            </Row>
+            <Row>
+              <PricingSlider />
+
             </Row>
             <Row>
               <Col lg='6'>
