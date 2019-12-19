@@ -272,3 +272,7 @@ ol.selling-contract-list { counter-reset: item }
 .saved-editing-text.editing {
     color: #bd8700;
 }
+
+.card-details {
+    display: inline-block;
+}

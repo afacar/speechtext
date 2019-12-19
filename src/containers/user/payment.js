@@ -44,7 +44,7 @@ class Payment extends Component {
             showCheckOutForm: false, // new
             loading: false,
             errorMessage: '',
-            disabled: false
+            disabled: true,
         })
     }
 
@@ -628,7 +628,7 @@ class Payment extends Component {
             })
     }
 
-    toggleSubmit = (flag) =>{
+    toggleSubmit = (flag) => {
         this.setState({
             disabled: flag
         })

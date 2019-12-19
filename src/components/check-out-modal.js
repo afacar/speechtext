@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { updateProfile } from '../actions';
 
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Modal, Container, Row } from 'react-bootstrap';
 import PaymentDetails from './payment-details';
 import BillingDetails from './billing-details';
@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faCheckCircle, faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
+import '../styles/dashboard.css';
 
 class CheckOutModal extends Component {
 
@@ -98,8 +99,8 @@ class CheckOutModal extends Component {
     }
 
     startPayment = () => {
-        const { values, cardNumber, expiry, cvc,} = this.state
-        if (values && cardNumber && expiry && cvc.length === 3 && this.validateBillingDetails() ) {
+        const { values, cardNumber, expiry, cvc, } = this.state
+        if (values && cardNumber && expiry && cvc.length === 3 && this.validateBillingDetails()) {
             console.log("Cardnumber", cardNumber)
             console.log("expiry", expiry)
             console.log("cvc", cvc)
@@ -110,6 +111,8 @@ class CheckOutModal extends Component {
                 cvc
             }
             this.props.startPayment(paymentObj)
+        }else{
+            this.props.toggleSubmit(true)
         }
     }
 
@@ -144,10 +147,12 @@ class CheckOutModal extends Component {
             return (
                 <Modal.Body className="d-flex flex-row justify-content-center">
                     <Container>
-                        <h3 style={{ color: '#B63C5B' }}>Billing Details</h3>
+                        <h4 style={{ color: '#086FA1' }}>Billing Details</h4>
                         <BillingDetails handleValueChange={this.handleValueChange} values={values} displayNameIsValid={this.state.displayNameIsValid}
                             countryIsValid={this.state.countryIsValid} addressIsValid={this.state.addressIsValid} />
-                        <h3 style={{ marginTop: -20, color: '#B63C5B' }}>Payment Details</h3>
+                        <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
+                            <FormattedMessage id={"Payment.Card.Details"} />
+                        </h4>
                         <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
                             handleCardNumberChange={this.handleCardNumberChange}
                             handleCardExpiryChange={this.handleCardExpiryChange}
