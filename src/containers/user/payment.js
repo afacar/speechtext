@@ -36,7 +36,7 @@ class Payment extends Component {
         this.setState({
             duration: 1,
             durationType: 'hours',
-            calculatedPrice: this.props.plans.standard.hourPrice[1],
+            calculatedPrice: 9,
             state: 'INITIAL',
             basketId: undefined,
             checkoutForm: undefined,
@@ -112,101 +112,6 @@ class Payment extends Component {
         const numOf5s = parseInt(hours / 5)
         const price = pricePerHour - numOf5s * 0.5
         return price
-    }
-
-    initializePayment = async () => {
-        var that = this;
-        const { language, user, intl } = this.props;
-        var { duration, basketId } = this.state;
-
-        this.setState({
-            state: 'PAYMENT',
-            showSpinner: true,
-            spinnerText: 'Initializing...'
-        });
-
-        if (!user.country) {
-            this.setState({ infoForm: true })
-            return
-        }
-
-        var ip = await publicIp.v4();
-        var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
-        fncAddBasket({
-            hours: duration,
-            locale: language,
-            ip,
-            basketId
-        }).then(({ data }) => {
-            const { basketId, checkoutForm, error } = data;
-            console.log('checkout result', checkoutForm)
-            console.log('checkout error', error)
-            that.setState({
-                basketId,
-                checkoutForm,
-                error,
-                showCheckoutForm: true,
-                showSpinner: false,
-                spinnerText: ''
-            })
-            if (checkoutForm || error) this.setState({ showCheckoutForm: true })
-
-            firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
-                .onSnapshot((snapshot) => {
-                    if (snapshot && snapshot.data) {
-                        let data = snapshot.data();
-                        that.setState({
-                            state: data.status,
-                            error: data.error,
-                            showCheckoutForm: data.status === 'SUCCESS' ? false : true
-                        });
-                    }
-                }, (error) => {
-                    // TODO: GET_PAYMENT_RESULT_ERROR
-                    console.log(error)
-                });
-        })
-
-        this.setState({
-            showCheckOutForm: true,
-            showSpinner: false,
-            spinnerText: ''
-        })
-
-        // var ip = await publicIp.v4();
-        // var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
-        // fncAddBasket({
-        //     minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
-        //     locale: language,
-        //     ip,
-        //     basketId
-        // }).then(({ data }) => {
-        //     const { basketId, checkoutForm } = data;
-        //     that.setState({
-        //         basketId,
-        //         checkoutForm,
-        //         showSpinner: false,
-        //         spinnerText: ''
-        //     })
-        //     firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
-        //         .onSnapshot((snapshot) => {
-        //             if (snapshot && snapshot.data) {
-        //                 let data = snapshot.data();
-        //                 that.setState({
-        //                     state: data.status,
-        //                     error: data.error
-        //                 });
-        //             }
-        //         }, (error) => {
-        //             // TODO: GET_PAYMENT_RESULT_ERROR
-        //             console.log(error)
-        //         });
-        // })
-        //     .catch(error => {
-        //         // TODO: ADD_TO_BASKET_ERROR
-        //         // NOTE: This function need to thwrow an error on firebase to catch here!
-        //         console.log(error)
-        //     })
     }
 
     renderSuccess = () => {
@@ -344,17 +249,9 @@ class Payment extends Component {
         }
         console.log("Card", card)
         var that = this;
-        const { language, user, intl } = this.props;
+        const { language, user } = this.props;
         console.log("User", user);
-        var { duration, durationType, basketId, sellingContractAccepted, refundContractAccepted, selectedPlanType } = this.state;
-        if (!sellingContractAccepted) {
-            Alert.error(intl.formatMessage({ id: 'Payment.Error.onlineSellingContract' }));
-            return;
-        }
-        if (!refundContractAccepted) {
-            Alert.error(intl.formatMessage({ id: 'Payment.Error.refundPolicy' }));
-            return;
-        }
+        var { duration, durationType, basketId, selectedPlanType } = this.state;
         let durationInMinutes = undefined;
         if (selectedPlanType === 'PayAsYouGo')
             durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
@@ -368,7 +265,8 @@ class Payment extends Component {
         var ip = await publicIp.v4();
         var fncAddBasket = firebase.functions().httpsCallable('addToBasketSecondary');
         fncAddBasket({
-            minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
+            hours: duration,
+            // minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
             locale: language,
             ip,
             basketId,
@@ -431,7 +329,6 @@ class Payment extends Component {
         const { showCheckOutForm, duration, durationType, unitPrice, calculatedPrice, error, showSpinner, showContactForm } = this.state
         const { user } = this.props;
         // rph -> rate per hour
-        const rph = this.props.user.currentPlan ? this.props.user.currentPlan.price : 0;
         return (
             <Container>
                 <div className="pricing card-deck flex-column flex-md-row mb-3">
@@ -455,7 +352,7 @@ class Payment extends Component {
                             startPayment={this.startPayment}
                             duration={duration}
                             durationType={durationType}
-                            rph={rph}
+                            rph={unitPrice}
                             errorMessage={this.state.errorMessage}
                             loading={this.state.loading}
                             disabled={this.state.disabled}

@@ -23,7 +23,7 @@ class CheckOutInfo extends Component {
                 <Card>
                     <Card.Body>
                         <Card.Title className="border-bottom"><p style={{ color: '#086FA1' }} >Order Summary</p></Card.Title>
-                        
+
                         <Row>
                             <Col className="d-flex flex-start">
                                 <FormattedMessage id={"Payment.Summary.Total.Duration"} />
@@ -57,16 +57,10 @@ class CheckOutInfo extends Component {
                             </Row>
                             <Row className="d-flex justify-content-end" style={{ width: '100%' }}>
                                 <Button className="btn-lg" style={{ backgroundColor: '#22884f', }} onClick={startPayment} disabled={disabled}>
-                                    {
-                                        !loading && (
-                                            <FormattedMessage id='Payment.Summary.Pay'/>
-                                        )
-                                    }
+                                    <FormattedMessage id='Payment.Summary.Pay' />
                                     {
                                         loading && (
-                                            < div >
-                                                <Spinner animation="border" role="status" />
-                                            </div>
+                                            <Spinner animation="grow" role="status" />
                                         )
                                     }
                                 </Button>
