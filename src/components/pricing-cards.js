@@ -174,11 +174,11 @@ class StandardPaymentCard extends Component {
             <Container>
               <Row>
                 <Col>
-                  <Form.Label>
+                  {/* <Form.Label>
                     <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
                     {currentPlan.remainingMinutes}
                     <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                  </Form.Label><br />
+                  </Form.Label><br /> */}
                   <Form.Label>
                     <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
                     {Utils.formatExpireDate(currentPlan.expireDate)}
