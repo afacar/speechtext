@@ -162,6 +162,7 @@
     "Payment.Error.refundPolicy": "İptal ve İade şartlarını onaylayınız!",
     "Payment.Billing.Name": "Kart Üzerindeki İsim",
     "Payment.Billing.Address":"Fatura Adresi",
+    "Payment.Slider.Header":"Daha fazla al, daha az öde",
     "Payment.Summary.Total.Duration":"Toplam Saat",
     "Payment.Summary.RPH":"Saat Başına Ücret",
     "Payment.Summary.Total.Price":"Toplam Ücret",

@@ -34,7 +34,8 @@ export default class PricingSlider extends Component {
     return (
       <div style={parentStyle}>
         <div style={style}>
-          <h4>Transcription Friendly Pricing :)</h4>
+          <h4>
+            <FormattedMessage id={"Payment.Slider.Header"} /></h4>
           <Container className="d-flex flex-row justify-content-around">
             <Slider min={1} marks={marks} step={1} max={50}
               style={{ marginTop: "0.75rem" }}
