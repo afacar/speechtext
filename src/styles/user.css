@@ -46,6 +46,16 @@
     overflow-y: auto;
 }
 
+.user-tab-transaction-history {
+    height: 520;
+    display: inline-block;
+}
+
+.user-tab-transaction-history-paging {
+    height: 70px;
+    display: inline-block;
+}
+
 .address-title {
     margin: 5px 20px 0px 20px;
     border-bottom: none;
