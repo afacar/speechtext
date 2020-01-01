@@ -49,6 +49,17 @@ export const getFileList = () => {
     }
 }
 
+export const getFile = (fileId) => {
+    return async (dispatch, getState) => {
+        const { user } = getState();
+        let file = await firestore().collection('userfiles').doc(user.uid).collection('files').doc(fileId).get();
+        dispatch({
+            type: Utils.ActionTypes.SET_SELECTED_FILE,
+            payload: file.data() || {}
+        })
+    }
+}
+
 export const addFile = (file) => {
     return async (dispatch, getState) => {
         const { uid } = getState().user;

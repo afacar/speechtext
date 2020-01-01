@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap';
+import { Container, Dropdown, DropdownButton, Spinner } from 'react-bootstrap';
 import { Media } from 'react-media-player';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Axios from 'axios';
@@ -9,16 +9,27 @@ import Axios from 'axios';
 import firebase from '../../utils/firebase';
 import SpeechTextPlayer from '../../components/player';
 import SpeechTextEditor from '../../components/speech-text-editor';
-import { handleTimeChange, isPlaying, setEditorFocus } from "../../actions";
+import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
+import UserHeader from '../user-header';
 
-class Transcription extends Component {
+class TranscriptionResult extends Component {
     constructor(props) {
         super(props);
+
+        let fileId;
+        if(props.location && props.location.pathname) {
+            fileId = props.location.pathname.substr('/edit/'.length);
+        }
+
+        if(_.isEmpty(fileId)) {
+            props.history.push('/dashboard');
+        }
 
         this.state = {
             editorData: null,
             numOfWords: '',
-            intervalHolder: undefined
+            intervalHolder: undefined,
+            fileId
         }
     }
 
@@ -29,50 +40,55 @@ class Transcription extends Component {
         }
     }
 
-    componentWillReceiveProps = async ({ selectedFile }) => {
-        console.log('TranscriptionWillReceiveProps', selectedFile)
-        var that = this;
-        var { intervalHolder } = this.state;
-        this.props.isPlaying(false)
-        clearInterval(intervalHolder);
-        if (!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
-            //this.props.handleTimeChange(null, -1);
-            this.setState({
-                showSpinner: true
-            })
-            // Todo: this.props.getEditorDate(selectedFile)
-            // editorDataAll: { fileId: editorData, fileId2: editorData...}
-            var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
-            storageRef.getDownloadURL().then((downloadUrl) => {
-                Axios.get(downloadUrl)
-                    .then(({ data }) => {
-                        //this.props.setEditorFocus(-1, -1, -1)
-                        this.props.handleTimeChange(data, -1);
-                        let editorData = data;
-                        that.setState({
-                            editorData,
-                            //prevEditorData: _.cloneDeep(editorData),
-                            showSpinner: false
-                        }, () => {
-                            intervalHolder = setInterval(() => {
-                                that.updateTranscribedFile();
-                            }, 20000);
-                        })
-                        console.log('this.state.editorData is fetched', this.state.editorData)
-                    });
-            })
+    componentWillReceiveProps = async ({ user, selectedFile }) => {
+        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            this.props.getFile(this.state.fileId);
+        }
+        if(_.isEmpty(this.props.selectedFile) && !_.isEmpty(selectedFile)) {
+            console.log('TranscriptionWillReceiveProps', selectedFile)
+            var that = this;
+            var { intervalHolder } = this.state;
+            this.props.isPlaying(false)
+            clearInterval(intervalHolder);
+            if (!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
+                //this.props.handleTimeChange(null, -1);
+                this.setState({
+                    showSpinner: true
+                })
+                // Todo: this.props.getEditorDate(selectedFile)
+                // editorDataAll: { fileId: editorData, fileId2: editorData...}
+                var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
+                storageRef.getDownloadURL().then((downloadUrl) => {
+                    Axios.get(downloadUrl)
+                        .then(({ data }) => {
+                            //this.props.setEditorFocus(-1, -1, -1)
+                            this.props.handleTimeChange(data, -1);
+                            let editorData = data;
+                            that.setState({
+                                editorData,
+                                //prevEditorData: _.cloneDeep(editorData),
+                                showSpinner: false
+                            }, () => {
+                                intervalHolder = setInterval(() => {
+                                    that.updateTranscribedFile();
+                                }, 20000);
+                            })
+                            console.log('this.state.editorData is fetched', this.state.editorData)
+                        });
+                })
                 .catch(error => {
                     // TODO: GET_DOWNLOAD_URL_ERROR
                     console.log(error);
                 })
-        } else {
-            this.setState({
-                editorData: null,
-                prevEditorData: {},
-                intervalHolder: undefined,
-                showSpinner: false
-            })
-            //this.props.handleTimeChange(null, -1);
+            } else {
+                this.setState({
+                    editorData: null,
+                    prevEditorData: {},
+                    intervalHolder: undefined,
+                    showSpinner: false
+                })
+                //this.props.handleTimeChange(null, -1);
+            }
         }
     }
 
@@ -365,36 +381,39 @@ class Transcription extends Component {
         var { selectedFile } = this.props;
         if (_.isEmpty(selectedFile)) selectedFile = {};
         return (
-            <div className='transcription-container'>
-                <div className='transcription-title'>
-                    <div className='selected-file-name'>
-                        {selectedFile.name}
-                    </div>
-                    <Media>
-                        <SpeechTextPlayer
-                            key={selectedFile.id}
-                            src={selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : ''}
-                            duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
-                            type={selectedFile.options ? selectedFile.options.type : ''}
-                            timeToSeek={this.state.timeToSeek}
-                            editorData={this.state.editorData}
-                        />
-                    </Media>
-                </div>
-                {
-                    this.state.showSpinner &&
-                    <div className="d-flex justify-content-center mt-5">
-                        <div className="spinner-border" role="status">
-                            <span className="sr-only">Loading...</span>
+            <div>
+                <UserHeader />
+                <Container className='dashboard-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
+                    <div className='transcription-title'>
+                        <div className='selected-file-name'>
+                            {selectedFile.name}
                         </div>
+                        <Media>
+                            <SpeechTextPlayer
+                                key={selectedFile.id}
+                                src={selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : ''}
+                                duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
+                                type={selectedFile.options ? selectedFile.options.type : ''}
+                                timeToSeek={this.state.timeToSeek}
+                                editorData={this.state.editorData}
+                            />
+                        </Media>
                     </div>
-                }
-                {
-                    !this.state.showSpinner &&
-                    <div className='transcription'>
-                        {this.renderResults()}
-                    </div>
-                }
+                    {
+                        this.state.showSpinner &&
+                        <div className="d-flex justify-content-center mt-5">
+                            <div className="spinner-border" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    }
+                    {
+                        !this.state.showSpinner &&
+                        <div className='transcription'>
+                            {this.renderResults()}
+                        </div>
+                    }
+                </Container>
             </div>
         );
     }
@@ -404,4 +423,4 @@ const mapStateToProps = ({ user, selectedFile }) => {
     return { user, selectedFile };
 }
 
-export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus })(injectIntl(Transcription));
+export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus, getFile })(injectIntl(TranscriptionResult));

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Utils from '../utils';
-const { firestore, auth } = Utils.firebase;
+import publicIp from 'public-ip';
+const { firestore, auth, functions } = Utils.firebase;
 
 const db = firestore();
 
@@ -10,21 +11,26 @@ export const login = (data) => {
         db.doc(`users/${uid}`).onSnapshot(async (snapshot) => {
             let userData = data;
             if (snapshot && snapshot.data && snapshot.data()) {
+                const { emailVerified } = snapshot.data()
                 userData = snapshot.data();
+                if (emailVerified === false && data.emailVerified === true) {
+                    db.doc(`users/${uid}`).update({ emailVerified: true })
+                    userData.emailVerified = true
+                }
             } else if (data.isNewUser) {
-                const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
-                userData = { ...data, currentPlan: demoPlan };
-                userData.currentPlan.remainingMinutes = demoPlan.quota;
+                var fncCreateUser = functions().httpsCallable('createNewUser');
+                let ip = await publicIp.v4();
+                //const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
+                userData = { ...data, ip };
                 delete userData.isNewUser;
-
-                await db.doc(`users/${uid}`).set(userData)
-                    .then(res => {
-                        !data.emailVerified && auth().currentUser.sendEmailVerification()
-                    })
-                    .catch(error => {
-                        // TODO: SET_USER_PROFILE_ERROR
-                        console.log(error);
-                    })
+                try {
+                    console.log('Creating new user...')
+                    let res = await fncCreateUser(userData).data
+                    !data.emailVerified && auth().currentUser.sendEmailVerification()
+                    console.log('res of new user creation:', res)
+                } catch (err) {
+                    console.log('createNewUser returns error:', err)
+                }
             }
             dispatch({
                 type: Utils.ActionTypes.LOGIN,

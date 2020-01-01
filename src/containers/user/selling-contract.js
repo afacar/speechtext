@@ -7,9 +7,9 @@ class SellingContract extends Component {
     calculateAmount = () => {
         const { duration, durationType } = this.props;
         const { currentPlan } = this.props.user;
-        if(currentPlan.quota > 0) return `${currentPlan.quota} dakika`;
+        if(currentPlan.quota > 0) return `${currentPlan.quota} saat`;
         let durationInMinutes = durationType === 'hours' ? duration * 60 : duration;
-        return `${durationInMinutes} dakika`;
+        return `${durationInMinutes} saat`;
     }
 
     render() {
@@ -104,8 +104,8 @@ class SellingContract extends Component {
                                     <p>
                                         Ürün Açıklaması: { user.currentPlan.planName }<br />
                                         Adet: { this.calculateAmount() }<br />
-                                        Birim Fiyatı: { user.currentPlan.pricePerMinute }<br />
-                                        Toplam (KDV Dahil): $ { this.props.calculatedPrice }<br />
+                                        Birim Fiyatı: ${ this.props.unitPrice }<br />
+                                        Toplam (KDV Dahil): ${ this.props.calculatedPrice }<br />
                                         
                                         Ödeme Şekli ve Planı: Online Kredi Kartı<br />
                                         Teslimat Adresi: { user.email }<br />

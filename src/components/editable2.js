@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
-import ReactDOM from 'react-dom';
 import _ from "lodash";
 
 import { setEditorFocus } from "../actions";
@@ -324,27 +323,18 @@ class Editable2 extends React.Component {
 
     decideClassName = (word, isActive, isPlaying) => {
         let className = 'editable-content';
-        if (isActive) className += ' active-word';
-        if (isPlaying) className += ' playing-word';
         if (word.confidence < 0.6) className += ' not-so-confident';
+        if (word.confidence === 1) className += ' fixed-word';
 
         return className;
     }
 
     render = () => {
-        const { index, transcript, editorFocus } = this.props;
-        let { playerActiveIndex, playerActiveWordIndex } = this.props
+        const { index, transcript, } = this.props;
         let words = transcript.words.map((word, wordIndex) => {
-            let isActive = false
-            let isPlaying = false
-            if (index === playerActiveIndex && wordIndex === playerActiveWordIndex)
-                isPlaying = true
-            if (index === editorFocus.activeIndex && wordIndex === editorFocus.activeWordIndex)
-                isActive = true
-
             return (
                 <span
-                    //className={this.decideClassName(word, isActive, isPlaying)}
+                    className={this.decideClassName(word)}
                     key={wordIndex}
                     tabIndex={index}
                     id={wordIndex}

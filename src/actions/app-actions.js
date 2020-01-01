@@ -19,15 +19,15 @@ export const setSupportedLanguages = (languages) => {
 
 export const getPlans = () => {
     return dispatch => {
-        firestore().collection('plans').orderBy('order')
+        firestore().collection('plans').doc('standard')
             .get()
             .then(snapshot => {
                 if (snapshot) {
-                    var plans = [];
-                    snapshot.docs.forEach(doc => plans.push({ id: doc.id, ...doc.data() }));
+                    //var plans = [];
+                    //snapshot.docs.forEach(doc => plans.push({ id: doc.id, ...doc.data() }));
                     dispatch({
                         type: Utils.ActionTypes.GET_PLANS,
-                        payload: plans
+                        payload: snapshot.data()
                     });
                 }
             })

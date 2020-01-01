@@ -33,19 +33,22 @@ class Contact extends Component {
         if (form.checkValidity() === true) {
             // Submit Contact Form to db
             this.props.submitContactForm(values)
-            .then((res)=> { 
-                Alert.success(res);
-                that.setState({ validated: false });
-            })
-            .catch(err => Alert.error(err))
-            
+                .then((res) => {
+                    Alert.success(res);
+                    that.setState({ validated: false });
+                })
+                .catch(err => Alert.error(err))
+
             that.setState({
                 values: {},
                 validated: false
             });
-            that.props.goToRef('topRef');
+            if (that.props.goToRef)
+                that.props.goToRef('topRef');
         }
         this.setState({ validated: true });
+        if (this.props.closeContactForm)
+            this.props.closeContactForm();
     };
 
     render() {
@@ -86,7 +89,7 @@ class Contact extends Component {
                                 <FormattedMessage id="Contact.Form.Feedback.email" />
                             </Form.Control.Feedback>
                         </Form.Group>
-                        
+
                         <Form.Group controlId="formUsageNeeded">
                             <Form.Label>
                                 <FormattedMessage id="Contact.Form.Label.opinions" />

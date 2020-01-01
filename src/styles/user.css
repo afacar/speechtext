@@ -1,4 +1,5 @@
 .dashboard-container,
+.transcription-container,
 .profile-container {
     padding-top: 140px;
     max-width: 70%;
@@ -46,6 +47,16 @@
     overflow-y: auto;
 }
 
+.user-tab-transaction-history {
+    height: 520;
+    display: inline-block;
+}
+
+.user-tab-transaction-history-paging {
+    height: 70px;
+    display: inline-block;
+}
+
 .address-title {
     margin: 5px 20px 0px 20px;
     border-bottom: none;
@@ -68,9 +79,6 @@
 }
 
 .user-plan .card-pricing {
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
     cursor: pointer;
 }
 
@@ -95,4 +103,22 @@
 
 .userbox-dropdown .dropdown-toggle::after {
     display: none;
+}
+
+@media only screen and (max-width: 1400px) {
+    .dashboard-container {
+        max-width: 80% !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .dashboard-container {
+        max-width: 90% !important;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .dashboard-container {
+        max-width: 100% !important;
+    }
 }

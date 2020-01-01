@@ -1,3 +1,8 @@
+body, select {
+    font-family: 'Cario', sans-serif;
+    font-size: 16px !important;
+}
+
 .page-style {
     padding-top: 80px;
 }
