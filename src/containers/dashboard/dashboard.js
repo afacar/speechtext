@@ -8,7 +8,7 @@ import { getFileList, updateFileState, removeFromUploadingFiles } from '../../ac
 import '../../styles/dashboard.css';
 import UserHeader from '../user-header';
 import FileList from './file-list';
-import Transcription from './transcription';
+import TranscriptionResult from './transcription-result';
 import Utils from '../../utils';
 const { auth } = Utils.firebase;
 
@@ -105,11 +105,8 @@ class Dashboard extends Component {
                         </Alert>
                     }
                     <Row>
-                        <Col lg="4" md="4" sm="6" xs="12">
+                        <Col lg="12" md="12" sm="12" xs="12">
                             <FileList emailVerified={this.state.emailVerified} />
-                        </Col>
-                        <Col lg="8" md="8" sm="6" xs="12">
-                            <Transcription />
                         </Col>
                     </Row>
                 </Container>

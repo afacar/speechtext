@@ -61,21 +61,21 @@ class SpeechTextPlayer extends Component {
                 <div className='player-controls play-resume'>
                     {
                         (!media.isPlaying || !playerStatus.isPlaying) &&
-                        <PlayerIcon.Play onClick={ () => !disabled ? media.play() : null } />
+                        <PlayerIcon.Play onClick={ () => !disabled ? media.play() : null } disabled={ disabled } />
                     }
                     {
                         (media.isPlaying && playerStatus.isPlaying) &&
-                        <PlayerIcon.Pause onClick={ () => !disabled ? media.pause() : null } />
+                        <PlayerIcon.Pause onClick={ () => !disabled ? media.pause() : null }  disabled={ disabled }/>
                     }
                 </div>
                 <div className='player-controls mute-unmute'>
                     {
                         !media.isMuted &&
-                        <PlayerIcon.SoundOn onClick={ () => media.mute(true) } />
+                        <PlayerIcon.SoundOn onClick={ () => media.mute(true) } disabled={ disabled } />
                     }
                     {
                         this.props.media.isMuted &&
-                        <PlayerIcon.SoundOff onClick={ () => this.props.media.mute(false) } />
+                        <PlayerIcon.SoundOff onClick={ () => this.props.media.mute(false) } disabled={ disabled } />
                     }
                 </div>
                 <div className='player-slider'>
@@ -84,6 +84,7 @@ class SpeechTextPlayer extends Component {
                         duration={ this.props.media.duration }
                         seekTo={ this.seekTo }
                         playPause={ this._handlePlayPause }
+                        disabled={ disabled }
                     />
                 </div>
                 {

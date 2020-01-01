@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Card, ProgressBar, Spinner } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Card, ProgressBar, Dropdown, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDatabase, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
+
+import ExportPopup from '../components/export-popup';
+import FileLogo from '../assets/default-file-thumbnail.png';
 import {
     faTrashAlt, faPause, faPlay
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
+import Utils from '../utils';
 import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
 
 class File extends Component {
@@ -68,7 +73,7 @@ class File extends Component {
         this.setState({ progress: 0 });
 
         var uploadTask = storageRef.put(file.file);
-        this.props.onSelected(this.props.index);
+        // this.props.onSelected(this.props.index);
 
         file.status = 'UPLOADING';
         this.props.updateFileInState(file);
@@ -105,7 +110,6 @@ class File extends Component {
                     this.props.removeFromUploadingFiles(file.id);
                     await this.props.updateFile(file, { originalFile: file.originalFile });
                     await this.props.updateFileState(file.id, 'UPLOADED');
-                    // that.props.updateFileState(file.id, 'UPLOADED');
                 });
         });
         this.setState({
@@ -132,16 +136,6 @@ class File extends Component {
         this.props.editFile(this.state.file.index);
     }
 
-    deleteFile = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const { file } = this.state;
-        this.props.updateFileState(file.id, 'DELETED');
-        this.props.removeFromUploadingFiles(file.id);
-        this.setState({ showSpinner: true })
-    }
-
     transcribeFile = () => {
         var { file } = this.state;
         if(_.isEmpty(file.options) || !file.options.language) {
@@ -162,58 +156,234 @@ class File extends Component {
         return '';
     }
 
+    formatTime = (time) => {
+        let seconds = Math.floor(time % 60);
+        let minutes = Math.floor(time / 60);
+        let hours = Math.floor(minutes / 60)
+        if(hours > 0) {
+            minutes = Math.floor(minutes % 60);
+        }
+        if(hours < 10) hours = `0${hours}`;
+        if(minutes < 10) minutes = `0${minutes}`;
+        if(seconds < 10) seconds = `0${seconds}`;
+        if(!hours) hours = '00';
+        if(!minutes) minutes = '00';
+        if(!seconds) seconds = '00';
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
+    formatSize = (size) => {
+        return (size / 1000000).toFixed(2);
+    }
+
+    getFileStatus = (status) => {
+        switch(status) {
+            case 'ERROR':
+                return 'Error';
+            case 'CONVERTING':
+            case 'PROCESSING':
+            case 'TRANSCRIBING':
+                return 'Processing...';
+            default:
+                return '';
+        }
+    }
+
+    getFileStatusClassName = (status) => {
+        switch(status) {
+            case 'ERROR':
+                return 'error';
+            case 'CONVERTING':
+            case 'PROCESSING':
+            case 'TRANSCRIBING':
+                return 'processing';
+            default:
+                return '';
+        }
+    }
+
+    deleteFile = () => {
+        this.setState({ showSpinner: true });
+        this.props.deleteFile(this.props.file.id);
+    }
+
+    openInEditor = () => {
+        this.props.openInEditor(this.props.file.id);
+    }
+
+    showDropdownMenu = (e) => {
+        e.stopPropagation();
+        this.setState({
+            showDropdownMenu: true
+        })
+    }
+
+    hideDropdownMenu = (e) => {
+        e.stopPropagation();
+        this.setState({
+            showDropdownMenu: false
+        })
+    }
+
+    renderDropdown = () => {
+        const { file } = this.props;
+        return (
+            <div>
+                <ul
+                    className='dropbtn icons btn-right'
+                    onClick={ this.showDropdownMenu }
+                    onMouseEnter={ this.showDropdownMenu }
+                    onMouseLeave={ this.hideDropdownMenu }
+                >
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <Dropdown.Menu
+                        show={ this.state.showDropdownMenu }
+                    >
+                        <Dropdown.Item eventKey="1" onClick={ this.openInEditor }>Edit</Dropdown.Item>
+                        <Dropdown.Item eventKey="2" onClick={ () => this.setState({ showExportPopup: true}) }>Export</Dropdown.Item>
+                        <Dropdown.Item eventKey="3" onClick={ this.deleteFile }>Delete</Dropdown.Item>
+                    </Dropdown.Menu>
+                </ul>
+            </div>
+        )
+    }
+
     render() {
         const { file, progress, paused, showSpinner } = this.state;
 
         let errorText = this.getErrorMessage(file);
+        let fileSrc = FileLogo;
+        let fileImageContainerClass = 'file-image-container';
+        if(file && file.thumbnail && file.thumbnail.publicUrl) {
+            fileSrc = file.thumbnail.publicUrl;
+        } else {
+            fileImageContainerClass += ' default';
+        }
+
+        let duration = '';
+        let size = '';
+        let createDate = '';
+        if(file && file.originalFile) {
+            const { originalFile } = file;
+            if(originalFile.originalDuration) {
+                duration = this.formatTime(originalFile.originalDuration);
+            }
+            if(originalFile.size) {
+                size = this.formatSize(originalFile.size) + ' MB';
+            }
+            if(originalFile.createDate) {
+                createDate = Utils.formatDateSimpleFormat(originalFile.createDate);
+            }
+        }
         return (
-            <div className={ `file-container ${this.props.isSelected ? 'active' : ''}` }>
-                <Card>
-                    <Card.Body>
-                        { file.name }
-                        {
-                            !showSpinner && file.status !== 'PROCESSING' &&
-                            <span className='file-settings'>
-                                {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
-                                <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
-                            </span>
-                        }
-                        {
-                            showSpinner &&
-                            <div className='float-right'>
-                                <Spinner animation="border" role="status" size='sm' />
-                            </div>
-                        }
+            <div className={ `file-container ${ file.status === 'DONE' ? 'completed ' : ''}${this.props.isSelected ? 'active' : ''}` }>
+                {
+                    (this.state.showSpinner || this.props.showSpinner) &&
+                    <span className='file-spinner'>
+                        <Spinner animation="border" role="status" size='sm' variant='danger' />
+                    </span>
+                }
+                {
+                    file.status === 'DONE' &&
+                    <span class= { `checkmark ${this.props.isSelected ? 'active' : ''}` }>
+                        <div class="circle"></div>
+                        <div class="stem"></div>
+                        <div class="kick"></div>
+                    </span>
+                }
+                <div className={ fileImageContainerClass }>
+                    <Card.Img variant="left" src={ fileSrc } alt={ file.name + ' thumbnail' } />
+                </div>
+                <div className='file-body-container'>
+                    {
+                        file.status === 'DONE' &&
+                        this.renderDropdown()
+                    }
+                    <div className='file-header'>
+                        <label title={ file.name }>{ file.name }</label>
+                    </div>
+                    <div className='file-body'>
+                        <FontAwesomeIcon 
+                            icon={ faDatabase } 
+                            title='File Size'
+                            className='file-info-image' size="x" />
+                        { size }
+                        <br />
+                        <FontAwesomeIcon 
+                            icon={ faClock } 
+                            title='File Duration' 
+                            className='file-info-image' size="x" />
+                        { duration }
+                        <br />
+                        <FontAwesomeIcon 
+                            icon={ faCalendar } 
+                            title='File Size' 
+                            className='file-info-image' size="x" />
+                        { createDate }
                         {
                             file.status !== 'DONE' && file.status !== 'ERROR' && progress < 100 &&
                             <div className={ 'file-progress' }>
                                 <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
                                 <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
-                                {
-                                    file.status !== 'PROCESSING' && !paused &&
-                                    <FontAwesomeIcon icon={ faPause } className='pause-play' onClick={ this.pauseUpload } />
-                                }
-                                {
-                                    file.status !== 'PROCESSING' && paused &&
-                                    <FontAwesomeIcon icon={ faPlay } className='pause-play'  onClick={ this.resumeUpload } />
-                                }
                             </div>
                         }
+                    </div>
+                </div>
+                <div className={ `file-footer ${this.getFileStatusClassName(file.status)}` }>
+                    <span>
                         {
-                            (file.status === 'UPLOADED' || file.status ==='CONVERTING') &&
-                            <div className='mt-2'>
-                                <Spinner animation="border" role="status" size='sm' />
-                                <span className='ml-2'>Processing...</span>
-                            </div>
+                            this.getFileStatus(file.status)
                         }
-                        {
-                            file.status === 'ERROR' &&
-                            <div className='file-error-text'>
-                                { !_.isEmpty(errorText) ? errorText : 'An error occured during transcription!' }
-                            </div>
-                        }
-                    </Card.Body>
-                </Card>
+                    </span>
+                </div>
+                <ExportPopup
+                    show={ this.state.showExportPopup }
+                    file={ this.props.file }
+                    closeModal={ () => this.setState({ showExportPopup: false}) }
+                />
+                    {
+                        // !showSpinner && file.status !== 'PROCESSING' &&
+                        // <span className='file-settings'>
+                        //     {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
+                        //     <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
+                        // </span>
+                    }
+                    {/* {
+                        showSpinner &&
+                        <div className='float-right'>
+                            <Spinner animation="border" role="status" size='sm' />
+                        </div>
+                    } */}
+                    {/* {
+                        file.status !== 'DONE' && file.status !== 'ERROR' && progress < 100 &&
+                        <div className={ 'file-progress' }>
+                            <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
+                            <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
+                            {
+                                file.status !== 'PROCESSING' && !paused &&
+                                <FontAwesomeIcon icon={ faPause } className='pause-play' onClick={ this.pauseUpload } />
+                            }
+                            {
+                                file.status !== 'PROCESSING' && paused &&
+                                <FontAwesomeIcon icon={ faPlay } className='pause-play'  onClick={ this.resumeUpload } />
+                            }
+                        </div>file.
+                    } */}
+                    {/* {
+                        (file.status === 'UPLOADED' || file.status ==='CONVERTING') &&
+                        <div className='mt-2'>
+                            <Spinner animation="border" role="status" size='sm' />
+                            <span className='ml-2'>Processing...</span>
+                        </div>
+                    }
+                    {
+                        file.status === 'ERROR' &&
+                        <div className='file-error-text'>
+                            { !_.isEmpty(errorText) ? errorText : 'An error occured during transcription!' }
+                        </div>
+                    } */}
             </div>
         )
     }

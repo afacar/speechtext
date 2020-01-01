@@ -3,19 +3,24 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import firebase from '../../utils/firebase';
-import { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles } from '../../actions';
+import { Row, Col, Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudUploadAlt, faEdit, faTrash, faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons';
 
-import Dropzone from '../../components/dropzone';
+import { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles } from '../../actions';
+import '../../styles/file.css';
 import File from '../../components/file';
 import ApprovementPopup from '../../components/approvement-popup';
-import UploadOptions from '../../components/upload-options';
+import UploadPopup from '../../components/upload-popup';
+import ExportPopup from '../../components/export-popup';
 
 class FileList extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            files: []
+            files: [],
+            selectedFiles: []
         }
     }
 
@@ -26,6 +31,11 @@ class FileList extends Component {
                     this.props.updateFileState(file.id, 'DELETED');
                 }
             })
+        }
+        if(!_.isEmpty(this.state.filterValue)) {
+            files = _.filter(files, (file) => {
+                return file.name.toLowerCase().indexOf(this.state.filterValue.toLowerCase()) > -1
+            });
         }
         this.setState({
             files
@@ -63,11 +73,17 @@ class FileList extends Component {
         this.props.history.push('/user#payment');
     }
 
+    uploadClicked = () => {
+        this.setState({
+            showUploadPopup: true
+        })
+    }
+
     cancelFileUpload = () => {
         this.setState({
             selectedFileDuration: '',
             showApprovement: false,
-            showUploadOptions: false
+            showUploadPopup: false
         });
     }
 
@@ -91,7 +107,7 @@ class FileList extends Component {
         const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc();
         fileObj.id = id;
         this.setState({
-            showUploadOptions: true,
+            showUploadPopup: true,
             fileToUpload: fileObj,
             selectedFile: file
         })
@@ -108,42 +124,124 @@ class FileList extends Component {
             this.props.addToUploadingFiles(fileToUpload.id, selectedFile);
             this.props.setSelectedFile(fileToUpload);
             this.setState({
-                showUploadOptions: false,
+                showUploadPopup: false,
                 fileToUpload: undefined,
                 selectedFile: undefined
             });
         }
     }
 
-    onFileSelected = (index) => {
-        const { files } = this.state;
-        const selectedFile = files[index];
-        this.props.setSelectedFile(selectedFile);
+    onFileSelected = (file) => {
+        if(file.status === 'DONE') {
+            // const { files } = this.state;
+            // const selectedFile = files[index];
+            // this.props.setSelectedFile(selectedFile);
+            const { selectedFiles } = this.state;
+            if(!selectedFiles.includes(file.id)) {
+                selectedFiles.push(file.id);
+            } else {
+                selectedFiles.splice(selectedFiles.indexOf(file.id), 1);
+            }
+            this.setState({
+                selectedFiles
+            })
+        }
+    }
+
+    filterFiles = (e) => {
+        let value = e.target.value;
+        let { files } = this.state;
+        if(_.isEmpty(value)) {
+            files = this.props.files;
+        } else {
+            files = _.filter(files, function(file) {
+                return file.name.toLowerCase().indexOf(value.toLowerCase()) > -1;
+            });
+        }
+        this.setState({
+            files,
+            filterValue: value
+        })
+    }
+
+    deleteFiles = (fileId) => {
+        const { selectedFiles } = this.state;
+        if(!_.isEmpty(fileId)) {
+            this.props.updateFileState(fileId, 'DELETED');
+            this.props.removeFromUploadingFiles(fileId);
+        } else if(!_.isEmpty(selectedFiles)) {
+            selectedFiles.forEach(fileId => {
+                this.props.updateFileState(fileId, 'DELETED');
+                this.props.removeFromUploadingFiles(fileId);
+            });
+        }
+    }
+
+    getSelectedFileToExport = () => {
+        const { files, selectedFiles } = this.state;
+        return _.find(files, { id: selectedFiles[0]});
+    }
+
+    openInEditor = (fileId) => {
+        const { selectedFiles } = this.state;
+        if(_.isEmpty(fileId)) {
+            if(!_.isEmpty(selectedFiles) && selectedFiles.length === 1) {
+                fileId = selectedFiles[0];
+            }
+        }
+        if(!_.isEmpty(fileId)) {
+            window.open(`/edit/${fileId}`, '_blank');
+        }
     }
 
     render() {
         var { user } = this.props;
         const currentPlan = user.currentPlan || {};
+        const { selectedFiles } = this.state;
         return (
             <div>
-                <Dropzone onFileAdded={this.onFileAdded} />
+                <div className='file-actions-container'>
+                    <Button onClick={ this.uploadClicked } className='primary'>
+                        <FontAwesomeIcon icon={ faCloudUploadAlt } />
+                        Upload New File
+                    </Button>
+                    <Button disabled={ selectedFiles.length !== 1 } className='secondary' onClick={ () => this.openInEditor() }>
+                        <FontAwesomeIcon icon={ faEdit } />
+                        Open in Editor
+                    </Button>
+                    <Button disabled={ selectedFiles.length !== 1 } className='secondary' onClick={ () => { this.setState({ showExportPopup: true }) } }>
+                        <FontAwesomeIcon icon={ faCloudDownloadAlt } />
+                        Export
+                    </Button>
+                    <Button disabled={ selectedFiles.length === 0 } className='secondary' onClick={ () => this.deleteFiles() }>
+                        <FontAwesomeIcon icon={ faTrash } />
+                        Delete
+                    </Button>
+                    <input type='text' placeholder='Type to Search' onChange={ this.filterFiles } />
+                </div>
                 <div className='file-list-container'>
-                    {
-                        this.props.files.map((file, index) => {
-                            var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
-                            return (
-                                <div onClick={() => { this.onFileSelected(index) }} key={file.id}>
-                                    <File
-                                        key={file.id}
-                                        file={file}
-                                        index={index}
-                                        onSelected={this.onFileSelected}
-                                        isSelected={isSelected}
-                                    />
-                                </div>
-                            )
-                        })
-                    }
+                    <Row>
+                        {
+                            this.state.files.map((file, index) => {
+                                // var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
+                                return (
+                                    <Col lg='4' md='6' sm='6' xs='12'>
+                                        <div onClick={() => { this.onFileSelected(file) }} key={file.id}>
+                                            <File
+                                                key={file.id}
+                                                file={file}
+                                                index={index}
+                                                onSelected={this.onFileSelected}
+                                                isSelected={ selectedFiles.includes(file.id) }
+                                                deleteFile={ this.deleteFiles }
+                                                openInEditor={ this.openInEditor }
+                                            />
+                                        </div>
+                                    </Col>
+                                )
+                            })
+                        }
+                    </Row>
                 </div>
                 <ApprovementPopup
                     show={this.state.showApprovement}
@@ -170,13 +268,19 @@ class FileList extends Component {
                     }}
                     handleCancel={this.cancelFileUpload}
                 />
-                <UploadOptions
-                    show={this.state.showUploadOptions}
-                    file={this.state.fileToUpload}
-                    language={this.props.language}
-                    supportedLanguages={this.props.supportedLanguages}
-                    approveFileUpload={this.approveFileUpload}
-                    cancelFileUpload={this.cancelFileUpload}
+                <UploadPopup
+                    show={ this.state.showUploadPopup }
+                    file={ this.state.fileToUpload }
+                    language={ this.props.language }
+                    supportedLanguages={ this.props.supportedLanguages }
+                    approveFileUpload={ this.approveFileUpload }
+                    cancelFileUpload={ this.cancelFileUpload }
+                    onFileAdded={ this.onFileAdded }
+                />
+                <ExportPopup
+                    show={ this.state.showExportPopup }
+                    file={ this.getSelectedFileToExport() }
+                    closeModal={ () => this.setState({ showExportPopup: false}) }
                 />
             </div>
         )

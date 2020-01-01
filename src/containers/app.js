@@ -13,6 +13,7 @@ import User from './user/user';
 import Privacy from './landing/privacy';
 import Terms from './landing/terms';
 import ScrollTop from '../components/scroll-top';
+import TranscriptionResult from './dashboard/transcription-result'
 import FrequentlyAskedQuestions from './landing/faq';
 import Evaluate from './../components/evaluation-popup';
 
@@ -30,14 +31,15 @@ class App extends Component {
             <div>
                 <BrowserRouter>
                     <ScrollTop>
-                        <Route exact path='/' render={props => <Main {...props} />} />
-                        <Route path='/dashboard' component={Dashboard} />
-                        <Route path='/user' component={User} />
-                        <Route path='/privacy' component={Privacy} />
-                        <Route path='/terms' component={Terms} />
-                        <Route path='/faq' component={FrequentlyAskedQuestions} />
-                        <Route path='/feedback/:fileInfo' component={Evaluate} />
-                        <Route exact path='/feedback' component={Evaluate} />
+                        <Route exact path='/' render={ props => <Main {...props} /> } />
+                        <Route path='/dashboard' component={ Dashboard } />
+                        <Route path='/user' component={ User } />
+                        <Route path='/privacy' component={ Privacy } />
+                        <Route path='/terms' component={ Terms } />
+                        <Route path='/faq' component={ FrequentlyAskedQuestions } />
+                        <Route path='/edit' component={ TranscriptionResult } />
+                        <Route path='/feedback/:fileInfo' component={ Evaluate } />
+                        <Route exact path='/feedback' component={ Evaluate } />
                     </ScrollTop>
                 </BrowserRouter>
                 <Alert stack={{ limit: 3 }} timeout={5000} html={true} effect={'slide'} position={'top-right'} />
