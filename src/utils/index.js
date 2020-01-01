@@ -29,7 +29,7 @@ export default {
     firebase,
     addZeroes,
     getNameSurname,
-    formatExpireDate: (expireDate, language) => {
+    formatDateSimpleFormat: (expireDate, language) => {
         if (!expireDate) return null;
         var date = new Date(expireDate.seconds * 1000);
         let day = addZeroes(date.getDate());

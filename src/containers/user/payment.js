@@ -503,7 +503,7 @@ class Payment extends Component {
                             </Form.Label><br />
                             <Form.Label>
                                 <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
-                                {Utils.formatExpireDate(currentPlan.expireDate)}
+                                { Utils.formatDateSimpleFormat(currentPlan.expireDate) }
                             </Form.Label>
                         </Col>
                     </Row>

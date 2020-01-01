@@ -12,6 +12,7 @@ import User from './user/user';
 import Privacy from './landing/privacy';
 import Terms from './landing/terms';
 import ScrollTop from '../components/scroll-top';
+import TranscriptionResult from './dashboard/transcription-result'
 import FrequentlyAskedQuestions from './landing/faq';
 import Evaluate from './../components/evaluation-popup';
 
@@ -34,6 +35,7 @@ class App extends Component {
                         <Route path='/privacy' component={ Privacy } />
                         <Route path='/terms' component={ Terms } />
                         <Route path='/faq' component={ FrequentlyAskedQuestions } />
+                        <Route path='/edit' component={ TranscriptionResult } />
                         <Route path='/feedback/:fileInfo' component={ Evaluate } />
                         <Route exact path='/feedback' component={ Evaluate } />
                     </ScrollTop>

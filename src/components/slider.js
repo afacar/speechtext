@@ -88,10 +88,11 @@ class Slider extends Component {
                 onChangeStart={ this.onSliderChangeStart }
                 onChangeEnd={ this.onSliderChangeEnd }
                 style={ styles.slider }
+                disabled={ this.props.disabled }
             >
-                <SliderBar direction={ Direction.HORIZONTAL } value={ this.state.value } />
-                <SliderHandle direction={ Direction.HORIZONTAL } value={ this.state.value } />
-                <span className='player-time'>
+                <SliderBar direction={ Direction.HORIZONTAL } value={ this.state.value } disabled={ this.props.disabled } />
+                <SliderHandle direction={ Direction.HORIZONTAL } value={ this.state.value } disabled={ this.props.disabled }/>
+                <span className='player-time' disabled= { this.props.disabled }>
                     {`${this.formatTime(this.state.value * this.props.duration)} / ${duration}`}
                 </span>
             </ReactSlider>

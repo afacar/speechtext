@@ -2,8 +2,8 @@
     position: fixed;
     width: 13.5%;
     height: 25%;
-    right: 20px;
-    top: 100px;
+    left: 20px;
+    top: 140px;
 }
 
 .player-window {
@@ -42,9 +42,19 @@
     fill: #384d60;
 }
 
+.player-controls svg[disabled] polygon,
+.player-controls svg[disabled] path,
+.player-controls svg[disabled] rect {
+    fill: lightgray;
+}
+
 .player-slider {
     display: flex;
     margin-top: 10px;
+}
+
+.player-slider>div {
+    width: 100% !important;
 }
 
 .handle {
@@ -64,10 +74,23 @@
     transform: scale(1.3);
 }
 
+.handle[disabled] {
+    background: lightgray;
+    cursor: auto;
+}
+
+.handle[disabled]:hover {
+    transform: none;
+}
+
 .slider-bar {
     position: absolute;
     background: #384d60;
     border-radius: 4px;
+}
+
+.slider-bar[disabled] {
+    cursor: auto;
 }
 
 .player-time {
@@ -76,4 +99,14 @@
     font-size: 11px;
     font-weight: bold;
     color: #007bff;
+}
+
+.player-time[disabled] {
+    color: lightgray;
+}
+
+@media only screen and (max-width: 1200px) {
+    .player-window {
+        display: none;
+    }
 }

@@ -1,4 +1,5 @@
 .dashboard-container,
+.transcription-container,
 .profile-container {
     padding-top: 140px;
     max-width: 70%;
@@ -95,4 +96,22 @@
 
 .userbox-dropdown .dropdown-toggle::after {
     display: none;
+}
+
+@media only screen and (max-width: 1400px) {
+    .dashboard-container {
+        max-width: 80% !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .dashboard-container {
+        max-width: 90% !important;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .dashboard-container {
+        max-width: 100% !important;
+    }
 }

@@ -1,9 +1,13 @@
 .card-pricing-popular {
     z-index: 1;
-    border: 3px solid #384d60;
+    border: 5px solid #dc576e;
 }
 
-.card-pricing > span {
+.card-pricing.card-pricing-popular > span:first-child {
+    background-color: #dc576e !important;
+}
+
+.card-pricing > span:first-child {
     background-color: #384d60 !important;
 }
 
@@ -32,7 +36,8 @@
 }
 
 .card-pricing-popular .pricing-footer-container > button {
-    background-color: #384d60 !important;
+    background-color: #dc576e !important;
+    border-color: #dc576e;
 }
 
 .enterprise-header-style {
