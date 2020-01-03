@@ -323,10 +323,10 @@ class File extends Component {
                             className='file-info-image' size="x" />
                         { createDate }
                         {
-                            file.status !== 'DONE' && file.status !== 'ERROR' && progress < 100 &&
+                            file.status === 'UPLOADING' && progress < 100 &&
                             <div className={ 'file-progress' }>
-                                <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
-                                <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
+                                <span>{ 'Uploading...' }</span>
+                                <ProgressBar striped now={ progress } />
                             </div>
                         }
                     </div>
