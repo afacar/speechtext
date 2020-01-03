@@ -38,59 +38,62 @@ class Entry extends Component {
     render() {
         return (
             <div className='main-div' >
-                <Container align="center" className='banner'>
-                    <Fade in={this.state.animatedDivIndex === 1} timeout={2000}>
-                        <div className='centered'>
-                            <FormattedMessage id='Banner.feature1' />
-                        </div>
-                    </Fade>
-                    <Fade in={this.state.animatedDivIndex === 2} timeout={2000}>
-                        <div className='centered'>
-                            <FormattedMessage id='Banner.feature2' />
-                            <br />
-                            <FormattedMessage id='Banner.feature3' />
-                        </div>
-                    </Fade>
-                    <Fade in={this.state.animatedDivIndex === 3} timeout={2000}>
-                        <div className='centered'>
-                            <FormattedMessage id='Banner.feature4' />
-                        </div>
-                    </Fade>
-                    {/* <Carousel nextIcon={<span aria-hidden="true" className="carousel-control-next-icon" />}>
-                        <Carousel.Item>
-                            <img
-                                className="d-block w-100"
-                                src={ Banner1 }
-                                alt="State of Art"
-                            />
+                <div className='main-div-background'></div>
+                <div className='main-div-content'>
+                    <Container align="center" className='banner'>
+                        <Fade in={this.state.animatedDivIndex === 1} timeout={3000}>
                             <div className='centered'>
                                 <FormattedMessage id='Banner.feature1' />
                             </div>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                            <img
-                                className="d-block w-100"
-                                src={ Banner2 }
-                                alt="Integrated Editor"
-                            />
+                        </Fade>
+                        <Fade in={this.state.animatedDivIndex === 2} timeout={3000}>
                             <div className='centered'>
                                 <FormattedMessage id='Banner.feature2' />
                                 <br />
                                 <FormattedMessage id='Banner.feature3' />
                             </div>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                            <img
-                                className="d-block w-100"
-                                src={ Banner3 }
-                                alt="Best Price"
-                            />
+                        </Fade>
+                        <Fade in={this.state.animatedDivIndex === 3} timeout={3000}>
                             <div className='centered'>
                                 <FormattedMessage id='Banner.feature4' />
                             </div>
-                        </Carousel.Item>
-                    </Carousel> */}
-                </Container>
+                        </Fade>
+                        {/* <Carousel nextIcon={<span aria-hidden="true" className="carousel-control-next-icon" />}>
+                            <Carousel.Item>
+                                <img
+                                    className="d-block w-100"
+                                    src={ Banner1 }
+                                    alt="State of Art"
+                                />
+                                <div className='centered'>
+                                    <FormattedMessage id='Banner.feature1' />
+                                </div>
+                            </Carousel.Item>
+                            <Carousel.Item>
+                                <img
+                                    className="d-block w-100"
+                                    src={ Banner2 }
+                                    alt="Integrated Editor"
+                                />
+                                <div className='centered'>
+                                    <FormattedMessage id='Banner.feature2' />
+                                    <br />
+                                    <FormattedMessage id='Banner.feature3' />
+                                </div>
+                            </Carousel.Item>
+                            <Carousel.Item>
+                                <img
+                                    className="d-block w-100"
+                                    src={ Banner3 }
+                                    alt="Best Price"
+                                />
+                                <div className='centered'>
+                                    <FormattedMessage id='Banner.feature4' />
+                                </div>
+                            </Carousel.Item>
+                        </Carousel> */}
+                    </Container>
+                </div>
                 <Auth language={ this.props.language } show={ this.state.showAuth } handleClose={ this.handleClose } />
             </div>
         )

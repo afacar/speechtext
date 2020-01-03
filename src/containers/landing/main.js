@@ -41,7 +41,26 @@ const Main = () => {
             <div ref={refs.topRef}>
                 <Entry />
             </div>
-            <Container style={{ marginBottom: '100px' }}>
+            <div ref={refs.howItWorksRef} className='page-style'>
+                <HowItWorks />
+            </div>
+            <hr />
+            <div ref={refs.featuresRef} className='page-style'>
+                <Features />
+            </div>
+            <hr />
+            <div ref={refs.pricingRef} className='page-style'>
+                <Pricing goToRef={goToRef} />
+            </div>
+            <hr />
+            <div ref={refs.aboutRef} className='page-style'>
+                <AboutUs />
+            </div>
+            <hr />
+            <div ref={refs.contactRef} className='page-style'>
+                <Contact goToRef={goToRef} />
+            </div>
+            {/* <Container style={{ marginBottom: '100px' }}>
                 <div ref={refs.howItWorksRef} className='page-style'>
                     <HowItWorks />
                 </div>
@@ -61,7 +80,7 @@ const Main = () => {
                 <div ref={refs.contactRef} className='page-style'>
                     <Contact goToRef={goToRef} />
                 </div>
-            </Container>
+            </Container> */}
             <Footer />
         </div>
     );

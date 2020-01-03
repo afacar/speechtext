@@ -44,7 +44,7 @@ class Header extends Component {
         return (
             <div>
                 <Nav>
-                    <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
+                    <Navbar id='header-nav' variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
                         <Container>
                             <Link to='/' onClick={ this.logoClicked }>
                                 <Navbar.Brand>
