@@ -105,7 +105,7 @@
     "User.Tabs.payment": "Payment",
     "User.Tabs.transaction": "Payment History",
     "User.Tab.Transaction.Header.id": "ID",
-    "User.Tab.Transaction.Header.date": "Date",
+    "User.Tab.Transaction.Header.date": "Date (mm/dd/yyyy)",
     "User.Tab.Transaction.Header.amount":"Amount",
     "User.Tab.Transaction.Header.price":"Price",
     "User.Tab.Transaction.Header.status":"Status",

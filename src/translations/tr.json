@@ -105,7 +105,7 @@
     "User.Tabs.payment": "Ödeme",
     "User.Tabs.transaction":"Ödeme Geçmişi",
     "User.Tab.Transaction.Header.id":"ID",
-    "User.Tab.Transaction.Header.date":"Tarih",
+    "User.Tab.Transaction.Header.date":"Tarih (gün/ay/yıl)",
     "User.Tab.Transaction.Header.amount":"Miktar",
     "User.Tab.Transaction.Header.price":"Ücret",
     "User.Tab.Transaction.Header.status":"Statüs",

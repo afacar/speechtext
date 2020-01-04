@@ -2,6 +2,8 @@ import _ from 'lodash';
 import Utils from '../utils';
 const { firestore, auth } = Utils.firebase;
 
+const { currentLanguage } = Utils.Localization;
+
 export const updateProfile = (data) => {
     console.log('updateProfile called with:', data)
     return async (dispatch, getState) => {
@@ -53,8 +55,14 @@ export const getTransactions = (user) => {
                         }
                         console.log("Date ", transcriptionData.requestDate.toDate());
                         var date = transcriptionData.requestDate.toDate();
-                        var dateStr = date.toLocaleDateString();
+                        var dateStr = "";
 
+                        // for turkish browsers use day-month-year order, for others use month-day-year
+                        if (currentLanguage === 'tr') {
+                            dateStr = date.toLocaleDateString('en-GB');
+                        } else {
+                            dateStr = date.toLocaleDateString('en-US');
+                        }
                         var transaction = {
                             basketId: transcriptionData.request.basketId,
                             date: dateStr,
