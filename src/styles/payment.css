@@ -1,0 +1,22 @@
+.close-button{
+    top: 0;
+    right: 0;
+    position: absolute;
+    background: transparent;
+    border: 0px;
+}
+.close-button:focus {
+    outline: transparent !important;
+    outline-offset: transparent !important;
+    background: transparent !important;
+    border: 0px;
+}
+.close-button:hover{
+    outline: transparent !important;
+    outline-offset: transparent !important;
+    background: transparent !important;
+    border: 0px;
+}
+.close-button:active{
+    border: 0px;
+}
