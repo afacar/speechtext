@@ -34,19 +34,16 @@ class CheckOutModal extends Component {
     }
 
     initializeValues = (user) => {
-        if (!_.isEmpty(user) && _.isEmpty(this.state.values)) {
+        if (!_.isEmpty(user)) {
             const { displayName, email, country, address } = user;
             var values = { displayName, email, country, address }
             this.setState({ values })
         }
     }
 
-    componentDidMount() {
-        this.initializeValues(this.props.user);
-    }
-
     componentWillReceiveProps({ user }) {
-        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+        console.log("new props arrived " , user);
+        if (!_.isEmpty(user)) {
             this.initializeValues(user);
         }
     }
@@ -181,6 +178,7 @@ class CheckOutModal extends Component {
         return (
             <Modal
                 show={show}
+                onHide={()=>{}}
                 size="lg"
             >
                 {this.renderCheckOutModal()}
