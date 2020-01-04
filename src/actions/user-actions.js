@@ -63,12 +63,18 @@ export const getTransactions = (user) => {
                         } else {
                             dateStr = date.toLocaleDateString('en-US');
                         }
+                        var cardNumber = transcriptionData.request.paymentCard.cardNumber;
+                        if ( cardNumber.length > 4){
+                            cardNumber = cardNumber.substring(cardNumber.length - 4);
+                        }
+                        cardNumber = "**** **** **** " + cardNumber;
                         var transaction = {
                             basketId: transcriptionData.request.basketId,
                             date: dateStr,
                             amount: transcriptionData.minutes / 60,
                             price: parseFloat(price).toFixed(2),
                             currency,
+                            card: cardNumber,
                             status
                         }
                         transactions.push(transaction);

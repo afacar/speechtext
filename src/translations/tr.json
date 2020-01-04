@@ -109,6 +109,7 @@
     "User.Tab.Transaction.Header.amount":"Miktar",
     "User.Tab.Transaction.Header.price":"Ücret",
     "User.Tab.Transaction.Header.status":"Statüs",
+    "User.Tab.Transaction.Header.card":"Kart",
     "Profile.Label.nameSurname": "Ad Soyad",
     "Profile.Label.email": "E-posta",
     "Profile.Label.phoneNumber": "Telefon",

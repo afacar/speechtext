@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Container, Button, Table } from 'react-bootstrap';
+import { Container, Table } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as actions from '../../actions';
+import Utils from '../../utils';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faCheckCircle, faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 
+
+const { currentLanguage } = Utils.Localization;
+
 class Transaction extends Component {
 
     componentDidMount() {
+        console.log(currentLanguage);
         this.props.getTransactions(this.props.user);
     }
 
@@ -32,11 +37,11 @@ class Transaction extends Component {
     renderTransaction(transaction, index) {
         return (
             <tr key={index}>
-                <td>{transaction.basketId}</td>
-                <td>{transaction.date}</td>
-                <td>{transaction.amount + " hour(s)"}</td>
-                <td>{transaction.currency + " " + transaction.price}</td>
-                <td>
+                <td className="text-center">{transaction.date}</td>
+                <td className="text-center">{transaction.amount + " hour(s)"}</td>
+                <td className="text-center">{transaction.currency + " " + transaction.price}</td>
+                <td className="text-center">{transaction.card}</td>
+                <td className="text-center">
                     {
                         transaction.status === 'success' ?
                             <FontAwesomeIcon icon={faCheckCircle} color={'green'} />
@@ -57,19 +62,19 @@ class Transaction extends Component {
                 <Table responsive striped bordered hover >
                     <thead>
                         <tr>
-                            <th>
-                                <FormattedMessage id={"User.Tab.Transaction.Header.id"} />
-                            </th>
-                            <th>
+                            <th className="text-center">
                                 <FormattedMessage id={"User.Tab.Transaction.Header.date"} />
                             </th>
-                            <th>
+                            <th className="text-center">
                                 <FormattedMessage id={"User.Tab.Transaction.Header.amount"} />
                             </th>
-                            <th>
+                            <th className="text-center">
                                 <FormattedMessage id={"User.Tab.Transaction.Header.price"} />
                             </th>
-                            <th>
+                            <th className="text-center">
+                                <FormattedMessage id={"User.Tab.Transaction.Header.card"} />
+                            </th>
+                            <th className="text-center">
                                 <FormattedMessage id={"User.Tab.Transaction.Header.status"} />
                             </th>
                         </tr>

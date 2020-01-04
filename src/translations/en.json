@@ -109,6 +109,7 @@
     "User.Tab.Transaction.Header.amount":"Amount",
     "User.Tab.Transaction.Header.price":"Price",
     "User.Tab.Transaction.Header.status":"Status",
+    "User.Tab.Transaction.Header.card":"Card",
     "Profile.Label.nameSurname": "Name Surname",
     "Profile.Label.email": "Email",
     "Profile.Label.phoneNumber": "Phone Number",
