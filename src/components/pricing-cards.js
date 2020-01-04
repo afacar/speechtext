@@ -7,6 +7,7 @@ import RefundContract from '../containers/user/refund-contract';
 import Utils from '../utils'
 import _ from 'lodash';
 import PricingSlider from './pricing-slider';
+import "../styles/payment.css"
 
 class DemoCard extends Component {
 
@@ -172,33 +173,51 @@ class StandardPaymentCard extends Component {
           </div>
           <div className="card-body pt-0">
             <Container>
-              <Row>
+              {/* <Row>
                 <Col>
-                  {/* <Form.Label>
+                  <Form.Label>
                     <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
                     {currentPlan.remainingMinutes}
                     <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                  </Form.Label><br /> */}
+                  </Form.Label><br />
                   <Form.Label>
                     <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
                     {Utils.formatExpireDate(currentPlan.expireDate)}
                   </Form.Label>
                 </Col>
-              </Row>
+              </Row> */}
               <Row>
                 <PricingSlider duration={this.props.duration} durationChanged={this.props.durationChanged} />
               </Row>
-              <Row className="justify-content-center">
-                <Col lg='6' >
-                  <Form.Label>
-                    <FormattedMessage id='Payment.Label.totalCost' />
-                  </Form.Label>
+              <Row className="d-flex justify-content-md-center buy-button-surrounding">
+                <Col className="d-flex justify-content-end" md>
                   <h3>
-                    <div className="price">${this.props.price}</div>
+                    <FormattedMessage id='Payment.Label.totalCost' />
+                  </h3>
+                  <h3>
+                    <div className="price">:    ${this.props.price}</div>
                   </h3>
                 </Col>
+
+                <Col className="d-flex justify-content-start" md>
+                  {
+                    this.props.duration >= 50 && (
+                      <Button className="btn btn-primary mb-3" onClick={this.props.handleBuy}>
+                        <FormattedMessage id="Pricing.Standard.contactUs" />
+                      </Button>
+                    )
+                  }
+                  {
+                    this.props.duration < 50 && (
+                      <Button variant="outline-secondary" className="mb-3" onClick={this.props.handleBuy}>
+                        <FormattedMessage id="Pricing.Standard.loggedInButtonText" />
+                      </Button>
+                    )
+                  }
+                  <img src={MasterVisaLogo} alt='Master Card' className='card-logo' />
+                </Col>
               </Row>
-              <Row>
+              {/* <Row>
                 <Col>
                   {
                     this.props.duration >= 50 && (
@@ -215,14 +234,14 @@ class StandardPaymentCard extends Component {
                     )
                   }
                 </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <span className='mb-3'>
-                    <img src={MasterVisaLogo} alt='Master Card' className='card-logo' />
-                    {this.renderTerms()}
-                  </span>
-                </Col>
+              </Row> */}
+              <Row className="d-flex justify-content-center">
+                {/* <Col> */}
+                {/* <span className='mb-3'> */}
+                {/* <img src={MasterVisaLogo} alt='Master Card' className='card-logo' /> */}
+                {this.renderTerms()}
+                {/* </span> */}
+                {/* </Col> */}
               </Row>
             </Container>
           </div>

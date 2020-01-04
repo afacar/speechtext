@@ -20,3 +20,7 @@
 .close-button:active{
     border: 0px;
 }
+
+.buy-button-surrounding{
+    margin-top: 12px;
+}
