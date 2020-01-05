@@ -40,3 +40,31 @@
 .dashboard-link:hover {
     text-decoration: none;
 }
+
+#header-nav {
+    position: fixed; /* Make it stick/fixed */
+    top: 0; /* Stay on top */
+    width: 100%; /* Full width */
+    transition: top 0.3s; /* Transition effect when sliding down (and up) */
+}
+
+#header-nav .navbar-nav,
+#header-nav .navbar-nav .nav-link {
+    font-weight: bold;
+    color: #384d60 !important;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* filter: opacity(.5); */
+    z-index: -1;
+}
+
+.header-content {
+    /* background: none; */
+    z-index: 10;
+}
