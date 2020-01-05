@@ -67,33 +67,39 @@ class Pricing extends Component {
                       <line x1="90" x2="90" y1="5" y2="371"></line>
                     </g>
                     <g class="grid y-grid" id="yGrid">
-                        <line x1="90" x2="1000" y1="370" y2="370"></line>
+                        <line x1="90" x2="1005" y1="370" y2="370"></line>
                     </g>
                     <g class="labels x-labels">
-                        <text x="100" y="400">0</text>
+                        <text x="100" y="400">1</text>
                         <text x="246" y="400">10</text>
                         <text x="392" y="400">20</text>
                         <text x="538" y="400">30</text>
                         <text x="684" y="400">40</text>
                         <text x="850" y="400">50+</text>
-                        <text x="960" y="400">Contact Us</text>
-                        <text x="500" y="440" class="label-title">HOURS</text>
+                        <text x="960" y="400">
+                            <FormattedMessage id='Pricing.contactUs' />
+                        </text>
+                        <text x="500" y="440" class="label-title">
+                            <FormattedMessage id='Pricing.hoursLabel' />
+                        </text>
                     </g>
                     <g class="labels y-labels">
-                        <text x="80" y="55">$9</text>
-                        <text x="60" y="200" class="label-title">PRICE</text>
+                        <text x="80" y="55">$9 <FormattedMessage id='Pricing.hourSubText' /></text>
+                        <text x="60" y="200" class="label-title">
+                            <FormattedMessage id='Pricing.priceLabel' />
+                        </text>
                     </g>
                     <g class="data" data-setname="Our first data set">
                         <circle cx="246" cy="98" data-value="8.1" r="5"></circle>
-                        <text x='236' y='122'>$8</text>
+                        <text x='216' y='132'>$8 <FormattedMessage id='Pricing.hourSubText' /></text>
                         <circle cx="392" cy="140" data-value="7.7" r="5"></circle>
-                        <text x='382' y='164'>$7</text>
+                        <text x='362' y='174'>$7 <FormattedMessage id='Pricing.hourSubText' /></text>
                         <circle cx="538" cy="182" data-value="6.8" r="5"></circle>
-                        <text x='528' y='206'>$6</text>
+                        <text x='508' y='216'>$6 <FormattedMessage id='Pricing.hourSubText' /></text>
                         <circle cx="684" cy="223" data-value="6.7" r="5"></circle>
-                        <text x='674' y='247'>$5</text>
+                        <text x='654' y='257'>$5 <FormattedMessage id='Pricing.hourSubText' /></text>
                         <circle cx="850" cy="265" data-value="6.7" r="5"></circle>
-                        <text x='840' y='289'>$4.5</text>
+                        <text x='820' y='299'>$4.5 <FormattedMessage id='Pricing.hourSubText' /></text>
                     </g>
                 </svg>
             </div>
