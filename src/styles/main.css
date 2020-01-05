@@ -5,6 +5,9 @@ body, select {
 
 .page-style {
     padding-top: 80px;
+    /* width: 80%;
+    margin-left: auto;
+    margin-right: auto; */
 }
 
 .margin-left-5 {
@@ -109,4 +112,14 @@ body, select {
     .faq-container {
         padding: 20px;
     }
+}
+
+.about-us-content {
+    height: 100vh;
+    padding-top: 200px;
+}
+
+.contact-content {
+    height: 60vh;
+    /* padding-top: 80px; */
 }

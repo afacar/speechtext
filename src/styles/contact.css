@@ -1,7 +1,22 @@
 .card-style {
     padding: 40px;
+    border: 4px solid #384d60;
+    background-color: #384d60;
+    color: white;
 }
 
 .submit-button-style {
     float: right;
+    background-color: #EA2753;
+    border-color: #EA2753;
+    font-weight: bold;
+}
+
+.contact-content svg {
+    margin-right: 10px;
+    color: #384d60;
+}
+
+.contact-info-data {
+    padding-top: 5px;
 }
