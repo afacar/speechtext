@@ -12,6 +12,11 @@
     font-weight: bold;
 }
 
+.contact-content {
+    padding-top: 120px;
+    min-height: 600px;
+}
+
 .contact-content svg {
     margin-right: 10px;
     color: #384d60;
