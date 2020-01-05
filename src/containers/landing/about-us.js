@@ -5,7 +5,7 @@ import LogoContainer from '../landing/logo-container';
 
 const AboutUs = () => {
     return (
-        <Container className="mb-5 mt-5">
+        <Container className="about-us-content mb-5 mt-5">
             <div className='about-logo-container'>
                 <LogoContainer />
             </div>

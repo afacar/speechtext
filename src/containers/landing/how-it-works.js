@@ -7,111 +7,113 @@ import '../../styles/how-it-works.css';
 
 const HowItWorks = (props) => {
     return (
-        <Row className="mb-5 mt-5">
-            <Col lg="12">
-                <h4>
-                    <FormattedMessage id="HowItWorks.title" />
-                </h4>
-                <br />
-                <h5>
-                    <b><FormattedMessage id="HowItWorks.message" /></b>
-                </h5>
-                <Row className='steps-container'>
-                    <Col lg='2' md='2'></Col>
-                    <Col lg='4' md='4'>
-                        <Card className="h-100 text-center">
-                            <span className='span-style'>1</span>
-                            <FontAwesomeIcon 
-                                icon={faCloudUploadAlt} 
-                                title='Upload Audio/Video Files' 
-                                className='image-style' size="6x" />
-                            <Card.Body>
-                                <p className="card-text">
-                                    <FormattedMessage id="HowItWorks.step1" />
-                                </p>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col lg='2' md='2'className='steps-direction-right'></Col>
-                </Row>
-                <Row className='steps-container'>
-                    <Col lg='4' md='4'></Col>
-                    <Col lg='2' md='2'className='steps-direction-left'></Col>
-                    <Col lg="4" mb="4">
-                        <Card className="h-100 text-center">
-                            <span className='span-style'>2</span>
-                            <FontAwesomeIcon
-                                icon={faSync}
-                                title='Automatic Speech to Text Convertion'
-                                className='image-style' size="5x" />
-                            <Card.Body>
-                                <p className="card-text">
-                                    <FormattedMessage id="HowItWorks.step2" />
-                                </p>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row className='steps-container'>
-                    <Col lg='2' md='2'></Col>
-                    <Col lg="4" mb="4">
-                        <Card className="h-100 text-center">
-                            <span className='span-style'>3</span>
-                            <FontAwesomeIcon
-                                icon={faEdit}
-                                title='Online Integrated Player & Editor'
-                                className='image-style' size="5x" />
-                            <Card.Body>
-                                <p className="card-text">
-                                    <FormattedMessage id="HowItWorks.step3" />
-                                </p>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col lg='2' md='2'className='steps-direction-right'></Col>
-                </Row>
-                <Row className='steps-container'>
-                    <Col lg='4' md='4'></Col>
-                    <Col lg='2' md='2'className='steps-direction-left'></Col>
-                    <Col lg="4" mb="4">
-                        <Card className="h-100 text-center">
-                            <span className='span-style'>4</span>
-                            <FontAwesomeIcon
-                                icon={faCloudDownloadAlt}
-                                title='Export Your Transcription'
-                                className='image-style' size="6x" />
-                            <Card.Body>
-                                <p className="card-text">
-                                    <FormattedMessage id="HowItWorks.step4" />
-                                </p>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row className='steps-container'>
-                    <Col lg='2' md='2'></Col>
-                    {/* <Col lg="4" mb="4">
-                        <Card className="h-100 text-center">
-                            <Card.Body>
-                                <img src={ FileLogo } />
-                            </Card.Body>
-                        </Card>
-                    </Col> */}
-                    <Col lg="4" mb="4">
-                        <Card className="h-100 text-center">
-                            <span className='span-style'>
+        <div className='how-it-works-content'>
+            <Row className="mb-5 mt-5">
+                <Col lg="12">
+                    <p className='title'>
+                        <FormattedMessage id="HowItWorks.title" />
+                    </p>
+                    <br />
+                    <h5>
+                        <b><FormattedMessage id="HowItWorks.message" /></b>
+                    </h5>
+                    <Row className='steps-container'>
+                        <Col lg='2' md='2'></Col>
+                        <Col lg='4' md='4'>
+                            <Card className="h-100 text-center">
+                                <span className='span-style'>1</span>
+                                <FontAwesomeIcon 
+                                    icon={faCloudUploadAlt} 
+                                    title='Upload Audio/Video Files' 
+                                    className='image-style' size="6x" />
+                                <Card.Body>
+                                    <p className="card-text">
+                                        <FormattedMessage id="HowItWorks.step1" />
+                                    </p>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col lg='2' md='2'className='steps-direction-right'></Col>
+                    </Row>
+                    <Row className='steps-container'>
+                        <Col lg='4' md='4'></Col>
+                        <Col lg='2' md='2'className='steps-direction-left'></Col>
+                        <Col lg="4" mb="4">
+                            <Card className="h-100 text-center">
+                                <span className='span-style'>2</span>
                                 <FontAwesomeIcon
-                                    icon={faCheck} color='green' className='mt-1' />
-                            </span>
-                            <FontAwesomeIcon
-                                icon={faFilePdf}
-                                title='Export Your Transcription'
-                                className='image-style' size="6x" />
-                        </Card>
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
+                                    icon={faSync}
+                                    title='Automatic Speech to Text Convertion'
+                                    className='image-style' size="5x" />
+                                <Card.Body>
+                                    <p className="card-text">
+                                        <FormattedMessage id="HowItWorks.step2" />
+                                    </p>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row className='steps-container'>
+                        <Col lg='2' md='2'></Col>
+                        <Col lg="4" mb="4">
+                            <Card className="h-100 text-center">
+                                <span className='span-style'>3</span>
+                                <FontAwesomeIcon
+                                    icon={faEdit}
+                                    title='Online Integrated Player & Editor'
+                                    className='image-style' size="5x" />
+                                <Card.Body>
+                                    <p className="card-text">
+                                        <FormattedMessage id="HowItWorks.step3" />
+                                    </p>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col lg='2' md='2'className='steps-direction-right'></Col>
+                    </Row>
+                    <Row className='steps-container'>
+                        <Col lg='4' md='4'></Col>
+                        <Col lg='2' md='2'className='steps-direction-left'></Col>
+                        <Col lg="4" mb="4">
+                            <Card className="h-100 text-center">
+                                <span className='span-style'>4</span>
+                                <FontAwesomeIcon
+                                    icon={faCloudDownloadAlt}
+                                    title='Export Your Transcription'
+                                    className='image-style' size="6x" />
+                                <Card.Body>
+                                    <p className="card-text">
+                                        <FormattedMessage id="HowItWorks.step4" />
+                                    </p>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row className='steps-container'>
+                        <Col lg='2' md='2'></Col>
+                        {/* <Col lg="4" mb="4">
+                            <Card className="h-100 text-center">
+                                <Card.Body>
+                                    <img src={ FileLogo } />
+                                </Card.Body>
+                            </Card>
+                        </Col> */}
+                        <Col lg="4" mb="4">
+                            <Card className="h-100 text-center">
+                                <span className='span-style'>
+                                    <FontAwesomeIcon
+                                        icon={faCheck} color='green' className='mt-1' />
+                                </span>
+                                <FontAwesomeIcon
+                                    icon={faFilePdf}
+                                    title='Export Your Transcription'
+                                    className='image-style' size="6x" />
+                            </Card>
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </div>
     )
 }
 

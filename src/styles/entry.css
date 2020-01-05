@@ -1,6 +1,6 @@
 .main-div {
     height: 100vh;
-    padding-top: 120px;
+    /* padding-top: 120px; */
 }
 
 .main-div-background {
@@ -21,7 +21,7 @@
 .banner {
     font: 'Montserrat Medium';
     color: white;
-    font-size: xx-large;
+    font-size: 38px;
     font-weight: 550;
 }
 

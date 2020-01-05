@@ -1,8 +1,13 @@
+body, select {
+    font-family: 'Cario', sans-serif;
+    font-size: 16px !important;
+}
+
 .page-style {
-    padding-top: 120px;
-    width: 80%;
+    padding-top: 80px;
+    /* width: 80%;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto; */
 }
 
 .margin-left-5 {
@@ -107,4 +112,14 @@
     .faq-container {
         padding: 20px;
     }
+}
+
+.about-us-content {
+    height: 100vh;
+    padding-top: 200px;
+}
+
+.contact-content {
+    height: 60vh;
+    /* padding-top: 80px; */
 }

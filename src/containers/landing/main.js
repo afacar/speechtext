@@ -41,23 +41,23 @@ const Main = () => {
             <div ref={refs.topRef}>
                 <Entry />
             </div>
-            <div ref={refs.howItWorksRef} className='page-style'>
+            <div ref={refs.howItWorksRef}>
                 <HowItWorks />
             </div>
             <hr />
-            <div ref={refs.featuresRef} className='page-style'>
+            <div ref={refs.featuresRef}>
                 <Features />
             </div>
             <hr />
-            <div ref={refs.pricingRef} className='page-style'>
+            <div ref={refs.pricingRef}>
                 <Pricing goToRef={goToRef} />
             </div>
             <hr />
-            <div ref={refs.aboutRef} className='page-style'>
+            <div ref={refs.aboutRef}>
                 <AboutUs />
             </div>
             <hr />
-            <div ref={refs.contactRef} className='page-style'>
+            <div ref={refs.contactRef}>
                 <Contact goToRef={goToRef} />
             </div>
             {/* <Container style={{ marginBottom: '100px' }}>

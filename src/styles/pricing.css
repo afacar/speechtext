@@ -1,3 +1,17 @@
+.pricing-content {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 120px;
+    height: 100vh;
+}
+
+.pricing-content .title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #384d60;
+}
+
 .card-pricing-popular {
     z-index: 1;
     border: 3px solid #384d60;
@@ -37,4 +51,45 @@
 
 .enterprise-header-style {
     line-height: .5;
+}
+
+.graph polyline {
+    margin-left: 50px;
+}
+
+.graph .labels.x-labels {
+    text-anchor: middle;
+}
+  
+.graph .labels.y-labels {
+    text-anchor: end;
+}
+  
+  
+.graph {
+    height: 500px;
+    width: 1005px;
+}
+  
+.graph .grid {
+    stroke: #ccc;
+    stroke-dasharray: 0;
+    stroke-width: 5;
+}
+  
+.labels {
+    font-size: 18px;
+}
+  
+.label-title {
+    font-weight: bolder;
+    text-transform: uppercase;
+    font-size: 18px;
+    fill: black;
+}
+  
+.data {
+    fill: #384d60;
+    stroke-width: 1;
+    font-size: 20px;
 }
