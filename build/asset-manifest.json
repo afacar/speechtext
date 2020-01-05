@@ -1,16 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.1fd29088.chunk.css",
-    "main.js": "/static/js/main.6b5bf28d.chunk.js",
+    "main.css": "/static/css/main.f0ebd383.chunk.css",
+    "main.js": "/static/js/main.2a4560ab.chunk.js",
     "runtime~main.js": "/static/js/runtime~main.5287d67b.js",
-    "static/css/2.0c757b7f.chunk.css": "/static/css/2.0c757b7f.chunk.css",
-    "static/js/2.2d796c7b.chunk.js": "/static/js/2.2d796c7b.chunk.js",
+    "static/css/2.6509e952.chunk.css": "/static/css/2.6509e952.chunk.css",
+    "static/js/2.a360edc4.chunk.js": "/static/js/2.a360edc4.chunk.js",
     "index.html": "/index.html",
-    "precache-manifest.4d76326ebfdaed8693ae5b84655a4027.js": "/precache-manifest.4d76326ebfdaed8693ae5b84655a4027.js",
+    "precache-manifest.9aceb536456d431b944cb3965a4b5933.js": "/precache-manifest.9aceb536456d431b944cb3965a4b5933.js",
     "service-worker.js": "/service-worker.js",
+    "static/media/entry.css": "/static/media/banner-1.12b4252b.jpeg",
     "static/media/banner-1.png": "/static/media/banner-1.b3dc92ae.png",
     "static/media/banner-2.png": "/static/media/banner-2.eeb8a920.png",
     "static/media/banner-3.png": "/static/media/banner-3.781b3b40.png",
+    "static/media/features.css": "/static/media/features-banner.a66d095f.jpg",
     "static/media/logo-en.png": "/static/media/logo-en.e4c6e26e.png",
     "static/media/logo-tr.png": "/static/media/logo-tr.614c150f.png"
   }
