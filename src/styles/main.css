@@ -1,6 +1,7 @@
 body, select {
     font-family: 'Cario', sans-serif;
     font-size: 16px !important;
+    overflow-x: hidden;
 }
 
 .page-style {
