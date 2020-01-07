@@ -114,12 +114,12 @@
 
     .pricing-mobile-content {
         display: block;
-        width: 90%;
+        width: 100%;
     }
 
     .graph {
         height: 500px;
-        width: 405px;
+        width: 355px;
     }
 
     .data {
@@ -134,11 +134,12 @@
 
     .pricing-mobile-content {
         display: block;
-        width: 100%
+        width: 95%
     }
 
     .graph {
-        width: 405px;
+        width: 355px;
+        margin-left: -40px;
     }
 
     .data {
@@ -149,6 +150,10 @@
         margin-left: 30px;
         font-weight: bold;
         font-size: 30px;
+    }
+
+    .labels {
+        font-size: 12px;
     }
 }
 
