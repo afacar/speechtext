@@ -33,36 +33,33 @@
     width: 60%;
 }
 
-@media only screen and (max-width: 1198px) {
+.banner .fade {
+    transition: opacity .5s linear;
+}
+
+@media only screen and (max-width: 1200px) {
     .banner {
         font-size: 20px;
     }
 
     .banner .centered {
-        width: 80%
+        width: 100%
     }
+}
+
+@media only screen and (max-width: 1024px) {
 }
 
 @media only screen and (max-width: 768px) {
-    .banner {
-        font-size: small;
-    }
-
     .banner .centered {
-        width: 80%
+        width: 90%;
+        top: 90%;
+        left: 50%;
     }
 }
 
-@media only screen and (max-width: 730px) {
+@media only screen and (max-width: 600px) {
     .banner {
-        font-size: x-small;
+        font-size: normal;
     }
-
-    .banner .centered {
-        width: 80%
-    }
-}
-
-.banner .fade {
-    transition: opacity .5s linear;
 }
