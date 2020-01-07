@@ -81,6 +81,8 @@ body, select {
 
 .about-us-title {
     padding-top: 30px;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .about-logo-container {
@@ -123,4 +125,20 @@ body, select {
 .contact-content {
     height: 60vh;
     /* padding-top: 80px; */
+}
+
+@media only screen and (max-width: 768px) {
+    .about-us-title {
+        padding-top: 10px;
+        font-size: 24px;
+    }
+    
+    .about-logo-container {
+        float: right;
+        width: 200px;
+    }
+
+    .about-logo-container img {
+        width: 200px;
+    }
 }
