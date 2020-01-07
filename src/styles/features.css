@@ -36,3 +36,17 @@
 .feature > svg {
     color: #384d60;
 }
+
+@media only screen and (max-width: 767px) {
+    .features-background {
+        height: 220%;
+    }
+
+    .feature {
+        width: auto;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    
+}

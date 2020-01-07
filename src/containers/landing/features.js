@@ -80,7 +80,7 @@ const Features = (props) => {
                             {
                                 featureList.map(item => {
                                     return (
-                                        <Col lg="4" md='4' sm='6' xs='12' align='center' key={ item.key }>
+                                        <Col lg="4" md='6' sm='6' xs='12' align='center' key={ item.key }>
                                             {/* <ul className="list-group"> */}
                                                 <li key={ item.key } className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
                                                     <FontAwesomeIcon icon={ item.icon } title={ item.title } size='5x' color='#007bff' />

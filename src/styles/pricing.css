@@ -1,9 +1,14 @@
-.pricing-content {
+.pricing-content,
+.pricing-mobile-content {
     width: 60%;
     margin-left: auto;
     margin-right: auto;
     padding-top: 120px;
     height: 100vh;
+}
+
+.pricing-mobile-content {
+    display: none;
 }
 
 .pricing-content .title {
@@ -70,7 +75,6 @@
     text-anchor: end;
 }
   
-  
 .graph {
     height: 500px;
     width: 1015px;
@@ -97,4 +101,57 @@
     fill: #384d60;
     stroke-width: 1;
     font-size: 20px;
+}
+
+@media only screen and (max-width: 1200px) {
+    
+}
+
+@media only screen and (max-width: 1024px) {
+    .pricing-content {
+        display: none;
+    }
+
+    .pricing-mobile-content {
+        display: block;
+        width: 90%;
+    }
+
+    .graph {
+        height: 500px;
+        width: 405px;
+    }
+
+    .data {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .pricing-content {
+        display: none;
+    }
+
+    .pricing-mobile-content {
+        display: block;
+        width: 100%
+    }
+
+    .graph {
+        width: 405px;
+    }
+
+    .data {
+        font-size: 12px;
+    }
+
+    .pricing-mobile-content .title {
+        margin-left: 30px;
+        font-weight: bold;
+        font-size: 30px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    
 }

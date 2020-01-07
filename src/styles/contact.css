@@ -25,3 +25,13 @@
 .contact-info-data {
     padding-top: 5px;
 }
+
+@media only screen and (max-width: 768px) {
+    .contact-content {
+        margin-bottom: 300px !important;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    
+}
