@@ -33,7 +33,7 @@
 }
 
 .steps-container {
-    height: 280px !important;
+    height: 280px;
     margin-top: 35px;
 }
 
@@ -59,4 +59,34 @@
     border-left: 3px dashed #384d60;
     height: 120px;
     margin-top: 150px;
+}
+
+@media only screen and (max-width: 1200px) {
+    
+}
+
+@media only screen and (min-width: 1024px) {
+    .step-direction-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .steps-container {
+        height: auto;
+    }
+
+    .steps-direction-right {
+        border-top: none;
+        height: 80px;
+        margin-top: 40px;
+    }
+
+    .image-style {
+        margin-top: 10px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    
 }
