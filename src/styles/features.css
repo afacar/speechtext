@@ -39,11 +39,25 @@
 
 @media only screen and (max-width: 767px) {
     .features-background {
-        height: 300%;
+        display: none;
+    }
+
+    .features-content .title {
+        color: #384d60;
+        margin-left: 20px;
+    }
+
+    .features-content .list-group-item {
+        filter: opacity(1);
     }
 
     .feature {
         width: auto;
+    }
+
+    .features-content .row {
+        margin-left: 0px;
+        margin-right: 0px
     }
 }
 
