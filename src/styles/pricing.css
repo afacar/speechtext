@@ -1,9 +1,9 @@
 .pricing-content,
 .pricing-mobile-content {
-    width: 60%;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 120px;
+    padding-top: 140px;
     height: 100vh;
 }
 
@@ -29,7 +29,6 @@
 .card-pricing h2 {
     color: #384d60 !important;
 }
-
 
 .list-unstyled {
     padding: .5rem 0;
@@ -69,10 +68,14 @@
 .graph .labels.y-labels {
     text-anchor: end;
 }
+
+.graph text {
+    font-size: 20px;
+}
   
 .graph {
     height: 500px;
-    width: 1015px;
+    width: 915px;
 }
   
 .graph .grid {
@@ -96,6 +99,25 @@
     fill: #384d60;
     stroke-width: 1;
     font-size: 20px;
+}
+
+.side-message {
+    padding: 60px 10px 0px 10px;
+}
+
+.side-message-title {
+    font-size: 24px;
+}
+
+.side-message-discount-rate {
+    color: #EA2753;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.side-message ul {
+    font-size: 16px;
+    line-height: 2.5;
 }
 
 @media only screen and (max-width: 1200px) {
