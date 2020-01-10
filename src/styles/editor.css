@@ -1,7 +1,7 @@
 .conversionResult {
     font-size: 15px;
-    border-left: 1px solid rgb(63, 63, 63);
-    border-right: 1px solid rgb(63, 63, 63);
+    /* border-left: 1px solid rgb(63, 63, 63); */
+    /* border-right: 1px solid rgb(63, 63, 63); */
     padding: 10px;
     line-height: 2;
     box-shadow: 0px 0px 0px 0px;
@@ -9,18 +9,18 @@
 
 .first-conversionResult {
     font-size: 15px;
-    border-top: 1px solid rgb(63, 63, 63);
-    border-left: 1px solid rgb(63, 63, 63);
-    border-right: 1px solid rgb(63, 63, 63);
+    /* border-top: 1px solid rgb(63, 63, 63); */
+    /* border-left: 1px solid rgb(63, 63, 63); */
+    /* border-right: 1px solid rgb(63, 63, 63); */
     padding: 10px;
     line-height: 2;
 }
 
 .last-conversionResult {
     font-size: 15px;
-    border-left: 1px solid rgb(63, 63, 63);
-    border-right: 1px solid rgb(63, 63, 63);
-    border-bottom: 1px solid rgb(63, 63, 63);
+    /* border-left: 1px solid rgb(63, 63, 63); */
+    /* border-right: 1px solid rgb(63, 63, 63); */
+    /* border-bottom: 1px solid rgb(63, 63, 63); */
     padding: 10px;
     line-height: 2;
 }
@@ -94,4 +94,12 @@
 .editable-content-wrapper {
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.input-speaker{
+    border: 0px;
+    border-bottom: 1px black !important;
+    padding-left: 4px;
+    font-size: small; 
+    font-weight: bold;
 }

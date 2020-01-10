@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 
 import Editable from './editable';
 import '../styles/editor.css';
 import Editable2 from './editable2';
+import { Container } from 'react-bootstrap';
 
 class SpeechTextEditor extends Component {
     constructor(props) {
@@ -16,10 +18,27 @@ class SpeechTextEditor extends Component {
         }
     }
 
+    componentDidMount() {
+        console.log("Editor data");
+        console.log(this.props.editorData);
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         let prevLength = this.props.editorData.length
         let nextLength = nextProps.editorData.length
         if (prevLength !== nextLength) return true
+        var prevData = this.props.editorData;
+        var nextData = nextProps.editorData;
+        console.log("Prev data");
+        console.log(prevData)
+        console.log("Next data");
+        console.log(nextData)
+        if (nextState.speakerEdited) {
+            this.setState({
+                speakerEdited: false
+            })
+            return true
+        }
         return false
     }
 
@@ -60,6 +79,14 @@ class SpeechTextEditor extends Component {
         return formattedTime;
     }
 
+    onSpeakerChange = (speakerTag, index) => {
+        this.props.editorData[index].alternatives["0"]["speakerTag"] = speakerTag.target.value;
+        console.log(this.props.editorData[index]);
+        this.setState({
+            speakerEdited: true
+        })
+    }
+
     /*     handleWordChange = (index, wordIndex, text) => {
             if(!text || _.isEmpty(text.trim())) {
                 let activeWordIndex = wordIndex;
@@ -81,8 +108,10 @@ class SpeechTextEditor extends Component {
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
+                console.log("Alternative index", index);
+                console.log(alternative);
                 if (alternative && alternative.startTime && alternative.endTime) {
-                    let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult': 'conversionResult'
+                    let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult' : 'conversionResult'
                     return (
                         <div className={className} key={index} onClick={(e) => { }} >
                             <div
@@ -90,9 +119,11 @@ class SpeechTextEditor extends Component {
                                 className='conversionTime'
                                 disabled={true}
                             >
-                                {'Speaker: ' + alternative.words[0].speakerTag} {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
+                                <input className="input-speaker" placeholder={this.props.intl.formatMessage({id:"Editor.Speaker.Input"})} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
+                                {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
                             <div
+                                className="d-flex flex-row border primary"
                                 id={'editable-content-' + index}
                                 key={'editable-content-' + index}
                                 disabled={false}
@@ -108,6 +139,7 @@ class SpeechTextEditor extends Component {
                                     handleEditorChange={handleEditorChange}
                                 />
                             </div>
+
                         </div>
                     )
 
@@ -117,4 +149,4 @@ class SpeechTextEditor extends Component {
     }
 }
 
-export default SpeechTextEditor;
+export default injectIntl(SpeechTextEditor);

@@ -91,6 +91,7 @@
     "Contact.Form.Button.text": "Submit",
     "Dropzone.text": "Click Here or Drop Files to Upload",
     "Dropzone.multipleFileError": "Please wait for current uploading to finish!",
+    "Editor.Speaker.Input":"Enter Speaker",
     "FileUpload.timeLimit.title": "Time Limit Reached",
     "FileUpload.timeLimit.body": "You do not have enough credits to upload this file.",
     "FileUpload.timeLimit.bodySubText": "<sub><b>Remaining Minutes:</b> {remainingMinutes} <br /><b>File Duration: </b> {selectedFileDuration} min(s)</sub>",

@@ -91,6 +91,7 @@
     "Contact.Form.Button.text": "Gönder",
     "Dropzone.text": "Dosya Yüklemek için Tıklayın veya Sürükleyin",
     "Dropzone.multipleFileError": "Lütfen mevcut dosya yüklemesinin bitmesini bekleyiniz.",
+    "Editor.Speaker.Input":"Konuşmacı Girin",
     "FileUpload.timeLimit.title": "Kredi Limitinizi Aştınız",
     "FileUpload.timeLimit.body": "Bu dosyayı yüklemek için yeterli krediniz bulunmamaktadır.",
     "FileUpload.timeLimit.bodySubText": "<sub><b>Kalan Dakika:</b> {remainingMinutes} <br /><b>Seçilen Dosya Süresi: </b> {selectedFileDuration} dakika</sub>",
