@@ -191,6 +191,7 @@
     "UserBox.dashboard": "Dashboard",
     "UserBox.profile": "Profile",
     "UserBox.payment": "Payment",
+    "UserBox.transactions": "Transactions",
     "UserBox.logout": "Logout",
     "FAQ.ContentDescription": "Read Frequently Asked Questions for Speechtext.io",
     "FAQ.Title": "Speechtext.io | Frequently Asked Questions",

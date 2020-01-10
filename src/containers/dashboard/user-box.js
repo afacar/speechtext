@@ -62,6 +62,9 @@ class UserBox extends Component {
                     <Link to='/user#payment' className='dropdown-item'>
                         <FormattedMessage id='UserBox.payment' />
                     </Link>
+                    <Link to='/user#transaction' className='dropdown-item'>
+                        <FormattedMessage id='UserBox.transactions' />
+                    </Link>
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey='0' onClick={ this.logout }>Logout</NavDropdown.Item>
                 </NavDropdown>
