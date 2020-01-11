@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 import Editable from './editable';
 import '../styles/editor.css';
 import Editable2 from './editable2';
-import { Container } from 'react-bootstrap';
+import { Container, Col } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 class SpeechTextEditor extends Component {
     constructor(props) {
@@ -116,14 +118,16 @@ class SpeechTextEditor extends Component {
                         <div className={className} key={index} onClick={(e) => { }} >
                             <div
                                 id={'conversionTime_' + index}
-                                className='conversionTime'
+                                className='d-flex justify-content-between conversionTime'
                                 disabled={true}
                             >
-                                <input className="input-speaker" placeholder={this.props.intl.formatMessage({id:"Editor.Speaker.Input"})} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
+                                <div>
+                                    <input className="input-speaker" placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
+                                    <FontAwesomeIcon icon={faPen} color={'black'} />
+                                </div>
                                 {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
                             <div
-                                className="d-flex flex-row border primary"
                                 id={'editable-content-' + index}
                                 key={'editable-content-' + index}
                                 disabled={false}
