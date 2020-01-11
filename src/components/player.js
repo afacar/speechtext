@@ -1,11 +1,14 @@
 import React, { Component, createRef } from 'react';
 import _ from 'lodash';
-import  { withMediaProps, Player } from 'react-media-player';
+import { withMediaProps, Player } from 'react-media-player';
 import { PlayerIcon } from 'react-player-controls';
 import { connect } from 'react-redux';
 
 import Slider from './slider';
 import { handleTimeChange, isPlaying } from "../actions";
+
+import Backward from '../assets/five_seconds_backward.png';
+import Forward from '../assets/five_seconds_forward.png';
 
 import '../styles/player.css';
 
@@ -21,7 +24,7 @@ class SpeechTextPlayer extends Component {
     }
 
     componentWillReceiveProps({ timeToSeek }) {
-        if(timeToSeek || timeToSeek === 0) {
+        if (timeToSeek || timeToSeek === 0) {
             this.seekToTime(timeToSeek);
         }
     }
@@ -53,49 +56,53 @@ class SpeechTextPlayer extends Component {
     render() {
         const { media, src, type, playerStatus } = this.props;
         let disabled = _.isEmpty(src);
-        if(!media) {
+        if (!media) {
             return null;
         }
         return (
             <div className='player-container'>
                 <div className='player-controls play-resume'>
                     {
+                        <img src={Backward} alt='Rewind 5 seconds ' className='backward-icon' onClick={()=>this.seekToTime(this.state.currentTime >=5 ? this.state.currentTime - 5 : 0)}/>
+                    }
+                    {
                         (!media.isPlaying || !playerStatus.isPlaying) &&
-                        <PlayerIcon.Play onClick={ () => !disabled ? media.play() : null } disabled={ disabled } />
+                        <PlayerIcon.Play onClick={() => !disabled ? media.play() : null} disabled={disabled} />
                     }
                     {
                         (media.isPlaying && playerStatus.isPlaying) &&
-                        <PlayerIcon.Pause onClick={ () => !disabled ? media.pause() : null }  disabled={ disabled }/>
+                        <PlayerIcon.Pause onClick={() => !disabled ? media.pause() : null} disabled={disabled} />
                     }
+                    <img src={Forward} alt='Fast forward 5 seconds' className='forward-icon' onClick={()=>this.seekToTime(this.state.currentTime + 5 )} />
                 </div>
                 <div className='player-controls mute-unmute'>
                     {
                         !media.isMuted &&
-                        <PlayerIcon.SoundOn onClick={ () => media.mute(true) } disabled={ disabled } />
+                        <PlayerIcon.SoundOn onClick={() => media.mute(true)} disabled={disabled} />
                     }
                     {
                         this.props.media.isMuted &&
-                        <PlayerIcon.SoundOff onClick={ () => this.props.media.mute(false) } disabled={ disabled } />
+                        <PlayerIcon.SoundOff onClick={() => this.props.media.mute(false)} disabled={disabled} />
                     }
                 </div>
                 <div className='player-slider'>
                     <Slider
-                        value={ this.state.currentTime / this.props.media.duration }
-                        duration={ this.props.media.duration }
-                        seekTo={ this.seekTo }
-                        playPause={ this._handlePlayPause }
-                        disabled={ disabled }
+                        value={this.state.currentTime / this.props.media.duration}
+                        duration={this.props.media.duration}
+                        seekTo={this.seekTo}
+                        playPause={this._handlePlayPause}
+                        disabled={disabled}
                     />
                 </div>
                 {
                     !_.isEmpty(this.props.src) &&
                     <Player
-                        className={ `player ${type.startsWith('video') ? 'player-window' : ''}` }
-                        src={ this.props.src }
-                        onTimeUpdate={ this.onTimeUpdate }
-                        onPlay={ () => this.props.isPlaying(true) }
-                        onPause={ () => this.props.isPlaying(false) }
-                        ref={ this.playerRef }
+                        className={`player ${type.startsWith('video') ? 'player-window' : ''}`}
+                        src={this.props.src}
+                        onTimeUpdate={this.onTimeUpdate}
+                        onPlay={() => this.props.isPlaying(true)}
+                        onPause={() => this.props.isPlaying(false)}
+                        ref={this.playerRef}
                     />
                 }
             </div>
@@ -103,7 +110,7 @@ class SpeechTextPlayer extends Component {
     }
 }
 
-const mapStateToProps = ({ user, selectedFile,  playerStatus }) => {
+const mapStateToProps = ({ user, selectedFile, playerStatus }) => {
     return { user, selectedFile, playerStatus };
 }
 

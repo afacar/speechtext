@@ -110,3 +110,15 @@
         display: none;
     }
 }
+
+.forward-icon{
+    height: 1.5rem;
+    height: 1.5rem;
+    margin-left: 8px;
+}
+
+.backward-icon{
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 8px;
+}

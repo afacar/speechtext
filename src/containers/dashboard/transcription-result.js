@@ -11,6 +11,7 @@ import SpeechTextPlayer from '../../components/player';
 import SpeechTextEditor from '../../components/speech-text-editor';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
 import UserHeader from '../user-header';
+import "../../styles/user.css";
 
 class TranscriptionResult extends Component {
     constructor(props) {
@@ -324,7 +325,7 @@ class TranscriptionResult extends Component {
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
         const { formatMessage } = this.props.intl;
         return (
-            <div className=''>
+            <div>
                 <div className={'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing')}>
                     {isSaved === undefined ? '' : isSaved ? 'Saved!' : 'Editing...'}
                 </div>
