@@ -11,7 +11,7 @@ import 'react-tagsinput/react-tagsinput.css';
 
 import Utils from '../utils';
 
-const ModalPageNames = { INFO: 0, UPLOAD: 1 };
+const ModalPageNames = { INFO: 0, UPLOAD: 1, ERROR: 2 };
 
 class UploadPopup extends Component {
     constructor(props) {
@@ -60,10 +60,19 @@ class UploadPopup extends Component {
     onFileAdded = (evt) => {
         const files = evt.target.files;
         if (this.props.onFileAdded && !_.isEmpty(files)) {
-            this.props.onFileAdded(files[0]);
-            this.setState({
-                activeWindow: ModalPageNames.UPLOAD
-            });
+            const file = files[0];
+
+            const sizeInMB = Utils.formatSizeByteToMB(file.size);
+            if(sizeInMB > 500) {
+                this.setState({
+                    activeWindow: ModalPageNames.ERROR
+                });
+            } else {
+                this.props.onFileAdded(files[0]);
+                this.setState({
+                    activeWindow: ModalPageNames.UPLOAD
+                });
+            }
         }
     }
 
@@ -156,18 +165,13 @@ class UploadPopup extends Component {
             options.autoTranscribe = true;
             if(!options.speakerCount) options.speakerCount = 1;
             file.options = _.merge(file.options, options);
-            // if(file.status === 'INITIAL') {
-            //     this.props.updateFileInState(file.id, { options });
-            // } else {
-            //     this.props.updateFile(file, { options: file.options });
     
-            //     if(file.status === 'CONVERTED') {
-            //         this.props.updateFileState(file.id, 'READY');
-            //     }
-            // }
             this.props.approveFileUpload(file.options);
         }
-        this.setState({ validated: true });
+        this.setState({
+            validated: true,
+            activeWindow: ModalPageNames.INFO
+        });
     }
 
     cancelClicked = () => {
@@ -185,19 +189,17 @@ class UploadPopup extends Component {
             return this.renderInfoWindow();
         } else if(activeWindow === ModalPageNames.UPLOAD) {
             return this.renderUploadUptions();
+        } else if(activeWindow === ModalPageNames.ERROR) {
+            return this.renderError();
         }
     }
 
     renderInfoWindow = () => {
-        const { language, supportedLanguages, file, show } = this.props;
-        const { options } = this.state;
-        let selectedLanguage = options.language || language;
-        let disabled = false;
         return (
             <div>
                 <Modal.Header>
                     <div className='upload-info-page-header'>
-                        In order to get the best transcription results, please make sure;
+                        <FormattedMessage id='UploadPopup.InfoWindow.title' />
                     </div>
                 </Modal.Header>
                 <Modal.Body>
@@ -208,7 +210,7 @@ class UploadPopup extends Component {
                                     <i className='fa fa-check fa-2x' />
                                 </span>
                                 <label>
-                                    The recording is free of background noise
+                                    <FormattedMessage id='UploadPopup.InfoWindow.info1' />
                                 </label>
                             </li>
                             <li>
@@ -216,7 +218,7 @@ class UploadPopup extends Component {
                                     <i className='fa fa-check fa-2x' />
                                 </span>
                                 <label>
-                                    The speakers are close to microphone/device
+                                    <FormattedMessage id='UploadPopup.InfoWindow.info2' />
                                 </label>
                             </li>
                             <li>
@@ -224,7 +226,7 @@ class UploadPopup extends Component {
                                     <i className='fa fa-check fa-2x' />
                                 </span>
                                 <label>
-                                    The speakers are not talking over
+                                    <FormattedMessage id='UploadPopup.InfoWindow.info3' />
                                 </label>
                             </li>
                         </ul>
@@ -235,7 +237,7 @@ class UploadPopup extends Component {
                         <FormattedMessage id='UploadPopup.cancelButton' />
                     </Button>
                     <Button variant="success" onClick={ this.openFileDialog }>
-                        I understand
+                        <FormattedMessage id='UploadPopup.infoConfirmButton' />
                         <span>
                             <i className='fa fa-arrow-right'></i>
                         </span>
@@ -246,7 +248,7 @@ class UploadPopup extends Component {
     }
 
     renderUploadUptions = () => {
-        const { language, supportedLanguages, file, show } = this.props;
+        const { language, supportedLanguages } = this.props;
         const { options } = this.state;
         const disabled = false;//file.status === 'PROCESSING' || file.status === 'DONE';
         let selectedLanguage = options.language || language;
@@ -340,9 +342,36 @@ class UploadPopup extends Component {
         )
     }
 
+    renderError = () => {
+        return (
+            <div>
+                <Modal.Header>
+                    <b>
+                        <FormattedMessage id='FileUpload.fileSizeErrorTitle' />
+                    </b>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <p>
+                            <FormattedMessage id='FileUpload.fileSizeError' />
+                        </p>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer className='float-right'>
+                    <Button variant="danger" onClick={ this.cancelClicked }>
+                        <FormattedMessage id='UploadPopup.cancelButton' />
+                    </Button>
+                    <Button onClick={ this.openFileDialog }>
+                        <FormattedMessage id='UploadPopup.retryButton' />
+                    </Button>
+                </Modal.Footer>
+            </div>
+        )
+    }
+
     render() {
         return (
-            <Modal show={ this.props.show } size='lg' className='upload-modal' centered>
+            <Modal show={ this.props.show } size='lg' className={ this.state.activeWindow === ModalPageNames.ERROR ? '' : 'upload-modal' } centered>
                 {
                     this.renderWindows()
                 }

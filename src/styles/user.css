@@ -5,6 +5,16 @@
     max-width: 70%;
 }
 
+.profile-container .btn[type='submit'] {
+    background-color: #384d60;
+    border-color: #384d60;
+}
+
+.profile-container .page-item.active .page-link {
+    background-color: #384d60;
+    border-color: #384d60;
+}
+
 .user-box {
     line-height: 1.1;
     padding-top: 15px;
@@ -30,8 +40,13 @@
     margin-left: 15px;
 }
 
+.nav-pills .nav-link {
+    color: #384d60;
+}
+
 .nav-pills .nav-link.active {
-    background-color: #0C62D0;
+    background-color: #384d60;
+    color: white;
 }
 
 .user-tabs {

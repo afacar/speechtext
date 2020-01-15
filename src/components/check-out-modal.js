@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateProfile } from '../actions';
 
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Container, Row } from 'react-bootstrap';
+import { Modal, Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import PaymentDetails from './payment-details';
 import BillingDetails from './billing-details';
 import CheckOutInfo from './check-out-info';
@@ -14,6 +14,8 @@ import {
     faCheckCircle, faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/dashboard.css';
+import '../styles/payment.css';
+
 
 class CheckOutModal extends Component {
 
@@ -32,26 +34,32 @@ class CheckOutModal extends Component {
     }
 
     initializeValues = (user) => {
-        if (!_.isEmpty(user) && _.isEmpty(this.state.values)) {
+        if (!_.isEmpty(user)) {
             const { displayName, email, country, address } = user;
-            var values = { displayName, email, country, address }
-            this.setState({ values })
+            var values = { displayName, email, country, address };
+            this.setState({
+                values,
+                cardNumber: '',
+                expiry: '',
+                cvc: '',
+                validationErrorMessage: '',
+                displayNameIsValid: true,
+                countryIsValid: true,
+                addressIsValid: true
+            })
         }
     }
 
-    componentDidMount() {
-        this.initializeValues(this.props.user);
-    }
-
-    componentWillReceiveProps({ user }) {
-        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+    componentWillReceiveProps({ user, state }) {
+        console.log("new props arrived " , user);
+        if (!_.isEmpty(user) && state !== 'PAYMENT') {
             this.initializeValues(user);
         }
     }
 
     handleValueChange = (stateName, value) => {
         this.props.toggleSubmit(false)
-        console.log(stateName + '\n' + values)
+       
         var { values } = this.state;
         values[stateName] = value;
         this.setState({ values });
@@ -111,15 +119,15 @@ class CheckOutModal extends Component {
                 cvc
             }
             this.props.startPayment(paymentObj)
-        }else{
+        } else {
             this.props.toggleSubmit(true)
         }
     }
 
     renderCheckOutModal = () => {
-        const { calculatedPrice, rph, duration, durationType, state, loading, disabled, errorMessage } = this.props
-        const { cardNumber, expiry, cvc, values } = this.state
-        if (state === 'success' || state === 'SUCCESS') {
+        const { calculatedPrice, pricePerHour, duration, durationType, state, loading, disabled, errorMessage } = this.props;
+        const { cardNumber, expiry, cvc, values } = this.state;
+        if (state && state.toUpperCase() === 'SUCCESS') {
             return (
                 <Modal.Body className="d-flex flex-column">
                     <Row className="justify-content-center">
@@ -127,11 +135,13 @@ class CheckOutModal extends Component {
                     </Row>
 
                     <Row className="justify-content-center">
-                        <h3>Ödemeniz Başarı ile tamamlandı</h3>
+                        <h3>
+                            <FormattedMessage id='Payment.successMessage' />
+                        </h3>
                     </Row>
                 </Modal.Body>
             )
-        } else if (state === 'failure' || state === 'failure') {
+        } else if (state && state.toUpperCase() === 'FAILURE') {
             return (
                 <Modal.Body className="d-flex justify-content-center align-content-center flex-column">
                     <Row className="justify-content-center">
@@ -147,24 +157,47 @@ class CheckOutModal extends Component {
             return (
                 <Modal.Body className="d-flex flex-row justify-content-center">
                     <Container>
-                        <h4 style={{ color: '#086FA1' }}>Billing Details</h4>
-                        <BillingDetails handleValueChange={this.handleValueChange} values={values} displayNameIsValid={this.state.displayNameIsValid}
-                            countryIsValid={this.state.countryIsValid} addressIsValid={this.state.addressIsValid} />
-                        <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
-                            <FormattedMessage id={"Payment.Card.Details"} />
-                        </h4>
-                        <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
-                            handleCardNumberChange={this.handleCardNumberChange}
-                            handleCardExpiryChange={this.handleCardExpiryChange}
-                            handleCardCVCChange={this.handleCardCVCChange}
-                            toggleSubmit={this.props.toggleSubmit}
-                        />
-                    </Container>
-                    <Container>
-                        <CheckOutInfo startPayment={this.startPayment}
-                            calculatedPrice={calculatedPrice} rph={rph}
-                            duration={duration} durationType={durationType} loading={loading}
-                            disabled={disabled} validationErrorMessage={this.state.validationErrorMessage} />
+                        <Row>
+                            <Col lg='5' md='5' sm='6'>
+                                <CheckOutInfo
+                                    calculatedPrice={ calculatedPrice }
+                                    pricePerHour={ pricePerHour }
+                                    duration={ duration }
+                                    durationType={ durationType }
+                                    loading={ loading }
+                                    validationErrorMessage={ this.state.validationErrorMessage }
+                                />
+                            </Col>
+                            <Col lg='7' md='7' sm='6' className='billing-detail-container'>
+                                <h4 className='payment-modal-title'>
+                                    <FormattedMessage id="Payment.Billing.Title" />
+                                </h4>
+                                <BillingDetails
+                                    handleValueChange={ this.handleValueChange }
+                                    values={ values }
+                                    displayNameIsValid={ this.state.displayNameIsValid }
+                                    countryIsValid={ this.state.countryIsValid }
+                                    addressIsValid={ this.state.addressIsValid }
+                                />
+                                <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
+                                    <FormattedMessage id={"Payment.Card.Details"} />
+                                </h4>
+                                <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
+                                    handleCardNumberChange={this.handleCardNumberChange}
+                                    handleCardExpiryChange={this.handleCardExpiryChange}
+                                    handleCardCVCChange={this.handleCardCVCChange}
+                                    toggleSubmit={this.props.toggleSubmit}
+                                />
+                            </Col>
+                        </Row>
+                        <Button className="btn-lg checkout-button" onClick={ this.startPayment } disabled={ disabled }>
+                            <FormattedMessage id='Payment.Summary.Pay' />
+                            {
+                                loading && (
+                                    <Spinner animation="grow" role="status" />
+                                )
+                            }
+                        </Button>
                     </Container>
                 </Modal.Body>
             )
@@ -172,22 +205,16 @@ class CheckOutModal extends Component {
     }
 
     render() {
-        const { show, handleClose } = this.props
+        const { show, state } = this.props;
         return (
             <Modal
                 show={show}
-                onHide={() => handleClose()}
-                size="lg"
+                onHide={ this.props.handleClose }
+                size={ state === 'INITIAL' || state === 'PAYMENT' ? 'xl' : 'lg' }
+                backdrop={ state === 'INITIAL' || state === 'PAYMENT' ? 'static' : true }
             >
+                <Modal.Header closeButton></Modal.Header>
                 {this.renderCheckOutModal()}
-                {/* <Modal.Footer className="align-content-center">
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                     </Button>
-                    <Button variant="primary" onClick={startPayment}>
-                        {"Pay $" + calculatedPrice}
-                    </Button>
-                </Modal.Footer> */}
             </Modal>
         )
     }
