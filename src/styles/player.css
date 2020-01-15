@@ -1,9 +1,9 @@
 .player {
     position: fixed;
-    width: 13.5%;
-    height: 25%;
-    left: 20px;
-    top: 140px;
+    width: 13.5% !important;
+    height: 25% !important;
+    left: 20px !important;
+    top: 140px !important;
 }
 
 .player-window {
@@ -121,4 +121,19 @@
     height: 1.5rem;
     width: 1.5rem;
     margin-right: 8px;
+}
+
+.playback-dropdown{
+    background-color: cadetblue;
+    margin-left: 1rem;
+    height: 2.1rem;
+}
+
+.playback-dropdown-menu{
+    background-color: cadetblue;
+}
+
+.playback-dropdown-menu-toggle{
+    background-color: cadetblue;
+    height: 2.1rem;
 }

@@ -97,6 +97,8 @@ class TranscriptionResult extends Component {
         const { editorData, isSaved } = this.state;
         const { selectedFile } = this.props;
         console.log("TranscribedFile", selectedFile.transcribedFile);
+        console.log("Editor data", editorData);
+        console.log("Is saved", isSaved);
         if (!_.isEmpty(editorData) && !isSaved) {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             console.log("putting editordata as json");

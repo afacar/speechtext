@@ -38,6 +38,7 @@ class Slider extends Component {
     }
 
     onSliderChangeStart = (value) => {
+        this.props.seeking(true);
         if(this.props.duration > 0.1) {
             this.props.playPause();
             this.setState({
@@ -47,6 +48,7 @@ class Slider extends Component {
     }
 
     onSliderChangeEnd = (value) => {
+        this.props.seeking(false);
         if(this.props.duration > 0.1) {
             this.setState({
                 value

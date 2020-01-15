@@ -10,6 +10,8 @@ import { Container, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 
+const ReactDOM = require('react-dom')
+
 class SpeechTextEditor extends Component {
     constructor(props) {
         super(props);
@@ -114,6 +116,7 @@ class SpeechTextEditor extends Component {
                 console.log(alternative);
                 if (alternative && alternative.startTime && alternative.endTime) {
                     let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult' : 'conversionResult'
+                    var id = "input_" + index;
                     return (
                         <div className={className} key={index} onClick={(e) => { }} >
                             <div
@@ -122,7 +125,7 @@ class SpeechTextEditor extends Component {
                                 disabled={true}
                             >
                                 <div>
-                                    <input className="input-speaker" placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag || "Speaker " + alternative.words[0].speakerTag}></input>
+                                    <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
                                     <FontAwesomeIcon icon={faPen} color={'black'} />
                                 </div>
                                 {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
