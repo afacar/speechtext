@@ -47,7 +47,7 @@ class Payment extends Component {
             showCheckOutForm: false, // new
             loading: false,
             errorMessage: '',
-            disabled: true,
+            disabled: false,
             showContactForm: false,
         })
     }

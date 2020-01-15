@@ -5,15 +5,17 @@ import { connect } from 'react-redux';
 import { updateProfile } from '../actions';
 
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Container, Row } from 'react-bootstrap';
+import { Modal, Container, Row, Button } from 'react-bootstrap';
 import PaymentDetails from './payment-details';
 import BillingDetails from './billing-details';
 import CheckOutInfo from './check-out-info';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faCheckCircle, faTimesCircle
+    faCheckCircle, faTimesCircle, faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/dashboard.css';
+import '../styles/payment.css';
+
 
 class CheckOutModal extends Component {
 
@@ -32,19 +34,16 @@ class CheckOutModal extends Component {
     }
 
     initializeValues = (user) => {
-        if (!_.isEmpty(user) && _.isEmpty(this.state.values)) {
+        if (!_.isEmpty(user)) {
             const { displayName, email, country, address } = user;
             var values = { displayName, email, country, address }
             this.setState({ values })
         }
     }
 
-    componentDidMount() {
-        this.initializeValues(this.props.user);
-    }
-
     componentWillReceiveProps({ user }) {
-        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+        console.log("new props arrived " , user);
+        if (!_.isEmpty(user)) {
             this.initializeValues(user);
         }
     }
@@ -111,7 +110,7 @@ class CheckOutModal extends Component {
                 cvc
             }
             this.props.startPayment(paymentObj)
-        }else{
+        } else {
             this.props.toggleSubmit(true)
         }
     }
@@ -147,6 +146,9 @@ class CheckOutModal extends Component {
             return (
                 <Modal.Body className="d-flex flex-row justify-content-center">
                     <Container>
+                        <Button className="close-button" onClick={()=>{this.props.handleClose()}}>
+                            <FontAwesomeIcon icon={faTimes} size="lg" color={'black'} />
+                        </Button>
                         <h4 style={{ color: '#086FA1' }}>Billing Details</h4>
                         <BillingDetails handleValueChange={this.handleValueChange} values={values} displayNameIsValid={this.state.displayNameIsValid}
                             countryIsValid={this.state.countryIsValid} addressIsValid={this.state.addressIsValid} />
@@ -172,11 +174,11 @@ class CheckOutModal extends Component {
     }
 
     render() {
-        const { show, handleClose } = this.props
+        const { show } = this.props
         return (
             <Modal
                 show={show}
-                onHide={() => handleClose()}
+                onHide={()=>{}}
                 size="lg"
             >
                 {this.renderCheckOutModal()}
