@@ -13,18 +13,24 @@ import {
 class Transaction extends Component {
 
     componentDidMount() {
-        this.props.getTransactions(this.props.user);
+        if(!_.isEmpty(this.props.user)) {
+            this.props.getTransactions(this.props.user);
+        }
     }
 
-    componentWillReceiveProps({ transactions }) {
-        console.log("Transactions " + transactions)
-        console.log("Transactions size " + transactions.length)
-        var size = transactions.length || 0;
-        var sizeTmp = transactions.length || 0;
-        size = parseInt(size / 10);
-        if (sizeTmp % 10 !== 0)
-            size++;
-        this.props.setArraySize(size);
+    componentWillReceiveProps({ transactions, user }) {
+        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            this.props.getTransactions(user);
+        } else if(!_.isEmpty(transactions)) {
+            console.log("Transactions " + transactions)
+            console.log("Transactions size " + transactions.length)
+            var size = transactions.length || 0;
+            var sizeTmp = transactions.length || 0;
+            size = parseInt(size / 10);
+            if (sizeTmp % 10 !== 0)
+                size++;
+            this.props.setArraySize(size);
+        }
     }
 
     // 1 , 2 ,3 pages, also add to list on profile click

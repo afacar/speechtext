@@ -53,20 +53,21 @@ class Payment extends Component {
     }
 
     componentDidMount() {
-        //this.setUserPlan(this.props.user);
         const { plans } = this.props
-        this.setState({
-            duration: 1,
-            durationType: 'hours',
-            calculatedPrice: plans.standard ? plans.standard.hourPrice : 9,
-            state: 'INITIAL',
-            basketId: undefined,
-            checkoutForm: undefined,
-            showSpinner: false,
-            spinnerText: '',
-            sellingContractAccepted: false,
-            refundContractAccepted: false
-        })
+        if(!_.isEmpty(plans)) {
+            this.setState({
+                duration: 1,
+                durationType: 'hours',
+                calculatedPrice: plans.standard ? plans.standard.hourPrice : 9,
+                state: 'INITIAL',
+                basketId: undefined,
+                checkoutForm: undefined,
+                showSpinner: false,
+                spinnerText: '',
+                sellingContractAccepted: false,
+                refundContractAccepted: false
+            })
+        }
     }
 
     durationChanged = (e) => {
