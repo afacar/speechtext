@@ -189,7 +189,7 @@ class StandardPaymentCard extends Component {
               <Row>
                 <PricingSlider duration={this.props.duration} durationChanged={this.props.durationChanged} />
               </Row>
-              <Row className="d-flex justify-content-md-center buy-button-surrounding">
+              <Row className="d-flex justify-content-md-center buy-button-surrounding mb-3 mt-5 align-items-center">
                 <Col className="d-flex justify-content-end" md>
                   <h3>
                     <FormattedMessage id='Payment.Label.totalCost' />
@@ -198,18 +198,17 @@ class StandardPaymentCard extends Component {
                     <div className="price">:    ${this.props.price}</div>
                   </h3>
                 </Col>
-
                 <Col className="d-flex justify-content-start" md>
                   {
                     this.props.duration >= 50 && (
-                      <Button className="btn btn-primary mb-3" onClick={this.props.handleBuy}>
+                      <Button className="btn btn-primary" onClick={this.props.handleBuy}>
                         <FormattedMessage id="Pricing.Standard.contactUs" />
                       </Button>
                     )
                   }
                   {
                     this.props.duration < 50 && (
-                      <Button variant="outline-secondary" className="mb-3" onClick={this.props.handleBuy}>
+                      <Button variant="outline-secondary"onClick={this.props.handleBuy}>
                         <FormattedMessage id="Pricing.Standard.loggedInButtonText" />
                       </Button>
                     )

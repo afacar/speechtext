@@ -71,7 +71,6 @@ class Payment extends Component {
     }
 
     durationChanged = (e) => {
-        console.log(e)
         if (!e.target) {
             this.setState({ duration: e })
             this.calculatePrice(e)

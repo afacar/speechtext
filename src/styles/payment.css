@@ -1,3 +1,31 @@
+.rc-slider-track {
+    background-color: #384d60;
+}
+
+.rc-slider-handle {
+    margin-top: -3px;
+    border: 4px solid #384d60;
+}
+
+.rc-slider-handle:focus {
+    border-color: #384d60;
+    box-shadow: none;
+}
+
+.rc-slider-dot {
+    top: 0px;
+    border-color: #384d60;
+}
+
+.rc-slider-dot:hover,
+.rc-slider-dot:focus {
+    border-color: #384d60;
+}
+
+.card-logo {
+    transform: scale(.5);
+}
+
 .close-button{
     top: 0;
     right: 0;
@@ -5,22 +33,66 @@
     background: transparent;
     border: 0px;
 }
+
 .close-button:focus {
     outline: transparent !important;
     outline-offset: transparent !important;
     background: transparent !important;
     border: 0px;
 }
+
 .close-button:hover{
     outline: transparent !important;
     outline-offset: transparent !important;
     background: transparent !important;
     border: 0px;
 }
+
 .close-button:active{
     border: 0px;
 }
 
 .buy-button-surrounding{
     margin-top: 12px;
+}
+
+.slider-container {
+    width: 100%;
+    height: 150px;
+    background-color: #dde1e4;
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.slider {
+    margin-top: 1.5rem;
+}
+
+.duration-to-buy-container {
+    margin-top: -15px;
+    text-align: center;
+}
+
+.duration-to-buy-header {
+    font-size: 10px;
+    font-weight: bold
+}
+
+.duration-to-buy {
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.duration-to-buy::-webkit-outer-spin-button,
+.duration-to-buy::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.duration-to-buy[type=number] {
+  -moz-appearance:textfield;
 }
