@@ -328,7 +328,6 @@ class Payment extends Component {
     render() {
         const { showCheckOutForm, duration, durationType, unitPrice, calculatedPrice, error, showSpinner, showContactForm } = this.state
         const { user } = this.props;
-        // rph -> rate per hour
         return (
             <Container>
                 <div className="pricing card-deck flex-column flex-md-row mb-3">
@@ -352,7 +351,7 @@ class Payment extends Component {
                             startPayment={this.startPayment}
                             duration={duration}
                             durationType={durationType}
-                            rph={unitPrice}
+                            pricePerHour={unitPrice}
                             errorMessage={this.state.errorMessage}
                             loading={this.state.loading}
                             disabled={this.state.disabled}
@@ -368,7 +367,7 @@ class Payment extends Component {
                     </div>
                 }
                 {
-                    error && <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
+                    error && <Modal show={this.state.showCheckoutForm} size='lg' onHide={this.onHide}>
                         <Modal.Header>Some error happened!</Modal.Header>
                         <Modal.Body>
                             {error.errorMessage}

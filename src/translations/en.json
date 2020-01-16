@@ -141,7 +141,7 @@
     "Payment.Billing.Address": "Billing Address",
     "Payment.Slider.Header": "More you buy, less you pay!",
     "Payment.Summary.Total.Duration": "Total Amount",
-    "Payment.Summary.RPH": "Rate Per Hour",
+    "Payment.Summary.pricePerHour": "Rate Per Hour",
     "Payment.Summary.Total.Price": "Total Price",
     "Payment.Summary.Pay": "Checkout",
     "Payment.Plan.PlanAmount.5hours": "5 hours",

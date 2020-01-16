@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateProfile } from '../actions';
 
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Container, Row, Button } from 'react-bootstrap';
+import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import PaymentDetails from './payment-details';
 import BillingDetails from './billing-details';
 import CheckOutInfo from './check-out-info';
@@ -36,8 +36,17 @@ class CheckOutModal extends Component {
     initializeValues = (user) => {
         if (!_.isEmpty(user)) {
             const { displayName, email, country, address } = user;
-            var values = { displayName, email, country, address }
-            this.setState({ values })
+            var values = { displayName, email, country, address };
+            this.setState({
+                values,
+                cardNumber: '',
+                expiry: '',
+                cvc: '',
+                validationErrorMessage: '',
+                displayNameIsValid: true,
+                countryIsValid: true,
+                addressIsValid: true
+            })
         }
     }
 
@@ -116,9 +125,9 @@ class CheckOutModal extends Component {
     }
 
     renderCheckOutModal = () => {
-        const { calculatedPrice, rph, duration, durationType, state, loading, disabled, errorMessage } = this.props
-        const { cardNumber, expiry, cvc, values } = this.state
-        if (state === 'success' || state === 'SUCCESS') {
+        const { calculatedPrice, pricePerHour, duration, durationType, state, loading, disabled, errorMessage } = this.props;
+        const { cardNumber, expiry, cvc, values } = this.state;
+        if (state && state.toUpperCase() === 'SUCCESS') {
             return (
                 <Modal.Body className="d-flex flex-column">
                     <Row className="justify-content-center">
@@ -130,7 +139,7 @@ class CheckOutModal extends Component {
                     </Row>
                 </Modal.Body>
             )
-        } else if (state === 'failure' || state === 'failure') {
+        } else if (state && state.toUpperCase() === 'FAILURE') {
             return (
                 <Modal.Body className="d-flex justify-content-center align-content-center flex-column">
                     <Row className="justify-content-center">
@@ -146,27 +155,34 @@ class CheckOutModal extends Component {
             return (
                 <Modal.Body className="d-flex flex-row justify-content-center">
                     <Container>
-                        <Button className="close-button" onClick={()=>{this.props.handleClose()}}>
-                            <FontAwesomeIcon icon={faTimes} size="lg" color={'black'} />
-                        </Button>
-                        <h4 style={{ color: '#086FA1' }}>Billing Details</h4>
-                        <BillingDetails handleValueChange={this.handleValueChange} values={values} displayNameIsValid={this.state.displayNameIsValid}
-                            countryIsValid={this.state.countryIsValid} addressIsValid={this.state.addressIsValid} />
-                        <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
-                            <FormattedMessage id={"Payment.Card.Details"} />
-                        </h4>
-                        <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
-                            handleCardNumberChange={this.handleCardNumberChange}
-                            handleCardExpiryChange={this.handleCardExpiryChange}
-                            handleCardCVCChange={this.handleCardCVCChange}
-                            toggleSubmit={this.props.toggleSubmit}
-                        />
-                    </Container>
-                    <Container>
-                        <CheckOutInfo startPayment={this.startPayment}
-                            calculatedPrice={calculatedPrice} rph={rph}
-                            duration={duration} durationType={durationType} loading={loading}
-                            disabled={disabled} validationErrorMessage={this.state.validationErrorMessage} />
+                        <Row>
+                            <Col lg='5' md='5' sm='6'>
+                                <CheckOutInfo
+                                    startPayment={ this.startPayment }
+                                    calculatedPrice={ calculatedPrice }
+                                    pricePerHour={ pricePerHour }
+                                    duration={ duration }
+                                    durationType={ durationType }
+                                    loading={ loading }
+                                    disabled={ disabled }
+                                    validationErrorMessage={ this.state.validationErrorMessage }
+                                />
+                            </Col>
+                            <Col lg='7' md='7' sm='6'>
+                                <h4 style={{ color: '#086FA1' }}>Billing Details</h4>
+                                <BillingDetails handleValueChange={this.handleValueChange} values={values} displayNameIsValid={this.state.displayNameIsValid}
+                                    countryIsValid={this.state.countryIsValid} addressIsValid={this.state.addressIsValid} />
+                                <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
+                                    <FormattedMessage id={"Payment.Card.Details"} />
+                                </h4>
+                                <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
+                                    handleCardNumberChange={this.handleCardNumberChange}
+                                    handleCardExpiryChange={this.handleCardExpiryChange}
+                                    handleCardCVCChange={this.handleCardCVCChange}
+                                    toggleSubmit={this.props.toggleSubmit}
+                                />
+                            </Col>
+                        </Row>
                     </Container>
                 </Modal.Body>
             )
@@ -174,22 +190,15 @@ class CheckOutModal extends Component {
     }
 
     render() {
-        const { show } = this.props
+        const { show, state } = this.props;
         return (
             <Modal
                 show={show}
-                onHide={()=>{}}
-                size="lg"
+                onHide={ this.props.handleClose }
+                size={ state === 'INITIAL' ? 'xl' : 'lg' }
             >
+                <Modal.Header closeButton></Modal.Header>
                 {this.renderCheckOutModal()}
-                {/* <Modal.Footer className="align-content-center">
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                     </Button>
-                    <Button variant="primary" onClick={startPayment}>
-                        {"Pay $" + calculatedPrice}
-                    </Button>
-                </Modal.Footer> */}
             </Modal>
         )
     }

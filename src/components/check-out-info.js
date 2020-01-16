@@ -14,7 +14,7 @@ class CheckOutInfo extends Component {
     }
 
     render() {
-        var { calculatedPrice, rph, duration, durationType, startPayment, loading, disabled } = this.props
+        var { calculatedPrice, pricePerHour, duration, durationType, startPayment, loading, disabled } = this.props
         if (duration === 1) {
             durationType = durationType.substring(0, durationType.length - 1);
         }
@@ -38,7 +38,7 @@ class CheckOutInfo extends Component {
                                 <FormattedMessage id={"Payment.Summary.RPH"} />
                             </Col>
                             <Col className="d-flex flex-end">
-                                {'$' + rph}
+                                {'$' + pricePerHour}
                             </Col>
                         </Row>
 

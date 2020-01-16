@@ -4,6 +4,16 @@
     max-width: 70%;
 }
 
+.profile-container .btn[type='submit'] {
+    background-color: #384d60;
+    border-color: #384d60;
+}
+
+.profile-container .page-item.active .page-link {
+    background-color: #384d60;
+    border-color: #384d60;
+}
+
 .user-box {
     line-height: 1.1;
     padding-top: 15px;

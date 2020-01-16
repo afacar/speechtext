@@ -172,7 +172,7 @@
     "Payment.Billing.Address":"Fatura Adresi",
     "Payment.Slider.Header":"Daha fazla al, daha az öde",
     "Payment.Summary.Total.Duration":"Toplam Saat",
-    "Payment.Summary.RPH":"Saat Başına Ücret",
+    "Payment.Summary.pricePerHour":"Saat Başına Ücret",
     "Payment.Summary.Total.Price":"Toplam Ücret",
     "Payment.Summary.Pay":"Öde",
     "Payment.Feedback.nameSurname": "Kart Üzerindeki İsmi Giriniz",
