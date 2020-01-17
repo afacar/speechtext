@@ -242,7 +242,8 @@ class Editable2 extends React.Component {
             this.editableRef.appendChild(newSpan)
         }
         console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and words.length is ${transcript.words.length} and textLen is ${text.length}`)
-
+        words[activeWordIndex].confidence = 1;
+        this.editableRef.childNodes[this.getSpanIndexById(activeWordIndex)].style["color"] = 'darkgoldenrod';
         let children = this.editableRef.childNodes
         //console.log('onKeyUp children:', children)
         let len = children.length

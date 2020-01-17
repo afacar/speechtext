@@ -88,7 +88,7 @@
 }
 
 .fixed-word {
-    background-color: lightgreen;
+    color: goldenrod;
 }
 
 .editable-content-wrapper {
@@ -103,4 +103,43 @@
     font-size: small; 
     font-weight: bold;
     max-width: 6rem;
+}
+
+.export{
+    position: fixed;
+    right: 80px !important;
+    top: 140px !important;
+}
+
+.save-button{
+    width: 100%;
+    background-color: #384d60;
+    margin-bottom: 0.5rem;
+}
+
+.save-button:disabled{
+    background-color: gray;
+}
+
+.saving-state-text{
+    text-align: center;
+    font-size: large;
+    margin-top: 4px;
+}
+
+.saving-state-text.saving{
+    color: seagreen;
+    animation-fill-mode: backwards;
+}
+
+.saving-state-text.saved{
+    color: seagreen;
+}
+
+.saving-state-text.error{
+    color: firebrick;
+}
+
+.saving-state-text.unsaved{
+    color: darkgoldenrod;
 }

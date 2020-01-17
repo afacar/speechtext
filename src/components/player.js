@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import _ from 'lodash';
-import { withMediaProps, Player } from 'react-media-player';
+import { withMediaProps } from 'react-media-player';
 import { PlayerIcon } from 'react-player-controls';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
@@ -12,11 +12,7 @@ import Backward from '../assets/five_seconds_backward.png';
 import Forward from '../assets/five_seconds_forward.png';
 
 import '../styles/player.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faPlay, faPause
-} from '@fortawesome/free-solid-svg-icons';
-import { Button, DropdownButton, Dropdown, ButtonToolbar } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 
 class SpeechTextPlayer extends Component {
     constructor(props) {
@@ -106,7 +102,7 @@ class SpeechTextPlayer extends Component {
         })
     }
     render() {
-        const { media, src, type, playerStatus } = this.props;
+        const { media, src, type } = this.props;
         let disabled = _.isEmpty(src);
         if (!media) {
             return null;
