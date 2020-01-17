@@ -26,7 +26,7 @@ class Payment extends Component {
             duration: 1,
             durationType: 'hours',
             unitPrice: 9,
-            calculatedPrice: 0,
+            calculatedPrice: 9,
             state: 'INITIAL',
             selectedPlanType: undefined
         }
@@ -189,7 +189,7 @@ class Payment extends Component {
             <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
                 <p>
                     {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
-                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={ this.sellingContractClicked }>
                         {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
                     </span>
                     {this.props.language !== 'tr' ? ' and ' : ' ve '}

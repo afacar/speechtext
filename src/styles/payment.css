@@ -70,3 +70,48 @@
 .duration-to-buy[type=number] {
   -moz-appearance:textfield;
 }
+
+.checkout-button {
+    background-color: #22884f;
+    border-color: #22884f;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.payment-modal-title {
+    color: #086FA1;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.payment-total-container {
+    position: absolute;
+    bottom: 0;
+    padding-left: 0;
+    padding-right: 45px;
+    color: #384d60;
+}
+
+.billing-detail-container {
+    border-left: 1px solid lightgray;
+    padding-left: 30px;
+}
+
+.order-summary-container {
+    padding-right: 35px;
+}
+
+.order-summary-container .row {
+    height: calc(1.5em + .75rem + 2px);
+}
+
+/* CREDIT CARD NUMBER*/
+.sc-bwzfXH > .hlTfmo {
+    width: 60%;
+    padding-top: 10px;
+}
+
+.sc-bwzfXH > .hlTfmo ~ .hlTfmo {
+    width: auto;
+}

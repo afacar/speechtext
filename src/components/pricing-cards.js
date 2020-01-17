@@ -4,7 +4,6 @@ import { Button, Form, InputGroup, Spinner, Col, Container, Row } from 'react-bo
 import MasterVisaLogo from '../assets/mastercard-visa-logo.png';
 import SellingContract from '../containers/user/selling-contract';
 import RefundContract from '../containers/user/refund-contract';
-import Utils from '../utils'
 import _ from 'lodash';
 import PricingSlider from './pricing-slider';
 import "../styles/payment.css"

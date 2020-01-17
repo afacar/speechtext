@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { Container, Table } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as actions from '../../actions';
-import Utils from '../../utils';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {

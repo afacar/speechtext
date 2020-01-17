@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateProfile } from '../actions';
 
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
+import { Modal, Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import PaymentDetails from './payment-details';
 import BillingDetails from './billing-details';
 import CheckOutInfo from './check-out-info';
@@ -135,7 +135,9 @@ class CheckOutModal extends Component {
                     </Row>
 
                     <Row className="justify-content-center">
-                        <h3>Ödemeniz Başarı ile tamamlandı</h3>
+                        <h3>
+                            <FormattedMessage id='Payment.successMessage' />
+                        </h3>
                     </Row>
                 </Modal.Body>
             )
@@ -158,20 +160,25 @@ class CheckOutModal extends Component {
                         <Row>
                             <Col lg='5' md='5' sm='6'>
                                 <CheckOutInfo
-                                    startPayment={ this.startPayment }
                                     calculatedPrice={ calculatedPrice }
                                     pricePerHour={ pricePerHour }
                                     duration={ duration }
                                     durationType={ durationType }
                                     loading={ loading }
-                                    disabled={ disabled }
                                     validationErrorMessage={ this.state.validationErrorMessage }
                                 />
                             </Col>
-                            <Col lg='7' md='7' sm='6'>
-                                <h4 style={{ color: '#086FA1' }}>Billing Details</h4>
-                                <BillingDetails handleValueChange={this.handleValueChange} values={values} displayNameIsValid={this.state.displayNameIsValid}
-                                    countryIsValid={this.state.countryIsValid} addressIsValid={this.state.addressIsValid} />
+                            <Col lg='7' md='7' sm='6' className='billing-detail-container'>
+                                <h4 className='payment-modal-title'>
+                                    <FormattedMessage id="Payment.Billing.Title" />
+                                </h4>
+                                <BillingDetails
+                                    handleValueChange={ this.handleValueChange }
+                                    values={ values }
+                                    displayNameIsValid={ this.state.displayNameIsValid }
+                                    countryIsValid={ this.state.countryIsValid }
+                                    addressIsValid={ this.state.addressIsValid }
+                                />
                                 <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
                                     <FormattedMessage id={"Payment.Card.Details"} />
                                 </h4>
@@ -183,6 +190,14 @@ class CheckOutModal extends Component {
                                 />
                             </Col>
                         </Row>
+                        <Button className="btn-lg checkout-button" onClick={ this.startPayment } disabled={ disabled }>
+                            <FormattedMessage id='Payment.Summary.Pay' />
+                            {
+                                loading && (
+                                    <Spinner animation="grow" role="status" />
+                                )
+                            }
+                        </Button>
                     </Container>
                 </Modal.Body>
             )
@@ -196,6 +211,7 @@ class CheckOutModal extends Component {
                 show={show}
                 onHide={ this.props.handleClose }
                 size={ state === 'INITIAL' ? 'xl' : 'lg' }
+                backdrop={ state === 'INITIAL' ? 'static' : true }
             >
                 <Modal.Header closeButton></Modal.Header>
                 {this.renderCheckOutModal()}

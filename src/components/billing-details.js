@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Form, Container } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import countryList from 'country-list';
 
 class BillingDetails extends Component {
@@ -18,51 +18,45 @@ class BillingDetails extends Component {
         }
         return (
             <Form noValidate>
-                <Form.Group className="d-flex flex-row">
+                <Form.Group>
                     <Form.Label >
                         <FormattedMessage id='Payment.Billing.Name' />
                     </Form.Label>
-                    <Container className="d-flex flex-column" style={{marginLeft: 14}}>
-                        <Form.Control
-                            name="displayName"
-                            type="text"
-                            isInvalid={!displayNameIsValid}
-                            placeholder={formatMessage({ id: 'Payment.Billing.Name' })}
-                            value={displayName || ''}
-                            onChange={(e) => { this.props.handleValueChange('displayName', e.target.value) }}
-                            required
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            <FormattedMessage id='Payment.Feedback.nameSurname' />
-                        </Form.Control.Feedback>
-                    </Container>
-
+                    <Form.Control
+                        name="displayName"
+                        type="text"
+                        isInvalid={!displayNameIsValid}
+                        placeholder={formatMessage({ id: 'Payment.Billing.Name' })}
+                        value={displayName || ''}
+                        onChange={(e) => { this.props.handleValueChange('displayName', e.target.value) }}
+                        required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        <FormattedMessage id='Payment.Feedback.nameSurname' />
+                    </Form.Control.Feedback>
                 </Form.Group>
-
-                <Form.Group className="d-flex flex-row">
+                <Form.Group>
                     <Form.Label >
                         <FormattedMessage id='Profile.Label.country' />
                     </Form.Label>
-                    <Container className="d-flex flex-column">
-                        <Form.Control
-                            name='country'
-                            as='select'
-                            isInvalid={!countryIsValid}
-                            required
-                            onChange={(e) => { this.props.handleValueChange('country', e.target.value) }}
-                            value={country || ''}
-                        >
-                            <option />
-                            {
-                                _.map(countryList.getCodeList(), (value, key) => {
-                                    return <option key={key} value={key}>{value}</option>
-                                })
-                            }
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            <FormattedMessage id='Profile.Feedback.country' />
-                        </Form.Control.Feedback>
-                    </Container>
+                    <Form.Control
+                        name='country'
+                        as='select'
+                        isInvalid={!countryIsValid}
+                        required
+                        onChange={(e) => { this.props.handleValueChange('country', e.target.value) }}
+                        value={country || ''}
+                    >
+                        <option />
+                        {
+                            _.map(countryList.getCodeList(), (value, key) => {
+                                return <option key={key} value={key}>{value}</option>
+                            })
+                        }
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                        <FormattedMessage id='Profile.Feedback.country' />
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="d-flex flex-column">
                     <Form.Label>
