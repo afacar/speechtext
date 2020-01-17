@@ -129,6 +129,7 @@ ol.selling-contract-list { counter-reset: item }
     font-weight: bold;
     font-size: 14px;
     padding-top: 10px;
+    margin-left: 10px;
 }
 
 .saved-editing-text.saved {

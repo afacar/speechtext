@@ -86,6 +86,7 @@ class SpeechTextEditor extends Component {
     onSpeakerChange = (speakerTag, index) => {
         this.props.editorData[index].alternatives["0"]["speakerTag"] = speakerTag.target.value;
         console.log(this.props.editorData[index]);
+        this.props.speakerTagChanged();
         this.setState({
             speakerEdited: true
         })
@@ -107,7 +108,7 @@ class SpeechTextEditor extends Component {
         } */
 
     render() {
-        const { editorData, handleEditorChange, splitData, mergeData, changeActiveIndex } = this.props;
+        const { editorData, handleEditorChange, splitData, mergeData } = this.props;
         console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {
