@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import Slider, { Range } from 'rc-slider';
-import { Row, Col, Container, Form, InputGroup } from "react-bootstrap";
+import Slider from 'rc-slider';
+import { Row, Col, Container, Form } from "react-bootstrap";
 // We can just import Slider or Range to reduce bundle size
 // import Slider from 'rc-slider/lib/Slider';
 // import Range from 'rc-slider/lib/Range';
@@ -21,10 +21,6 @@ const marks = {
   40: '40',
   50: '50'
 };
-
-const log = (val) => {
-  console.log('slider val is', val)
-}
 
 export default class PricingSlider extends Component {
 

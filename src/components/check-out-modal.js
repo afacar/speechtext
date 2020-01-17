@@ -11,7 +11,7 @@ import BillingDetails from './billing-details';
 import CheckOutInfo from './check-out-info';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faCheckCircle, faTimesCircle, faTimes
+    faCheckCircle, faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/dashboard.css';
 import '../styles/payment.css';
@@ -59,7 +59,6 @@ class CheckOutModal extends Component {
 
     handleValueChange = (stateName, value) => {
         this.props.toggleSubmit(false)
-        console.log(stateName + '\n' + values)
         var { values } = this.state;
         values[stateName] = value;
         this.setState({ values });

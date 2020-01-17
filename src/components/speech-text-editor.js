@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { connect } from 'react-redux';
-
-import Editable from './editable';
 import '../styles/editor.css';
 import Editable2 from './editable2';
 
@@ -76,7 +73,7 @@ class SpeechTextEditor extends Component {
         } */
 
     render() {
-        const { editorData, handleEditorChange, splitData, mergeData, changeActiveIndex } = this.props;
+        const { editorData, handleEditorChange, splitData, mergeData } = this.props;
         console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {

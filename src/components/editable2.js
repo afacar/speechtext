@@ -1,13 +1,11 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
 
 import { setEditorFocus } from "../actions";
 
 const exclusiveKeyCodes = [9, 13, 16, 17, 18, 20, 27, 93, 225, 144, 35, 36, 37, 38, 39, 40];
-const arrowKeyCodes = [35, 36, 37, 38, 39, 40]
 const KEYCODES = { BACKSPACE: 8, ENTER: 13, DEL: 46, LEFT: 37, RIGHT: 39, UP: 38, DOWN: 40 }
-console.log('Editable2 Import!')
 
 class Editable2 extends React.Component {
     isEditorClean = true
@@ -84,21 +82,16 @@ class Editable2 extends React.Component {
     }
 
     onKeyDown = (e) => {
-        const { index, transcript, splitData, mergeData, isLastEditable, changeActiveIndex, setEditorFocus } = this.props;
-        //console.log(`onKeyDown is`, e.keyCode)
+        const { index, splitData, mergeData, isLastEditable, setEditorFocus } = this.props;
         let sel = document.getSelection()
-        //console.log('onKeyDown sel>', sel)
         let offset = sel.focusOffset
         let text = sel.focusNode.innerText || sel.focusNode.textContent
         let id = sel.focusNode.nodeName !== 'SPAN' ? sel.focusNode.parentNode.id : sel.focusNode.id
         let wordIndex = parseInt(id)
         let firstIndex = parseInt(this.editableRef.firstElementChild.id)
         let lastIndex = parseInt(this.editableRef.lastElementChild.id)
-        //console.log(`onKeyDown text is ${text} wordIndex ${wordIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
         this.lastCaretPosition = offset
         this.lastActiveWordIndex = wordIndex
-        //this.setCaretPos(wordIndex, offset)
-        //setEditorFocus(index, wordIndex, offset)
 
         if (![8, 13, 46, 35, 36, 37, 38, 39, 40].includes(e.keyCode)) return;
 
