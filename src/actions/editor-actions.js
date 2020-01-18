@@ -15,7 +15,6 @@ export const setEditorFocus = (activeIndex, activeWordIndex, caretPosition) => {
 let lastPlayerIndex = ''
 
 export const handleTimeChange = (editorData, currentTime) => {
-    console.log("HandleTimechange called", currentTime);
     return (dispatch, getState) => {
         let seconds = Math.floor(currentTime);
         let nanoSeconds = parseInt((currentTime - seconds) * 1000);

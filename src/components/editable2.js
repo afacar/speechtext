@@ -53,17 +53,17 @@ class Editable2 extends React.Component {
             console.log(`Editable${index} UPDATES due to cleaning!`)
             this.isEditorClean = true
             if (this.lastPlayingWordIndex > -1 && this.getSpanIndexById(this.lastPlayingWordIndex) > -1) {
-                this.editableRef.childNodes[this.getSpanIndexById(this.lastPlayingWordIndex)].style["background-color"] = null;
+                this.editableRef.childNodes[this.getSpanIndexById(this.lastPlayingWordIndex)].style["color"] = null;
             }
         }
         if (isPlayingWordChanged) {
             this.isEditorClean = false
             console.log(`Editable${index} PlayingWordChanged`)
             if (this.props.playerActiveWordIndex > -1 && this.getSpanIndexById(this.props.playerActiveWordIndex) > -1) {
-                this.editableRef.childNodes[this.getSpanIndexById(this.props.playerActiveWordIndex)].style["background-color"] = null;
+                this.editableRef.childNodes[this.getSpanIndexById(this.props.playerActiveWordIndex)].style["color"] = null;
             }
             if (nextProps.playerActiveWordIndex > -1 && this.getSpanIndexById(nextProps.playerActiveWordIndex) > -1) {
-                this.editableRef.childNodes[this.getSpanIndexById(nextProps.playerActiveWordIndex)].style["background-color"] = '#a2f2f2';
+                this.editableRef.childNodes[this.getSpanIndexById(nextProps.playerActiveWordIndex)].style["color"] = 'red';
                 this.lastPlayingWordIndex = this.getSpanIndexById(nextProps.playerActiveWordIndex)
             }
 
