@@ -18,8 +18,11 @@ class SpeechTextPlayer extends Component {
     constructor(props) {
         super(props);
 
+        this.timer = undefined;
+
         this.state = {
             currentTime: 0,
+            timer: 0,
             muted: false,
             playing: false,
             playbackRate: 1.0
@@ -40,17 +43,25 @@ class SpeechTextPlayer extends Component {
         })
     }
 
-    onTimeUpdate = ({ currentTime }) => {
+    onTimeUpdate = (currentTime) => {
+        console.log("On time update callled", currentTime);
         this.setState({
-            currentTime
+            currentTime,
+            timer: currentTime,
+            playing:true
         });
-        this.props.handleTimeChange(this.props.editorData, currentTime);
+        // this.props.handleTimeChange(this.props.editorData, currentTime);
     }
 
     seekTo = (progress) => {
         console.log("seek to called", progress)
         console.log("seek duration", this.state.duration)
         var currentTime = this.state.duration * progress;
+        this.setState({
+            timer:currentTime,
+            currentTime,
+            playing:true
+        })
         this.player.seekTo(currentTime);
         this.props.handleTimeChange(this.props.editorData, currentTime);
     }
@@ -60,7 +71,8 @@ class SpeechTextPlayer extends Component {
         if (second) {
             this.player.seekTo(second);
             this.setState({
-                currentTime: second
+                currentTime: second,
+                timer: second,
             });
         }
     }
@@ -80,9 +92,10 @@ class SpeechTextPlayer extends Component {
         if (!this.state.seeking) {
             this.setState({
                 progress,
-                currentTime: progress.playedSeconds
+                currentTime: progress.playedSeconds,
+                timer: progress.playedSeconds
             })
-            this.props.handleTimeChange(this.props.editorData, progress.playedSeconds);
+            // this.props.handleTimeChange(this.props.editorData, progress.playedSeconds);
         }
     }
 
@@ -101,6 +114,21 @@ class SpeechTextPlayer extends Component {
             playbackRate: rate
         })
     }
+
+    createInterval = () => {
+        this.timer = setInterval(() => {
+            this.setState({
+                timer: this.state.timer + 0.25*this.state.playbackRate
+            })
+            this.props.handleTimeChange(this.props.editorData, this.state.timer);
+        }, 250 / this.state.playbackRate)
+    }
+
+    stopInterval = () => {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
+    }
     render() {
         const { media, src, type } = this.props;
         let disabled = _.isEmpty(src);
@@ -115,12 +143,18 @@ class SpeechTextPlayer extends Component {
                     }
                     {
                         (!this.state.playing) && (
-                            <PlayerIcon.Play onClick={() => { this.setState({ playing: true }) }} />
+                            <PlayerIcon.Play onClick={() => {
+                                this.createInterval();
+                                this.setState({ playing: true })
+                            }} />
                         )
                     }
                     {
                         (this.state.playing) && (
-                            <PlayerIcon.Pause onClick={() => { this.setState({ playing: false }) }} />
+                            <PlayerIcon.Pause onClick={() => {
+                                this.stopInterval();
+                                this.setState({ playing: false })
+                            }} />
                         )
                     }
                     <img src={Forward} alt='Fast forward 5 seconds' className='forward-icon' onClick={() => this.seekToTime(this.state.currentTime + 5)} />
