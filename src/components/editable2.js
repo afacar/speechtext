@@ -123,7 +123,7 @@ class Editable2 extends React.Component {
                     }
                     return
                 }
-                else if (offset === 1) {
+                else if (wordIndex !== 0 && offset === 1) {
                     console.log(" Backspace two spans Should be merged")
                     let children = this.editableRef.childNodes;
                     let curNode = children[wordIndex];
