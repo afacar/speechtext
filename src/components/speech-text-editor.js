@@ -108,7 +108,7 @@ class SpeechTextEditor extends Component {
         } */
 
     render() {
-        const { editorData, handleEditorChange, splitData, mergeData } = this.props;
+        const { editorData, handleEditorChange, splitData, mergeData, mergeSpans } = this.props;
         console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {
@@ -143,6 +143,7 @@ class SpeechTextEditor extends Component {
                                     transcript={alternative}
                                     splitData={splitData}
                                     mergeData={mergeData}
+                                    mergeSpans={mergeSpans}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
                                 />

@@ -84,9 +84,11 @@ class Editable2 extends React.Component {
     }
 
     onKeyDown = (e) => {
-        const { index, transcript, splitData, mergeData, isLastEditable, changeActiveIndex, setEditorFocus } = this.props;
+        const { index, transcript, splitData, mergeData, isLastEditable, changeActiveIndex, setEditorFocus, mergeSpans } = this.props;
         //console.log(`onKeyDown is`, e.keyCode)
         let sel = document.getSelection()
+        console.log("Selection", sel);
+        console.log("Transcript", transcript);
         //console.log('onKeyDown sel>', sel)
         let offset = sel.focusOffset
         let text = sel.focusNode.innerText || sel.focusNode.textContent
@@ -104,6 +106,7 @@ class Editable2 extends React.Component {
 
         switch (e.keyCode) {
             case KEYCODES.BACKSPACE:
+                console.log("Backspace clicked with offset, wordindex, firstindex and index", offset, " ", wordIndex, " ", firstIndex, " ", index)
                 if (wordIndex === firstIndex && offset === 0) {
                     if (index > 0) {
                         console.log('Merge with prev paragraphs!')
@@ -119,6 +122,22 @@ class Editable2 extends React.Component {
                         e.stopPropagation()
                     }
                     return
+                }
+                else if (offset === 1) {
+                    console.log(" Backspace two spans Should be merged")
+                    let children = this.editableRef.childNodes;
+                    let curNode = children[wordIndex];
+                    let prevNode = children[wordIndex - 1];
+                    let prevLen = prevNode.textContent.length;
+                    prevNode.textContent = prevNode.textContent + curNode.textContent.substring(1);
+                    this.editableRef.removeChild(curNode);
+                    for (var j = 0; j < children.length; j++) {
+                        children[j].id = j;
+                    }
+                    e.preventDefault()
+                    e.stopPropagation()
+                    mergeSpans(index, wordIndex, -1);
+                    setEditorFocus(index, wordIndex - 1, prevLen);
                 }
                 break;
             case KEYCODES.ENTER:
@@ -149,6 +168,20 @@ class Editable2 extends React.Component {
                     e.preventDefault()
                     e.stopPropagation()
                     return
+                } else if (offset === text.length) {
+                    console.log(" DELETE two spans Should be merged");
+                    let children = this.editableRef.childNodes;
+                    let curNode = children[wordIndex];
+                    let nextNode = children[wordIndex + 1];
+                    curNode.textContent = curNode.textContent + nextNode.textContent.substring(1);
+                    this.editableRef.removeChild(nextNode);
+                    for (var k = 0; k < children.length; k++) {
+                        children[k].id = k;
+                    }
+                    e.preventDefault()
+                    e.stopPropagation()
+                    mergeSpans(index, wordIndex, 1);
+                    setEditorFocus(index, wordIndex, offset);
                 }
                 break;
             case KEYCODES.LEFT:
@@ -255,12 +288,15 @@ class Editable2 extends React.Component {
         //console.log('children.length=', children.length)
         //console.log('words.length=', words.length)
         for (let i = 0; i < len; i++) {
-            // TODO: Check for missing spans and create newSpans to append  
+            // TODO: Check for missing spans and create newSpans to append 
             let child = children[i];
+            console.log("NODES on KEYUP ", i, " ", child.textContent);
             let wordIndex = parseInt(child.id);
+            console.log("NODES wordindex on KEYUP ", wordIndex);
             let newWord = child.innerText.trim()
-            if (child.nodeName === 'SPAN' && !isNaN(wordIndex))
+            if (child.nodeName === 'SPAN' && !isNaN(wordIndex)) {
                 words[wordIndex].word = newWord
+            }
         }
 
         //console.log(`transcript object final`, words)

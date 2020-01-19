@@ -98,7 +98,7 @@ class TranscriptionResult extends Component {
         console.log("Editor data", editorData);
         console.log("Is saved", isSaved);
         if (!_.isEmpty(editorData) && !isSaved && savingState === -1) {
-            this.setState({savingState: 2})
+            this.setState({ savingState: 2 })
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             console.log("putting editordata as json");
             console.log(editorData)
@@ -336,7 +336,58 @@ class TranscriptionResult extends Component {
             savingState: -1
         });
         //this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
+    }
 
+    mergeSpans = (editableIndex, wordIndex, direction) => {
+        if (wordIndex > 0) {
+            console.log("Merge Spans with editableIndex, wordIndex, direction ", editableIndex, " ", wordIndex, " ", direction);
+            const curWords = this.state.editorData[editableIndex].alternatives[0].words;
+            const firstWord = curWords[wordIndex + direction];
+            const secondWord = curWords[wordIndex];
+            var finalWord = ""
+            if (direction === -1) {
+                // Backspace is clicked
+                finalWord = {
+                    startTime: firstWord.startTime,
+                    endTime: secondWord.endTime,
+                    word: firstWord.word + secondWord.word,
+                    confidence: 1,
+                    speakerTag: firstWord.speakerTag
+                }
+                curWords[wordIndex + direction] = finalWord;
+                curWords.splice(wordIndex, 1);
+                console.log("Merge completed? curWords", curWords);
+                var dataCopy = this.state.editorData;
+                console.log("Merge completed? dataCopy 1 ", dataCopy);
+                dataCopy[editableIndex].alternatives[0].words = [];
+                dataCopy[editableIndex].alternatives[0].words = curWords;
+                this.setState({
+                    editorData: dataCopy
+                })
+                console.log("Merge completed? dataCopy 2 ", dataCopy);
+            } else if (direction === 1) {
+                finalWord = {
+                    startTime: secondWord.startTime,
+                    endTime: firstWord.endTime,
+                    word: secondWord.word + firstWord.word,
+                    confidence: 1,
+                    speakerTag: firstWord.speakerTag
+                }
+                curWords[wordIndex] = finalWord;
+                curWords.splice(wordIndex, 1);
+                console.log("Merge completed? curWords", curWords);
+                var dataCopy = this.state.editorData;
+                console.log("Merge completed? dataCopy 1 ", dataCopy);
+                dataCopy[editableIndex].alternatives[0].words = [];
+                dataCopy[editableIndex].alternatives[0].words = curWords;
+                this.setState({
+                    editorData: dataCopy
+                })
+            }
+            console.log("Merge final word ", finalWord);
+            console.log("Merge completed? editorData", this.state.editorData);
+            console.log("Merge concrete words ", firstWord, " ", secondWord);
+        }
     }
 
     renderResults = () => {
@@ -380,6 +431,7 @@ class TranscriptionResult extends Component {
                             handleEditorChange={this.handleEditorChange}
                             splitData={this.splitData}
                             mergeData={this.mergeData}
+                            mergeSpans={this.mergeSpans}
                             //suppressContentEditableWarning
                             //playerTime={this.state.playerTime}
                             editorClicked={this.editorClicked}
