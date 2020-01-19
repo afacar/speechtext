@@ -113,8 +113,9 @@ class Editable2 extends React.Component {
                         e.preventDefault()
                         e.stopPropagation()
                         this.isBackSpaceActive = false
-                        setEditorFocus(index - 1, -1, -1)
-                        mergeData(index)
+                        mergeData(index, (wordIndex, offset) => {
+                            setEditorFocus(index - 1, wordIndex, offset)
+                        })
                     } else if (index === 0) {
                         console.log(`onKeyDown do nothin!!!`)
                         this.isBackSpaceActive = false
@@ -168,7 +169,7 @@ class Editable2 extends React.Component {
                     e.preventDefault()
                     e.stopPropagation()
                     return
-                } else if (offset === text.length) {
+                } else if (wordIndex !== lastIndex && offset === text.length) {
                     console.log(" DELETE two spans Should be merged");
                     let children = this.editableRef.childNodes;
                     let curNode = children[wordIndex];

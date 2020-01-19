@@ -310,13 +310,15 @@ class TranscriptionResult extends Component {
             //this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
         } */
 
-    mergeData = (activeIndex) => {
+    mergeData = (activeIndex, callback) => {
         const { editorData } = this.state;
 
         if (activeIndex === 0) return;
 
         let prevData = editorData[activeIndex - 1];
         let currentData = editorData[activeIndex];
+        var wordIndex = prevData.alternatives[0].words.length;
+        var offset = prevData.alternatives[0].words[wordIndex - 1].length;
 
         prevData.alternatives[0].words = prevData.alternatives[0].words.concat(currentData.alternatives[0].words);
         let wordLength = prevData.alternatives[0].words.length;
@@ -335,6 +337,7 @@ class TranscriptionResult extends Component {
             isSaved: false,
             savingState: -1
         });
+        callback(wordIndex, offset)
         //this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
     }
 
