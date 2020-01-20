@@ -22,7 +22,7 @@ class FileList extends Component {
     componentWillReceiveProps({ files, uploadingFiles }) {
         if(!_.isEmpty(files)) {
             _.each(files, file => {
-                if((file.status === 'INITIAL' || file.status === 'UPLOADING') && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { 'id': file.id })))) {
+                if(file.status === 'INITIAL' && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { 'id': file.id })))) {
                     this.props.updateFileState(file.id, 'DELETED');
                 }
             })
