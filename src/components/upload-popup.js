@@ -167,7 +167,10 @@ class UploadPopup extends Component {
             // }
             this.props.approveFileUpload(file.options);
         }
-        this.setState({ validated: true });
+        this.setState({
+            activeWindow: ModalPageNames.INFO,
+            validated: true
+        });
     }
 
     cancelClicked = () => {
