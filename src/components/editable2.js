@@ -20,6 +20,11 @@ class Editable2 extends React.Component {
     isFocused = false
     isBlurred = false
 
+    state = {
+        copyPasteOp: false,
+        keyUpCounter: 2,
+    }
+
     shouldComponentUpdate(nextProps, nextStates) {
         const { index } = this.props;
         console.log(`Editable${index}ShouldUpdate props `, this.props, nextProps)
@@ -217,94 +222,106 @@ class Editable2 extends React.Component {
     }
 
     onKeyUp = (e) => {
-        const { keyCode } = e;
+        if (!this.state.copyPasteOp && this.state.keyUpCounter === 1) {
+            const { keyCode } = e;
 
-        if (exclusiveKeyCodes.includes(keyCode)) return;
+            if (exclusiveKeyCodes.includes(keyCode)) return;
 
-        //console.log('onKeyUp!', keyCode)
+            //console.log('onKeyUp!', keyCode)
 
-        const { index, transcript, handleEditorChange } = this.props;
-        let words = _.cloneDeep(transcript.words)
-        words = words.map((word, i) => {
-            word.word = ''
-            return word
-        })
-        //console.log('onKeyUp PrevWords!', words)
+            const { index, transcript, handleEditorChange } = this.props;
+            let words = _.cloneDeep(transcript.words)
+            words = words.map((word, i) => {
+                word.word = ''
+                return word
+            })
+            //console.log('onKeyUp PrevWords!', words)
 
-        switch (keyCode) {
-            case KEYCODES.BACKSPACE:
-                console.log('backspace pressed at index?', index)
-                if (!this.isBackSpaceActive) {
-                    console.log(`onKeyUp do nothin!!!`)
-                    e.preventDefault()
-                    e.stopPropagation()
-                    this.isBackSpaceActive = true
-                    return
-                }
-                break;
-            case KEYCODES.DEL:
-                console.log('Delete pressed')
-                if (!this.isDelActive) {
-                    console.log('onKeyUp do nothig')
-                    this.isDelActive = true
-                    e.preventDefault()
-                    e.stopPropagation()
-                    return
-                }
-                break;
-            default:
-                console.log('Unknown')
-                break;
-        }
-
-        let sel = document.getSelection()
-        //console.log('onKeyUp sel>', sel)
-        let offset = sel.focusOffset
-        let text = sel.focusNode.innerText || sel.focusNode.textContent || ' '
-        let isNodeSpan = sel.focusNode.parentNode.nodeName === 'SPAN'
-        let id = isNodeSpan ? sel.focusNode.parentNode.id : 0
-        let activeWordIndex = parseInt(id)
-        if (!isNodeSpan) {
-            //console.log('OnKeyUp node is not inside a span so Create span with activeWordIndex and append to childNodes')
-            let newSpan = document.createElement('span')
-            newSpan.id = activeWordIndex
-            newSpan.tabIndex = activeWordIndex
-            newSpan.innerText = text
-            let word = { confidence: 1 }
-            newSpan.className = this.decideClassName(word, true, false)
-            console.log('newSpan is ready onKeyUp', newSpan)
-            if (sel.focusNode.nodeName !== 'DIV' && this.editableRef.contains(sel.focusNode)) this.editableRef.removeChild(sel.focusNode)
-            this.editableRef.appendChild(newSpan)
-        }
-        console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and words.length is ${transcript.words.length} and textLen is ${text.length}`)
-        if (words[activeWordIndex])
-            words[activeWordIndex].confidence = 1;
-        var span = this.editableRef.childNodes[this.getSpanIndexById(activeWordIndex)];
-        if (span) {
-            span.style["color"] = 'darkgoldenrod';
-            span.style["text-decoration"] = "none";
-        }
-        let children = this.editableRef.childNodes
-        //console.log('onKeyUp children:', children)
-        let len = children.length
-        //console.log('children.length=', children.length)
-        //console.log('words.length=', words.length)
-        for (let i = 0; i < len; i++) {
-            // TODO: Check for missing spans and create newSpans to append 
-            let child = children[i];
-            console.log("NODES on KEYUP ", i, " ", child.textContent);
-            let wordIndex = parseInt(child.id);
-            console.log("NODES wordindex on KEYUP ", wordIndex);
-            let newWord = child.innerText.trim()
-            if (child.nodeName === 'SPAN' && !isNaN(wordIndex)) {
-                words[wordIndex].word = newWord
+            switch (keyCode) {
+                case KEYCODES.BACKSPACE:
+                    console.log('backspace pressed at index?', index)
+                    if (!this.isBackSpaceActive) {
+                        console.log(`onKeyUp do nothin!!!`)
+                        e.preventDefault()
+                        e.stopPropagation()
+                        this.isBackSpaceActive = true
+                        return
+                    }
+                    break;
+                case KEYCODES.DEL:
+                    console.log('Delete pressed')
+                    if (!this.isDelActive) {
+                        console.log('onKeyUp do nothig')
+                        this.isDelActive = true
+                        e.preventDefault()
+                        e.stopPropagation()
+                        return
+                    }
+                    break;
+                default:
+                    console.log('Unknown')
+                    break;
             }
-        }
 
-        //console.log(`transcript object final`, words)
-        //this.lastCaretPosition = offset
-        //this.props.setEditorFocus(index, activeWordIndex, this.lastCaretPosition)
-        handleEditorChange(index, words)
+            let sel = document.getSelection()
+            //console.log('onKeyUp sel>', sel)
+            let offset = sel.focusOffset
+            let text = sel.focusNode.innerText || sel.focusNode.textContent || ' '
+            let isNodeSpan = sel.focusNode.parentNode.nodeName === 'SPAN'
+            let id = isNodeSpan ? sel.focusNode.parentNode.id : 0
+            let activeWordIndex = parseInt(id)
+            if (!isNodeSpan) {
+                //console.log('OnKeyUp node is not inside a span so Create span with activeWordIndex and append to childNodes')
+                let newSpan = document.createElement('span')
+                newSpan.id = activeWordIndex
+                newSpan.tabIndex = activeWordIndex
+                newSpan.innerText = text
+                let word = { confidence: 1 }
+                newSpan.className = this.decideClassName(word, true, false)
+                console.log('newSpan is ready onKeyUp', newSpan)
+                if (sel.focusNode.nodeName !== 'DIV' && this.editableRef.contains(sel.focusNode)) this.editableRef.removeChild(sel.focusNode)
+                this.editableRef.appendChild(newSpan)
+            }
+            console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and words.length is ${transcript.words.length} and textLen is ${text.length}`)
+            if (words[activeWordIndex])
+                words[activeWordIndex].confidence = 1;
+            var span = this.editableRef.childNodes[this.getSpanIndexById(activeWordIndex)];
+            if (span) {
+                span.style["color"] = 'darkgoldenrod';
+                span.style["text-decoration"] = "none";
+            }
+            let children = this.editableRef.childNodes
+            //console.log('onKeyUp children:', children)
+            let len = children.length
+            //console.log('children.length=', children.length)
+            //console.log('words.length=', words.length)
+            for (let i = 0; i < len; i++) {
+                // TODO: Check for missing spans and create newSpans to append 
+                let child = children[i];
+                console.log("NODES on KEYUP ", i, " ", child.textContent);
+                let wordIndex = parseInt(child.id);
+                console.log("NODES wordindex on KEYUP ", wordIndex);
+                let newWord = child.innerText.trim()
+                if (child.nodeName === 'SPAN' && !isNaN(wordIndex)) {
+                    words[wordIndex].word = newWord
+                }
+            }
+
+            //console.log(`transcript object final`, words)
+            //this.lastCaretPosition = offset
+            //this.props.setEditorFocus(index, activeWordIndex, this.lastCaretPosition)
+            handleEditorChange(index, words)
+        }
+        else {
+            var keyUpCounter = this.state.keyUpCounter;
+            keyUpCounter -= 1;
+            if (keyUpCounter === 0)
+                keyUpCounter = 2;
+            this.setState({
+                copyPasteOp: false,
+                keyUpCounter
+            })
+        }
     }
 
     formatTime = ({ seconds, nanos }) => {
@@ -373,13 +390,29 @@ class Editable2 extends React.Component {
         return className;
     }
 
+    onPaste = (index, event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        let text = event.clipboardData.getData("Text");
+        let words = this.props.transcript.words;
+        words[index].word = " " + words[index].word + text;
+        let children = this.editableRef.childNodes;
+        let curNode = children[index];
+        curNode.textContent = words[index].word;
+        this.setState({
+            copyPasteOp: true
+        })
+        this.props.handleEditorChange(this.props.index, words)
+    }
+
     render = () => {
         const { index, transcript, changePlayerTime } = this.props;
         let words = transcript.words.map((word, wordIndex) => {
             return (
                 <span
                     className={this.decideClassName(word)}
-                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos/1000 ))}
+                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                    onPaste={(event) => this.onPaste(wordIndex, event)}
                     key={wordIndex}
                     tabIndex={index}
                     id={wordIndex}
