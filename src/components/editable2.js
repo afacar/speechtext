@@ -159,9 +159,10 @@ class Editable2 extends React.Component {
                     e.stopPropagation()
                     console.log('Merge with next pressed')
                     this.isDelActive = false
-                    mergeData(index + 1)
+                    mergeData(index + 1, () => {
+                        setEditorFocus(index, wordIndex, offset);
+                    })
                     // ??
-                    setEditorFocus(index, wordIndex, offset)
                     return;
                 } else if (isLastEditable && wordIndex === lastIndex && offset === text.length) {
                     console.log('onKeyDown do nothig')
