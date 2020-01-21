@@ -457,6 +457,7 @@ class TranscriptionResult extends Component {
     }
 
     editorClicked = (seconds) => {
+        console.log("editor clicked seek to ", seconds)
         this.setState({
             timeToSeek: seconds
         }, () => {

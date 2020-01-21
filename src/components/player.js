@@ -32,8 +32,12 @@ class SpeechTextPlayer extends Component {
     }
 
     componentWillReceiveProps({ timeToSeek }) {
+        console.log("component received timeToSeek ", timeToSeek)
         if (timeToSeek || timeToSeek === 0) {
             this.seekToTime(timeToSeek);
+        } 
+        if ( timeToSeek <= 1 ){
+            this.seekToTime(1);
         }
     }
 
@@ -48,7 +52,6 @@ class SpeechTextPlayer extends Component {
         this.setState({
             currentTime,
             timer: currentTime,
-            playing:true
         });
         // this.props.handleTimeChange(this.props.editorData, currentTime);
     }
@@ -58,9 +61,8 @@ class SpeechTextPlayer extends Component {
         console.log("seek duration", this.state.duration)
         var currentTime = this.state.duration * progress;
         this.setState({
-            timer:currentTime,
+            timer: currentTime,
             currentTime,
-            playing:true
         })
         this.player.seekTo(currentTime);
         this.props.handleTimeChange(this.props.editorData, currentTime);
@@ -95,7 +97,7 @@ class SpeechTextPlayer extends Component {
                 currentTime: progress.playedSeconds,
                 timer: progress.playedSeconds
             })
-            // this.props.handleTimeChange(this.props.editorData, progress.playedSeconds);
+            this.props.handleTimeChange(this.props.editorData, progress.playedSeconds);
         }
     }
 
@@ -115,20 +117,6 @@ class SpeechTextPlayer extends Component {
         })
     }
 
-    createInterval = () => {
-        this.timer = setInterval(() => {
-            this.setState({
-                timer: this.state.timer + 0.25*this.state.playbackRate
-            })
-            this.props.handleTimeChange(this.props.editorData, this.state.timer);
-        }, 250 / this.state.playbackRate)
-    }
-
-    stopInterval = () => {
-        if (this.timer) {
-            clearInterval(this.timer);
-        }
-    }
     render() {
         const { media, src, type } = this.props;
         let disabled = _.isEmpty(src);
@@ -144,7 +132,7 @@ class SpeechTextPlayer extends Component {
                     {
                         (!this.state.playing) && (
                             <PlayerIcon.Play onClick={() => {
-                                this.createInterval();
+                                // this.createInterval();
                                 this.setState({ playing: true })
                             }} />
                         )
@@ -152,7 +140,7 @@ class SpeechTextPlayer extends Component {
                     {
                         (this.state.playing) && (
                             <PlayerIcon.Pause onClick={() => {
-                                this.stopInterval();
+                                // this.stopInterval();
                                 this.setState({ playing: false })
                             }} />
                         )
@@ -237,6 +225,7 @@ class SpeechTextPlayer extends Component {
                             muted={this.state.muted}
                             onDuration={this.onDuration}
                             onProgress={this.onProgress}
+                            progressInterval={ 175 / this.state.playbackRate}
                             playing={this.state.playing}
                         />
                     )

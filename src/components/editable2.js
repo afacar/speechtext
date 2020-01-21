@@ -374,11 +374,12 @@ class Editable2 extends React.Component {
     }
 
     render = () => {
-        const { index, transcript, } = this.props;
+        const { index, transcript, changePlayerTime } = this.props;
         let words = transcript.words.map((word, wordIndex) => {
             return (
                 <span
                     className={this.decideClassName(word)}
+                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos/1000 ))}
                     key={wordIndex}
                     tabIndex={index}
                     id={wordIndex}

@@ -46,10 +46,10 @@ class SpeechTextEditor extends Component {
         return false
     }
 
-    changePlayerTime = (index, wordIndex) => {
-        const { editorData } = this.props;
-        let word = editorData[index].alternatives[0].words[wordIndex];
-        this.props.editorClicked(parseFloat(word.startTime.seconds + '.' + word.startTime.nanos));
+    changePlayerTime = (seconds) => {
+        // const { editorData } = this.props;
+        // let word = editorData[index].alternatives[0].words[wordIndex];
+        this.props.editorClicked(seconds);
     }
 
     getTranscriptionText = (words) => words.map((theword, i) => theword.word ? theword.word : '').join(' ')
@@ -146,6 +146,7 @@ class SpeechTextEditor extends Component {
                                     mergeSpans={mergeSpans}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
+                                    changePlayerTime={this.changePlayerTime}
                                 />
                             </div>
 
