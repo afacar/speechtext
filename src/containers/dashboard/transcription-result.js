@@ -102,7 +102,7 @@ class TranscriptionResult extends Component {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             console.log("putting editordata as json");
             console.log(editorData)
-            storageRef.put(new Blob([JSON.stringify(editorData)]))
+            await storageRef.put(new Blob([JSON.stringify(editorData)]))
                 .then(snapshot => {
                     this.setState({ isSaved: true, savingState: 1 })
                     this.clearSavingState();
@@ -154,7 +154,8 @@ class TranscriptionResult extends Component {
         return formattedTime;
     }
 
-    downloadAsTxt = () => {
+    downloadAsTxt = async () => {
+        await this.updateTranscribedFile();
         const { selectedFile } = this.props;
         const { editorData } = this.state;
         var textData = '';
