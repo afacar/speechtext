@@ -5,9 +5,7 @@ import _ from 'lodash';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { Row, Col } from 'react-bootstrap';
 
-import { DemoCard, StandardCard, MonthlyCard, EnterpriseCard  } from "../../components/pricing-cards";
 import '../../styles/pricing.css';
-import Auth from '../../components/auth';
 
 class Pricing extends Component {
     constructor(props) {

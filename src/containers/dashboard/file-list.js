@@ -306,5 +306,4 @@ const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLan
     }
 }
 
-export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })
-(withRouter(injectIntl(FileList)));
+export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })(withRouter(injectIntl(FileList)));

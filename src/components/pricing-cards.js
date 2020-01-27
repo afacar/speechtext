@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Form, InputGroup, Spinner, Col, Container, Row } from 'react-bootstrap';
+import { Button, Form, Spinner, Col, Container, Row } from 'react-bootstrap';
 import MasterVisaLogo from '../assets/mastercard-visa-logo.png';
 import SellingContract from '../containers/user/selling-contract';
 import RefundContract from '../containers/user/refund-contract';

@@ -248,7 +248,7 @@ class UploadPopup extends Component {
     }
 
     renderUploadUptions = () => {
-        const { language, supportedLanguages, file, show } = this.props;
+        const { language, supportedLanguages } = this.props;
         const { options } = this.state;
         const disabled = false;//file.status === 'PROCESSING' || file.status === 'DONE';
         let selectedLanguage = options.language || language;

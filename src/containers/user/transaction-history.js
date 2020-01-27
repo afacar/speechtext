@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { Container, Button, Table } from 'react-bootstrap';
+import { Container, Table } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as actions from '../../actions';
 

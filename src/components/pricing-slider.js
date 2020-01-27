@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import Slider, { Range } from 'rc-slider';
-import { Overlay, Container, Form, InputGroup } from "react-bootstrap";
+import Slider from 'rc-slider';
+import { Container, Form } from "react-bootstrap";
 // We can just import Slider or Range to reduce bundle size
 // import Slider from 'rc-slider/lib/Slider';
 // import Range from 'rc-slider/lib/Range';
@@ -23,14 +23,10 @@ const marks = {
 const style = { height: 100, width: '100%', padding: 20, backgroundColor: 'rgb(224, 236, 210)' };
 const parentStyle = { borderWidth: 1, width: '100%', backgroundColor: 'rgb(224, 236, 210)', borderRadius: 10, paddingBottom: 50, paddingRight: 15, paddingLeft: 15 };
 
-const log = (val) => {
-  console.log('slider val is', val)
-}
-
 export default class PricingSlider extends Component {
 
   render() {
-    const { vertical, min, max, step, onChange, defaultValue, duration, durationChanged } = this.props;
+    const { duration, durationChanged } = this.props;
     return (
       <div style={parentStyle}>
         <div style={style}>

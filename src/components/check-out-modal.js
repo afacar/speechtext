@@ -51,7 +51,7 @@ class CheckOutModal extends Component {
 
     handleValueChange = (stateName, value) => {
         this.props.toggleSubmit(false)
-        console.log(stateName + '\n' + values)
+        
         var { values } = this.state;
         values[stateName] = value;
         this.setState({ values });

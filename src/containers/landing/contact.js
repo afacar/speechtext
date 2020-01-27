@@ -4,7 +4,7 @@ import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMapMarkedAlt, faPhoneAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faPhoneAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { submitContactForm } from '../../actions';
 
 import '../../styles/contact.css';
