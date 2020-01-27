@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import { Card, ProgressBar, Dropdown, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDatabase, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 import ExportPopup from '../components/export-popup';
 import FileLogo from '../assets/default-file-thumbnail.png';
-import {
-    faTrashAlt, faPause, faPlay
-} from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
 import Utils from '../utils';
 import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
@@ -172,10 +170,6 @@ class File extends Component {
         return `${hours}:${minutes}:${seconds}`;
     }
 
-    formatSize = (size) => {
-        return (size / 1000000).toFixed(2);
-    }
-
     getFileStatus = (status) => {
         switch(status) {
             case 'ERROR':
@@ -226,7 +220,6 @@ class File extends Component {
     }
 
     renderDropdown = () => {
-        const { file } = this.props;
         return (
             <div>
                 <ul
@@ -241,9 +234,15 @@ class File extends Component {
                     <Dropdown.Menu
                         show={ this.state.showDropdownMenu }
                     >
-                        <Dropdown.Item eventKey="1" onClick={ this.openInEditor }>Edit</Dropdown.Item>
-                        <Dropdown.Item eventKey="2" onClick={ () => this.setState({ showExportPopup: true}) }>Export</Dropdown.Item>
-                        <Dropdown.Item eventKey="3" onClick={ this.deleteFile }>Delete</Dropdown.Item>
+                        <Dropdown.Item eventKey="1" onClick={ this.openInEditor }>
+                            <FormattedMessage id='File.Options.edit' />
+                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="2" onClick={ () => this.setState({ showExportPopup: true}) }>
+                            <FormattedMessage id='File.Options.export' />
+                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="3" onClick={ this.deleteFile }>
+                            <FormattedMessage id='File.Options.delete' />
+                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </ul>
             </div>
@@ -271,7 +270,7 @@ class File extends Component {
                 duration = this.formatTime(originalFile.originalDuration);
             }
             if(originalFile.size) {
-                size = this.formatSize(originalFile.size) + ' MB';
+                size = Utils.formatSizeByteToMB(originalFile.size) + ' MB';
             }
             if(originalFile.createDate) {
                 createDate = Utils.formatDateSimpleFormat(originalFile.createDate);

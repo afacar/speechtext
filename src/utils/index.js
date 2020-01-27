@@ -18,6 +18,10 @@ const getNameSurname = (displayName) => {
     return [name, surname]
 }
 
+const formatSizeByteToMB = (size) => {
+    return (size / 1000000).toFixed(2);
+}
+
 export default {
     ActionTypes,
     LanguageMap,
@@ -29,6 +33,7 @@ export default {
     firebase,
     addZeroes,
     getNameSurname,
+    formatSizeByteToMB,
     formatDateSimpleFormat: (expireDate, language) => {
         if (!expireDate) return null;
         var date = new Date(expireDate.seconds * 1000);
