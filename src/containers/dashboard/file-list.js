@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
-import firebase from '../../utils/firebase';
+import { injectIntl } from 'react-intl';
 import { Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt, faEdit, faTrash, faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons';
+import Alert from 'react-s-alert';
 
+import firebase from '../../utils/firebase';
 import { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles } from '../../actions';
 import '../../styles/file.css';
 import File from '../../components/file';
@@ -74,6 +76,12 @@ class FileList extends Component {
     }
 
     uploadClicked = () => {
+        if(!_.isEmpty(this.props.uploadingFiles)) {
+            Alert.error(this.props.intl.formatMessage({
+                id: 'FileUpload.multipleFileError'
+            }));
+            return;
+        }
         this.setState({
             showUploadPopup: true
         })
@@ -298,4 +306,5 @@ const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLan
     }
 }
 
-export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })(withRouter(FileList));
+export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })
+(withRouter(injectIntl(FileList)));
