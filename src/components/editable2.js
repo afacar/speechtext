@@ -393,36 +393,45 @@ class Editable2 extends React.Component {
     onPaste = (index, event) => {
         event.preventDefault();
         event.stopPropagation();
-        let text = event.clipboardData.getData("Text");
-        let words = this.props.transcript.words;
-        words[index].word = " " + words[index].word + text;
-        let children = this.editableRef.childNodes;
-        let curNode = children[index];
-        curNode.textContent = words[index].word;
-        this.setState({
-            copyPasteOp: true
-        })
-        this.props.handleEditorChange(this.props.index, words)
     }
 
     render = () => {
         const { index, transcript, changePlayerTime } = this.props;
         let words = transcript.words.map((word, wordIndex) => {
-            return (
-                <span
-                    className={this.decideClassName(word)}
-                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
-                    onPaste={(event) => this.onPaste(wordIndex, event)}
-                    key={wordIndex}
-                    tabIndex={index}
-                    id={wordIndex}
-                    contentEditable='true'
-                    suppressContentEditableWarning='true'
-                    title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
-                >
-                    {word.word ? ' ' + word.word : ''}
-                </span>
-            )
+            if (wordIndex === 0) {
+                return (
+                    <span
+                        className={this.decideClassName(word)}
+                        onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                        onPaste={(event) => this.onPaste(wordIndex, event)}
+                        key={wordIndex}
+                        tabIndex={index}
+                        id={wordIndex}
+                        contentEditable='true'
+                        suppressContentEditableWarning='true'
+                        title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
+                    >
+                        {word.word ? word.word : ''}
+                    </span>
+                )
+            } else {
+                return (
+                    <span
+                        className={this.decideClassName(word)}
+                        onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                        onPaste={(event) => this.onPaste(wordIndex, event)}
+                        key={wordIndex}
+                        tabIndex={index}
+                        id={wordIndex}
+                        contentEditable='true'
+                        suppressContentEditableWarning='true'
+                        title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
+                    >
+                        {word.word ? ' ' + word.word : ''}
+                    </span>
+                )
+            }
+
         })
         console.log(`Editable${index} Rendering words>>>`, words)
         return (
@@ -438,6 +447,7 @@ class Editable2 extends React.Component {
                 onChange={this.onChange}
                 onClick={this.onClick}
                 onInput={this.onInput}
+                onPaste={this.onPaste}
                 contentEditable='true'
                 suppressContentEditableWarning='true'
             >
