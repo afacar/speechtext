@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-
 import '../styles/editor.css';
 import Editable2 from './editable2';
 

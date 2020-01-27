@@ -21,4 +21,4 @@ class PaymentDetails extends Component {
     }
 }
 
-export default (PaymentDetails);
+export default PaymentDetails;

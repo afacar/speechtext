@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
 import '../styles/dashboard.css';
-import { updateProfile } from '../actions';
 import Contact from '../containers/landing/contact';
 
 class ContactFormModal extends Component {
@@ -24,10 +22,4 @@ class ContactFormModal extends Component {
     }
 }
 
-const mapStateToProps = ({ user }) => {
-    return {
-        user
-    }
-}
-
-export default connect(mapStateToProps, { updateProfile })(ContactFormModal);
+export default ContactFormModal;

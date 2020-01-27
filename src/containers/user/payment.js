@@ -21,7 +21,7 @@ class Payment extends Component {
             duration: 1,
             durationType: 'hours',
             unitPrice: 9,
-            calculatedPrice: 0,
+            calculatedPrice: 9,
             state: 'INITIAL',
             selectedPlanType: undefined
         }
@@ -42,30 +42,30 @@ class Payment extends Component {
             showCheckOutForm: false, // new
             loading: false,
             errorMessage: '',
-            disabled: true,
+            disabled: false,
             showContactForm: false,
         })
     }
 
     componentDidMount() {
-        //this.setUserPlan(this.props.user);
         const { plans } = this.props
-        this.setState({
-            duration: 1,
-            durationType: 'hours',
-            calculatedPrice: plans.standard ? plans.standard.hourPrice : 9,
-            state: 'INITIAL',
-            basketId: undefined,
-            checkoutForm: undefined,
-            showSpinner: false,
-            spinnerText: '',
-            sellingContractAccepted: false,
-            refundContractAccepted: false
-        })
+        if(!_.isEmpty(plans)) {
+            this.setState({
+                duration: 1,
+                durationType: 'hours',
+                calculatedPrice: plans.standard ? plans.standard.hourPrice : 9,
+                state: 'INITIAL',
+                basketId: undefined,
+                checkoutForm: undefined,
+                showSpinner: false,
+                spinnerText: '',
+                sellingContractAccepted: false,
+                refundContractAccepted: false
+            })
+        }
     }
 
     durationChanged = (e) => {
-        console.log(e)
         if (!e.target) {
             this.setState({ duration: e })
             this.calculatePrice(e)
@@ -184,7 +184,7 @@ class Payment extends Component {
             <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
                 <p>
                     {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
-                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={ this.sellingContractClicked }>
                         {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
                     </span>
                     {this.props.language !== 'tr' ? ' and ' : ' ve '}
@@ -323,7 +323,6 @@ class Payment extends Component {
     render() {
         const { showCheckOutForm, duration, durationType, unitPrice, calculatedPrice, error, showSpinner, showContactForm } = this.state
         const { user } = this.props;
-        // rph -> rate per hour
         return (
             <Container>
                 <div className="pricing card-deck flex-column flex-md-row mb-3">
@@ -347,7 +346,7 @@ class Payment extends Component {
                             startPayment={this.startPayment}
                             duration={duration}
                             durationType={durationType}
-                            rph={unitPrice}
+                            pricePerHour={unitPrice}
                             errorMessage={this.state.errorMessage}
                             loading={this.state.loading}
                             disabled={this.state.disabled}
@@ -363,7 +362,7 @@ class Payment extends Component {
                     </div>
                 }
                 {
-                    error && <Modal show={this.state.showCheckoutForm} onHide={this.onHide}>
+                    error && <Modal show={this.state.showCheckoutForm} size='lg' onHide={this.onHide}>
                         <Modal.Header>Some error happened!</Modal.Header>
                         <Modal.Body>
                             {error.errorMessage}
