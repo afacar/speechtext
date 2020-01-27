@@ -1,5 +1,4 @@
 import React, { createRef } from 'react';
-import { Container } from 'react-bootstrap';
 import { Helmet } from "react-helmet";
 import '../../styles/main.css';
 
@@ -60,27 +59,6 @@ const Main = () => {
             <div ref={refs.contactRef}>
                 <Contact goToRef={goToRef} />
             </div>
-            {/* <Container style={{ marginBottom: '100px' }}>
-                <div ref={refs.howItWorksRef} className='page-style'>
-                    <HowItWorks />
-                </div>
-                <hr />
-                <div ref={refs.featuresRef} className='page-style'>
-                    <Features />
-                </div>
-                <hr />
-                <div ref={refs.pricingRef} className='page-style'>
-                    <Pricing goToRef={goToRef} />
-                </div>
-                <hr />
-                <div ref={refs.aboutRef} className='page-style'>
-                    <AboutUs />
-                </div>
-                <hr />
-                <div ref={refs.contactRef} className='page-style'>
-                    <Contact goToRef={goToRef} />
-                </div>
-            </Container> */}
             <Footer />
         </div>
     );

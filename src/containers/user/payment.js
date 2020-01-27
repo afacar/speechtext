@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Container, Button, ResponsiveEmbed, Modal, Spinner, Alert as BootstrapAlert } from 'react-bootstrap';
+import { Container, Button, Modal, Alert as BootstrapAlert } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import publicIp from 'public-ip';
 
@@ -12,11 +12,6 @@ import ApprovementPopup from '../../components/approvement-popup';
 import { StandardPaymentCard } from '../../components/pricing-cards';
 import CheckOutModal from '../../components/check-out-modal';
 import ContactFormModal from '../../components/contact-form-modal';
-
-import SellingContract from './selling-contract';
-import RefundContract from './refund-contract';
-import MasterCardLogo from '../../assets/mastercard-logo.png';
-import VisaLogo from '../../assets/visa-logo.png';
 
 class Payment extends Component {
     constructor(props) {
@@ -251,10 +246,10 @@ class Payment extends Component {
         var that = this;
         const { language, user } = this.props;
         console.log("User", user);
-        var { duration, durationType, basketId, selectedPlanType } = this.state;
-        let durationInMinutes = undefined;
-        if (selectedPlanType === 'PayAsYouGo')
-            durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        var { duration, basketId } = this.state;
+        // let durationInMinutes = undefined;
+        // if (selectedPlanType === 'PayAsYouGo')
+            // durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         this.setState({
             state: 'PAYMENT',
             loading: true,

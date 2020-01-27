@@ -254,9 +254,9 @@ class File extends Component {
     }
 
     render() {
-        const { file, progress, paused, showSpinner } = this.state;
+        const { file, progress } = this.state;
 
-        let errorText = this.getErrorMessage(file);
+        // let errorText = this.getErrorMessage(file);
         let fileSrc = FileLogo;
         let fileImageContainerClass = 'file-image-container';
         if(file && file.thumbnail && file.thumbnail.publicUrl) {
