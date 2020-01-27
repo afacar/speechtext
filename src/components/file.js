@@ -174,6 +174,8 @@ class File extends Component {
         switch(status) {
             case 'ERROR':
                 return 'Error';
+            case 'UPLOADED':
+            case 'READY':
             case 'CONVERTING':
             case 'PROCESSING':
             case 'TRANSCRIBING':
@@ -187,6 +189,8 @@ class File extends Component {
         switch(status) {
             case 'ERROR':
                 return 'error';
+            case 'UPLOADED':
+            case 'READY':
             case 'CONVERTING':
             case 'PROCESSING':
             case 'TRANSCRIBING':
@@ -342,47 +346,6 @@ class File extends Component {
                     file={ this.props.file }
                     closeModal={ () => this.setState({ showExportPopup: false}) }
                 />
-                    {
-                        // !showSpinner && file.status !== 'PROCESSING' &&
-                        // <span className='file-settings'>
-                        //     {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
-                        //     <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
-                        // </span>
-                    }
-                    {/* {
-                        showSpinner &&
-                        <div className='float-right'>
-                            <Spinner animation="border" role="status" size='sm' />
-                        </div>
-                    } */}
-                    {/* {
-                        file.status !== 'DONE' && file.status !== 'ERROR' && progress < 100 &&
-                        <div className={ 'file-progress' }>
-                            <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
-                            <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
-                            {
-                                file.status !== 'PROCESSING' && !paused &&
-                                <FontAwesomeIcon icon={ faPause } className='pause-play' onClick={ this.pauseUpload } />
-                            }
-                            {
-                                file.status !== 'PROCESSING' && paused &&
-                                <FontAwesomeIcon icon={ faPlay } className='pause-play'  onClick={ this.resumeUpload } />
-                            }
-                        </div>file.
-                    } */}
-                    {/* {
-                        (file.status === 'UPLOADED' || file.status ==='CONVERTING') &&
-                        <div className='mt-2'>
-                            <Spinner animation="border" role="status" size='sm' />
-                            <span className='ml-2'>Processing...</span>
-                        </div>
-                    }
-                    {
-                        file.status === 'ERROR' &&
-                        <div className='file-error-text'>
-                            { !_.isEmpty(errorText) ? errorText : 'An error occured during transcription!' }
-                        </div>
-                    } */}
             </div>
         )
     }
