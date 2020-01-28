@@ -292,7 +292,6 @@ class TranscriptionResult extends Component {
 
         let prevData = editorData[activeIndex - 1];
         let currentData = editorData[activeIndex];
-        let prevWordLength = prevData.alternatives[0].words.length;
 
         prevData.alternatives[0].words = prevData.alternatives[0].words.concat(currentData.alternatives[0].words);
         let wordLength = prevData.alternatives[0].words.length;
@@ -315,7 +314,7 @@ class TranscriptionResult extends Component {
     }
 
     renderResults = () => {
-        const { editorData, isSaved, numOfWords } = this.state;
+        const { editorData, isSaved } = this.state;
         console.log('renderResults editorData', editorData)
         if (editorData === null) return;
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'

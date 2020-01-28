@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import CreditCardInput from 'react-credit-card-input';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import '../styles/dashboard.css';
 
 class PaymentDetails extends Component {
@@ -22,4 +21,4 @@ class PaymentDetails extends Component {
     }
 }
 
-export default (injectIntl(PaymentDetails));
+export default PaymentDetails;

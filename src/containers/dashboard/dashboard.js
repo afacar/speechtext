@@ -8,7 +8,6 @@ import { getFileList, updateFileState, removeFromUploadingFiles } from '../../ac
 import '../../styles/dashboard.css';
 import UserHeader from '../user-header';
 import FileList from './file-list';
-import TranscriptionResult from './transcription-result';
 import Utils from '../../utils';
 const { auth } = Utils.firebase;
 
