@@ -390,7 +390,7 @@ class Editable2 extends React.Component {
         return className;
     }
 
-    onPaste = (index, event) => {
+    onDisableEvent = (event) => {
         event.preventDefault();
         event.stopPropagation();
     }
@@ -403,7 +403,8 @@ class Editable2 extends React.Component {
                     <span
                         className={this.decideClassName(word)}
                         onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
-                        onPaste={(event) => this.onPaste(wordIndex, event)}
+                        onPaste={(event) => this.onDisableEvent(event)}
+                        onCut={(event) => this.onDisableEvent(event)}
                         key={wordIndex}
                         tabIndex={index}
                         id={wordIndex}
@@ -419,7 +420,8 @@ class Editable2 extends React.Component {
                     <span
                         className={this.decideClassName(word)}
                         onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
-                        onPaste={(event) => this.onPaste(wordIndex, event)}
+                        onPaste={(event) => this.onDisableEvent(event)}
+                        onCut={(event) => this.onDisableEvent(event)}
                         key={wordIndex}
                         tabIndex={index}
                         id={wordIndex}
@@ -447,7 +449,8 @@ class Editable2 extends React.Component {
                 onChange={this.onChange}
                 onClick={this.onClick}
                 onInput={this.onInput}
-                onPaste={this.onPaste}
+                onPaste={this.onDisableEvent}
+                onCut={(event) => this.onDisableEvent(event)}
                 contentEditable='true'
                 suppressContentEditableWarning='true'
             >
