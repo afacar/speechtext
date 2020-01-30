@@ -42,12 +42,21 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 80%;
     height: 100%;
-    /* filter: opacity(.5); */
+    /* filter: opacity(.7); */
     z-index: -1;
 }
 
+#header-nav {
+    opacity: .7;
+    background-color: #DDE1E4;
+}
+
+#header-nav:hover {
+    background-color: white;
+    opacity: 1;
+}
 .header-content {
     /* background: none; */
     z-index: 10;
