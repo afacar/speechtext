@@ -162,8 +162,13 @@ class Editable2 extends React.Component {
                 e.preventDefault()
                 e.stopPropagation()
                 if (wordIndex > firstIndex && wordIndex < lastIndex) {
-                    console.log('Split paragraphs!')
-                    splitData(index, wordIndex, offset, text.length)
+                    console.log('Split paragraphs not from last word!')
+                    splitData(index, wordIndex, offset, text.length, false)
+                    setEditorFocus(index + 1, 0, 0)
+                    return;
+                } else if (wordIndex > firstIndex && wordIndex === lastIndex) {
+                    console.log('Split paragraphs from last word!')
+                    splitData(index, wordIndex, offset, text.length, true)
                     setEditorFocus(index + 1, 0, 0)
                     return;
                 }
@@ -401,39 +406,50 @@ class Editable2 extends React.Component {
         return className;
     }
 
-    onPaste = (index, event) => {
+    onDisableEvent = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        let text = event.clipboardData.getData("Text");
-        let words = this.props.transcript.words;
-        words[index].word = " " + words[index].word + text;
-        let children = this.editableRef.childNodes;
-        let curNode = children[index];
-        curNode.textContent = words[index].word;
-        this.setState({
-            copyPasteOp: true
-        })
-        this.props.handleEditorChange(this.props.index, words)
     }
 
     render = () => {
         const { index, transcript, changePlayerTime } = this.props;
         let words = transcript.words.map((word, wordIndex) => {
-            return (
-                <span
-                    className={this.decideClassName(word)}
-                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
-                    onPaste={(event) => this.onPaste(wordIndex, event)}
-                    key={wordIndex}
-                    tabIndex={index}
-                    id={wordIndex}
-                    contentEditable='true'
-                    suppressContentEditableWarning='true'
-                    title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
-                >
-                    {word.word ? ' ' + word.word : ''}
-                </span>
-            )
+            if (wordIndex === 0) {
+                return (
+                    <span
+                        className={this.decideClassName(word)}
+                        onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                        onPaste={(event) => this.onDisableEvent(event)}
+                        onCut={(event) => this.onDisableEvent(event)}
+                        key={wordIndex}
+                        tabIndex={index}
+                        id={wordIndex}
+                        contentEditable='true'
+                        suppressContentEditableWarning='true'
+                        title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
+                    >
+                        {word.word ? word.word : ''}
+                    </span>
+                )
+            } else {
+                return (
+                    <span
+                        className={this.decideClassName(word)}
+                        onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                        onPaste={(event) => this.onDisableEvent(event)}
+                        onCut={(event) => this.onDisableEvent(event)}
+                        key={wordIndex}
+                        tabIndex={index}
+                        id={wordIndex}
+                        contentEditable='true'
+                        suppressContentEditableWarning='true'
+                        title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
+                    >
+                        {word.word ? ' ' + word.word : ''}
+                    </span>
+                )
+            }
+
         })
         console.log(`Editable${index} Rendering words>>>`, words)
         return (
@@ -449,6 +465,8 @@ class Editable2 extends React.Component {
                 onChange={this.onChange}
                 onClick={this.onClick}
                 onInput={this.onInput}
+                onPaste={this.onDisableEvent}
+                onCut={(event) => this.onDisableEvent(event)}
                 contentEditable='true'
                 suppressContentEditableWarning='true'
             >
