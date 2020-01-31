@@ -102,6 +102,8 @@ class TranscriptionResult extends Component {
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             console.log("putting editordata as json");
             console.log(editorData)
+            var currentUser = firebase.auth().currentUser;
+            firebase.firestore().collection('userfiles').doc(currentUser.uid).collection('files').doc(selectedFile.id).update({lastEdit: new Date()});
             await storageRef.put(new Blob([JSON.stringify(editorData)]))
                 .then(snapshot => {
                     this.setState({ isSaved: true, savingState: 1 })
