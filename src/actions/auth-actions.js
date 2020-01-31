@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Utils from '../utils';
 import publicIp from 'public-ip';
 const { firestore, auth, functions } = Utils.firebase;

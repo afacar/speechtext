@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Container, Table } from 'react-bootstrap';
+import { Container, Button, Table } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as actions from '../../actions';
 
@@ -10,28 +10,21 @@ import {
     faCheckCircle, faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 
-
 class Transaction extends Component {
 
     componentDidMount() {
-        if(!_.isEmpty(this.props.user)) {
-            this.props.getTransactions(this.props.user);
-        }
+        this.props.getTransactions(this.props.user);
     }
 
-    componentWillReceiveProps({ transactions, user }) {
-        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
-            this.props.getTransactions(user);
-        } else if(!_.isEmpty(transactions)) {
-            console.log("Transactions " + transactions)
-            console.log("Transactions size " + transactions.length)
-            var size = transactions.length || 0;
-            var sizeTmp = transactions.length || 0;
-            size = parseInt(size / 10);
-            if (sizeTmp % 10 !== 0)
-                size++;
-            this.props.setArraySize(size);
-        }
+    componentWillReceiveProps({ transactions }) {
+        console.log("Transactions " + transactions)
+        console.log("Transactions size " + transactions.length)
+        var size = transactions.length || 0;
+        var sizeTmp = transactions.length || 0;
+        size = parseInt(size / 10);
+        if (sizeTmp % 10 !== 0)
+            size++;
+        this.props.setArraySize(size);
     }
 
     // 1 , 2 ,3 pages, also add to list on profile click
@@ -39,11 +32,11 @@ class Transaction extends Component {
     renderTransaction(transaction, index) {
         return (
             <tr key={index}>
-                <td className="text-center">{transaction.date}</td>
-                <td className="text-center">{transaction.amount + " hour(s)"}</td>
-                <td className="text-center">{transaction.currency + " " + transaction.price}</td>
-                <td className="text-center">{transaction.card}</td>
-                <td className="text-center">
+                <td>{transaction.basketId}</td>
+                <td>{transaction.date}</td>
+                <td>{transaction.amount + " hour(s)"}</td>
+                <td>{transaction.currency + " " + transaction.price}</td>
+                <td>
                     {
                         transaction.status === 'success' ?
                             <FontAwesomeIcon icon={faCheckCircle} color={'green'} />
@@ -64,19 +57,19 @@ class Transaction extends Component {
                 <Table responsive striped bordered hover >
                     <thead>
                         <tr>
-                            <th className="text-center">
+                            <th>
+                                <FormattedMessage id={"User.Tab.Transaction.Header.id"} />
+                            </th>
+                            <th>
                                 <FormattedMessage id={"User.Tab.Transaction.Header.date"} />
                             </th>
-                            <th className="text-center">
+                            <th>
                                 <FormattedMessage id={"User.Tab.Transaction.Header.amount"} />
                             </th>
-                            <th className="text-center">
+                            <th>
                                 <FormattedMessage id={"User.Tab.Transaction.Header.price"} />
                             </th>
-                            <th className="text-center">
-                                <FormattedMessage id={"User.Tab.Transaction.Header.card"} />
-                            </th>
-                            <th className="text-center">
+                            <th>
                                 <FormattedMessage id={"User.Tab.Transaction.Header.status"} />
                             </th>
                         </tr>

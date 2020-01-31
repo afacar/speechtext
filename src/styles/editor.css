@@ -1,7 +1,7 @@
 .conversionResult {
     font-size: 15px;
-    border-left: 1px solid rgb(63, 63, 63);
-    border-right: 1px solid rgb(63, 63, 63);
+    /* border-left: 1px solid rgb(63, 63, 63); */
+    /* border-right: 1px solid rgb(63, 63, 63); */
     padding: 10px;
     line-height: 2;
     box-shadow: 0px 0px 0px 0px;
@@ -9,18 +9,18 @@
 
 .first-conversionResult {
     font-size: 15px;
-    border-top: 1px solid rgb(63, 63, 63);
-    border-left: 1px solid rgb(63, 63, 63);
-    border-right: 1px solid rgb(63, 63, 63);
+    /* border-top: 1px solid rgb(63, 63, 63); */
+    /* border-left: 1px solid rgb(63, 63, 63); */
+    /* border-right: 1px solid rgb(63, 63, 63); */
     padding: 10px;
     line-height: 2;
 }
 
 .last-conversionResult {
     font-size: 15px;
-    border-left: 1px solid rgb(63, 63, 63);
-    border-right: 1px solid rgb(63, 63, 63);
-    border-bottom: 1px solid rgb(63, 63, 63);
+    /* border-left: 1px solid rgb(63, 63, 63); */
+    /* border-right: 1px solid rgb(63, 63, 63); */
+    /* border-bottom: 1px solid rgb(63, 63, 63); */
     padding: 10px;
     line-height: 2;
 }
@@ -88,10 +88,59 @@
 }
 
 .fixed-word {
-    background-color: lightgreen;
+    color: goldenrod;
 }
 
 .editable-content-wrapper {
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.input-speaker{
+    border: 0px;
+    border-bottom: 1px black !important;
+    padding-left: 4px;
+    font-size: small; 
+    font-weight: bold;
+    max-width: 6rem;
+}
+
+.export{
+    position: fixed;
+    right: 80px !important;
+    top: 140px !important;
+}
+
+.save-button{
+    width: 100%;
+    background-color: #384d60;
+    margin-top: 0.5rem;
+    border-color: #384d60 !important;
+}
+
+.save-button:disabled{
+    background-color: gray;
+}
+
+.saving-state-text{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.saving-state-text.saving{
+    color: seagreen;
+    animation-fill-mode: backwards;
+}
+
+.saving-state-text.saved{
+    color: seagreen;
+}
+
+.saving-state-text.error{
+    color: firebrick;
+}
+
+.saving-state-text.unsaved{
+    color: darkgoldenrod;
 }

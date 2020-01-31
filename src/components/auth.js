@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Modal } from 'react-bootstrap';
 import Utils from '../utils';
 import FirebaseUIAuth from "react-firebaseui-localized";
+import { bake_cookie } from 'sfcookies';
 import { withRouter } from 'react-router';
 
 const { firebase } = Utils;

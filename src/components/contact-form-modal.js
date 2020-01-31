@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-bootstrap';
+import _ from 'lodash';
+import { connect } from 'react-redux';
 
+import { updateProfile } from '../actions';
+
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Modal, Container, Row } from 'react-bootstrap';
+import PaymentDetails from './payment-details';
+import BillingDetails from './billing-details';
+import CheckOutInfo from './check-out-info';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faCheckCircle, faTimesCircle
+} from '@fortawesome/free-solid-svg-icons';
 import '../styles/dashboard.css';
 import Contact from '../containers/landing/contact';
+
 
 class ContactFormModal extends Component {
 
@@ -22,4 +35,10 @@ class ContactFormModal extends Component {
     }
 }
 
-export default ContactFormModal;
+const mapStateToProps = ({ user }) => {
+    return {
+        user
+    }
+}
+
+export default connect(mapStateToProps, { updateProfile })(injectIntl(ContactFormModal));

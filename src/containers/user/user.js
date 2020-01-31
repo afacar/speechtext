@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Container, Tab, Row, Col, Nav, Pagination } from 'react-bootstrap';
+import { Container, Tab, Row, Col, Nav, Button, Pagination } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import UserHeader from '../user-header';

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { FormattedMessage } from 'react-intl';
 import { Card, ProgressBar, Dropdown, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDatabase, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 import ExportPopup from '../components/export-popup';
 import FileLogo from '../assets/default-file-thumbnail.png';
+import {
+    faTrashAlt, faPause, faPlay
+} from '@fortawesome/free-solid-svg-icons';
 import firebase from '../utils/firebase';
 import Utils from '../utils';
 import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
@@ -170,12 +172,14 @@ class File extends Component {
         return `${hours}:${minutes}:${seconds}`;
     }
 
+    formatSize = (size) => {
+        return (size / 1000000).toFixed(2);
+    }
+
     getFileStatus = (status) => {
         switch(status) {
             case 'ERROR':
                 return 'Error';
-            case 'UPLOADED':
-            case 'READY':
             case 'CONVERTING':
             case 'PROCESSING':
             case 'TRANSCRIBING':
@@ -189,8 +193,6 @@ class File extends Component {
         switch(status) {
             case 'ERROR':
                 return 'error';
-            case 'UPLOADED':
-            case 'READY':
             case 'CONVERTING':
             case 'PROCESSING':
             case 'TRANSCRIBING':
@@ -224,6 +226,7 @@ class File extends Component {
     }
 
     renderDropdown = () => {
+        const { file } = this.props;
         return (
             <div>
                 <ul
@@ -238,15 +241,9 @@ class File extends Component {
                     <Dropdown.Menu
                         show={ this.state.showDropdownMenu }
                     >
-                        <Dropdown.Item eventKey="1" onClick={ this.openInEditor }>
-                            <FormattedMessage id='File.Options.edit' />
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="2" onClick={ () => this.setState({ showExportPopup: true}) }>
-                            <FormattedMessage id='File.Options.export' />
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="3" onClick={ this.deleteFile }>
-                            <FormattedMessage id='File.Options.delete' />
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="1" onClick={ this.openInEditor }>Edit</Dropdown.Item>
+                        <Dropdown.Item eventKey="2" onClick={ () => this.setState({ showExportPopup: true}) }>Export</Dropdown.Item>
+                        <Dropdown.Item eventKey="3" onClick={ this.deleteFile }>Delete</Dropdown.Item>
                     </Dropdown.Menu>
                 </ul>
             </div>
@@ -254,9 +251,9 @@ class File extends Component {
     }
 
     render() {
-        const { file, progress } = this.state;
+        const { file, progress, paused, showSpinner } = this.state;
 
-        // let errorText = this.getErrorMessage(file);
+        let errorText = this.getErrorMessage(file);
         let fileSrc = FileLogo;
         let fileImageContainerClass = 'file-image-container';
         if(file && file.thumbnail && file.thumbnail.publicUrl) {
@@ -274,7 +271,7 @@ class File extends Component {
                 duration = this.formatTime(originalFile.originalDuration);
             }
             if(originalFile.size) {
-                size = Utils.formatSizeByteToMB(originalFile.size) + ' MB';
+                size = this.formatSize(originalFile.size) + ' MB';
             }
             if(originalFile.createDate) {
                 createDate = Utils.formatDateSimpleFormat(originalFile.createDate);
@@ -346,6 +343,47 @@ class File extends Component {
                     file={ this.props.file }
                     closeModal={ () => this.setState({ showExportPopup: false}) }
                 />
+                    {
+                        // !showSpinner && file.status !== 'PROCESSING' &&
+                        // <span className='file-settings'>
+                        //     {/* <FontAwesomeIcon icon={ faEdit } className='edit'  onClick={ this.editFile } /> */}
+                        //     <FontAwesomeIcon icon={ faTrashAlt } className='delete' onClick={ this.deleteFile } />
+                        // </span>
+                    }
+                    {/* {
+                        showSpinner &&
+                        <div className='float-right'>
+                            <Spinner animation="border" role="status" size='sm' />
+                        </div>
+                    } */}
+                    {/* {
+                        file.status !== 'DONE' && file.status !== 'ERROR' && progress < 100 &&
+                        <div className={ 'file-progress' }>
+                            <span>{file.status === 'PROCESSING' ? 'Transcribing...' : 'Uploading...'}</span>
+                            <ProgressBar striped now={ progress } className={file.status === 'PROCESSING' ? 'transcribe-progress' : ''} />
+                            {
+                                file.status !== 'PROCESSING' && !paused &&
+                                <FontAwesomeIcon icon={ faPause } className='pause-play' onClick={ this.pauseUpload } />
+                            }
+                            {
+                                file.status !== 'PROCESSING' && paused &&
+                                <FontAwesomeIcon icon={ faPlay } className='pause-play'  onClick={ this.resumeUpload } />
+                            }
+                        </div>file.
+                    } */}
+                    {/* {
+                        (file.status === 'UPLOADED' || file.status ==='CONVERTING') &&
+                        <div className='mt-2'>
+                            <Spinner animation="border" role="status" size='sm' />
+                            <span className='ml-2'>Processing...</span>
+                        </div>
+                    }
+                    {
+                        file.status === 'ERROR' &&
+                        <div className='file-error-text'>
+                            { !_.isEmpty(errorText) ? errorText : 'An error occured during transcription!' }
+                        </div>
+                    } */}
             </div>
         )
     }
