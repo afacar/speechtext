@@ -46,10 +46,7 @@ class Export extends Component {
         const { formatMessage } = intl;
         return (
             <div>
-                <Button className="save-button" onClick={this.props.onSave} disabled={savingState !== -1 || savingState === 1}>
-                    Save{"  "}
-                    <FontAwesomeIcon icon={faSave} color="white" size="1x"/>
-                </Button>
+
                 <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })}>
                     <Dropdown.Item as="button" onClick={this.props.downloadAsTxt}>
                         <FormattedMessage id='Transcription.Download.option1' />
@@ -61,6 +58,10 @@ class Export extends Component {
                         <FormattedMessage id='Transcription.Download.option3' />
                     </Dropdown.Item>
                 </DropdownButton>
+                <Button className="save-button" onClick={this.props.onSave} disabled={savingState !== -1 || savingState === 1}>
+                    Save{"  "}
+                    <FontAwesomeIcon icon={faSave} color="white" size="1x"/>
+                </Button>
                 {this.renderSavingText()}
             </div>
         )
