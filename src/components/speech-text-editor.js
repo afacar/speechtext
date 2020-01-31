@@ -126,8 +126,8 @@ class SpeechTextEditor extends Component {
                                 disabled={true}
                             >
                                 <div>
-                                    <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
                                     <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' />
+                                    <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
                                 </div>
                                 {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
