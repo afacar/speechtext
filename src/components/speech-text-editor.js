@@ -46,10 +46,10 @@ class SpeechTextEditor extends Component {
         return false
     }
 
-    changePlayerTime = (index, wordIndex) => {
-        const { editorData } = this.props;
-        let word = editorData[index].alternatives[0].words[wordIndex];
-        this.props.editorClicked(parseFloat(word.startTime.seconds + '.' + word.startTime.nanos));
+    changePlayerTime = (seconds) => {
+        // const { editorData } = this.props;
+        // let word = editorData[index].alternatives[0].words[wordIndex];
+        this.props.editorClicked(seconds);
     }
 
     getTranscriptionText = (words) => words.map((theword, i) => theword.word ? theword.word : '').join(' ')
@@ -108,7 +108,7 @@ class SpeechTextEditor extends Component {
         } */
 
     render() {
-        const { editorData, handleEditorChange, splitData, mergeData } = this.props;
+        const { editorData, handleEditorChange, splitData, mergeData, mergeSpans } = this.props;
         console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {
@@ -127,7 +127,7 @@ class SpeechTextEditor extends Component {
                             >
                                 <div>
                                     <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
-                                    <FontAwesomeIcon icon={faPen} color={'black'} />
+                                    <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' />
                                 </div>
                                 {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
@@ -143,8 +143,10 @@ class SpeechTextEditor extends Component {
                                     transcript={alternative}
                                     splitData={splitData}
                                     mergeData={mergeData}
+                                    mergeSpans={mergeSpans}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
+                                    changePlayerTime={this.changePlayerTime}
                                 />
                             </div>
 

@@ -115,6 +115,7 @@
     width: 100%;
     background-color: #384d60;
     margin-bottom: 0.5rem;
+    border-color: #384d60 !important;
 }
 
 .save-button:disabled{
@@ -123,7 +124,7 @@
 
 .saving-state-text{
     text-align: center;
-    font-size: large;
+    font-weight: bold;
     margin-top: 4px;
 }
 

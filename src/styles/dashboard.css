@@ -122,6 +122,7 @@ ol.selling-contract-list { counter-reset: item }
 
 .transcription #dropdown-item-button {
     background-color: #384d60;
+    border-color: #384d60;
 }
 
 .saved-editing-text {

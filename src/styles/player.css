@@ -124,16 +124,32 @@
 }
 
 .playback-dropdown{
-    background-color: cadetblue;
+    background-color: #384d60;
     margin-left: 1rem;
+    margin-top: -5px;
     height: 2.1rem;
 }
 
-.playback-dropdown-menu{
-    background-color: cadetblue;
+.playback-dropdown-menu {
+    background-color: #384d60;
+    transform: none !important;
+    top: 30px !important;
+    border-radius: 0;
+    border: 0 !important;
 }
 
-.playback-dropdown-menu-toggle{
-    background-color: cadetblue;
+.playback-dropdown-menu button {
+    color: white;
+}
+
+.playback-dropdown-menu-toggle {
+    background-color: #384d60 !important;
+    border: 0 !important;
     height: 2.1rem;
+    box-shadow: none !important;
+}
+
+.speaker-pen-icon {
+    color: #384d60;
+    margin-left: 15px;
 }

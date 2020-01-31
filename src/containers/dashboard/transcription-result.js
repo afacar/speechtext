@@ -98,11 +98,11 @@ class TranscriptionResult extends Component {
         console.log("Editor data", editorData);
         console.log("Is saved", isSaved);
         if (!_.isEmpty(editorData) && !isSaved && savingState === -1) {
-            this.setState({savingState: 2})
+            this.setState({ savingState: 2 })
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
             console.log("putting editordata as json");
             console.log(editorData)
-            storageRef.put(new Blob([JSON.stringify(editorData)]))
+            await storageRef.put(new Blob([JSON.stringify(editorData)]))
                 .then(snapshot => {
                     this.setState({ isSaved: true, savingState: 1 })
                     this.clearSavingState();
@@ -154,7 +154,8 @@ class TranscriptionResult extends Component {
         return formattedTime;
     }
 
-    downloadAsTxt = () => {
+    downloadAsTxt = async () => {
+        await this.updateTranscribedFile();
         const { selectedFile } = this.props;
         const { editorData } = this.state;
         var textData = '';
@@ -265,35 +266,83 @@ class TranscriptionResult extends Component {
         })
     }
 
-    splitData = (activeIndex, activeWordIndex, caretPos, wordLength) => {
+    splitData = (activeIndex, activeWordIndex, caretPos, wordLength, lastWord) => {
         const { editorData } = this.state;
+        if (!lastWord) {
+            let wordIndex = activeWordIndex;
+            if (caretPos <= wordLength / 2) {
+                wordIndex -= 1;
+            }
 
-        let wordIndex = activeWordIndex;
-        if (caretPos <= wordLength / 2) {
-            wordIndex -= 1;
+            let firstSplittedData = editorData[activeIndex];
+            let secondSplittedData = _.cloneDeep(firstSplittedData);
+            console.log("Split data first splitted data ", firstSplittedData);
+            let endWord = firstSplittedData.alternatives[0].words[wordIndex];
+            firstSplittedData.alternatives[0].endTime = endWord.endTime;
+            firstSplittedData.alternatives[0].words.splice(wordIndex + 1);
+            firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
+
+            let startWord = secondSplittedData.alternatives[0].words[wordIndex + 1];
+            secondSplittedData.alternatives[0].startTime = startWord.startTime;
+            secondSplittedData.alternatives[0].words.splice(0, wordIndex + 1);
+            secondSplittedData.alternatives[0].transcript = this.getTranscriptionText(secondSplittedData.alternatives[0].words);
+
+            editorData[activeIndex] = firstSplittedData;
+            editorData.splice(activeIndex + 1, 0, secondSplittedData);
+            console.log('After split new editorData>', editorData)
+            this.setState({
+                editorData,
+                isSaved: false,
+                savingState: -1,
+            });
+        } else {
+            let firstSplittedData = editorData[activeIndex];
+            let secondSplittedData = _.cloneDeep(firstSplittedData);
+            console.log("Split data first splitted data ", firstSplittedData);
+
+            let endWord = firstSplittedData.alternatives[0].words[activeWordIndex];
+            let endWordStr = endWord.word;
+            console.log("javid Split data end word word  ", endWordStr);
+            let endWordFirstPartStr = endWord.word.substring(0, caretPos - 1);
+            let endWordSecondPartStr = endWord.word.substring(caretPos - 1, endWord.word.length);
+
+            console.log("javid Split data end word  ", endWord);
+            console.log("javid Split data caretpos  ", caretPos);
+            console.log("javid Split data end word first part str ", endWordFirstPartStr);
+            console.log("javid Split data end word second part str ", endWordSecondPartStr);
+
+
+            let endWordFirstPart = _.cloneDeep(endWord);
+            endWordFirstPart.word = endWordFirstPartStr;
+            console.log("javid Split data end word first part ", endWordFirstPart);
+            endWordFirstPart.confidence = 1;
+
+            let endWordSecondPart = _.cloneDeep(endWord);
+            endWordSecondPart.word = endWordSecondPartStr;
+            endWordSecondPart.confidence = 1;
+
+            firstSplittedData.alternatives[0].endTime = endWord.endTime;
+            console.log("javid Split data end word first part ", endWordFirstPart);
+            firstSplittedData.alternatives[0].words.splice(activeWordIndex, 1, endWordFirstPart);
+            firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
+
+            let startWord = endWordSecondPart;
+            console.log("javid Split data end word first part ", endWordFirstPart);
+            console.log("javid Split data end word second part ", endWordSecondPart);
+            secondSplittedData.alternatives[0].startTime = startWord.startTime;
+            secondSplittedData.alternatives[0].words = [startWord]
+            secondSplittedData.alternatives[0].transcript = this.getTranscriptionText(secondSplittedData.alternatives[0].words);
+
+            editorData[activeIndex] = firstSplittedData;
+            editorData.splice(activeIndex + 1, 0, secondSplittedData);
+            console.log('After split new editorData>', editorData)
+            this.setState({
+                editorData,
+                isSaved: false,
+                savingState: -1,
+            });
         }
 
-        let firstSplittedData = editorData[activeIndex];
-        let secondSplittedData = _.cloneDeep(firstSplittedData);
-
-        let endWord = firstSplittedData.alternatives[0].words[wordIndex];
-        firstSplittedData.alternatives[0].endTime = endWord.endTime;
-        firstSplittedData.alternatives[0].words.splice(wordIndex + 1);
-        firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
-
-        let startWord = secondSplittedData.alternatives[0].words[wordIndex + 1];
-        secondSplittedData.alternatives[0].startTime = startWord.startTime;
-        secondSplittedData.alternatives[0].words.splice(0, wordIndex + 1);
-        secondSplittedData.alternatives[0].transcript = this.getTranscriptionText(secondSplittedData.alternatives[0].words);
-
-        editorData[activeIndex] = firstSplittedData;
-        editorData.splice(activeIndex + 1, 0, secondSplittedData);
-        console.log('After split new editorData>', editorData)
-        this.setState({
-            editorData,
-            isSaved: false,
-            savingState: -1,
-        });
         //this.props.setEditorFocus(activeIndex + 1, 0, 0)
     }
 
@@ -310,13 +359,15 @@ class TranscriptionResult extends Component {
             //this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
         } */
 
-    mergeData = (activeIndex) => {
+    mergeData = (activeIndex, callback) => {
         const { editorData } = this.state;
 
         if (activeIndex === 0) return;
 
         let prevData = editorData[activeIndex - 1];
         let currentData = editorData[activeIndex];
+        var wordIndex = prevData.alternatives[0].words.length;
+        var offset = prevData.alternatives[0].words[wordIndex - 1].length;
 
         prevData.alternatives[0].words = prevData.alternatives[0].words.concat(currentData.alternatives[0].words);
         let wordLength = prevData.alternatives[0].words.length;
@@ -335,8 +386,60 @@ class TranscriptionResult extends Component {
             isSaved: false,
             savingState: -1
         });
+        callback(wordIndex, offset)
         //this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
+    }
 
+    mergeSpans = (editableIndex, wordIndex, direction) => {
+        if (wordIndex > 0) {
+            console.log("Merge Spans with editableIndex, wordIndex, direction ", editableIndex, " ", wordIndex, " ", direction);
+            const curWords = this.state.editorData[editableIndex].alternatives[0].words;
+            const firstWord = curWords[wordIndex + direction];
+            const secondWord = curWords[wordIndex];
+            var finalWord = ""
+            if (direction === -1) {
+                // Backspace is clicked
+                finalWord = {
+                    startTime: firstWord.startTime,
+                    endTime: secondWord.endTime,
+                    word: firstWord.word + secondWord.word,
+                    confidence: 1,
+                    speakerTag: firstWord.speakerTag
+                }
+                curWords[wordIndex + direction] = finalWord;
+                curWords.splice(wordIndex, 1);
+                console.log("Merge completed? curWords", curWords);
+                var dataCopy = this.state.editorData;
+                console.log("Merge completed? dataCopy 1 ", dataCopy);
+                dataCopy[editableIndex].alternatives[0].words = [];
+                dataCopy[editableIndex].alternatives[0].words = curWords;
+                this.setState({
+                    editorData: dataCopy
+                })
+                console.log("Merge completed? dataCopy 2 ", dataCopy);
+            } else if (direction === 1) {
+                finalWord = {
+                    startTime: secondWord.startTime,
+                    endTime: firstWord.endTime,
+                    word: secondWord.word + firstWord.word,
+                    confidence: 1,
+                    speakerTag: firstWord.speakerTag
+                }
+                curWords[wordIndex] = finalWord;
+                curWords.splice(wordIndex, 1);
+                console.log("Merge completed? curWords", curWords);
+                var dataCopy = this.state.editorData;
+                console.log("Merge completed? dataCopy 1 ", dataCopy);
+                dataCopy[editableIndex].alternatives[0].words = [];
+                dataCopy[editableIndex].alternatives[0].words = curWords;
+                this.setState({
+                    editorData: dataCopy
+                })
+            }
+            console.log("Merge final word ", finalWord);
+            console.log("Merge completed? editorData", this.state.editorData);
+            console.log("Merge concrete words ", firstWord, " ", secondWord);
+        }
     }
 
     renderResults = () => {
@@ -380,6 +483,7 @@ class TranscriptionResult extends Component {
                             handleEditorChange={this.handleEditorChange}
                             splitData={this.splitData}
                             mergeData={this.mergeData}
+                            mergeSpans={this.mergeSpans}
                             //suppressContentEditableWarning
                             //playerTime={this.state.playerTime}
                             editorClicked={this.editorClicked}
@@ -402,6 +506,7 @@ class TranscriptionResult extends Component {
     }
 
     editorClicked = (seconds) => {
+        console.log("editor clicked seek to ", seconds)
         this.setState({
             timeToSeek: seconds
         }, () => {
