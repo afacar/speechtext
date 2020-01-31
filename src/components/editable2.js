@@ -163,12 +163,18 @@ class Editable2 extends React.Component {
                 e.stopPropagation()
                 if (wordIndex > firstIndex && wordIndex < lastIndex) {
                     console.log('Split paragraphs not from last word!')
-                    splitData(index, wordIndex, offset, text.length, false)
+                    splitData(index, wordIndex, offset, text.length)
                     setEditorFocus(index + 1, 0, 0)
                     return;
-                } else if (wordIndex > firstIndex && wordIndex === lastIndex) {
+                } else if (wordIndex > firstIndex && wordIndex === lastIndex && text.length !== offset) {
                     console.log('Split paragraphs from last word!')
-                    splitData(index, wordIndex, offset, text.length, true)
+                    splitData(index, wordIndex, offset, text.length)
+                    setEditorFocus(index + 1, 0, 0)
+                    return;
+                } else if (wordIndex === firstIndex && offset !== 0) {
+                    console.log('Split paragraphs from first word!')
+                    console.log('Split paragraphs from last word!')
+                    splitData(index, wordIndex, offset + 1, text.length)
                     setEditorFocus(index + 1, 0, 0)
                     return;
                 }
