@@ -522,6 +522,12 @@ class TranscriptionResult extends Component {
         console.log('Transcription Rendering...')
         var { selectedFile } = this.props;
         if (_.isEmpty(selectedFile)) selectedFile = {};
+        let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
+        if(selectedFile.options && selectedFile.options.type.startsWith('video')) {
+            if(selectedFile.resizedFile && selectedFile.resizedFile.publicUrl) {
+                fileSrc = selectedFile.resizedFile.publicUrl;
+            }
+        }
         return (
             <div>
                 <UserHeader />
@@ -533,7 +539,7 @@ class TranscriptionResult extends Component {
                         <Media>
                             <SpeechTextPlayer
                                 key={selectedFile.id}
-                                src={selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : ''}
+                                src={fileSrc}
                                 duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
                                 type={selectedFile.options ? selectedFile.options.type : ''}
                                 timeToSeek={this.state.timeToSeek}
