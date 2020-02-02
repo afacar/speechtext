@@ -23,7 +23,7 @@ class User extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : '';
+        let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : 'profile';
         this.setState({
             activeTabKey: hashValue
         });
