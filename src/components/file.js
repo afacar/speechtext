@@ -200,13 +200,30 @@ class File extends Component {
         }
     }
 
-    deleteFile = () => {
+    deleteFile = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         this.setState({ showSpinner: true });
         this.props.deleteFile(this.props.file.id);
     }
 
-    openInEditor = () => {
+    openInEditor = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         this.props.openInEditor(this.props.file.id);
+    }
+
+    exportClicked = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        this.setState({ showExportPopup: true})
+    }
+
+    closeExportModal = (e) => {
+        this.setState({ showExportPopup: false});
     }
 
     showDropdownMenu = (e) => {
@@ -241,7 +258,7 @@ class File extends Component {
                         <Dropdown.Item eventKey="1" onClick={ this.openInEditor }>
                             <FormattedMessage id='File.Options.edit' />
                         </Dropdown.Item>
-                        <Dropdown.Item eventKey="2" onClick={ () => this.setState({ showExportPopup: true}) }>
+                        <Dropdown.Item eventKey="2" onClick={ this.exportClicked }>
                             <FormattedMessage id='File.Options.export' />
                         </Dropdown.Item>
                         <Dropdown.Item eventKey="3" onClick={ this.deleteFile }>
@@ -251,6 +268,10 @@ class File extends Component {
                 </ul>
             </div>
         )
+    }
+
+    fileSelected = (e) => {
+        this.props.onSelected(this.state.file);    
     }
 
     render() {
@@ -290,48 +311,50 @@ class File extends Component {
                 }
                 {
                     file.status === 'DONE' &&
-                    <span class= { `checkmark ${this.props.isSelected ? 'active' : ''}` }>
+                    <span class= { `checkmark ${this.props.isSelected ? 'active' : ''}` } onClick={ this.fileSelected }>
                         <div class="circle"></div>
                         <div class="stem"></div>
                         <div class="kick"></div>
                     </span>
                 }
-                <div className={ fileImageContainerClass }>
-                    <Card.Img variant="left" src={ fileSrc } alt={ file.name + ' thumbnail' } />
-                </div>
-                <div className='file-body-container'>
-                    {
-                        file.status === 'DONE' &&
-                        this.renderDropdown()
-                    }
-                    <div className='file-header'>
-                        <label title={ file.name }>{ file.name }</label>
+                <div onClick={() => { this.props.openInEditor(file.id) }}>
+                    <div className={ fileImageContainerClass }>
+                        <Card.Img variant="left" src={ fileSrc } alt={ file.name + ' thumbnail' } />
                     </div>
-                    <div className='file-body'>
-                        <FontAwesomeIcon 
-                            icon={ faDatabase } 
-                            title='File Size'
-                            className='file-info-image' size="x" />
-                        { size }
-                        <br />
-                        <FontAwesomeIcon 
-                            icon={ faClock } 
-                            title='File Duration' 
-                            className='file-info-image' size="x" />
-                        { duration }
-                        <br />
-                        <FontAwesomeIcon 
-                            icon={ faCalendar } 
-                            title='File Size' 
-                            className='file-info-image' size="x" />
-                        { createDate }
+                    <div className='file-body-container'>
                         {
-                            file.status === 'UPLOADING' && progress < 100 &&
-                            <div className={ 'file-progress' }>
-                                <span>{ 'Uploading...' }</span>
-                                <ProgressBar striped now={ progress } />
-                            </div>
+                            file.status === 'DONE' &&
+                            this.renderDropdown()
                         }
+                        <div className='file-header'>
+                            <label title={ file.name }>{ file.name }</label>
+                        </div>
+                        <div className='file-body'>
+                            <FontAwesomeIcon 
+                                icon={ faDatabase } 
+                                title='File Size'
+                                className='file-info-image' size="x" />
+                            { size }
+                            <br />
+                            <FontAwesomeIcon 
+                                icon={ faClock } 
+                                title='File Duration' 
+                                className='file-info-image' size="x" />
+                            { duration }
+                            <br />
+                            <FontAwesomeIcon 
+                                icon={ faCalendar } 
+                                title='File Size' 
+                                className='file-info-image' size="x" />
+                            { createDate }
+                            {
+                                file.status === 'UPLOADING' && progress < 100 &&
+                                <div className={ 'file-progress' }>
+                                    <span>{ 'Uploading...' }</span>
+                                    <ProgressBar striped now={ progress } />
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div className={ `file-footer ${this.getFileStatusClassName(file.status)}` }>
@@ -344,7 +367,7 @@ class File extends Component {
                 <ExportPopup
                     show={ this.state.showExportPopup }
                     file={ this.props.file }
-                    closeModal={ () => this.setState({ showExportPopup: false}) }
+                    closeModal={ this.closeExportModal }
                 />
             </div>
         )
