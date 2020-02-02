@@ -14,6 +14,7 @@
 
 .fixed-top-style {
     z-index: 1000;
+    height: 100px;
 }
 
 /* .fixed-top-style {

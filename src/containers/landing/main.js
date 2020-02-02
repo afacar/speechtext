@@ -48,6 +48,7 @@ const Main = () => {
                 <Features />
             </div>
             <hr />
+            <br />
             <div ref={refs.pricingRef}>
                 <Pricing goToRef={goToRef} />
             </div>

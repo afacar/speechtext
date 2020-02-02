@@ -143,10 +143,8 @@ class SpeechTextEditor extends Component {
                                     changePlayerTime={this.changePlayerTime}
                                 />
                             </div>
-
                         </div>
                     )
-
                 }
             })
         )
