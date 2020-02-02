@@ -45,7 +45,9 @@ export default class PricingSlider extends Component {
                             />
                         </Col>
                         <Col lg='2' md='2' sm='4' className='duration-to-buy-container'>
-                            <label for="chooseHours" className='duration-to-buy-header'>Choose Hours</label>
+                            <label for="chooseHours" className='duration-to-buy-header'>
+                              <FormattedMessage id={"Payment.Slider.hoursToBuy"} />
+                            </label>
                             <Form.Control
                               id="chooseHours"
                               name='duration'

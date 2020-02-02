@@ -102,6 +102,7 @@
     "Editor.SavingState.Saving": "Kaydediliyor",
     "Editor.SavingState.Unsaved": "Değişiklerinizi kaydedin",
     "Editor.SavingState.Error": "Hata oluştu",
+    "Editor.leaveMessage": "Son yapılan değişiklikleri kaydetmediniz!",
     "FileUpload.timeLimit.title": "Kredi Limitinizi Aştınız",
     "FileUpload.timeLimit.body": "Bu dosyayı yüklemek için yeterli krediniz bulunmamaktadır.",
     "FileUpload.timeLimit.bodySubText": "<sub><b>Kalan Dakika:</b> {remainingMinutes} <br /><b>Seçilen Dosya Süresi: </b> {selectedFileDuration} dakika</sub>",

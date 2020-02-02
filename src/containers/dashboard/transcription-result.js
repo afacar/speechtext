@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
 import { Container, Spinner } from 'react-bootstrap';
 import { Media } from 'react-media-player';
@@ -33,6 +34,7 @@ class TranscriptionResult extends Component {
             intervalHolder: undefined,
             fileId,
             savingState: 0, // 0-initial, 1-saved, -1: not saved, -2: error
+            blockNavigation: false
         }
     }
 
@@ -89,6 +91,29 @@ class TranscriptionResult extends Component {
                 //this.props.handleTimeChange(null, -1);
             }
         }
+    }
+
+    componentDidUpdate() {
+        const { savingState } = this.state;
+        if(!this.state.blockNavigation && savingState < 0) {
+            this.setState({
+                blockNavigation: true
+            });
+            window.addEventListener('beforeunload', this.beforeUnload);
+        } else if(this.state.blockNavigation && savingState >= 0) {
+            this.setState({
+                blockNavigation: false
+            });
+            window.removeEventListener('beforeunload', this.beforeUnload);
+        }
+    }
+
+    beforeUnload = e => {
+        const { intl } = this.props;
+        e.preventDefault();
+        let message = intl.formatMessage({ id: "Editor.leaveMessage" });
+        e.returnValue = message;
+        return message;
     }
 
     updateTranscribedFile = async () => {
@@ -406,6 +431,7 @@ class TranscriptionResult extends Component {
 
     renderResults = () => {
         const { editorData } = this.state;
+        const { intl } = this.props;
         console.log('renderResults editorData', editorData)
         if (editorData === null) return;
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
@@ -423,17 +449,6 @@ class TranscriptionResult extends Component {
                             className='margin-right-5'
                         />
                     }
-                    {/* <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })}>
-                        <Dropdown.Item as="button" onClick={this.downloadAsTxt}>
-                            <FormattedMessage id='Transcription.Download.option1' />
-                        </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={this.downloadAsDocx}>
-                            <FormattedMessage id='Transcription.Download.option2' />
-                        </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={this.downloadAsSrt}>
-                            <FormattedMessage id='Transcription.Download.option3' />
-                        </Dropdown.Item>
-                    </DropdownButton> */}
                 </div>
                 <br />
                 <div className="d-flex flex-col">
@@ -463,6 +478,12 @@ class TranscriptionResult extends Component {
                         />
                     </div>
                 </div>
+                <React.Fragment>
+                    <Prompt
+                        when={this.state.blockNavigation}
+                        message={ intl.formatMessage({ id: "Editor.leaveMessage" }) }
+                    />
+                </React.Fragment>
             </div>
         );
     }
@@ -532,4 +553,4 @@ const mapStateToProps = ({ user, selectedFile }) => {
     return { user, selectedFile };
 }
 
-export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus, getFile })(injectIntl(TranscriptionResult));
+export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus, getFile })(injectIntl(withRouter(TranscriptionResult)));
