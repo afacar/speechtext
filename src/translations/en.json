@@ -93,6 +93,8 @@
     "File.Options.edit": "Edit",
     "File.Options.export": "Export",
     "File.Options.delete": "Delete",
+    "File.Delete.Approval.title": "Deletion Approval",
+    "File.Delete.Approval.body": "Are you sure to want to delete selected file(s)",
     "FileUpload.multipleFileError": "Please wait for current uploading to finish!",
     "FileUpload.fileSizeErrorTitle": "File Size Error",
     "FileUpload.fileSizeError": "Maximum allowed file size is 500 megabytes!",

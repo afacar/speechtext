@@ -173,16 +173,35 @@ class FileList extends Component {
     }
 
     deleteFiles = (fileId) => {
+        const filesToDelete = [];
         const { selectedFiles } = this.state;
+
         if(!_.isEmpty(fileId)) {
-            this.props.updateFileState(fileId, 'DELETED');
-            this.props.removeFromUploadingFiles(fileId);
+            filesToDelete.push(fileId);
         } else if(!_.isEmpty(selectedFiles)) {
             selectedFiles.forEach(fileId => {
+                filesToDelete.push(fileId);
+            });
+        }
+
+        this.setState({
+            filesToDelete,
+            showDeleteApprovement: true
+        })
+    }
+
+    deleteFilesAfterApproval = () => {
+        const { filesToDelete } = this.state;
+        if(!_.isEmpty(filesToDelete)) {
+            filesToDelete.forEach(fileId => {
                 this.props.updateFileState(fileId, 'DELETED');
                 this.props.removeFromUploadingFiles(fileId);
             });
         }
+        this.setState({
+            filesToDelete: [],
+            showDeleteApprovement: false
+        })
     }
 
     getSelectedFileToExport = () => {
@@ -289,6 +308,17 @@ class FileList extends Component {
                     show={ this.state.showExportPopup }
                     file={ this.getSelectedFileToExport() }
                     closeModal={ () => this.setState({ showExportPopup: false}) }
+                />
+                <ApprovementPopup
+                    show={ this.state.showDeleteApprovement }
+                    headerText={{
+                        id: 'File.Delete.Approval.title'
+                    }}
+                    bodyText={{
+                        id: 'File.Delete.Approval.body'
+                    }}
+                    handleSuccess={ this.deleteFilesAfterApproval }
+                    handleCancel={ () => this.setState({ showDeleteApprovement: false}) }
                 />
             </div>
         )

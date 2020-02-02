@@ -204,7 +204,7 @@ class File extends Component {
         e.preventDefault();
         e.stopPropagation();
 
-        this.setState({ showSpinner: true });
+        // this.setState({ showSpinner: true });
         this.props.deleteFile(this.props.file.id);
     }
 

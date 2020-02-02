@@ -94,6 +94,8 @@
     "File.Options.edit": "Güncelle",
     "File.Options.export": "İndir",
     "File.Options.delete": "Sil",
+    "File.Delete.Approval.title": "Dosya Silme Onayı",
+    "File.Delete.Approval.body": "Seçtiğiniz dosya(lar) silinecektir. Emin misiniz?",
     "FileUpload.multipleFileError": "Lütfen mevcut dosya yüklemesinin bitmesini bekleyiniz.",
     "FileUpload.fileSizeErrorTitle": "Dosya Boyutu Hatası",
     "FileUpload.fileSizeError": "Lütfen boyutu 500 megabyte'ı geçmeyen bir dosya seçiniz!",
