@@ -420,42 +420,24 @@ class Editable2 extends React.Component {
     render = () => {
         const { index, transcript, changePlayerTime } = this.props;
         let words = transcript.words.map((word, wordIndex) => {
-            if (wordIndex === 0) {
-                return (
-                    <span
-                        className={this.decideClassName(word)}
-                        onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
-                        onPaste={(event) => this.onDisableEvent(event)}
-                        onCut={(event) => this.onDisableEvent(event)}
-                        key={wordIndex}
-                        tabIndex={index}
-                        id={wordIndex}
-                        contentEditable='true'
-                        suppressContentEditableWarning='true'
-                        title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
-                    >
-                        {word.word ? word.word : ''}
-                    </span>
-                )
-            } else {
-                return (
-                    <span
-                        className={this.decideClassName(word)}
-                        onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
-                        onPaste={(event) => this.onDisableEvent(event)}
-                        onCut={(event) => this.onDisableEvent(event)}
-                        key={wordIndex}
-                        tabIndex={index}
-                        id={wordIndex}
-                        contentEditable='true'
-                        suppressContentEditableWarning='true'
-                        title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
-                    >
-                        {word.word ? ' ' + word.word : ''}
-                    </span>
-                )
-            }
-
+            let preword = ' '
+            if (wordIndex === 0) preword = ''
+            return (
+                <span
+                    className={this.decideClassName(word)}
+                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                    onPaste={(event) => this.onDisableEvent(event)}
+                    onCut={(event) => this.onDisableEvent(event)}
+                    key={wordIndex}
+                    tabIndex={index}
+                    id={wordIndex}
+                    contentEditable='true'
+                    suppressContentEditableWarning='true'
+                    title={this.formatTime(word.startTime) + '-' + this.formatTime(word.endTime)}
+                >
+                    {word.word ? preword + word.word : ''}
+                </span>
+            )
         })
         console.log(`Editable${index} Rendering words>>>`, words)
         return (
