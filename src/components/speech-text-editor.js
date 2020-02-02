@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { injectIntl, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
-
-import Editable from './editable';
+import { injectIntl } from 'react-intl';
 import '../styles/editor.css';
 import Editable2 from './editable2';
-import { Container, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-
-const ReactDOM = require('react-dom')
 
 class SpeechTextEditor extends Component {
     constructor(props) {

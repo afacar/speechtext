@@ -357,7 +357,8 @@ class TranscriptionResult extends Component {
             const curWords = this.state.editorData[editableIndex].alternatives[0].words;
             const firstWord = curWords[wordIndex + direction];
             const secondWord = curWords[wordIndex];
-            var finalWord = ""
+            var finalWord = "";
+            var dataCopy = {};
             if (direction === -1) {
                 // Backspace is clicked
                 finalWord = {
@@ -370,7 +371,7 @@ class TranscriptionResult extends Component {
                 curWords[wordIndex + direction] = finalWord;
                 curWords.splice(wordIndex, 1);
                 console.log("Merge completed? curWords", curWords);
-                var dataCopy = this.state.editorData;
+                dataCopy = this.state.editorData;
                 console.log("Merge completed? dataCopy 1 ", dataCopy);
                 dataCopy[editableIndex].alternatives[0].words = [];
                 dataCopy[editableIndex].alternatives[0].words = curWords;
@@ -389,7 +390,7 @@ class TranscriptionResult extends Component {
                 curWords[wordIndex] = finalWord;
                 curWords.splice(wordIndex, 1);
                 console.log("Merge completed? curWords", curWords);
-                var dataCopy = this.state.editorData;
+                dataCopy = this.state.editorData;
                 console.log("Merge completed? dataCopy 1 ", dataCopy);
                 dataCopy[editableIndex].alternatives[0].words = [];
                 dataCopy[editableIndex].alternatives[0].words = curWords;
@@ -404,7 +405,7 @@ class TranscriptionResult extends Component {
     }
 
     renderResults = () => {
-        const { editorData, isSaved } = this.state;
+        const { editorData } = this.state;
         console.log('renderResults editorData', editorData)
         if (editorData === null) return;
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'

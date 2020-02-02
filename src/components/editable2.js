@@ -1,11 +1,10 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
 
 import { setEditorFocus } from "../actions";
 
 const exclusiveKeyCodes = [9, 13, 16, 17, 18, 20, 27, 93, 225, 144, 35, 36, 37, 38, 39, 40];
-const arrowKeyCodes = [35, 36, 37, 38, 39, 40]
 const KEYCODES = { BACKSPACE: 8, ENTER: 13, DEL: 46, LEFT: 37, RIGHT: 39, UP: 38, DOWN: 40 }
 console.log('Editable2 Import!')
 
@@ -54,12 +53,13 @@ class Editable2 extends React.Component {
             console.log(`Editable${index} DOESNT UPDATES IN ORDER TO FOCUS`)
             return false
         } */
+        var transcript, words;
         if (!this.isEditorClean && !this.isFocused && !this.isPlaying) {
             console.log(`Editable${index} UPDATES due to cleaning!`)
             this.isEditorClean = true
             if (this.lastPlayingWordIndex > -1 && this.getSpanIndexById(this.lastPlayingWordIndex) > -1) {
-                var transcript = nextProps.transcript;
-                var words = transcript.words;
+                transcript = nextProps.transcript;
+                words = transcript.words;
                 if (words[this.lastPlayingWordIndex].confidence === 1) {
                     this.editableRef.childNodes[this.getSpanIndexById(this.lastPlayingWordIndex)].style["color"] = 'darkgoldenrod';
                 } else {
@@ -71,8 +71,8 @@ class Editable2 extends React.Component {
             this.isEditorClean = false
             console.log(`Editable${index} PlayingWordChanged`)
             if (this.props.playerActiveWordIndex > -1 && this.getSpanIndexById(this.props.playerActiveWordIndex) > -1) {
-                var transcript = this.props.transcript;
-                var words = transcript.words;
+                transcript = this.props.transcript;
+                words = transcript.words;
                 if (words[this.props.playerActiveWordIndex].confidence === 1) {
                     this.editableRef.childNodes[this.getSpanIndexById(this.props.playerActiveWordIndex)].style["color"] = 'darkgoldenrod';
                 } else
@@ -100,7 +100,7 @@ class Editable2 extends React.Component {
     }
 
     onKeyDown = (e) => {
-        const { index, transcript, splitData, mergeData, isLastEditable, changeActiveIndex, setEditorFocus, mergeSpans } = this.props;
+        const { index, transcript, splitData, mergeData, isLastEditable, setEditorFocus, mergeSpans } = this.props;
         //console.log(`onKeyDown is`, e.keyCode)
         let sel = document.getSelection()
         console.log("Selection", sel);
