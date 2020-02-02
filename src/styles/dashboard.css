@@ -76,10 +76,6 @@ ol.selling-contract-list { counter-reset: item }
 .selling-contract-list > li { display: block }
 .selling-contract-list > li:before { content: counters(item, ".") "."; counter-increment: item }
 
-.card-logo {
-    transform: scale(.3);
-}
-
 @media only screen and (max-height: 882px) {
     .transcription {
         height: 650px !important;
