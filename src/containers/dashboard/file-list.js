@@ -204,6 +204,13 @@ class FileList extends Component {
         })
     }
 
+    cancelFileDeletion = () => {
+        this.setState({
+            filesToDelete: [],
+            showDeleteApprovement: false
+        })
+    }
+
     getSelectedFileToExport = () => {
         const { files, selectedFiles } = this.state;
         return _.find(files, { id: selectedFiles[0]});
@@ -318,7 +325,7 @@ class FileList extends Component {
                         id: 'File.Delete.Approval.body'
                     }}
                     handleSuccess={ this.deleteFilesAfterApproval }
-                    handleCancel={ () => this.setState({ showDeleteApprovement: false}) }
+                    handleCancel={ this.cancelFileDeletion }
                 />
             </div>
         )
