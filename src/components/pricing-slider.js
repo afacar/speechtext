@@ -8,18 +8,12 @@ import { Row, Col, Container, Form } from "react-bootstrap";
 import 'rc-slider/assets/index.css';
 
 const marks = {
-  1: {
-    style: {
-      fontSize: 21,
-      color: 'green',
-    },
-    label: "1",
-  },
-  10: '10',
-  20: '20',
-  30: '30',
-  40: '40',
-  50: '50'
+  1: { style: { fontSize: 21 }, label: "1" },
+  10: { style: { fontSize: 21 }, label: "10" },
+  20: { style: { fontSize: 21 }, label: "20" },
+  30: { style: { fontSize: 21 }, label: "30" },
+  40: { style: { fontSize: 21 }, label: "40" },
+  50: { style: { fontSize: 21, color: 'green', }, label: "50+" },
 };
 
 export default class PricingSlider extends Component {
@@ -41,7 +35,7 @@ export default class PricingSlider extends Component {
                               onChange={durationChanged} defaultValue={5}
                               railStyle={{ backgroundColor: "white", height: "0.5rem" }}
                               dotStyle={{ height: "0.5rem" }}
-                              trackStyle={[{ height: "0.5rem" }, { backgroundColor: 'red' }, { backgroundColor: 'orange' }]}
+                              trackStyle={[{ height: "0.5rem" }]}
                             />
                         </Col>
                         <Col lg='2' md='2' sm='4' className='duration-to-buy-container'>

@@ -106,22 +106,6 @@ class StandardPaymentCard extends Component {
     showRefundContract: false
   }
 
-  sellingContractClicked = (e) => {
-    console.log('sellingContractClicked')
-    e.preventDefault();
-    e.stopPropagation();
-
-    this.setState({ showSellingContract: true });
-  }
-
-  refundContractClicked = (e) => {
-    console.log('refundContractClicked')
-    e.preventDefault();
-    e.stopPropagation();
-
-    this.setState({ showRefundContract: true });
-  }
-
   handleSellingContractVisibility = () => {
     this.setState({
       showSellingContract: !this.state.showSellingContract
@@ -172,19 +156,6 @@ class StandardPaymentCard extends Component {
           </div>
           <div className="card-body pt-0">
             <Container>
-              {/* <Row>
-                <Col>
-                  <Form.Label>
-                    <b><FormattedMessage id='Payment.CurrentPlan.remainingMinutes' /></b>
-                    {currentPlan.remainingMinutes}
-                    <FormattedMessage id='Payment.CurrentPlan.durationType' />
-                  </Form.Label><br />
-                  <Form.Label>
-                    <b><FormattedMessage id='Payment.CurrentPlan.expireDate' /></b>
-                    {Utils.formatDateSimpleFormat(currentPlan.expireDate)}
-                  </Form.Label>
-                </Col>
-              </Row> */}
               <Row>
                 <PricingSlider duration={this.props.duration} durationChanged={this.props.durationChanged} />
               </Row>
@@ -215,31 +186,8 @@ class StandardPaymentCard extends Component {
                   <img src={MasterVisaLogo} alt='Master Card' className='card-logo' />
                 </Col>
               </Row>
-              {/* <Row>
-                <Col>
-                  {
-                    this.props.duration >= 50 && (
-                      <Button className="btn btn-primary mb-3" onClick={this.props.handleBuy}>
-                        <FormattedMessage id="Pricing.Standard.contactUs" />
-                      </Button>
-                    )
-                  }
-                  {
-                    this.props.duration < 50 && (
-                      <Button variant="outline-secondary" className="mb-3" onClick={this.props.handleBuy}>
-                        <FormattedMessage id="Pricing.Standard.loggedInButtonText" />
-                      </Button>
-                    )
-                  }
-                </Col>
-              </Row> */}
               <Row className="d-flex justify-content-center">
-                {/* <Col> */}
-                {/* <span className='mb-3'> */}
-                {/* <img src={MasterVisaLogo} alt='Master Card' className='card-logo' /> */}
                 {this.renderTerms()}
-                {/* </span> */}
-                {/* </Col> */}
               </Row>
             </Container>
           </div>
