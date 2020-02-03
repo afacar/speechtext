@@ -47,7 +47,7 @@ class Export extends Component {
         return (
             <div>
 
-                <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })}>
+                <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })} drop='left'>
                     <Dropdown.Item as="button" onClick={this.props.downloadAsTxt}>
                         <FormattedMessage id='Transcription.Download.option1' />
                     </Dropdown.Item>
