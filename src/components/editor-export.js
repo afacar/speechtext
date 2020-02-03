@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { DropdownButton, Dropdown, Button } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Button, Spinner } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import "../styles/editor.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
+
 class Export extends Component {
 
     renderSavingText() {
@@ -42,12 +43,20 @@ class Export extends Component {
     }
 
     render() {
-        const { intl, savingState } = this.props;
+        const { intl, savingState, showDownloadSpinner } = this.props;
         const { formatMessage } = intl;
         return (
             <div>
 
-                <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })} drop='left'>
+                <DropdownButton id="dropdown-item-button"
+                    title={
+                        <span>
+                            {formatMessage({ id: 'Transcription.Download.text' }) + '  '}
+                            <i className="fa fa-download"> </i>
+                            {showDownloadSpinner && <Spinner size='sm' animation="grow" role="status" />}
+                        </span>
+                    }
+                    drop='left'>
                     <Dropdown.Item as="button" onClick={this.props.downloadAsTxt}>
                         <FormattedMessage id='Transcription.Download.option1' />
                     </Dropdown.Item>
@@ -59,10 +68,10 @@ class Export extends Component {
                     </Dropdown.Item>
                 </DropdownButton>
                 <Button className="save-button" onClick={this.props.onSave} disabled={savingState !== -1 || savingState === 1}>
-                    Save{"  "}
-                    <FontAwesomeIcon icon={faSave} color="white" size="1x"/>
+                    {formatMessage({ id: 'Transcription.Save.text' }) + '  '}
+                    <FontAwesomeIcon icon={faSave} color="white" size="1x" />
+                    {savingState === 2 && <Spinner size='sm' animation="grow" role="status" />}
                 </Button>
-                {this.renderSavingText()}
             </div>
         )
     }
