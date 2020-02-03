@@ -33,7 +33,8 @@ class CheckOutModal extends Component {
         }
     }
 
-    initializeValues = (user) => {
+    initializeValues = () => {
+        const { user } = this.props;
         if (!_.isEmpty(user)) {
             const { displayName, email, country, address } = user;
             var values = { displayName, email, country, address };
@@ -50,11 +51,8 @@ class CheckOutModal extends Component {
         }
     }
 
-    componentWillReceiveProps({ user, state }) {
-        console.log("new props arrived " , user);
-        if (!_.isEmpty(user) && state !== 'PAYMENT') {
-            this.initializeValues(user);
-        }
+    componentDidMount() {
+        this.initializeValues()
     }
 
     handleValueChange = (stateName, value) => {
@@ -182,7 +180,8 @@ class CheckOutModal extends Component {
                                 <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
                                     <FormattedMessage id={"Payment.Card.Details"} />
                                 </h4>
-                                <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
+                                <PaymentDetails 
+                                    cardNumber={cardNumber} expiry={expiry} cvc={cvc}
                                     handleCardNumberChange={this.handleCardNumberChange}
                                     handleCardExpiryChange={this.handleCardExpiryChange}
                                     handleCardCVCChange={this.handleCardCVCChange}
