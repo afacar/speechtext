@@ -104,8 +104,8 @@ class Payment extends Component {
             return 0
         if (hours >= 50)
             return minPricePerHour
-        const numOf5s = parseInt(hours / 5)
-        const price = pricePerHour - numOf5s * 0.5
+        const numOf10s = parseInt(hours / 10)
+        const price = pricePerHour - numOf10s
         return price
     }
 
