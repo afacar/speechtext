@@ -15,7 +15,7 @@ class UserHeader extends Component {
         return (
             <div>
                 <Nav>
-                    <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style'>
+                    <Navbar variant="light" expand="lg" bg="light" fixed="top" className='text-dark fixed-top-style user-header-container'>
                         <Link to='/'>
                             <Navbar.Brand>
                                 <LogoContainer />
