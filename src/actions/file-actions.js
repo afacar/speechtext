@@ -52,6 +52,8 @@ export const getFileList = () => {
 export const getFile = (fileId) => {
     return async (dispatch, getState) => {
         const { user } = getState();
+        // TODO: This will change: Later, users will change others' files too.
+        // Thus, doc(user.uid) will be provided from file info
         let file = await firestore().collection('userfiles').doc(user.uid).collection('files').doc(fileId).get();
         dispatch({
             type: Utils.ActionTypes.SET_SELECTED_FILE,
