@@ -19,6 +19,18 @@ const supportedLanguages = [
     {
         key: 'en',
         value: 'English'
+    },
+    {
+        key: 'es',
+        value: 'Español'
+    },
+    {
+        key: 'ru',
+        value: 'Русский'
+    },
+    {
+        key: 'ar',
+        value: 'العربية'
     }
 ];
 

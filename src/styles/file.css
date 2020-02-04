@@ -302,6 +302,14 @@
     border: 1px dashed gray;
 }
 
+.file-name-edit {
+    width: 90% !important;
+}
+
+.direction-rtl {
+    direction: rtl;
+}
+
 .react-tagsinput-tag {
     background-color: cornflowerblue !important;
     color: white !important;

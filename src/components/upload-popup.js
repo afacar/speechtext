@@ -280,7 +280,7 @@ class UploadPopup extends Component {
                                         {
                                             supportedLanguages.map(lang => {
                                                 return (
-                                                    <option key={ lang.key } value={ lang.key }>
+                                                    <option key={ lang.key } value={ lang.key } className={ lang.key === 'ar' ? 'direction-rtl' : ''}>
                                                         { lang.value }
                                                     </option>
                                                 )
