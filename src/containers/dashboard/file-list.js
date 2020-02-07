@@ -95,6 +95,13 @@ class FileList extends Component {
         });
     }
 
+    closeFileUploadPopup = () => {
+        this.setState({
+            selectedFileDuration: '',
+            showUploadPopup: false
+        });
+    }
+
     onFileValidated = async (file, fileDurationInMinutes, durationInNanoSeconds) => {
         var { name, size, type } = file;
         var fileObj = {
@@ -132,7 +139,6 @@ class FileList extends Component {
             this.props.addToUploadingFiles(fileToUpload.id, selectedFile);
             this.props.setSelectedFile(fileToUpload);
             this.setState({
-                showUploadPopup: false,
                 fileToUpload: undefined,
                 selectedFile: undefined
             });
@@ -309,6 +315,7 @@ class FileList extends Component {
                     supportedLanguages={ this.props.supportedLanguages }
                     approveFileUpload={ this.approveFileUpload }
                     cancelFileUpload={ this.cancelFileUpload }
+                    closeFileUploadPopup={ this.closeFileUploadPopup }
                     onFileAdded={ this.onFileAdded }
                 />
                 <ExportPopup

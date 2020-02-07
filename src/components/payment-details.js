@@ -6,6 +6,7 @@ class PaymentDetails extends Component {
 
     render() {
         const { cardNumber, expiry, cvc } = this.props;
+        console.log("New card number ", cardNumber)
         return (
             <div className="d-flex flex-column border" style={{ width: '100%', borderColor: 'green' }}>
                 <CreditCardInput

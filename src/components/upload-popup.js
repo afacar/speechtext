@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Container, Card, Form, Button, Modal, Alert } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,7 @@ import 'react-tagsinput/react-tagsinput.css';
 
 import Utils from '../utils';
 
-const ModalPageNames = { INFO: 0, UPLOAD: 1, ERROR: 2 };
+const ModalPageNames = { INFO: 0, UPLOAD: 1, ERROR: 2, SUCCESS: 3 };
 
 class UploadPopup extends Component {
     constructor(props) {
@@ -117,17 +117,19 @@ class UploadPopup extends Component {
                         <Form.Label>
                             <FormattedMessage id='UploadPopup.Label.fileName' />
                         </Form.Label>
-                        <br />
-                        <Form.Control
-                            type='text'
-                            value={ fileName || '' }
-                            onChange={ this.handleFileNameChange }
-                            onBlur={ this.saveFileName }
-                            ref={ i => i ? ReactDOM.findDOMNode(i).focus() : '' }
-                        />
-                        <Button variant='success' className='float-right' onClick={ () => this.setState({ editFileName: false })}>
-                            <FontAwesomeIcon icon={ faCheck } onClick={ this.saveFileName } />
-                        </Button>
+                        <div className='d-flex'>
+                            <Form.Control
+                                type='text'
+                                value={ fileName || '' }
+                                onChange={ this.handleFileNameChange }
+                                onBlur={ this.saveFileName }
+                                ref={ i => i ? ReactDOM.findDOMNode(i).focus() : '' }
+                                className='file-name-edit'
+                            />
+                            <Button variant='success' className='float-right ml-3' onClick={ () => this.setState({ editFileName: false })}>
+                                <FontAwesomeIcon icon={ faCheck } onClick={ this.saveFileName } />
+                            </Button>
+                        </div>
                     </Form.Group>
                 </div>
             )
@@ -170,7 +172,7 @@ class UploadPopup extends Component {
         }
         this.setState({
             validated: true,
-            activeWindow: ModalPageNames.INFO
+            activeWindow: ModalPageNames.SUCCESS
         });
     }
 
@@ -179,6 +181,14 @@ class UploadPopup extends Component {
             activeWindow: ModalPageNames.INFO
         }, () => {
             this.props.cancelFileUpload();
+        })
+    }
+
+    closePopup = () => {
+        this.setState({
+            activeWindow: ModalPageNames.INFO
+        }, () => {
+            this.props.closeFileUploadPopup()
         })
     }
 
@@ -191,6 +201,8 @@ class UploadPopup extends Component {
             return this.renderUploadUptions();
         } else if(activeWindow === ModalPageNames.ERROR) {
             return this.renderError();
+        } else if(activeWindow === ModalPageNames.SUCCESS) {
+            return this.renderSuccess();
         }
     }
 
@@ -248,7 +260,7 @@ class UploadPopup extends Component {
     }
 
     renderUploadUptions = () => {
-        const { language, supportedLanguages } = this.props;
+        const { language, supportedLanguages, intl } = this.props;
         const { options } = this.state;
         const disabled = false;//file.status === 'PROCESSING' || file.status === 'DONE';
         let selectedLanguage = options.language || language;
@@ -261,7 +273,7 @@ class UploadPopup extends Component {
                 </Modal.Header>
                 <Form className='form-options' noValidate validated={ this.state.validated } onSubmit={ this.submitForm }>
                     <Modal.Body>
-                    <Container className='upload-popup-filename'>
+                        <Container className='upload-popup-filename'>
                             { this.renderFileName() }
                         </Container>
                         <Card>
@@ -324,7 +336,7 @@ class UploadPopup extends Component {
                                 </Form.Group>
                                 <br />
                                 <Form.Group>
-                                    <Alert variant='success'>Your transcription will automatically start after upload is complete.</Alert>
+                                    <Alert variant='success'>{ intl.formatMessage({ id: 'UploadPopup.infoText' }) }</Alert>
                                 </Form.Group>
                             </Card.Body>
                         </Card>
@@ -363,6 +375,30 @@ class UploadPopup extends Component {
                     </Button>
                     <Button onClick={ this.openFileDialog }>
                         <FormattedMessage id='UploadPopup.retryButton' />
+                    </Button>
+                </Modal.Footer>
+            </div>
+        )
+    }
+
+    renderSuccess = () => {
+        return (
+            <div>
+                <Modal.Header>
+                    <b>
+                        <FormattedMessage id='FileUpload.successTitle' />
+                    </b>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <p>
+                            <FormattedHTMLMessage id='FileUpload.successMessage' />
+                        </p>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer className='float-right'>
+                    <Button variant="success" onClick={ this.closePopup }>
+                        <FormattedMessage id='UploadPopup.closeButton' />
                     </Button>
                 </Modal.Footer>
             </div>
