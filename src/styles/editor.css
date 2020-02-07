@@ -116,6 +116,11 @@
     right: 80px !important;
     top: 140px !important;
 }
+@media only screen and (max-width: 1200px) {
+    .export {
+        display: none;
+    }
+}
 
 .save-button{
     width: 100%;
