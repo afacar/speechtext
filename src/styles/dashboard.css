@@ -22,7 +22,7 @@
 .transcription {
     padding: 10px;
     padding-left: 30px;
-    height: 700px;
+    height: 720px;
     border: 1px solid rgba(0,0,0,.125);
     overflow-y: auto;
 }
@@ -78,19 +78,19 @@ ol.selling-contract-list { counter-reset: item }
 
 @media only screen and (max-height: 882px) {
     .transcription {
-        height: 650px !important;
+        height: 670px !important;
     }
 }
 
 @media only screen and (max-height: 830px) {
     .transcription {
-        height: 550px !important;
+        height: 570px !important;
     }
 }
 
 @media only screen and (max-height: 730px) {
     .transcription {
-        height: 450px !important;
+        height: 470px !important;
     }
 }
 
@@ -116,7 +116,7 @@ ol.selling-contract-list { counter-reset: item }
     background-color: lightblue;
 }
 
-.transcription #dropdown-item-button {
+.export #dropdown-item-button {
     background-color: #384d60;
     border-color: #384d60;
 }

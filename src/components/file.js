@@ -211,8 +211,11 @@ class File extends Component {
     openInEditor = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        this.props.openInEditor(this.props.file.id);
+        
+        const { file } = this.props;
+        if(file.status === 'DONE') {
+            this.props.openInEditor(this.props.file.id);
+        }
     }
 
     exportClicked = (e) => {
@@ -317,7 +320,7 @@ class File extends Component {
                         <div class="kick"></div>
                     </span>
                 }
-                <div onClick={() => { this.props.openInEditor(file.id) }}>
+                <div onClick={ this.openInEditor }>
                     <div className={ fileImageContainerClass }>
                         <Card.Img variant="left" src={ fileSrc } alt={ file.name + ' thumbnail' } />
                     </div>

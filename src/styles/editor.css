@@ -114,7 +114,20 @@
 .export{
     position: fixed;
     right: 80px !important;
-    top: 140px !important;
+    top: 90px !important;
+}
+
+.export .dropdown-menu {
+    background-color: #384d60;
+    transform: translate3d(-220px, 0px, 0px) !important;
+}
+
+.export .dropdown-item {
+    color: white;
+}
+
+.export .dropdown-item:hover {
+    background-color: #607180;
 }
 @media only screen and (max-width: 1200px) {
     .export {
@@ -155,3 +168,24 @@
 .saving-state-text.unsaved{
     color: darkgoldenrod;
 }
+
+
+/* RESPONSIVE */
+@media only screen and (max-width: 1400px) {
+    .export {
+        right: 20px !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .export {
+        right: 40px !important;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .export {
+        right: 30px !important;
+    }
+}
+/* END - RESPONSIVE */
