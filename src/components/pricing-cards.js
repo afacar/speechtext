@@ -138,15 +138,13 @@ class StandardPaymentCard extends Component {
     return (
       <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
         <p>
-          {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
           <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
-            {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
+            {this.props.language === 'tr-TR' ? 'Satış Sözleşmesi' : 'Selling Contract'}
           </span>
-          {this.props.language !== 'tr' ? ' and ' : ' ve '}
+          {this.props.language !== 'tr-TR' ? ' and ' : ' ve '}
           <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
-            {this.props.language === 'tr' ? 'İade Koşulları' : 'Refund Policy'}
+            {this.props.language === 'tr-TR' ? 'İade Koşulları' : 'Refund Policy'}
           </span>
-          {/* this.props.language === 'tr' ? "'ini kabul ediyorum." : '' */}
         </p>
       </div>
     )
@@ -305,15 +303,13 @@ class MonthlyPaymentCard extends Component {
     return (
       <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
         <p>
-          {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
           <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
-            {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
+            {this.props.language === 'tr-TR' ? 'Satış Sözleşmesi' : 'Selling Contract'}
           </span>
-          {this.props.language !== 'tr' ? ' and ' : ' ve '}
+          {this.props.language !== 'tr-TR' ? ' and ' : ' ve '}
           <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
-            {this.props.language === 'tr' ? 'İade Koşulları' : 'Refund Policy'}
+            {this.props.language === 'tr-TR' ? 'İade Koşulları' : 'Refund Policy'}
           </span>
-          {/* this.props.language === 'tr' ? "'ini kabul ediyorum." : '' */}
         </p>
       </div>
     )
