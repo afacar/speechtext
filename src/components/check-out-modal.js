@@ -52,6 +52,7 @@ class CheckOutModal extends Component {
 
     componentWillReceiveProps({ user, state }) {
         console.log("new props arrived " , user);
+        console.log("new props arrived " , state);
         if (!_.isEmpty(user) && state !== 'PAYMENT') {
             this.initializeValues(user);
         }
@@ -80,6 +81,7 @@ class CheckOutModal extends Component {
     }
 
     handleCardNumberChange = (cardNumberEvent) => {
+        console.log("card number changed ", cardNumberEvent.target.value)
         this.props.toggleSubmit(false)
         this.setState({
             cardNumber: cardNumberEvent.target.value
