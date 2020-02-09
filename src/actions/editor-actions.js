@@ -60,3 +60,12 @@ export const isPlaying = (isPlaying) => {
         })
     }
 }
+
+export const setCurrentSpeakerBox = (index) => {
+    return (dispatch) => {
+        dispatch({
+            type: Utils.ActionTypes.CURRENT_SPEAKER_BOX,
+            payload: { index }
+        })
+    }
+}

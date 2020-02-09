@@ -28,3 +28,12 @@ export const getPlayerStatus = (state = {}, action) => {
             return state;
     }
 }
+
+export const setCurrentSpeakerBox = ( state = {}, action) =>{
+    switch(action.type){
+        case ActionTypes.CURRENT_SPEAKER_BOX:
+            return action.payload;
+        default:
+            return state;
+    }
+}

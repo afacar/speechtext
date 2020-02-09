@@ -321,7 +321,7 @@ class TranscriptionResult extends Component {
         firstSplittedData.alternatives[0].endTime = endWord.endTime;
         firstSplittedData.alternatives[0].words.splice(activeWordIndex, firstSplittedData.alternatives[0].words.length - activeWordIndex + 1, endWordFirstPart);
         firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
-        console.log("Javid end word first part ", endWordFirstPart)
+        console.log("end word first part ", endWordFirstPart)
         let startWord = endWordSecondPart;
         secondSplittedData.alternatives[0].startTime = startWord.startTime;
         secondSplittedData.alternatives[0].words.splice(0, activeWordIndex + 1, startWord);
