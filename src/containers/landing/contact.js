@@ -74,25 +74,25 @@ class Contact extends Component {
                         <div>
                             <FontAwesomeIcon icon={ faEnvelope } size='2x' className='float-left' />
                             <p className='contact-info-data'>
-                                <a href='mailto:support@speechtext.io' target='_blank'>support@speechtext.io</a>
+                                <a href='mailto:support@speechtext.io' target='_blank' rel="noopener noreferrer">support@speechtext.io</a>
                             </p>
                         </div>
                         <div>
                             <FontAwesomeIcon icon={ faTwitterSquare } size='2x' className='float-left' />
                             <p className='contact-info-data'>
-                                <a href='https://twitter.com/speechtext_io' target='_blank'>/speechtext_io</a>
+                                <a href='https://twitter.com/speechtext_io' target='_blank' rel="noopener noreferrer">/speechtext_io</a>
                             </p>
                         </div>
                         <div>
                             <FontAwesomeIcon icon={ faFacebookSquare } size='2x' className='float-left' />
                             <p className='contact-info-data'>
-                                <a href='https://www.facebook.com/speechtext.io' target='_blank'>/speechtext.io</a>
+                                <a href='https://www.facebook.com/speechtext.io' target='_blank' rel="noopener noreferrer">/speechtext.io</a>
                             </p>
                         </div>
                         <div>
                             <FontAwesomeIcon icon={ faLinkedin } size='2x' className='float-left' />
                             <p className='contact-info-data'>
-                                <a href='https://www.linkedin.com/in/speechtext-io-425b28195/' target='_blank'>/speechtext-io-425b28195</a>
+                                <a href='https://www.linkedin.com/in/speechtext-io-425b28195/' target='_blank' rel="noopener noreferrer">/speechtext-io-425b28195</a>
                             </p>
                         </div>
                     </Col>
