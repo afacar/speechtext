@@ -80,7 +80,7 @@ class Contact extends Component {
                         <div>
                             <FontAwesomeIcon icon={ faTwitterSquare } size='2x' className='float-left' />
                             <p className='contact-info-data'>
-                                <a href='https://twitter.com/speechtext_io' target='_blank'>/speechtext_io</a>
+                                <a href='https://twitter.com/speechtext_io' target='_blank'>/speechtext.io</a>
                             </p>
                         </div>
                         <div>
@@ -92,7 +92,7 @@ class Contact extends Component {
                         <div>
                             <FontAwesomeIcon icon={ faLinkedin } size='2x' className='float-left' />
                             <p className='contact-info-data'>
-                                <a href='https://www.linkedin.com/in/speechtext-io-425b28195/' target='_blank'>/speechtext-io-425b28195</a>
+                                <a href='https://www.linkedin.com/in/speechtext-io-425b28195/' target='_blank'>/speechtext.io</a>
                             </p>
                         </div>
                     </Col>
