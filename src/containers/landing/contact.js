@@ -4,7 +4,8 @@ import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPhoneAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faTwitterSquare, faFacebookSquare, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { submitContactForm } from '../../actions';
 
 import '../../styles/contact.css';
@@ -65,14 +66,34 @@ class Contact extends Component {
                         <p>
                             <FormattedMessage id="Contact.message" />
                         </p>
-                        <div>
+                        {/* <div>
                             <FontAwesomeIcon icon={ faPhoneAlt } size='2x' className='float-left' />
                             <p className='contact-info-data'>+90 554 242 14 17</p>
-                        </div>
+                        </div> */}
                         <br />
                         <div>
                             <FontAwesomeIcon icon={ faEnvelope } size='2x' className='float-left' />
-                            <p className='contact-info-data'>support@speechtext.io</p>
+                            <p className='contact-info-data'>
+                                <a href='mailto:support@speechtext.io' target='_blank'>support@speechtext.io</a>
+                            </p>
+                        </div>
+                        <div>
+                            <FontAwesomeIcon icon={ faTwitterSquare } size='2x' className='float-left' />
+                            <p className='contact-info-data'>
+                                <a href='https://twitter.com/speechtext_io' target='_blank'>/speechtext_io</a>
+                            </p>
+                        </div>
+                        <div>
+                            <FontAwesomeIcon icon={ faFacebookSquare } size='2x' className='float-left' />
+                            <p className='contact-info-data'>
+                                <a href='https://www.facebook.com/speechtext.io' target='_blank'>/speechtext.io</a>
+                            </p>
+                        </div>
+                        <div>
+                            <FontAwesomeIcon icon={ faLinkedin } size='2x' className='float-left' />
+                            <p className='contact-info-data'>
+                                <a href='https://www.linkedin.com/in/speechtext-io-425b28195/' target='_blank'>/speechtext-io-425b28195</a>
+                            </p>
                         </div>
                     </Col>
                     <Col lg='7' md='7' sm='12' xs='12'>

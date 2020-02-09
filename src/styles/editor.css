@@ -129,6 +129,11 @@
 .export .dropdown-item:hover {
     background-color: #607180;
 }
+@media only screen and (max-width: 1200px) {
+    .export {
+        display: none;
+    }
+}
 
 .save-button{
     width: 100%;

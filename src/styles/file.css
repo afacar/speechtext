@@ -445,7 +445,7 @@
 
     .file-image-container img {
         width: 90px;
-        margin-left: 15px;
+        margin-left: 5px;
         margin-top: 5px;
     }
     
@@ -471,7 +471,7 @@
 
     .checkmark {
         top: 15px;
-        left: 25px;
+        left: 20px;
         width: 16px;
         height: 16px;
     }
