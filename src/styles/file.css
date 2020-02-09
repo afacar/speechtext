@@ -90,15 +90,15 @@
 }
 
 .file-image-container img {
-    width: 110px;
-    margin-top: 15px;
+    width: 100px;
+    margin-top: 20px;
     margin-left: 15px;
 }
 
 .file-image-container.default img {
     width: auto;
-    height: 110px;
-    margin-left: 15px;
+    height: 100px;
+    margin-left: 20px;
 }
 
 .file-body-container {
