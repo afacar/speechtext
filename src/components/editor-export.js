@@ -42,11 +42,10 @@ class Export extends Component {
     }
 
     render() {
-        const { intl, savingState } = this.props;
+        const { intl, savingState, fileType } = this.props;
         const { formatMessage } = intl;
         return (
-            <div>
-
+            <div className={ 'export' + (fileType.startsWith('audio') ? ' export-audio' : '') }>
                 <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })} drop='left'>
                     <Dropdown.Item as="button" onClick={this.props.downloadAsTxt}>
                         <FormattedMessage id='Transcription.Download.option1' />

@@ -112,9 +112,20 @@
 }
 
 .export{
-    position: fixed;
-    right: 80px !important;
-    top: 90px !important;
+    position: relative;
+    float: left;
+    width: 256px;
+    left: -275px !important;
+    top: 305px !important;
+    text-align: center;
+}
+
+.export-audio {
+    top: 210px !important;
+}
+
+.export button {
+    width: 120px;
 }
 
 .export .dropdown-menu {
@@ -136,7 +147,6 @@
 }
 
 .save-button{
-    width: 100%;
     background-color: #384d60;
     margin-top: 0.5rem;
     border-color: #384d60 !important;
@@ -147,9 +157,10 @@
 }
 
 .saving-state-text{
+    height: 10px;
+    padding-top: 10px;
     text-align: center;
     font-weight: bold;
-    margin-top: 4px;
 }
 
 .saving-state-text.saving{
@@ -168,24 +179,3 @@
 .saving-state-text.unsaved{
     color: darkgoldenrod;
 }
-
-
-/* RESPONSIVE */
-@media only screen and (max-width: 1400px) {
-    .export {
-        right: 20px !important;
-    }
-}
-
-@media only screen and (max-width: 1200px) {
-    .export {
-        right: 40px !important;
-    }
-}
-
-@media only screen and (max-width: 1024px) {
-    .export {
-        right: 30px !important;
-    }
-}
-/* END - RESPONSIVE */
