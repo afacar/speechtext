@@ -1,8 +1,8 @@
 .dashboard-container,
 .transcription-container,
 .profile-container {
-    padding-top: 90px;
-    max-width: 70%;
+    /* padding-top: 90px; */
+    max-width: 60%;
 }
 
 .profile-container .btn[type='submit'] {
@@ -129,7 +129,7 @@
 @media only screen and (max-width: 1200px) {
     .dashboard-container {
         max-width: 85% !important;
-        margin-left: 10px;
+        margin-top: 80px;
     }
 }
 
