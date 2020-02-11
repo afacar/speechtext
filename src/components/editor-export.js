@@ -43,10 +43,10 @@ class Export extends Component {
     }
 
     render() {
-        const { intl, savingState, showDownloadSpinner } = this.props;
+        const { intl, savingState, showDownloadSpinner, fileType } = this.props;
         const { formatMessage } = intl;
         return (
-            <div>
+            <div className={ 'export' + (fileType.startsWith('audio') ? ' export-audio' : '') }>
 
                 <DropdownButton id="dropdown-item-button"
                     title={

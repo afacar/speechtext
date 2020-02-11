@@ -6,7 +6,8 @@
 }
 
 .transcription-container {
-    padding-top: 0
+    padding-top: 0;
+    max-width: 60%;
 }
 
 .profile-container .btn[type='submit'] {

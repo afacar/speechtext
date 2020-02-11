@@ -459,16 +459,6 @@ class TranscriptionResult extends Component {
                             speakerTagChanged={this.speakerTagChanged}
                         />
                     </div>
-                    <div className="export">
-                        <Export
-                            downloadAsDocx={this.downloadAsDocx}
-                            downloadAsTxt={this.downloadAsTxt}
-                            downloadAsSrt={this.downloadAsSrt}
-                            onSave={this.updateTranscribedFile}
-                            savingState={this.state.savingState}
-                            showDownloadSpinner={this.state.showDownloadSpinner}
-                        />
-                    </div>
                 </div>
                 <React.Fragment>
                     <Prompt
@@ -505,7 +495,18 @@ class TranscriptionResult extends Component {
         return (
             <div>
                 <UserHeader />
-                <Container className='editor'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
+                <Container className='transcription-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
+                    {
+                        !this.state.showSpinner && !_.isEmpty(editorData) &&
+                        <Export
+                            downloadAsDocx={ this.downloadAsDocx }
+                            downloadAsTxt={ this.downloadAsTxt }
+                            downloadAsSrt={ this.downloadAsSrt }
+                            onSave={ this.updateTranscribedFile }
+                            savingState={ this.state.savingState }
+                            fileType={ selectedFile.options ? selectedFile.options.type : '' }
+                        />
+                    }
                     <div className='transcription-title'>
                         <Media>
                             <SpeechTextPlayer
