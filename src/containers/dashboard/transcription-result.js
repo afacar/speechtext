@@ -504,7 +504,7 @@ class TranscriptionResult extends Component {
         return (
             <div>
                 <UserHeader />
-                <Container className='dashboard-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
+                <Container className='transcription-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
                     {
                         !this.state.showSpinner && !_.isEmpty(editorData) &&
                         <Export
