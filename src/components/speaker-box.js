@@ -39,7 +39,7 @@ class SpeakerBox extends Component {
                     {
                         speaker && (
                             <Form className='speaker-input-container'>
-                                <FormControl className="speaker-input" readOnly={true} autoFocus placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} value={speaker || this.state.speakerTag} onChange={(event) => this.setState({ speakerTag: event.target.value })} />
+                                <FormControl className="speaker-input" readOnly={true} autoFocus={!speaker} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} value={speaker || this.state.speakerTag} onChange={(event) => this.setState({ speakerTag: event.target.value })} />
                                 <Button className='speaker-button' onClick={() => {
                                     this.submitSpeaker(undefined, index, true)
                                     // onSpeakerChange(undefined, index)
