@@ -14,7 +14,7 @@ if (!Intl.PluralRules) {
 // }
 
 const messages = {
-    'tr-TR': messages_tr,
+    'tr': messages_tr,
     'en-US': messages_en
 };
 var currentLanguage = navigator.language;
