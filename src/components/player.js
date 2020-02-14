@@ -70,7 +70,7 @@ class SpeechTextPlayer extends Component {
 
     seekToTime = (second) => {
         console.log("seek to time called", second)
-        if (second) {
+        if (second >= 0) {
             this.player.seekTo(second);
             this.setState({
                 currentTime: second,
