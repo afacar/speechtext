@@ -14,10 +14,10 @@ if (!Intl.PluralRules) {
 // }
 
 const messages = {
-    'tr': messages_tr,
+    'tr-TR': messages_tr,
     'en-US': messages_en
 };
-var currentLanguage = navigator.language;
+var currentLanguage = navigator.language === 'tr' ? 'tr-TR' : navigator.language;
 
 if(!_.has(messages, currentLanguage)) {
     currentLanguage = 'en-US'
