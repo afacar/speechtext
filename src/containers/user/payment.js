@@ -211,7 +211,7 @@ class Payment extends Component {
         else {
             this.setState({
                 showCheckOutForm: true,
-                state:'INITIAL'
+                state:'PAYMENT'
             })
         }
     }

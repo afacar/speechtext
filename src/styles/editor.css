@@ -1,3 +1,8 @@
+.editor {
+    width: 50%;
+    padding-top: 90px;
+}
+
 .conversionResult {
     font-size: 15px;
     /* border-left: 1px solid rgb(63, 63, 63); */
@@ -112,24 +117,13 @@
 }
 
 .export{
-    position: relative;
-    float: left;
-    width: 256px;
-    left: -275px !important;
-    top: 305px !important;
-    text-align: center;
-}
-
-.export-audio {
-    top: 210px !important;
-}
-
-.export button {
-    width: 120px;
+    position: fixed;
+    right: 80px !important;
+    top: 90px !important;
 }
 
 .export .dropdown-menu {
-    background-color: #384d60;
+    background-color: #AFAFAF;
     transform: translate3d(-220px, 0px, 0px) !important;
 }
 
@@ -147,9 +141,10 @@
 }
 
 .save-button{
-    background-color: #384d60;
+    width: 100%;
+    background-color: #ED4F32;
     margin-top: 0.5rem;
-    border-color: #384d60 !important;
+    border-color: #AFAFAF !important;
 }
 
 .save-button:disabled{
@@ -157,10 +152,9 @@
 }
 
 .saving-state-text{
-    height: 10px;
-    padding-top: 10px;
     text-align: center;
     font-weight: bold;
+    margin-top: 4px;
 }
 
 .saving-state-text.saving{
@@ -179,3 +173,165 @@
 .saving-state-text.unsaved{
     color: darkgoldenrod;
 }
+
+.speaker-box{
+    width: 200px;
+    max-height: 720px;
+    border-radius: 5px;
+}
+.speaker-box.closed{
+    height: auto;
+}
+
+.speaker-box.closed:hover{
+    background-color: cornflowerblue;
+}
+
+.header-button{
+    background-color: transparent;
+    color: #AFAFAF;
+    outline: none !important;
+    outline-offset: none !important;
+    border: 0px !important;
+    width: 200px !important;
+    text-align: left;
+}
+
+.speaker-input-container{
+    display:flex;
+    flex-direction:row;
+    border:1px solid grey;
+    padding:2px;
+}
+
+.speaker-input-container:focus{
+    outline: none;
+}
+
+.speaker-button{
+    background-color: #ED4F32;
+    border-radius: 50%;
+    color:white;
+    align-self: center;
+    outline: none !important;
+    width: auto;
+    height: auto;
+}
+
+.speaker-button.active{
+    background-color: dodgerblue;
+}
+
+.speaker-button.active:hover{
+    background-color: dodgerblue !important;
+}
+
+.speaker-button.active:active{
+    background-color: dodgerblue !important;
+}
+
+.speaker-button.active:focus{
+    background-color: dodgerblue !important;
+}
+
+.speaker-button:hover{
+    background-color: #ED4F32 !important;
+}
+
+.speaker-button:active{
+    background-color: #ED4F32 !important;
+    outline: none !important;
+}
+
+.speaker-button:focus{
+    background-color: #ED4F32 !important;
+    outline: none !important;
+}
+
+.speaker{
+    color: dodgerblue;
+}
+
+.speaker-input{
+    border: 0px !important;
+}
+
+.speaker-input:focus{
+    outline: none !important;
+}
+
+
+.speaker-input:read-only{
+    background-color: transparent;
+}
+
+.header-button-icon{
+    margin-left: 24px;
+    color: #AFAFAF;
+}
+
+.header-button:hover{
+    background-color: transparent;
+    color: #AFAFAF;
+    outline: none !important;
+    outline-offset: none !important;
+    border: 0px !important;
+    width: 200px !important;
+}
+
+.header-button:active::after{
+    background-color: transparent;
+    color: #AFAFAF;
+    outline: none !important;
+    outline-offset: none !important;
+    border: 0px !important;
+    width: '100%' !important;
+}
+
+.header-button:active::before{
+    background-color: transparent;
+    color: #AFAFAF;
+    outline: none !important;
+    outline-offset: none !important;
+    /* border: 0px !important; */
+    width: '100%' !important;
+}
+
+.header-button::after{
+    background-color: transparent;
+    color: #AFAFAF;
+    outline: none !important;
+    outline-offset: none !important;
+    /* border: 0px !important; */
+    width: '100%' !important;
+}
+
+.speaker-box.opened{
+    height: auto;
+}
+
+.speaker-box-content{
+    padding-bottom: 4px;
+}
+
+.speaker-box.header{
+}
+/* RESPONSIVE */
+@media only screen and (max-width: 1400px) {
+    .export {
+        right: 20px !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .export {
+        right: 40px !important;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .export {
+        right: 30px !important;
+    }
+}
+/* END - RESPONSIVE */

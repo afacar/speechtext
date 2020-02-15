@@ -182,6 +182,8 @@ class TranscriptionResult extends Component {
     }
 
     downloadAsTxt = async () => {
+        this.setState({ showDownloadSpinner: true });
+
         await this.updateTranscribedFile();
         const { selectedFile } = this.props;
         const { editorData } = this.state;
@@ -201,13 +203,16 @@ class TranscriptionResult extends Component {
         element.download = fileName;
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
+        this.setState({ showDownloadSpinner: false });
+
     }
 
     downloadAsDocx = async () => {
+        this.setState({ showDownloadSpinner: true });
+
         await this.updateTranscribedFile();
 
         var { selectedFile } = this.props;
-        this.setState({ showDownloadSpinner: true });
 
         var getDocxFile = firebase.functions().httpsCallable('getDocxFile');
         getDocxFile({
@@ -316,7 +321,7 @@ class TranscriptionResult extends Component {
         firstSplittedData.alternatives[0].endTime = endWord.endTime;
         firstSplittedData.alternatives[0].words.splice(activeWordIndex, firstSplittedData.alternatives[0].words.length - activeWordIndex + 1, endWordFirstPart);
         firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
-        console.log("Javid end word first part ", endWordFirstPart)
+        console.log("end word first part ", endWordFirstPart)
         let startWord = endWordSecondPart;
         secondSplittedData.alternatives[0].startTime = startWord.startTime;
         secondSplittedData.alternatives[0].words.splice(0, activeWordIndex + 1, startWord);
@@ -437,20 +442,6 @@ class TranscriptionResult extends Component {
         if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
         return (
             <div>
-                <div className='d-flex flex-col justify-content-end align-items-center'>
-                    {
-                        this.state.showDownloadSpinner &&
-                        <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className='margin-right-5'
-                        />
-                    }
-                </div>
-                <br />
                 <div className="d-flex flex-col">
                     <div className="p-2 flex-fill">
                         <SpeechTextEditor
@@ -466,6 +457,16 @@ class TranscriptionResult extends Component {
                             editorClicked={this.editorClicked}
                             //isPlaying={this.state.isPlaying}
                             speakerTagChanged={this.speakerTagChanged}
+                        />
+                    </div>
+                    <div className="export">
+                        <Export
+                            downloadAsDocx={this.downloadAsDocx}
+                            downloadAsTxt={this.downloadAsTxt}
+                            downloadAsSrt={this.downloadAsSrt}
+                            onSave={this.updateTranscribedFile}
+                            savingState={this.state.savingState}
+                            showDownloadSpinner={this.state.showDownloadSpinner}
                         />
                     </div>
                 </div>
@@ -504,18 +505,7 @@ class TranscriptionResult extends Component {
         return (
             <div>
                 <UserHeader />
-                <Container className='transcription-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
-                    {
-                        !this.state.showSpinner && !_.isEmpty(editorData) &&
-                        <Export
-                            downloadAsDocx={ this.downloadAsDocx }
-                            downloadAsTxt={ this.downloadAsTxt }
-                            downloadAsSrt={ this.downloadAsSrt }
-                            onSave={ this.updateTranscribedFile }
-                            savingState={ this.state.savingState }
-                            fileType={ selectedFile.options ? selectedFile.options.type : '' }
-                        />
-                    }
+                <Container className='editor'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
                     <div className='transcription-title'>
                         <Media>
                             <SpeechTextPlayer

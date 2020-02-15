@@ -5,6 +5,10 @@ import '../styles/editor.css';
 import Editable2 from './editable2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import SpeakerBox from './speaker-box';
+import OutsideAlerter from '../utils/outside-alerter';
+import { connect } from 'react-redux';
+import { setCurrentSpeakerBox } from '../actions';
 
 class SpeechTextEditor extends Component {
     constructor(props) {
@@ -13,6 +17,8 @@ class SpeechTextEditor extends Component {
         this.state = {
             activeIndex: -1,
             activeWordIndex: -1,
+            openedEditable: -1,
+            speakerList: ["Speaker 1", "Speaker 2"]
         }
     }
 
@@ -78,7 +84,14 @@ class SpeechTextEditor extends Component {
     }
 
     onSpeakerChange = (speakerTag, index) => {
-        this.props.editorData[index].alternatives["0"]["speakerTag"] = speakerTag.target.value;
+        console.log("On speaker change")
+        this.props.editorData[index].alternatives["0"]["speakerTag"] = speakerTag;
+        for (var i = 0; i < this.props.editorData.length; i++) {
+            var tmpSpeakers = new Set(this.props.editorData[i].alternatives["0"].speakerList);
+            if (speakerTag)
+                tmpSpeakers.add(speakerTag)
+            this.props.editorData[i].alternatives["0"]["speakerList"] = Array.from(tmpSpeakers);
+        }
         console.log(this.props.editorData[index]);
         this.props.speakerTagChanged();
         this.setState({
@@ -120,8 +133,18 @@ class SpeechTextEditor extends Component {
                                 disabled={true}
                             >
                                 <div>
-                                    <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' />
-                                    <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input>
+                                    {/* <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' /> */}
+                                    {/* <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input> */}
+                                    {/* <OutsideAlerter handleClickOutside={this.props.setCurrentSpeakerBox}> */}
+                                    <SpeakerBox
+                                        index={index}
+                                        openedEditable={this.state.openedEditable}
+                                        speaker={alternative.speakerTag ? alternative.speakerTag : undefined}
+                                        onSpeakerChange={this.onSpeakerChange}
+                                        speakerList={alternative.speakerList}
+                                    />
+                                    {/* </OutsideAlerter> */}
+
                                 </div>
                                 {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
@@ -151,4 +174,4 @@ class SpeechTextEditor extends Component {
     }
 }
 
-export default injectIntl(SpeechTextEditor);
+export default connect(null, { setCurrentSpeakerBox })(injectIntl(SpeechTextEditor));
