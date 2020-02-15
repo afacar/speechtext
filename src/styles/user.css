@@ -2,7 +2,11 @@
 .transcription-container,
 .profile-container {
     padding-top: 90px;
-    max-width: 70%;
+    max-width: 60%;
+}
+
+.transcription-container {
+    padding-top: 0
 }
 
 .profile-container .btn[type='submit'] {
@@ -121,20 +125,23 @@
 }
 
 @media only screen and (max-width: 1400px) {
-    .dashboard-container {
+    .dashboard-container,
+    .transcription-container {
         max-width: 80% !important;
     }
 }
 
 @media only screen and (max-width: 1200px) {
-    .dashboard-container {
+    .dashboard-container,
+    .transcription-container {
         max-width: 85% !important;
-        margin-left: 10px;
+        margin-top: 80px;
     }
 }
 
 @media only screen and (max-width: 1024px) {
-    .dashboard-container {
+    .dashboard-container,
+    .transcription-container {
         max-width: 85% !important;
     }
 }

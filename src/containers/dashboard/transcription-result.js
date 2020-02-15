@@ -494,6 +494,7 @@ class TranscriptionResult extends Component {
     render() {
         console.log('Transcription Rendering...')
         var { selectedFile } = this.props;
+        const { editorData } = this.state;
         if (_.isEmpty(selectedFile)) selectedFile = {};
         let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
         if(selectedFile.options && selectedFile.options.type.startsWith('video')) {
@@ -506,17 +507,15 @@ class TranscriptionResult extends Component {
                 <UserHeader />
                 <Container className='editor'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
                     <div className='transcription-title'>
-                        <div className='selected-file-name'>
-                            {selectedFile.name}
-                        </div>
                         <Media>
                             <SpeechTextPlayer
-                                key={selectedFile.id}
-                                src={fileSrc}
-                                duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
-                                type={selectedFile.options ? selectedFile.options.type : ''}
-                                timeToSeek={this.state.timeToSeek}
-                                editorData={this.state.editorData}
+                                key={ selectedFile.id }
+                                src={ fileSrc }
+                                fileName={ selectedFile.name }
+                                duration={ selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined }
+                                type={ selectedFile.options ? selectedFile.options.type : '' }
+                                timeToSeek={ this.state.timeToSeek }
+                                editorData={ this.state.editorData }
                             />
                         </Media>
                     </div>

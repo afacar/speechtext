@@ -33,7 +33,7 @@ class Auth extends Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FirebaseUIAuth lang={this.props.language}
+                    <FirebaseUIAuth lang={ this.props.language ? this.props.language.split(/[-_]/)[0] : '' }
                         config={uiConfig}
                         auth={firebase.auth()}
                         firebase={firebase} />

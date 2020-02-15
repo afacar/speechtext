@@ -161,9 +161,6 @@ class UploadPopup extends Component {
             const { language, file } = this.props;
             var { options } = this.state;
             if(!options.language) options.language = language;
-            if(options.language.indexOf('-') === -1) {
-                options.language = Utils.LanguageMap[options.language];
-            }
             options.autoTranscribe = true;
             if(!options.speakerCount) options.speakerCount = 1;
             file.options = _.merge(file.options, options);
@@ -264,7 +261,7 @@ class UploadPopup extends Component {
         const { options } = this.state;
         const disabled = false;//file.status === 'PROCESSING' || file.status === 'DONE';
         let selectedLanguage = options.language || language;
-        if(selectedLanguage.indexOf('-') > -1) selectedLanguage = selectedLanguage.substr(0, selectedLanguage.indexOf('-'));
+        // if(selectedLanguage.indexOf('-') > -1) selectedLanguage = selectedLanguage.substr(0, selectedLanguage.indexOf('-'));
         
         return (
             <div>
@@ -292,7 +289,7 @@ class UploadPopup extends Component {
                                         {
                                             supportedLanguages.map(lang => {
                                                 return (
-                                                    <option key={ lang.key } value={ lang.key }>
+                                                    <option key={ lang.key } value={ lang.key } className={ lang.key.startsWith('ar-') ? 'direction-rtl' : ''}>
                                                         { lang.value }
                                                     </option>
                                                 )
