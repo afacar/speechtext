@@ -120,8 +120,8 @@ class SpeechTextEditor extends Component {
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
-                console.log("Alternative index", index);
-                console.log(alternative);
+                // console.log("Alternative index", index);
+                // console.log(alternative);
                 if (alternative && alternative.startTime && alternative.endTime) {
                     let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult' : 'conversionResult'
                     var id = "input_" + index;

@@ -84,7 +84,16 @@
     cursor: text;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 17px;
+    color: #212529;
     /*outline: 0px solid transparent;*/
+}
+
+.editable-content.red {
+    color: red;
+}
+
+.editable-content.darkgoldenrod {
+    color: darkgoldenrod;
 }
 
 .not-so-confident {
