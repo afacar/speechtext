@@ -130,11 +130,12 @@
 
 .export .dropdown-menu {
     background-color: #384d60;
-    transform: translate3d(-220px, 0px, 0px) !important;
+    /* transform: translate3d(-220px, 0px, 0px) !important; */
 }
 
 .export .dropdown-item {
     color: white;
+    width: auto;
 }
 
 .export .dropdown-item:hover {
