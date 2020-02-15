@@ -143,12 +143,12 @@
 }
 
 .export .dropdown-menu {
-    background-color: #AFAFAF;
-    transform: translate3d(-220px, 0px, 0px) !important;
+    background-color: #384d60;
 }
 
 .export .dropdown-item {
     color: white;
+    width: auto;
 }
 
 .export .dropdown-item:hover {
@@ -334,8 +334,6 @@
     padding-bottom: 4px;
 }
 
-.speaker-box.header{
-}
 /* RESPONSIVE */
 @media only screen and (max-width: 1400px) {
     .export {

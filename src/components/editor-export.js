@@ -47,7 +47,6 @@ class Export extends Component {
         const { formatMessage } = intl;
         return (
             <div className={ 'export' + (fileType.startsWith('audio') ? ' export-audio' : '') }>
-
                 <DropdownButton id="dropdown-item-button"
                     title={
                         <span>
@@ -56,7 +55,7 @@ class Export extends Component {
                             {showDownloadSpinner && <Spinner size='sm' animation="grow" role="status" />}
                         </span>
                     }
-                    drop='left'>
+                >
                     <Dropdown.Item as="button" onClick={this.props.downloadAsTxt}>
                         <FormattedMessage id='Transcription.Download.option1' />
                     </Dropdown.Item>
