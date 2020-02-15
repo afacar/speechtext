@@ -301,7 +301,11 @@ class Editable2 extends React.Component {
                 let word = { confidence: 1 }
                 newSpan.className = this.decideClassName(word, true, false)
                 console.log('newSpan is ready onKeyUp', newSpan)
-                if (sel.focusNode.nodeName !== 'DIV' && this.editableRef.contains(sel.focusNode)) this.editableRef.removeChild(sel.focusNode)
+                if (sel.focusNode.nodeName !== 'DIV' && this.editableRef.contains(sel.focusNode)) {
+                    console.log('sel: ' + sel);
+                    console.log('this.editableRef' + this.editableRef);
+                    this.editableRef.removeChild(sel.focusNode);
+                }
                 this.editableRef.appendChild(newSpan)
             }
             console.log(`onKeyUp text is ${text} activeWordIndex ${activeWordIndex} and offset is ${offset} and words.length is ${transcript.words.length} and textLen is ${text.length}`)
@@ -324,7 +328,7 @@ class Editable2 extends React.Component {
                 let wordIndex = parseInt(child.id);
                 console.log("NODES wordindex on KEYUP ", wordIndex);
                 let newWord = child.innerText.trim()
-                if (child.nodeName === 'SPAN' && !isNaN(wordIndex)) {
+                if (child.nodeName === 'SPAN' && !isNaN(wordIndex) && words.length > wordIndex) {
                     words[wordIndex].word = newWord
                 }
             }

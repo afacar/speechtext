@@ -90,7 +90,6 @@ class SpeechTextPlayer extends Component {
     }
 
     onProgress = (progress) => {
-        console.log("Progress", progress)
         if (!this.state.seeking) {
             this.setState({
                 progress,
