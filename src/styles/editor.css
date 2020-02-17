@@ -89,11 +89,12 @@
 }
 
 .editable-content.red {
-    color: red;
+    text-decoration: none;
+    border-bottom: 3px solid gray;
 }
 
 .editable-content.darkgoldenrod {
-    color: darkgoldenrod;
+    
 }
 
 .not-so-confident {
@@ -103,7 +104,7 @@
 }
 
 .fixed-word {
-    color: goldenrod;
+    
 }
 
 .editable-content-wrapper {
