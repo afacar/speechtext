@@ -26,83 +26,46 @@ class Editable2 extends React.Component {
 
     shouldComponentUpdate(nextProps, nextStates) {
         const { index } = this.props;
-        // console.log(`Editable${index}ShouldUpdate props `, this.props, nextProps)
+        console.log(`Editable${index}ShouldUpdate props `, this.props, nextProps)
         //const { playerActiveIndex, playerActiveWordIndex } = nextProps.playerChange
         const nextEditor = nextProps.editorFocus
         const thisEditor = this.props.editorFocus
 
         this.isEditing = index === nextEditor.activeIndex
         this.isPlaying = index === nextProps.playerActiveIndex
+        this.isPlayed = index < nextProps.playerActiveIndex
 
         const isEditingWordChanged = this.isEditing && !_.isEqual(thisEditor, nextEditor)
-        const isPlayingWordChanged = this.isPlaying && this.props.playerActiveWordIndex !== nextProps.playerActiveWordIndex
+        //const isPlayingWordChanged = this.isPlaying && this.props.playerActiveWordIndex !== nextProps.playerActiveWordIndex
+        let lastPlayingSpanIndex = this.getSpanIndexById(nextProps.playerActiveWordIndex);
+        if (this.isPlayed) {
+            this.editableRef.classList.add('isPlayed')
+        } else if (this.isPlaying) {
+            if (this.editableRef.classList.contains('isPlayed')) {
+                this.editableRef.classList.remove('isPlayed')
+            }
+            for (let i = 0; i < this.editableRef.childNodes.length; i++) {
+                let span = this.editableRef.childNodes[i]
+                if (i <= lastPlayingSpanIndex && !span.classList.contains('isPlayed')) {
+                    span.classList.add('isPlayed')
+                }
+                else if (i > lastPlayingSpanIndex && span.classList.contains('isPlayed')) {
+                    span.classList.remove('isPlayed')
+                }
+            }
+        } else {
+            this.editableRef.classList.remove('isPlayed')
+            for (let i = 0; i < this.editableRef.childNodes.length; i++) {
+                let span = this.editableRef.childNodes[i]
+                if (span.classList.contains('isPlayed'))
+                    span.classList.remove('isPlayed')
+            }
+        }
 
         if (isEditingWordChanged) {
-            this.isEditorClean = false
-            this.lastActiveWordIndex = nextEditor.activeWordIndex
-            this.lastCaretPosition = nextEditor.caretPosition
-            console.log(`Editable${index} DOESNT UPDATES DUE TO EditingWordChanged`)
-            if (this.lastActiveWordIndex !== null) {
-                this.setCaretPos(this.lastActiveWordIndex, this.lastCaretPosition);
-                this.lastActiveWordIndex = null
-                this.lastCaretPosition = null
-            }
-        }
-        /*
-        if (this.isEditing && !this.isFocused) {
-            console.log(`Editable${index} DOESNT UPDATES IN ORDER TO FOCUS`)
-            return false
-        } */
-        var transcript, words;
-        let lastPlayingSpanIndex = this.getSpanIndexById(this.lastPlayingWordIndex);
-        if (!this.isEditorClean && !this.isFocused && !this.isPlaying) {
-            console.log(`Editable${index} UPDATES due to cleaning!`)
-            this.isEditorClean = true;
-            if (this.lastPlayingWordIndex > -1 && lastPlayingSpanIndex > -1) {
-                transcript = nextProps.transcript;
-                words = transcript.words;
-                let lastSpan = this.editableRef.childNodes[lastPlayingSpanIndex];
-                if (words[this.lastPlayingWordIndex].confidence === 1) {
-                    if(!lastSpan.classList.contains('red')) {
-                        lastSpan.classList.add('darkgoldenrod');
-                    }
-                } else {
-                    lastSpan.classList.remove('red');
-                    lastSpan.classList.remove('darkgoldenrod');
-                }
-            }
-        }
-        if (isPlayingWordChanged) {
-            if(lastPlayingSpanIndex > -1) {
-                this.editableRef.childNodes[lastPlayingSpanIndex].classList.remove('red');
-            }
-
-            this.isEditorClean = false;
-            console.log(`Editable${index} PlayingWordChanged`)
-            let spanIndex = this.getSpanIndexById(this.props.playerActiveWordIndex);
-            let nextSpanIndex = this.getSpanIndexById(nextProps.playerActiveWordIndex);
-            if (this.props.playerActiveWordIndex > -1 && spanIndex > -1) {
-                transcript = this.props.transcript;
-                words = transcript.words;
-                let currentSpan = this.editableRef.childNodes[spanIndex];
-                if (words[this.props.playerActiveWordIndex].confidence === 1) {
-                    if(!currentSpan.classList.contains('red')) {
-                        currentSpan.classList.add('darkgoldenrod');
-                    }
-                } else {
-                    currentSpan.classList.remove('red');
-                    currentSpan.classList.remove('darkgoldenrod');
-                }
-            }
-            if (nextProps.playerActiveWordIndex > -1 && nextSpanIndex > -1) {
-                this.editableRef.childNodes[nextSpanIndex].classList.add('red');
-                this.lastPlayingWordIndex = nextSpanIndex;
-            }
-
-            return false
+            return true;
         }
 
-        // console.log(`Editable${index} SHOULD NOT UPDATE DUE TO NO REASON`)
         return false
     }
 
@@ -111,6 +74,16 @@ class Editable2 extends React.Component {
         var childNodes = this.editableRef.childNodes
         for (let i = 0; i < childNodes.length; i++) {
             if (childNodes[i].id === id) return i
+        }
+        return -1
+    }
+
+    getLastSpanIndex = (wordIndex) => {
+        var lastSpanId = parseInt(this.editableRef.lastElementChild.id)
+        if (lastSpanId === wordIndex) return wordIndex
+
+        for (let i = this.editableRef.childNodes.length - 1; i >= wordIndex; i--) {
+            if (this.editableRef.childNodes[i].textContent.trim() !== '') return i
         }
         return -1
     }
@@ -125,12 +98,12 @@ class Editable2 extends React.Component {
         let offset = sel.focusOffset
         let text = sel.focusNode.innerText || sel.focusNode.textContent
         let id = sel.focusNode.nodeName !== 'SPAN' ? sel.focusNode.parentNode.id : sel.focusNode.id
-        if(!id) {
+        if (!id) {
             id = sel.focusNode.parentNode ? sel.focusNode.parentNode.parentNode.id : '';
         }
         let wordIndex = parseInt(id) || parseInt(id.substring(id.lastIndexOf('-') + 1))
         let firstIndex = this.editableRef.firstElementChild ? parseInt(this.editableRef.firstElementChild.id) : wordIndex;
-        let lastIndex = this.editableRef.lastElementChild ? parseInt(this.editableRef.lastElementChild.id) : wordIndex;
+        let lastIndex = this.getLastSpanIndex(wordIndex)
         //console.log(`onKeyDown text is ${text} wordIndex ${wordIndex} and offset is ${offset} and #words is ${transcript.words.length} and textLen is ${text.length}`)
         this.lastCaretPosition = offset
         this.lastActiveWordIndex = wordIndex
@@ -448,7 +421,7 @@ class Editable2 extends React.Component {
             return (
                 <span
                     className={this.decideClassName(word)}
-                    onClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
+                    onDoubleClick={() => changePlayerTime(parseFloat(word.startTime.seconds) + parseFloat(word.startTime.nanos / 1000))}
                     onPaste={(event) => this.onDisableEvent(event)}
                     onCut={(event) => this.onDisableEvent(event)}
                     key={wordIndex}

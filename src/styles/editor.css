@@ -88,14 +88,6 @@
     /*outline: 0px solid transparent;*/
 }
 
-.editable-content.red {
-    text-decoration: none;
-    border-bottom: 3px solid gray;
-}
-
-.editable-content.darkgoldenrod {
-    
-}
 
 .not-so-confident {
     text-decoration: underline;
@@ -103,19 +95,17 @@
     text-decoration-color: red;
 }
 
-.fixed-word {
-    
-}
-
 .editable-content-wrapper {
     white-space: pre-wrap;
     word-wrap: break-word;
     outline: 0px solid transparent;
     padding-left: 10px;
+    color: lightslategrey;
+    font-weight: 500;
 }
 
-.editable-content-wrapper:focus {
-    border-left: dashed grey;
+.isPlayed {
+    color: black;
 }
 
 .input-speaker{
