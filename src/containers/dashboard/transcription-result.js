@@ -95,12 +95,12 @@ class TranscriptionResult extends Component {
 
     componentDidUpdate() {
         const { savingState } = this.state;
-        if(!this.state.blockNavigation && savingState < 0) {
+        if (!this.state.blockNavigation && savingState < 0) {
             this.setState({
                 blockNavigation: true
             });
             window.addEventListener('beforeunload', this.beforeUnload);
-        } else if(this.state.blockNavigation && savingState >= 0) {
+        } else if (this.state.blockNavigation && savingState >= 0) {
             this.setState({
                 blockNavigation: false
             });
@@ -298,7 +298,7 @@ class TranscriptionResult extends Component {
         })
     }
 
-    splitData = (activeIndex, activeWordIndex, caretPos, wordLength,) => {
+    splitData = (activeIndex, activeWordIndex, caretPos, wordLength, ) => {
         const { editorData } = this.state;
         let firstSplittedData = editorData[activeIndex];
         let secondSplittedData = _.cloneDeep(firstSplittedData);
@@ -463,7 +463,7 @@ class TranscriptionResult extends Component {
                 <React.Fragment>
                     <Prompt
                         when={this.state.blockNavigation}
-                        message={ intl.formatMessage({ id: "Editor.leaveMessage" }) }
+                        message={intl.formatMessage({ id: "Editor.leaveMessage" })}
                     />
                 </React.Fragment>
             </div>
@@ -487,9 +487,20 @@ class TranscriptionResult extends Component {
         const { editorData } = this.state;
         if (_.isEmpty(selectedFile)) selectedFile = {};
         let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
-        if(selectedFile.options && selectedFile.options.type.startsWith('video')) {
-            if(selectedFile.resizedFile && selectedFile.resizedFile.publicUrl) {
-                fileSrc = selectedFile.resizedFile.publicUrl;
+        if (selectedFile.options && selectedFile.options.type.startsWith('video')) {
+            if (selectedFile.resizedFile) {
+                var ref = firebase.storage().ref(selectedFile.resizedFile.filePath);
+                ref.getDownloadURL().then((downloadUrl) => {
+                    Axios.get(downloadUrl)
+                        .then((url) => {
+                            fileSrc = url.config.url;
+                            console.log("URL 2 ", url.config.url);
+                        });
+                })
+                    .catch(error => {
+                        // TODO: GET_DOWNLOAD_URL_ERROR
+                        console.log(error);
+                    })
             }
         }
         return (
@@ -499,24 +510,24 @@ class TranscriptionResult extends Component {
                     {
                         !this.state.showSpinner && !_.isEmpty(editorData) &&
                         <Export
-                            downloadAsDocx={ this.downloadAsDocx }
-                            downloadAsTxt={ this.downloadAsTxt }
-                            downloadAsSrt={ this.downloadAsSrt }
-                            onSave={ this.updateTranscribedFile }
-                            savingState={ this.state.savingState }
-                            fileType={ selectedFile.options ? selectedFile.options.type : '' }
+                            downloadAsDocx={this.downloadAsDocx}
+                            downloadAsTxt={this.downloadAsTxt}
+                            downloadAsSrt={this.downloadAsSrt}
+                            onSave={this.updateTranscribedFile}
+                            savingState={this.state.savingState}
+                            fileType={selectedFile.options ? selectedFile.options.type : ''}
                         />
                     }
                     <div className='transcription-title'>
                         <Media>
                             <SpeechTextPlayer
-                                key={ selectedFile.id }
-                                src={ fileSrc }
-                                fileName={ selectedFile.name }
-                                duration={ selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined }
-                                type={ selectedFile.options ? selectedFile.options.type : '' }
-                                timeToSeek={ this.state.timeToSeek }
-                                editorData={ this.state.editorData }
+                                key={selectedFile.id}
+                                src={fileSrc}
+                                fileName={selectedFile.name}
+                                duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
+                                type={selectedFile.options ? selectedFile.options.type : ''}
+                                timeToSeek={this.state.timeToSeek}
+                                editorData={this.state.editorData}
                             />
                         </Media>
                     </div>
