@@ -66,7 +66,7 @@ class Export extends Component {
                         <FormattedMessage id='Transcription.Download.option3' />
                     </Dropdown.Item>
                 </DropdownButton>
-                <Button className="save-button" onClick={this.props.onSave} disabled={savingState !== -1 || savingState === 1}>
+                <Button className="save-button" onClick={this.props.onSave} disabled={savingState !== -1 || savingState === 1 || savingState === 0}>
                     {formatMessage({ id: 'Transcription.Save.text' }) + '  '}
                     <FontAwesomeIcon icon={faSave} color="white" size="1x" />
                     {savingState === 2 && <Spinner size='sm' animation="grow" role="status" />}

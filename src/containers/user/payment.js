@@ -152,7 +152,6 @@ class Payment extends Component {
     }
 
     sellingContractClicked = (e) => {
-        console.log('sellingContractClicked')
         e.preventDefault();
         e.stopPropagation();
 
@@ -160,7 +159,6 @@ class Payment extends Component {
     }
 
     refundContractClicked = (e) => {
-        console.log('refundContractClicked')
         e.preventDefault();
         e.stopPropagation();
 
@@ -196,13 +194,10 @@ class Payment extends Component {
     }
 
     onHide = () => {
-        console.log('onHide')
         this.setState({ showCheckoutForm: false })
     }
 
-
     showForm = () => {
-        console.log("Duration" + this.state.duration)
         if (parseInt(this.state.duration) >= 50) {
             this.setState({
                 showContactForm: true
@@ -232,7 +227,6 @@ class Payment extends Component {
 
     startPayment = async (obj) => {
         //TODO add payment function
-        console.log("Start payment called", obj)
         const { values, cardNumber, expiry, cvc } = obj;
         var card = {
             cardHolderName: values.displayName,
@@ -241,10 +235,8 @@ class Payment extends Component {
             expireYear: expiry.substring(5, 7),
             cvc
         }
-        console.log("Card", card)
         var that = this;
         const { language, user } = this.props;
-        console.log("User", user);
         var { duration, basketId } = this.state;
         // let durationInMinutes = undefined;
         // if (selectedPlanType === 'PayAsYouGo')
@@ -267,7 +259,6 @@ class Payment extends Component {
             card
         }).then(({ data }) => {
             const { basketId, result, error } = data;
-            console.log("Data", data);
             let errorMessage = '';
             if (error)
                 errorMessage = error.errorMessage;

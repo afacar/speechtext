@@ -127,11 +127,8 @@
 
 .export{
     position: relative;
-    float: left;
-    width: 256px;
-    left: -275px !important;
-    top: 305px !important;
     text-align: center;
+    margin-top: 50px;
 }
 
 .export-audio {
