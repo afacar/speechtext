@@ -15,7 +15,7 @@ import {
     convertFromTranscript,
     convertToTranscript,
     convertToJSON
-  } from '../../components/transcription';
+} from '../../components/transcription';
 import Export from '../../components/editor-export';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
 import UserHeader from '../user-header';
@@ -84,10 +84,10 @@ class TranscriptionResult extends Component {
                             });
                         });
                 })
-                .catch(error => {
-                    // TODO: GET_DOWNLOAD_URL_ERROR
-                    console.log(error);
-                })
+                    .catch(error => {
+                        // TODO: GET_DOWNLOAD_URL_ERROR
+                        console.log(error);
+                    })
             } else {
                 this.setState({
                     editorData: null,
@@ -100,18 +100,17 @@ class TranscriptionResult extends Component {
             }
 
             let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
-            if (selectedFile.options && selectedFile.options.type.startsWith('video')) {
-                if (selectedFile.resizedFile) {
-                    var ref = firebase.storage().ref(selectedFile.resizedFile.filePath);
-                    ref.getDownloadURL().then((downloadUrl) => {
-                        Axios.get(downloadUrl)
-                            .then((url) => {
-                                fileSrc = url.config.url;
-                                that.setState({
-                                    fileSrc
-                                })
-                            });
-                    })
+            if (selectedFile.resizedFile) {
+                var ref = firebase.storage().ref(selectedFile.resizedFile.filePath);
+                ref.getDownloadURL().then((downloadUrl) => {
+                    Axios.get(downloadUrl)
+                        .then((url) => {
+                            fileSrc = url.config.url;
+                            that.setState({
+                                fileSrc
+                            })
+                        });
+                })
                     .catch(error => {
                         // TODO: GET_DOWNLOAD_URL_ERROR
                         console.log(error);
@@ -119,23 +118,22 @@ class TranscriptionResult extends Component {
                             fileSrc
                         })
                     })
-                } else {
-                    this.setState({
-                        fileSrc
-                    })
-                }
+            } else {
+                this.setState({
+                    fileSrc
+                })
             }
         }
     }
 
     formatDataForEditor = (data) => {
         if(data) {
-          const transcriptJson2 = convertToJSON(data)
-          const transcript = Transcript.fromJson(transcriptJson2);
-          return convertFromTranscript(transcript);
+            const transcriptJson2 = convertToJSON(data)
+            const transcript = Transcript.fromJson(transcriptJson2);
+            return convertFromTranscript(transcript);
         }
         return {};
-      }
+    }
 
     componentDidUpdate() {
         const { savingState } = this.state;
@@ -246,9 +244,9 @@ class TranscriptionResult extends Component {
             formattedTime += '00:00:';
         }
         formattedTime += this.addZero(seconds) + ',' + this.addZero(nanos, 3);
-    
+
         return formattedTime;
-      }
+    }
 
     downloadAsTxt = async () => {
         this.setState({ showDownloadSpinner: true });
@@ -256,14 +254,14 @@ class TranscriptionResult extends Component {
         await this.updateTranscribedFile();
         const { selectedFile } = this.props;
         const { editorState } = this.state;
-        
+
         let dataToExport = convertToTranscript(
             this.state.editorState.getCurrentContent(),
             this.state.speakers
         );
         var textData = '';
 
-        for(var i = 0;i < dataToExport.segments.size;i++) {
+        for (var i = 0; i < dataToExport.segments.size; i++) {
             let segment = dataToExport.segments.get(i);
             let start = segment.getStart();
             let end = segment.getEnd();
@@ -394,16 +392,12 @@ class TranscriptionResult extends Component {
                                     <div className="d-flex flex-col">
                                         <div className="p-2 flex-fill">
                                             <div className='row'>
-                                                <div className='col-12 transcription-title'>
-                                                    { selectedFile.name }
-                                                </div>
-                                            </div>
-                                            <div className='row'>
-                                                <div className='col-4'>
+                                                <div className='col-4 text-center' >
+                                                    {selectedFile.name}
                                                     <VideoPlayer
                                                         //thumbnail TODO Put Thumbnail of video, undefined for audio 
-                                                        src={ fileSrc }
-                                                        onTimeUpdate={ this.handleTimeUpdate }
+                                                        src={fileSrc}
+                                                        onTimeUpdate={this.handleTimeUpdate}
                                                     />
                                                     {
                                                         !this.state.showSpinner && !_.isEmpty(editorData) &&
@@ -419,10 +413,10 @@ class TranscriptionResult extends Component {
                                                 </div>
                                                 <div className='col-8 editor-container'>
                                                     <SpeechTextEditor
-                                                        editorState={ editorState }
-                                                        speakers={ speakers }
-                                                        currentTime={ currentTime }
-                                                        onTextChange={ this.onTextChange }
+                                                        editorState={editorState}
+                                                        speakers={speakers}
+                                                        currentTime={currentTime}
+                                                        onTextChange={this.onTextChange}
                                                     />
                                                 </div>
                                             </div>
