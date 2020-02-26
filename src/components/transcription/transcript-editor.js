@@ -247,6 +247,7 @@ class TranscriptEditor extends Component {
           keyBindingFn={this.handleKeyboardEvent}
           handlePastedText={this.handlePastedText}
           blockRendererFn={this.blockRenderer}
+          readOnly={true}
         />
       </div>
     );
