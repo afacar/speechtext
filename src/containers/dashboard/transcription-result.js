@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
+import { fromJS } from 'immutable'
 import { Container, Spinner } from 'react-bootstrap';
 import { Media } from 'react-media-player';
 import { injectIntl } from 'react-intl';
@@ -20,6 +21,7 @@ import Export from '../../components/editor-export';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
 import UserHeader from '../user-header';
 import "../../styles/user.css";
+import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 
 class TranscriptionResult extends Component {
     constructor(props) {
@@ -127,7 +129,7 @@ class TranscriptionResult extends Component {
     }
 
     formatDataForEditor = (data) => {
-        if(data) {
+        if (data) {
             const transcriptJson2 = convertToJSON(data)
             const transcript = Transcript.fromJson(transcriptJson2);
             return convertFromTranscript(transcript);
@@ -360,13 +362,44 @@ class TranscriptionResult extends Component {
     }
 
     onTextChange = (editorState) => {
-        if(this.state.editorState !== editorState) {
+        if (this.state.editorState !== editorState) {
             this.setState({
                 editorState,
                 isSaved: false,
                 savingState: -1
             })
         }
+    }
+
+    editSpeaker = (newSpeaker, index) => {
+        var { speakers } = this.state;
+        speakers = speakers.update(index, (item) => {
+            return item.set('name', newSpeaker);
+        })
+        this.setState({
+            speakers
+        })
+    }
+
+    addNewSpeaker = (newSpeaker) => {
+        var { speakers } = this.state;
+        var speakersJSON = speakers.toJS();
+        speakersJSON[speakersJSON.length] = { name: newSpeaker };
+        speakers = fromJS(speakersJSON);
+        this.setState({
+            speakers
+        })
+    }
+
+    setSpeaker = (blockIndex, speakerIndex) => {
+        console.log("Editor state ", this.state.editorState)
+        var contentState = this.state.editorState.getCurrentContent()
+        var contentStateJSON = convertToRaw(contentState);
+        contentStateJSON.blocks[blockIndex].data.speaker = speakerIndex;
+        contentState = convertFromRaw(contentStateJSON);
+        this.setState({
+            editorState: EditorState.createWithContent(contentState)
+        })
     }
 
     render() {
@@ -417,6 +450,9 @@ class TranscriptionResult extends Component {
                                                         speakers={speakers}
                                                         currentTime={currentTime}
                                                         onTextChange={this.onTextChange}
+                                                        editSpeaker={this.editSpeaker}
+                                                        addNewSpeaker={this.addNewSpeaker}
+                                                        setSpeaker={this.setSpeaker}
                                                     />
                                                 </div>
                                             </div>

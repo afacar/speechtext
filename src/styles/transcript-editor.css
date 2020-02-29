@@ -11,6 +11,10 @@
 
 .transcript-editor-speaker {
   width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .transcript-editor-text {

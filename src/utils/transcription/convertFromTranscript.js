@@ -59,7 +59,6 @@ const convertFromTranscript = (transcript) => {
   const speakers = transcript.get('speakers');
 
   const editorState = EditorState.createWithContent(contentState);
-
   return { editorState, speakers };
 };
 

@@ -64,10 +64,13 @@ class EditorView extends Component {
               ref={(editor) => {
                 this.editor = editor;
               }}
-              editorState={this.props.editorState}
+              // editorState={this.props.editorState}
               speakers={this.props.speakers}
               onChange={this.handleChange}
               showSpeakers
+              editSpeaker={this.props.editSpeaker}
+              addNewSpeaker={this.props.addNewSpeaker}
+              setSpeaker={this.props.setSpeaker}
               editorState={this.state.decorators[this.state.decorator](this.props.editorState)}
             />
       </div>

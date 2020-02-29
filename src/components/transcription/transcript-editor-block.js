@@ -40,7 +40,7 @@ const TranscriptEditorBlock = (props) => {
     } else {
       formattedTime += '00:00:';
     }
-    formattedTime += addZero(seconds) + ',' + addZero(nanos, 3);
+    formattedTime += addZero(seconds)
 
     return formattedTime;
   }
@@ -69,17 +69,19 @@ const TranscriptEditorBlock = (props) => {
     </div>
   ) : null;
 
-  console.log('props.speakersss', props.block.data.get('speaker'));
-
   return (
     <div className="transcript-editor-block row">
-      <div className="transcript-editor-speaker column" contentEditable={false}>
+      <div className="transcript-editor-speaker" contentEditable={false}>
         <SpeakerBox2
-          index={props.index}
+          index={props.block.get('key')}
           openedEditable={openedEditable}
           speaker={props.block.data.get('speaker')}
+          speakerList={props.blockProps.speakers}
+          editSpeaker={props.blockProps.editSpeaker}
+          addNewSpeaker={props.blockProps.addNewSpeaker}
+          setSpeaker={props.blockProps.setSpeaker}
         />
-        <div contentEditable={false}>{'>' + start}</div>
+        <div contentEditable={false}>{formatTime(start)}</div>
       </div>
       <div className="transcript-editor-text">
         <EditorBlock {...props} />
