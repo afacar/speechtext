@@ -395,6 +395,10 @@ class TranscriptionResult extends Component {
         console.log("Editor state ", this.state.editorState)
         var contentState = this.state.editorState.getCurrentContent()
         var contentStateJSON = convertToRaw(contentState);
+        if (!contentStateJSON.blocks[blockIndex])
+            contentStateJSON.blocks[blockIndex] = {};
+        if (!contentStateJSON.blocks[blockIndex].data)
+            contentStateJSON.blocks[blockIndex].data = {};
         contentStateJSON.blocks[blockIndex].data.speaker = speakerIndex;
         contentState = convertFromRaw(contentStateJSON);
         this.setState({
