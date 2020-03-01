@@ -331,6 +331,17 @@
     padding-bottom: 4px;
 }
 
+.speaker-input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid black;
+  }
+
+  .speaker-input:focus {
+    border-color: green
+  }
+
 /* RESPONSIVE */
 @media only screen and (max-width: 1400px) {
     .export {
