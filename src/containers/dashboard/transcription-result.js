@@ -22,7 +22,6 @@ import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../acti
 import UserHeader from '../user-header';
 import "../../styles/user.css";
 import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
-
 class TranscriptionResult extends Component {
     constructor(props) {
         super(props);
@@ -77,7 +76,8 @@ class TranscriptionResult extends Component {
                             //this.props.setEditorFocus(-1, -1, -1)
                             // this.props.handleTimeChange(data, -1);
                             let editorData = data;
-                            const { editorState, speakers } = that.formatDataForEditor(editorData);
+                            var { editorState, speakers } = that.formatDataForEditor(editorData);
+                            speakers = this.removeEmptySpeakers(speakers);
                             that.setState({
                                 editorData,
                                 editorState,
@@ -126,6 +126,22 @@ class TranscriptionResult extends Component {
                 })
             }
         }
+    }
+
+    removeEmptySpeakers(speakers) {
+        var filtered = speakers.toJS().filter(function (speaker) {
+            return speaker.name !== '';
+        });
+        // console.log("Not Filtered ", speakers)
+        // console.log("Filtered ", fromJS(filtered))
+        // return speakers
+        if (filtered.length === 0) {
+            filtered.push({ name: '' })
+        } else {
+            if (filtered[0].name !== '')
+                filtered.unshift({ name: '' })
+        }
+        return fromJS(filtered)
     }
 
     formatDataForEditor = (data) => {
@@ -376,6 +392,7 @@ class TranscriptionResult extends Component {
         speakers = speakers.update(index, (item) => {
             return item.set('name', newSpeaker);
         })
+        speakers = this.removeEmptySpeakers(speakers);
         this.setState({
             speakers
         })

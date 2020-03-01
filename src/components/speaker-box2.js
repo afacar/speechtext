@@ -46,11 +46,6 @@ class SpeakerBox2 extends Component {
         }
     }
 
-    editSpeaker = (e, index) => {
-        console.log("e", e)
-        // this.props.editSpeaker(e, index)
-    }
-
     editLocalSpeaker = (e, index) => {
         var { speakers } = this.state;
         speakers = speakers.update(index, (item) => {
@@ -65,6 +60,7 @@ class SpeakerBox2 extends Component {
     checkSubmit = (e, index) => {
         if (e.key === 'Enter') {
             this.props.editSpeaker(e.target.value, index)
+            this.props.setCurrentSpeakerBox(-1);
             return
         }
     }
@@ -75,8 +71,11 @@ class SpeakerBox2 extends Component {
     }
 
     render() {
-        const { openedIndex, index, speaker, onSpeakerChange, speakerList, setCurrentSpeakerBox } = this.props;
+        var { openedIndex, index, speaker, speakerList, setCurrentSpeakerBox } = this.props;
         const { speakers, useState } = this.state;
+        if (speaker >= speakerList.toJS().length) {
+            speaker = 0;
+        }
         var speakerName = speakerList.toJS()[speaker].name;
         if (!speakerName)
             speakerName = '>';
@@ -130,6 +129,7 @@ class SpeakerBox2 extends Component {
                                                             id={speakerIndex}
                                                             className="speaker-input"
                                                             type="text"
+                                                            disabled={speakerIndex === 0 ? true : false}
                                                             onKeyDown={(e) => this.checkSubmit(e, speakerIndex)}
                                                             onChange={(e) => this.editLocalSpeaker(e, speakerIndex)}
                                                             value={useState ? speakers.toJS()[speakerIndex].name : speaker.get('name')}
@@ -151,7 +151,7 @@ class SpeakerBox2 extends Component {
         return (
             <div>
                 <Button variant="primary" className="btn-circle" ref={c => this.refButton = c} onClick={() => setCurrentSpeakerBox(index)}>
-                    {speakerName}
+                    {speakerName.toUpperCase()}
                 </Button>
             </div>
         )

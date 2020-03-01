@@ -270,7 +270,8 @@
 }
 
 .speaker-input{
-    border: 0px !important;
+    border: none;
+    border-bottom: 1px;
 }
 
 .speaker-input:focus{
