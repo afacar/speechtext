@@ -31,9 +31,9 @@ class SpeakerBox2 extends Component {
         }
     }
 
-    addNew = (e, index) => {
+    addNew = (e, addButton) => {
         // console.log('New speaker submit', e)
-        if (e.key !== 'Enter') {
+        if (e.key !== 'Enter' && !addButton) {
             console.log('Not Enter')
             return
         }
@@ -69,7 +69,7 @@ class SpeakerBox2 extends Component {
         }
     }
 
-    setSpeaker = ( blockIndex, speakerIndex) => {
+    setSpeaker = (blockIndex, speakerIndex) => {
         this.props.setSpeaker(blockIndex, speakerIndex);
         this.props.setCurrentSpeakerBox(-1);
     }
@@ -88,15 +88,21 @@ class SpeakerBox2 extends Component {
             return (
                 <div>
                     <Button variant="primary" className="btn-circle" ref={c => this.refButton = c} onClick={() => setCurrentSpeakerBox(-1)}>
-                        {speakerName}
+                        {speakerName.toUpperCase()}
                     </Button>
                     <Overlay target={this.refButton} show={true} placement="right">
                         <div>
                             <Popover id="popover-basic">
                                 <Popover.Title as="h3">
+                                    <Button variant="primary"
+                                        className="btn-circle list-btn-circle"
+                                        onClick={() => this.addNew(index, true)}>
+                                        +
+                                    </Button>
                                     <input
                                         id={'speakerTag'}
                                         type="text"
+                                        className="speaker-input"
                                         contentEditable={false}
                                         onChange={(e) => this.setState({ speakerTag: e.target.value })}
                                         onKeyDown={this.addNew}
@@ -114,21 +120,21 @@ class SpeakerBox2 extends Component {
                                             if (speakerName.length > 3)
                                                 speakerName = speakerName.substring(0, 3);
                                             return (
-                                                <ListGroup.Item>
+                                                <ListGroup.Item key={speakerIndex}>
                                                     <div className="list-item">
                                                         <Button variant="primary" className="btn-circle list-btn-circle" onClick={() => this.setSpeaker(index, speakerIndex)}>
-                                                            {speakerName}
+                                                            {speakerName.toUpperCase()}
                                                         </Button>
-                                                      
+
                                                         <input
                                                             id={speakerIndex}
+                                                            className="speaker-input"
                                                             type="text"
                                                             onKeyDown={(e) => this.checkSubmit(e, speakerIndex)}
                                                             onChange={(e) => this.editLocalSpeaker(e, speakerIndex)}
                                                             value={useState ? speakers.toJS()[speakerIndex].name : speaker.get('name')}
                                                         />
                                                     </div>
-
                                                 </ListGroup.Item>
                                             )
                                         }
