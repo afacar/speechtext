@@ -265,7 +265,7 @@ class FileList extends Component {
                             this.state.files.map((file, index) => {
                                 // var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
                                 return (
-                                    <Col lg='4' md='6' sm='6' xs='12'>
+                                    <Col lg='4' md='6' sm='6' xs='12' key={file.id}>
                                         <div key={file.id}>
                                             <File
                                                 key={file.id}
