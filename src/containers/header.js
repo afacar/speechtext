@@ -59,7 +59,7 @@ class Header extends Component {
                 };
                 that.props.login(loginInfo);
 
-                bake_cookie('speechtext-dev-login', loginInfo);
+                bake_cookie(process.env.REACT_APP_LOGIN_INFO_NAME, loginInfo);
                 if(sinceLogin < 4500) {
                     // Redirect new user to dashboard 
                     this.props.history.push('/dashboard')
