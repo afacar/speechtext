@@ -14,7 +14,36 @@
 
 .fixed-top-style {
     z-index: 1000;
+    height: 100px;
 }
+
+.user-header-container {
+    height: 70px;
+}
+
+.user-header-container .logo-container {
+    margin-top: 0px;
+}
+
+.user-header-container .logo-container img {
+    height: 80px;
+}
+
+/* .fixed-top-style {
+    z-index: 1000;
+    background-color: #0B1115 !important;
+    height: 100px;
+    padding-top: 10px;
+} */
+
+/* .fixed-top-style a {
+    color: #607180 !important;
+    font-weight: bold;
+}
+
+.fixed-top-style a:hover {
+    color: white;
+} */
 
 .dashboard-link {
     color: black;
@@ -23,4 +52,41 @@
 
 .dashboard-link:hover {
     text-decoration: none;
+}
+
+#header-nav {
+    position: fixed; /* Make it stick/fixed */
+    top: 0; /* Stay on top */
+    width: 100%; /* Full width */
+    transition: top 0.3s; /* Transition effect when sliding down (and up) */
+}
+
+#header-nav .navbar-nav,
+#header-nav .navbar-nav .nav-link {
+    font-weight: bold;
+    color: #384d60 !important;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100%;
+    /* filter: opacity(.7); */
+    z-index: -1;
+}
+
+#header-nav {
+    opacity: .7;
+    background-color: #DDE1E4;
+}
+
+#header-nav:hover {
+    background-color: white;
+    opacity: 1;
+}
+.header-content {
+    /* background: none; */
+    z-index: 10;
 }

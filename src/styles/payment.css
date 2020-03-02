@@ -1,0 +1,117 @@
+.rc-slider-track {
+    background-color: #384d60;
+}
+
+.rc-slider-handle {
+    margin-top: -3px;
+    border: 4px solid #384d60;
+}
+
+.rc-slider-handle:focus {
+    border-color: #384d60;
+    box-shadow: none;
+}
+
+.rc-slider-dot {
+    top: 0px;
+    border-color: #384d60;
+}
+
+.rc-slider-dot:hover,
+.rc-slider-dot:focus {
+    border-color: #384d60;
+}
+
+.card-logo {
+    transform: scale(.5);
+}
+
+.buy-button-surrounding{
+    margin-top: 12px;
+}
+
+.slider-container {
+    width: 100%;
+    height: 150px;
+    background-color: #dde1e4;
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.slider {
+    margin-top: 1.5rem;
+}
+
+.duration-to-buy-container {
+    margin-top: -15px;
+    text-align: center;
+}
+
+.duration-to-buy-header {
+    font-size: 10px;
+    font-weight: bold
+}
+
+.duration-to-buy {
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.duration-to-buy::-webkit-outer-spin-button,
+.duration-to-buy::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.duration-to-buy[type=number] {
+  -moz-appearance:textfield;
+}
+
+.checkout-button {
+    background-color: #22884f;
+    border-color: #22884f;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.payment-modal-title {
+    color: #086FA1;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.payment-total-container {
+    position: absolute;
+    bottom: 0;
+    padding-left: 0;
+    padding-right: 45px;
+    color: #384d60;
+}
+
+.billing-detail-container {
+    border-left: 1px solid lightgray;
+    padding-left: 30px;
+}
+
+.order-summary-container {
+    padding-right: 35px;
+}
+
+.order-summary-container .row {
+    height: calc(1.5em + .75rem + 2px);
+}
+
+/* CREDIT CARD NUMBER*/
+.sc-bwzfXH > .hlTfmo {
+    width: 60%;
+    padding-top: 10px;
+}
+
+.sc-bwzfXH > .hlTfmo ~ .hlTfmo {
+    width: auto;
+}

@@ -9,7 +9,7 @@ class LogoContainer extends Component {
         const { language } = this.props;
         return (
             <div className='logo-container'>
-                <img alt='Speech to Text Transcripton Logo' src={language === 'tr' ? LogoTr : LogoEn } className='logo-style' />
+                <img alt='Online Audio/Video Transcripton Logo' src={language === 'tr-TR' ? LogoTr : LogoEn } className='logo-style' />
             </div>
         )
     }

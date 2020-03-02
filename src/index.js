@@ -18,11 +18,11 @@ const store = createStore(reducers, composeEnhancers(
 ));
 
 const Root = () => (
-    <Provider store={ store }>
-        <IntlProvider locale={ currentLanguage } messages={messages[currentLanguage]} >
-            <App language={ currentLanguage } supportedLanguages={ supportedLanguages } />
+    <Provider store={store}>
+        <IntlProvider locale={currentLanguage} messages={messages[currentLanguage]} >
+            <App language={currentLanguage} supportedLanguages={supportedLanguages} />
         </IntlProvider>
     </Provider>
 );
-  
+
 ReactDOM.render(<Root />, document.getElementById('root'));

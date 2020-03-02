@@ -1,3 +1,16 @@
+.how-it-works-content {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 120px;
+}
+
+.how-it-works-content .title {
+    font-size: 30px;
+    color: #384d60;
+    font-weight: bold;
+}
+
 .image-style {
     margin-top: 40px;
     width: 100px;
@@ -7,6 +20,9 @@
 }
 
 .span-style {
+    position: relative;
+    top: 20px;
+    left: 20px;
     border: 3px solid #384d60;
     border-radius: 50%;
     float: left;
@@ -14,4 +30,63 @@
     margin: 10px;
     font-weight: bolder;
     color: #384d60
+}
+
+.steps-container {
+    height: 280px;
+    margin-top: 35px;
+}
+
+.steps-container .card {
+    border: 1px solid;
+    border-radius: 80px;
+    box-shadow: 1px 1px 5px 5px #384d60;
+}
+
+.steps-container .card img {
+    margin-top: 40px;
+}
+
+.steps-direction-right {
+    border-top: 3px dashed #384d60;
+    border-right: 3px dashed #384d60;
+    height: 120px;
+    margin-top: 150px;
+}
+
+.steps-direction-left {
+    border-top: 3px dashed #384d60;
+    border-left: 3px dashed #384d60;
+    height: 120px;
+    margin-top: 150px;
+}
+
+@media only screen and (max-width: 1200px) {
+    
+}
+
+@media only screen and (min-width: 1024px) {
+    .step-direction-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .steps-container {
+        height: auto;
+    }
+
+    .steps-direction-right {
+        border-top: none;
+        height: 80px;
+        margin-top: 40px;
+    }
+
+    .image-style {
+        margin-top: 10px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    
 }

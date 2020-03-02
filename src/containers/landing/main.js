@@ -1,5 +1,4 @@
 import React, { createRef } from 'react';
-import { Container } from 'react-bootstrap';
 import { Helmet } from "react-helmet";
 import '../../styles/main.css';
 
@@ -34,34 +33,33 @@ const Main = () => {
         <div>
             <Helmet>
                 <meta name="description" content="Transcribe All Audio/Video Records into Text with Speechtext.io" />
-                <title>Speechtext.io | Speech to Text Audio/Video Transcription</title>
+                <title>Speechtext.io | Online Audio/Video Transcription Software</title>
                 <link rel="canonical" href="https://speechtext.io" />
             </Helmet>
             <Header goToRef={goToRef} showLinks={true} />
             <div ref={refs.topRef}>
                 <Entry />
             </div>
-            <Container style={{ marginBottom: '100px' }}>
-                <div ref={refs.howItWorksRef} className='page-style'>
-                    <HowItWorks />
-                </div>
-                <hr />
-                <div ref={refs.featuresRef} className='page-style'>
-                    <Features />
-                </div>
-                <hr />
-                <div ref={refs.pricingRef} className='page-style'>
-                    <Pricing goToRef={goToRef} />
-                </div>
-                <hr />
-                <div ref={refs.aboutRef} className='page-style'>
-                    <AboutUs />
-                </div>
-                <hr />
-                <div ref={refs.contactRef} className='page-style'>
-                    <Contact goToRef={goToRef} />
-                </div>
-            </Container>
+            <div ref={refs.howItWorksRef}>
+                <HowItWorks />
+            </div>
+            <hr />
+            <div ref={refs.featuresRef}>
+                <Features />
+            </div>
+            <hr />
+            <br />
+            <div ref={refs.pricingRef}>
+                <Pricing goToRef={goToRef} />
+            </div>
+            <hr />
+            <div ref={refs.aboutRef}>
+                <AboutUs />
+            </div>
+            <hr />
+            <div ref={refs.contactRef}>
+                <Contact goToRef={goToRef} />
+            </div>
             <Footer />
         </div>
     );

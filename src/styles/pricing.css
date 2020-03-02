@@ -1,16 +1,38 @@
-.card-pricing-popular {
-    z-index: 1;
-    border: 3px solid #384d60;
+.pricing-content,
+.pricing-mobile-content {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 140px;
+    height: 100vh;
 }
 
-.card-pricing > span {
+.pricing-mobile-content {
+    display: none;
+}
+
+.pricing-content .title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #384d60;
+}
+
+.card-pricing-popular {
+    z-index: 1;
+    border: 5px solid #dc576e;
+}
+
+.card-pricing.card-pricing-popular > span:first-child {
+    background-color: #dc576e !important;
+}
+
+.card-pricing > span:first-child {
     background-color: #384d60 !important;
 }
 
 .card-pricing h2 {
     color: #384d60 !important;
 }
-
 
 .list-unstyled {
     padding: .5rem 0;
@@ -32,9 +54,131 @@
 }
 
 .card-pricing-popular .pricing-footer-container > button {
-    background-color: #384d60 !important;
+    background-color: #dc576e !important;
+    border-color: #dc576e;
 }
 
 .enterprise-header-style {
     line-height: .5;
+}
+
+.graph polyline {
+    margin-left: 50px;
+}
+
+.graph .labels.x-labels {
+    text-anchor: middle;
+}
+  
+.graph .labels.y-labels {
+    text-anchor: end;
+}
+
+.graph text {
+    font-size: 20px;
+}
+  
+.graph {
+    height: 500px;
+    width: 915px;
+}
+  
+.graph .grid {
+    stroke: #ccc;
+    stroke-dasharray: 0;
+    stroke-width: 5;
+}
+  
+.labels {
+    font-size: 18px;
+}
+  
+.label-title {
+    font-weight: bolder;
+    text-transform: uppercase;
+    font-size: 18px;
+    fill: black;
+}
+  
+.data {
+    fill: #384d60;
+    stroke-width: 1;
+    font-size: 20px;
+}
+
+.side-message {
+    padding: 60px 10px 0px 10px;
+}
+
+.side-message-title {
+    font-size: 24px;
+}
+
+.side-message-discount-rate {
+    color: #EA2753;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.side-message ul {
+    font-size: 16px;
+    line-height: 2.5;
+}
+
+@media only screen and (max-width: 1200px) {
+    
+}
+
+@media only screen and (max-width: 1024px) {
+    .pricing-content {
+        display: none;
+    }
+
+    .pricing-mobile-content {
+        display: block;
+        width: 100%;
+    }
+
+    .graph {
+        height: 500px;
+        width: 355px;
+    }
+
+    .data {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .pricing-content {
+        display: none;
+    }
+
+    .pricing-mobile-content {
+        display: block;
+        width: 95%
+    }
+
+    .graph {
+        width: 355px;
+        margin-left: -40px;
+    }
+
+    .data {
+        font-size: 12px;
+    }
+
+    .pricing-mobile-content .title {
+        margin-left: 30px;
+        font-weight: bold;
+        font-size: 30px;
+    }
+
+    .labels {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    
 }

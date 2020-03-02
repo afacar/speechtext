@@ -5,7 +5,6 @@ import { FormattedMessage } from 'react-intl';
 import { Modal } from 'react-bootstrap';
 import Utils from '../utils';
 import FirebaseUIAuth from "react-firebaseui-localized";
-import { bake_cookie } from 'sfcookies';
 import { withRouter } from 'react-router';
 
 const { firebase } = Utils;
@@ -24,34 +23,8 @@ const uiConfig = {
 };
 
 class Auth extends Component {
-    componentDidMount() {
-        var that = this;
-        firebase.auth().onAuthStateChanged(user => {
-            const currentUser = user ? user : '';
-            that.setState({ user: currentUser });
-            if (currentUser) {
-                const { uid, displayName, email, emailVerified, metadata } = currentUser;
-                const { lastSignInTime, creationTime } = metadata;
-                const isNewUser = creationTime === lastSignInTime
-                const loginInfo = {
-                    uid,
-                    displayName,
-                    email,
-                    isNewUser,
-                    emailVerified,
-                    creationTime: new Date(creationTime),
-                };
-                that.props.login(loginInfo);
 
-                bake_cookie(process.env.REACT_APP_LOGIN_INFO_NAME, loginInfo);
-                if(isNewUser) {
-                    this.props.history.push('/dashboard');
-                }
-            }
-        });
-    }
-
-    render() {
+  render() {
         return (
             <Modal show={this.props.show} onHide={this.props.handleClose}>
                 <Modal.Header closeButton>
@@ -60,7 +33,7 @@ class Auth extends Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FirebaseUIAuth lang={this.props.language}
+                    <FirebaseUIAuth lang={ this.props.language ? this.props.language.split(/[-_]/)[0] : '' }
                         config={uiConfig}
                         auth={firebase.auth()}
                         firebase={firebase} />

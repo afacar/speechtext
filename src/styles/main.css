@@ -1,5 +1,14 @@
+body, select {
+    font-family: 'Cario', sans-serif;
+    font-size: 16px !important;
+    overflow-x: hidden;
+}
+
 .page-style {
     padding-top: 80px;
+    /* width: 80%;
+    margin-left: auto;
+    margin-right: auto; */
 }
 
 .margin-left-5 {
@@ -72,6 +81,8 @@
 
 .about-us-title {
     padding-top: 30px;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .about-logo-container {
@@ -89,6 +100,10 @@
     font-size: 13px;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 @media only screen and (max-height: 882px) {
     .privacy-container,
     .terms-container,
@@ -103,5 +118,31 @@
     .terms-container,
     .faq-container {
         padding: 20px;
+    }
+}
+
+.about-us-content {
+    height: 100vh;
+    padding-top: 200px;
+}
+
+.contact-content {
+    height: 60vh;
+    /* padding-top: 80px; */
+}
+
+@media only screen and (max-width: 768px) {
+    .about-us-title {
+        padding-top: 10px;
+        font-size: 24px;
+    }
+    
+    .about-logo-container {
+        float: right;
+        width: 200px;
+    }
+
+    .about-logo-container img {
+        width: 200px;
     }
 }

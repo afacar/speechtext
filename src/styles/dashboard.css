@@ -15,99 +15,31 @@
     background-color: rgb(188, 185, 236);
 }
 
-.file-input {
-    display: none;
-}
-
-.file-list-container {
-    overflow-y: auto;
-    height: 700px;
-    border: 1px solid rgba(0,0,0,.125);
-}
-
-.file-list-container .card {
-    border-right: none;
-    border-left: none;
-    border-top: none;
-    border-radius: 0;
-}
-
-.file-container {
-    cursor: pointer;
-}
-
-.file-container.active .card {
-    background-color: rgba(0, 0, 0, .125);
-    border: 4px solid rgba(0,0,0,.125);
-    border-radius: 5px;
-}
-
-.file-container.active .card-body {
-    font-weight: bold;
-}
-
-.file-settings {
-    float: right;
-}
-
-.file-settings .delete {
-    color: rgb(190, 11, 11);
-    font-size: 15px;
-}
-
-.file-progress {
-    margin-top: 20px;
-}
-
-.file-progress span {
-    font-size: 10px;
-    text-align: center;
-}
-
-.file-progress .progress {
-    height: 5px;
-    width: 90%;
-}
-
 .transcribe-progress {
     width: 100% !important;
-}
-
-.file-progress.done .progress {
-    width: 100%;
-}
-
-.file-progress .pause-play {
-    float: right;
-    font-size: 12px;
-    margin-top: -9px;
-    cursor: pointer;
-}
-
-.transcription-container {
-    margin-left: -30px;
 }
 
 .transcription {
     padding: 10px;
     padding-left: 30px;
-    height: 700px;
+    height: 720px;
     border: 1px solid rgba(0,0,0,.125);
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 .transcription-title {
     width: 100%;
-    height: 80px;
-    border: 1px solid rgba(0,0,0,.125);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    /* height: 80px; */
+    /* border: 1px solid rgba(0,0,0,.125); */
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.selected-file-name {
-    margin-top: -10px;
+.editor-container {
+    height: 650px;
+    overflow-y: auto;
 }
 
 .user-limits .card {
@@ -135,59 +67,6 @@
     align-content: left;
 }
 
-.upload-options-container {
-    margin-top: 30px;
-}
-
-.upload-options-filename {
-    height: 10%;
-    padding: 5px;
-}
-
-.upload-options-filename .name {
-    font-weight: bold;
-    cursor: text;
-    width: 100%;
-    padding: 8px;
-    border: 1px dashed gray;
-}
-
-/* .upload-options-filename span {
-    cursor: pointer;
-}
-
-.upload-options-filename span svg {
-    width: 30px !important;
-} */
-
-.react-tagsinput-tag {
-    background-color: cornflowerblue !important;
-    color: white !important;
-    border-color: blue !important;
-}
-
-.react-tagsinput--focused {
-    border-color: lightblue !important;
-    border-width: 2px !important;
-}
-
-.react-tagsinput.disabled {
-    background-color: #e9ecef;
-    opacity: 1;
-}
-
-.file-error-text {
-    margin-top: 10px;
-    color: red;
-    font-size: 12px;
-    font-weight: bold;
-    font-style: italic;
-}
-
-.switch.btn {
-    width: 8%;
-}
-
 .selling-contract-container .modal-body,
 .refund-container .modal-body {
     max-height: 800px;
@@ -198,37 +77,33 @@ ol.selling-contract-list { counter-reset: item }
 .selling-contract-list > li { display: block }
 .selling-contract-list > li:before { content: counters(item, ".") "."; counter-increment: item }
 
-.card-logo {
-    transform: scale(.8);
-}
-
 @media only screen and (max-height: 882px) {
-    .file-list-container {
-        height: 650px !important;
+    .transcription {
+        height: 670px !important;
     }
 
-    .transcription {
-        height: 650px !important;
+    .editor-container {
+        height: 600px !important;
     }
 }
 
 @media only screen and (max-height: 830px) {
-    .file-list-container {
-        height: 550px !important;
+    .transcription {
+        height: 570px !important;
     }
 
-    .transcription {
-        height: 550px !important;
+    .editor-container {
+        height: 500px !important;
     }
 }
 
 @media only screen and (max-height: 730px) {
-    .file-list-container {
-        height: 450px !important;
+    .transcription {
+        height: 470px !important;
     }
 
-    .transcription {
-        height: 450px !important;
+    .editor-container {
+        height: 400px !important;
     }
 }
 
@@ -254,8 +129,9 @@ ol.selling-contract-list { counter-reset: item }
     background-color: lightblue;
 }
 
-.transcription #dropdown-item-button {
+.export #dropdown-item-button {
     background-color: #384d60;
+    border-color: #384d60;
 }
 
 .saved-editing-text {
@@ -263,6 +139,7 @@ ol.selling-contract-list { counter-reset: item }
     font-weight: bold;
     font-size: 14px;
     padding-top: 10px;
+    margin-left: 10px;
 }
 
 .saved-editing-text.saved {
@@ -271,4 +148,8 @@ ol.selling-contract-list { counter-reset: item }
 
 .saved-editing-text.editing {
     color: #bd8700;
+}
+
+.card-details {
+    display: inline-block;
 }

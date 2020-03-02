@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <!-- Hotjar Tracking Code for speechtext.io -->
-    <script>
+<!--     <script>
         (function(h,o,t,j,a,r){
             h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
             h._hjSettings={hjid:1587751,hjsv:6};
@@ -11,6 +11,18 @@
             r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
             a.appendChild(r);
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script> -->
+    <script>
+      var prevScrollpos = window.pageYOffset;
+      // window.onscroll = function () {
+      //     var currentScrollPos = window.pageYOffset;
+      //     if (prevScrollpos > currentScrollPos) {
+      //         document.getElementById("header-nav").style.top = "0";
+      //     } else {
+      //         document.getElementById("header-nav").style.top = "-150px";
+      //     }
+      //     prevScrollpos = currentScrollPos;
+      // }
     </script>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -29,6 +41,8 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link href="https://fonts.googleapis.com/css?family=Cario&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/react-media-player/dist/react-media-player.js"></script>
     
     <!--
@@ -40,7 +54,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Speech to Text Audio/Video Transcription</title>
+    <title>Online Audio/Video Transcription Software</title>
   </head>
   <body>
     <!-- <noscript>You need to enable JavaScript to run this app.</noscript> -->

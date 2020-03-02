@@ -67,31 +67,37 @@ const featureList = [
 
 const Features = (props) => {
     return (
-        <Row className="mb-5 mt-5">
-            <Col lg="12" md="12" sm="12" xs="12">
-                <h4>
-                    <FormattedMessage id="Features.title" />
-                </h4>
-                <Row>
-                    {
-                        featureList.map(item => {
-                            return (
-                                <Col lg="4" md='4' align='center' key={ item.key }>
-                                    <ul className="list-group">
-                                        <li key={ item.key } className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
-                                            <FontAwesomeIcon icon={ item.icon } title={ item.title } size='5x' color='#007bff' />
-                                            <span className='feature-text'>
-                                                <FormattedMessage id={ item.textId} />
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </Col>
-                            )
-                        })
-                    }
+        <div>
+            <div className='features-background'></div>
+            <div className='features-content'>
+                <Row className="mb-5 mt-5">
+                    <Col lg='1' md='1' sm='0' xs='0'></Col>
+                    <Col lg="10" md="10" sm="12" xs="12">
+                        <p className='title'>
+                            <FormattedMessage id="Features.title" />
+                        </p>
+                        <Row>
+                            {
+                                featureList.map(item => {
+                                    return (
+                                        <Col lg="4" md='6' sm='6' xs='12' align='center' key={ item.key }>
+                                            {/* <ul className="list-group"> */}
+                                                <li key={ item.key } className="list-group-item d-flex align-items-center justify-content-center flex-column feature" align="center">
+                                                    <FontAwesomeIcon icon={ item.icon } title={ item.title } size='5x' color='#007bff' />
+                                                    <span className='feature-text'>
+                                                        <FormattedMessage id={ item.textId} />
+                                                    </span>
+                                                </li>
+                                            {/* </ul> */}
+                                        </Col>
+                                    )
+                                })
+                            }
+                        </Row>
+                    </Col>
                 </Row>
-            </Col>
-        </Row>
+            </div>
+        </div>
     )
 }
 

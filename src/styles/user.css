@@ -1,7 +1,24 @@
 .dashboard-container,
+.transcription-container,
 .profile-container {
-    padding-top: 140px;
+    padding-top: 90px;
+    max-width: 65%;
+}
+
+.transcription-container {
+    margin-left: auto;
+    margin-right: auto;
     max-width: 70%;
+}
+
+.profile-container .btn[type='submit'] {
+    background-color: #384d60;
+    border-color: #384d60;
+}
+
+.profile-container .page-item.active .page-link {
+    background-color: #384d60;
+    border-color: #384d60;
 }
 
 .user-box {
@@ -29,8 +46,13 @@
     margin-left: 15px;
 }
 
+.nav-pills .nav-link {
+    color: #384d60;
+}
+
 .nav-pills .nav-link.active {
-    background-color: #0C62D0;
+    background-color: #384d60;
+    color: white;
 }
 
 .user-tabs {
@@ -44,6 +66,16 @@
     height: 780px;
     padding: 30px;
     overflow-y: auto;
+}
+
+.user-tab-transaction-history {
+    height: 520;
+    display: inline-block;
+}
+
+.user-tab-transaction-history-paging {
+    height: 70px;
+    display: inline-block;
 }
 
 .address-title {
@@ -68,9 +100,6 @@
 }
 
 .user-plan .card-pricing {
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
     cursor: pointer;
 }
 
@@ -95,4 +124,26 @@
 
 .userbox-dropdown .dropdown-toggle::after {
     display: none;
+}
+
+@media only screen and (max-width: 1400px) {
+    .dashboard-container,
+    .transcription-container {
+        max-width: 80% !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .dashboard-container,
+    .transcription-container {
+        max-width: 85% !important;
+        margin-top: 80px;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .dashboard-container,
+    .transcription-container {
+        max-width: 85% !important;
+    }
 }
