@@ -127,8 +127,9 @@ class SpeakerBox2 extends Component {
 
                                                         <input
                                                             id={speakerIndex}
-                                                            className="speaker-input"
+                                                            className={speakerIndex === 0 ? "no-speaker-input": "speaker-input"}
                                                             type="text"
+                                                            placeholder={'No speaker'}
                                                             disabled={speakerIndex === 0 ? true : false}
                                                             onKeyDown={(e) => this.checkSubmit(e, speakerIndex)}
                                                             onChange={(e) => this.editLocalSpeaker(e, speakerIndex)}

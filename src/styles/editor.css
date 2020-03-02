@@ -269,6 +269,11 @@
     color: dodgerblue;
 }
 
+.no-speaker-input{
+    border: none;
+    background-color: transparent;
+}
+
 .speaker-input{
     border: none;
     border-bottom: 1px;
