@@ -9,7 +9,7 @@
     height: 100%;
     background-image: url("../assets/banner/banner-1.jpeg");
     background-size: cover;
-    filter: brightness(.5) blur(2px);
+    filter: brightness(.4);
 }
 
 .main-div-content {

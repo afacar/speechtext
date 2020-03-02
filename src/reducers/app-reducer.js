@@ -1,9 +1,9 @@
 import Utils from '../utils';
 
-const setLanguage = (state = 'en', action) => {
+const setLanguage = (state = 'en-US', action) => {
     switch(action.type) {
         case Utils.ActionTypes.SET_LANGUAGE:
-            return action.payload || 'en';
+            return action.payload || 'en-US';
         default:
             return state;
     }
@@ -11,11 +11,11 @@ const setLanguage = (state = 'en', action) => {
 
 const DEFAULT_SUPPORTED_LANGUAGES = [
     {
-        key: 'tr',
+        key: 'tr-TR',
         value: 'Türkçe'
     },
     {
-        key: 'en',
+        key: 'en-US',
         value: 'English'
     }
 ]

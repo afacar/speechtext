@@ -33,7 +33,8 @@ class CheckOutModal extends Component {
         }
     }
 
-    initializeValues = (user) => {
+    initializeValues = () => {
+        const { user } = this.props;
         if (!_.isEmpty(user)) {
             const { displayName, email, country, address } = user;
             var values = { displayName, email, country, address };
@@ -50,16 +51,20 @@ class CheckOutModal extends Component {
         }
     }
 
-    componentWillReceiveProps({ user }) {
-        console.log("new props arrived " , user);
-        if (!_.isEmpty(user)) {
+    componentDidMount() {
+        this.initializeValues()
+    }
+    componentWillReceiveProps({ user, state }) {
+        console.log("new props arrived ", user);
+        console.log("new props arrived ", state);
+        if (!_.isEmpty(user) && state !== 'PAYMENT') {
             this.initializeValues(user);
         }
     }
 
     handleValueChange = (stateName, value) => {
         this.props.toggleSubmit(false)
-       
+
         var { values } = this.state;
         values[stateName] = value;
         this.setState({ values });
@@ -80,6 +85,7 @@ class CheckOutModal extends Component {
     }
 
     handleCardNumberChange = (cardNumberEvent) => {
+        console.log("card number changed ", cardNumberEvent.target.value)
         this.props.toggleSubmit(false)
         this.setState({
             cardNumber: cardNumberEvent.target.value
@@ -160,12 +166,12 @@ class CheckOutModal extends Component {
                         <Row>
                             <Col lg='5' md='5' sm='6'>
                                 <CheckOutInfo
-                                    calculatedPrice={ calculatedPrice }
-                                    pricePerHour={ pricePerHour }
-                                    duration={ duration }
-                                    durationType={ durationType }
-                                    loading={ loading }
-                                    validationErrorMessage={ this.state.validationErrorMessage }
+                                    calculatedPrice={calculatedPrice}
+                                    pricePerHour={pricePerHour}
+                                    duration={duration}
+                                    durationType={durationType}
+                                    loading={loading}
+                                    validationErrorMessage={this.state.validationErrorMessage}
                                 />
                             </Col>
                             <Col lg='7' md='7' sm='6' className='billing-detail-container'>
@@ -173,16 +179,17 @@ class CheckOutModal extends Component {
                                     <FormattedMessage id="Payment.Billing.Title" />
                                 </h4>
                                 <BillingDetails
-                                    handleValueChange={ this.handleValueChange }
-                                    values={ values }
-                                    displayNameIsValid={ this.state.displayNameIsValid }
-                                    countryIsValid={ this.state.countryIsValid }
-                                    addressIsValid={ this.state.addressIsValid }
+                                    handleValueChange={this.handleValueChange}
+                                    values={values}
+                                    displayNameIsValid={this.state.displayNameIsValid}
+                                    countryIsValid={this.state.countryIsValid}
+                                    addressIsValid={this.state.addressIsValid}
                                 />
                                 <h4 style={{ marginTop: -20, color: '#086FA1' }}  >
                                     <FormattedMessage id={"Payment.Card.Details"} />
                                 </h4>
-                                <PaymentDetails cardNumber={cardNumber} expiry={expiry} cvc={cvc}
+                                <PaymentDetails
+                                    cardNumber={cardNumber} expiry={expiry} cvc={cvc}
                                     handleCardNumberChange={this.handleCardNumberChange}
                                     handleCardExpiryChange={this.handleCardExpiryChange}
                                     handleCardCVCChange={this.handleCardCVCChange}
@@ -190,7 +197,7 @@ class CheckOutModal extends Component {
                                 />
                             </Col>
                         </Row>
-                        <Button className="btn-lg checkout-button" onClick={ this.startPayment } disabled={ disabled }>
+                        <Button className="btn-lg checkout-button" onClick={this.startPayment} disabled={disabled}>
                             <FormattedMessage id='Payment.Summary.Pay' />
                             {
                                 loading && (
@@ -209,9 +216,9 @@ class CheckOutModal extends Component {
         return (
             <Modal
                 show={show}
-                onHide={ this.props.handleClose }
-                size={ state === 'INITIAL' ? 'xl' : 'lg' }
-                backdrop={ state === 'INITIAL' ? 'static' : true }
+                onHide={this.props.handleClose}
+                size={state === 'INITIAL' || state === 'PAYMENT' ? 'xl' : 'lg'}
+                backdrop={state === 'INITIAL' || state === 'PAYMENT' ? 'static' : true}
             >
                 <Modal.Header closeButton></Modal.Header>
                 {this.renderCheckOutModal()}

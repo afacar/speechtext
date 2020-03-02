@@ -14,6 +14,19 @@
 
 .fixed-top-style {
     z-index: 1000;
+    height: 100px;
+}
+
+.user-header-container {
+    height: 70px;
+}
+
+.user-header-container .logo-container {
+    margin-top: 0px;
+}
+
+.user-header-container .logo-container img {
+    height: 80px;
 }
 
 /* .fixed-top-style {

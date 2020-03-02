@@ -1,9 +1,9 @@
 .player {
-    position: fixed;
-    width: 13.5%;
-    height: 25%;
-    left: 20px;
-    top: 140px;
+    position: relative;
+    width: 256px !important;
+    height: 144px !important;
+    left: -300px !important;
+    top: -45px !important;
 }
 
 .player-window {
@@ -11,14 +11,19 @@
 }
 
 .player-container {
-    width: 95%;
+    margin-top: 120px;
+    width: 95%
+}
+
+.player-controls-container {
+    width: 100%;
     margin-bottom: -10px;
 }
 
 .player-controls {
     display: flex;
     justify-content: center;
-    margin-top: 1px;
+    margin-top: -10px;
 }
 
 .player-controls.play-resume {
@@ -105,8 +110,60 @@
     color: lightgray;
 }
 
+.selected-file-name {
+    text-align: center;
+    font-weight: bold;
+}
+
 @media only screen and (max-width: 1200px) {
     .player-window {
         display: none;
     }
+
+    .player-container {
+        margin-top: 0px;
+    }
+}
+
+.forward-icon{
+    height: 1.5rem;
+    height: 1.5rem;
+    margin-left: 8px;
+}
+
+.backward-icon{
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 8px;
+}
+
+.playback-dropdown{
+    background-color: #384d60;
+    margin-left: 1rem;
+    margin-top: -5px;
+    height: 2.1rem;
+}
+
+.playback-dropdown-menu {
+    background-color: #384d60;
+    transform: none !important;
+    top: 30px !important;
+    border-radius: 0;
+    border: 0 !important;
+}
+
+.playback-dropdown-menu button {
+    color: white;
+}
+
+.playback-dropdown-menu-toggle {
+    background-color: #384d60 !important;
+    border: 0 !important;
+    height: 2.1rem;
+    box-shadow: none !important;
+}
+
+.speaker-pen-icon {
+    color: #384d60;
+    margin-left: 15px;
 }

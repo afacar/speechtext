@@ -23,7 +23,7 @@ class User extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : '';
+        let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : 'profile';
         this.setState({
             activeTabKey: hashValue
         });
@@ -43,14 +43,12 @@ class User extends Component {
     }
 
     changeTransactionPage = (e) => {
-        console.log("transaction on click\n", e.target.text);
         this.setState({
             activePage: parseInt(e.target.text) || this.state.activePage
         })
     }
 
     setArraySize = (size) => {
-        console.log("Size arrived ", size)
         var items = [];
         for (let number = 1; number < size + 1; number++) {
             items.push(

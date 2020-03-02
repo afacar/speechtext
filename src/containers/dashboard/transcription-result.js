@@ -1,35 +1,50 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
-import { Container, Dropdown, DropdownButton, Spinner } from 'react-bootstrap';
+import { fromJS } from 'immutable'
+import { Container, Spinner } from 'react-bootstrap';
 import { Media } from 'react-media-player';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import Axios from 'axios';
+import { Transcript } from 'transcript-model';
 
 import firebase from '../../utils/firebase';
-import SpeechTextPlayer from '../../components/player';
-import SpeechTextEditor from '../../components/speech-text-editor';
+import VideoPlayer from '../../components/editor/video-player';
+import SpeechTextEditor from '../../components/editor/editor-view';
+import {
+    convertFromTranscript,
+    convertToTranscript,
+    convertToJSON
+} from '../../components/transcription';
+import Export from '../../components/editor-export';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
 import UserHeader from '../user-header';
-
+import "../../styles/user.css";
+import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 class TranscriptionResult extends Component {
     constructor(props) {
         super(props);
 
         let fileId;
-        if(props.location && props.location.pathname) {
+        if (props.location && props.location.pathname) {
             fileId = props.location.pathname.substr('/edit/'.length);
         }
 
-        if(_.isEmpty(fileId)) {
+        if (_.isEmpty(fileId)) {
             props.history.push('/dashboard');
         }
 
         this.state = {
             editorData: null,
+            editorState: null,
+            speakers: null,
             numOfWords: '',
             intervalHolder: undefined,
-            fileId
+            fileId,
+            savingState: 0, // 0-initial, 1-saved, -1: not saved, -2: error
+            blockNavigation: false,
+            currentTime: 0
         }
     }
 
@@ -41,72 +56,162 @@ class TranscriptionResult extends Component {
     }
 
     componentWillReceiveProps = async ({ user, selectedFile }) => {
-        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+        var that = this;
+        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
             this.props.getFile(this.state.fileId);
         }
-        if(_.isEmpty(this.props.selectedFile) && !_.isEmpty(selectedFile)) {
-            console.log('TranscriptionWillReceiveProps', selectedFile)
+        if (_.isEmpty(this.props.selectedFile) && !_.isEmpty(selectedFile)) {
             var that = this;
             var { intervalHolder } = this.state;
             this.props.isPlaying(false)
             clearInterval(intervalHolder);
             if (!_.isEmpty(selectedFile) && selectedFile.status === 'DONE') {
-                //this.props.handleTimeChange(null, -1);
                 this.setState({
                     showSpinner: true
                 })
-                // Todo: this.props.getEditorDate(selectedFile)
-                // editorDataAll: { fileId: editorData, fileId2: editorData...}
                 var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
                 storageRef.getDownloadURL().then((downloadUrl) => {
                     Axios.get(downloadUrl)
                         .then(({ data }) => {
                             //this.props.setEditorFocus(-1, -1, -1)
-                            this.props.handleTimeChange(data, -1);
+                            // this.props.handleTimeChange(data, -1);
                             let editorData = data;
+                            var { editorState, speakers } = that.formatDataForEditor(editorData);
+                            speakers = this.removeEmptySpeakers(speakers);
                             that.setState({
                                 editorData,
-                                //prevEditorData: _.cloneDeep(editorData),
+                                editorState,
+                                speakers,
                                 showSpinner: false
-                            }, () => {
-                                intervalHolder = setInterval(() => {
-                                    that.updateTranscribedFile();
-                                }, 20000);
-                            })
-                            console.log('this.state.editorData is fetched', this.state.editorData)
+                            });
                         });
                 })
-                .catch(error => {
-                    // TODO: GET_DOWNLOAD_URL_ERROR
-                    console.log(error);
-                })
+                    .catch(error => {
+                        // TODO: GET_DOWNLOAD_URL_ERROR
+                        console.log(error);
+                    })
             } else {
                 this.setState({
                     editorData: null,
+                    editorState: null,
+                    speakers: null,
                     prevEditorData: {},
                     intervalHolder: undefined,
                     showSpinner: false
                 })
-                //this.props.handleTimeChange(null, -1);
+            }
+
+            let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
+            if (selectedFile.resizedFile) {
+                var ref = firebase.storage().ref(selectedFile.resizedFile.filePath);
+                ref.getDownloadURL().then((downloadUrl) => {
+                    Axios.get(downloadUrl)
+                        .then((url) => {
+                            fileSrc = url.config.url;
+                            that.setState({
+                                fileSrc
+                            })
+                        });
+                })
+                    .catch(error => {
+                        // TODO: GET_DOWNLOAD_URL_ERROR
+                        console.log(error);
+                        this.setState({
+                            fileSrc
+                        })
+                    })
+            } else {
+                this.setState({
+                    fileSrc
+                })
             }
         }
     }
 
+    removeEmptySpeakers(speakers) {
+        var filtered = speakers.toJS().filter(function (speaker) {
+            return speaker.name !== '';
+        });
+        // console.log("Not Filtered ", speakers)
+        // console.log("Filtered ", fromJS(filtered))
+        // return speakers
+        if (filtered.length === 0) {
+            filtered.push({ name: '' })
+        } else {
+            if (filtered[0].name !== '')
+                filtered.unshift({ name: '' })
+        }
+        return fromJS(filtered)
+    }
+
+    formatDataForEditor = (data) => {
+        if (data) {
+            const transcriptJson2 = convertToJSON(data)
+            const transcript = Transcript.fromJson(transcriptJson2);
+            return convertFromTranscript(transcript);
+        }
+        return {};
+    }
+
+    componentDidUpdate() {
+        const { savingState } = this.state;
+        if (!this.state.blockNavigation && savingState < 0) {
+            this.setState({
+                blockNavigation: true
+            });
+            window.addEventListener('beforeunload', this.beforeUnload);
+        } else if (this.state.blockNavigation && savingState >= 0) {
+            this.setState({
+                blockNavigation: false
+            });
+            window.removeEventListener('beforeunload', this.beforeUnload);
+        }
+    }
+
+    beforeUnload = e => {
+        const { intl } = this.props;
+        e.preventDefault();
+        let message = intl.formatMessage({ id: "Editor.leaveMessage" });
+        e.returnValue = message;
+        return message;
+    }
+
     updateTranscribedFile = async () => {
-        const { editorData, isSaved } = this.state;
+        const { editorState, isSaved, savingState } = this.state;
         const { selectedFile } = this.props;
-        if (!_.isEmpty(editorData) && !isSaved) {
+        if (!_.isEmpty(editorState) && !isSaved && savingState === -1) {
+            this.setState({ savingState: 2 })
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
-            storageRef.put(new Blob([JSON.stringify(editorData)]))
+            var currentUser = firebase.auth().currentUser;
+            firebase.firestore().collection('userfiles').doc(currentUser.uid).collection('files').doc(selectedFile.id).update({ lastEdit: new Date() });
+
+            const transcript = convertToTranscript(
+                this.state.editorState.getCurrentContent(),
+                this.state.speakers
+            );
+            const blob = new Blob([JSON.stringify(transcript.toJSON(), null, 2)], {
+                type: 'application/json;charset=utf-8',
+            });
+            await storageRef.put(blob)
                 .then(snapshot => {
-                    this.setState({ isSaved: true })
-                    console.log('File uploaded', snapshot)
+                    this.setState({ isSaved: true, savingState: 1 })
+                    this.clearSavingState();
                 })
                 .catch(error => {
                     // TODO: UPDATE_TRANSCRIBED_FILE_ERROR	
+                    this.setState({ savingState: -2 })
+                    this.clearSavingState();
                     console.log(error);
                 });
         }
+    }
+
+    clearSavingState = () => {
+        setTimeout(() => {
+            this.setState({
+                savingState: 0
+            })
+        }, 1250)
     }
 
     addZero = (value, length) => {
@@ -138,15 +243,50 @@ class TranscriptionResult extends Component {
         return formattedTime;
     }
 
-    downloadAsTxt = () => {
+    formatTimeForExport = (time) => {
+        let seconds = Math.floor(time);
+        let nanos = parseInt(time % 1 * 100);
+        let formattedTime = '';
+        if (seconds > 60) {
+            let minutes = parseInt(seconds / 60);
+            seconds = seconds % 60;
+            if (minutes > 60) {
+                let hours = parseInt(minutes / 60);
+                minutes = minutes % 60;
+                formattedTime = this.addZero(hours) + ':';
+            } else {
+                formattedTime = '00:';
+            }
+            formattedTime += this.addZero(minutes) + ':';
+        } else {
+            formattedTime += '00:00:';
+        }
+        formattedTime += this.addZero(seconds) + ',' + this.addZero(nanos, 3);
+
+        return formattedTime;
+    }
+
+    downloadAsTxt = async () => {
+        this.setState({ showDownloadSpinner: true });
+
+        await this.updateTranscribedFile();
         const { selectedFile } = this.props;
-        const { editorData } = this.state;
+        const { editorState } = this.state;
+
+        let dataToExport = convertToTranscript(
+            this.state.editorState.getCurrentContent(),
+            this.state.speakers
+        );
         var textData = '';
-        _.each(editorData, data => {
-            let alternative = data.alternatives[0];
-            let { startTime, endTime, transcript } = alternative;
-            textData += `${this.formatTime(startTime)} - ${this.formatTime(endTime)}\n${transcript}\n\n`;
-        });
+
+        for (var i = 0; i < dataToExport.segments.size; i++) {
+            let segment = dataToExport.segments.get(i);
+            let start = segment.getStart();
+            let end = segment.getEnd();
+            let text = segment.getText();
+
+            textData += `${this.formatTimeForExport(start)} - ${this.formatTimeForExport(end)}\n${text}\n\n`;
+        }
 
         var fileName = selectedFile.name;
         fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
@@ -157,13 +297,16 @@ class TranscriptionResult extends Component {
         element.download = fileName;
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
+        this.setState({ showDownloadSpinner: false });
+
     }
 
     downloadAsDocx = async () => {
+        this.setState({ showDownloadSpinner: true });
+
         await this.updateTranscribedFile();
 
         var { selectedFile } = this.props;
-        this.setState({ showDownloadSpinner: true });
 
         var getDocxFile = firebase.functions().httpsCallable('getDocxFile');
         getDocxFile({
@@ -209,7 +352,7 @@ class TranscriptionResult extends Component {
                     contentDisposition: `attachment;filename=${fileName}`
                 }
                 storageRef.updateMetadata(newMetadata)
-                    .then((metadata) => {
+                    .then(() => {
                         storageRef.getDownloadURL().then((downloadUrl) => {
                             const element = document.createElement("a");
                             element.href = downloadUrl;
@@ -223,187 +366,71 @@ class TranscriptionResult extends Component {
             });
     }
 
-    getTranscriptionText = (words) => words.filter((theword, i) => theword.word.length > 0).map(theword => theword.word).join(' ')
-
-    handleEditorChange = (index, words) => {
-        //console.log(`handleEditorChange is called with index ${index} and words >`, words)
-        var { editorData } = this.state;
-        editorData[index].alternatives[0].words = words;
-        let transcript = this.getTranscriptionText(words);
-        editorData[index].alternatives[0].transcript = transcript
-        const numOfWords = transcript.split(' ').length
+    speakerTagChanged = () => {
         this.setState({
-            editorData,
-            numOfWords,
-            isSaved: false
-        })
-
-        //this.props.setEditorFocus(index, activeWordIndex, caretPosition)
-    }
-
-    splitData = (activeIndex, activeWordIndex, caretPos, wordLength) => {
-        const { editorData } = this.state;
-
-        let wordIndex = activeWordIndex;
-        if (caretPos <= wordLength / 2) {
-            wordIndex -= 1;
-        }
-
-        let firstSplittedData = editorData[activeIndex];
-        let secondSplittedData = _.cloneDeep(firstSplittedData);
-
-        let endWord = firstSplittedData.alternatives[0].words[wordIndex];
-        firstSplittedData.alternatives[0].endTime = endWord.endTime;
-        firstSplittedData.alternatives[0].words.splice(wordIndex + 1);
-        firstSplittedData.alternatives[0].transcript = this.getTranscriptionText(firstSplittedData.alternatives[0].words);
-
-        let startWord = secondSplittedData.alternatives[0].words[wordIndex + 1];
-        secondSplittedData.alternatives[0].startTime = startWord.startTime;
-        secondSplittedData.alternatives[0].words.splice(0, wordIndex + 1);
-        secondSplittedData.alternatives[0].transcript = this.getTranscriptionText(secondSplittedData.alternatives[0].words);
-
-        editorData[activeIndex] = firstSplittedData;
-        editorData.splice(activeIndex + 1, 0, secondSplittedData);
-        console.log('After split new editorData>', editorData)
-        this.setState({
-            editorData,
-            isSaved: false
-        });
-        //this.props.setEditorFocus(activeIndex + 1, 0, 0)
-    }
-
-/*     changeActiveIndex = (activeIndex, activeWordIndex, caretPosition) => {
-        const { editorData } = this.state
-        if (activeWordIndex === -1) {
-            let len = editorData[activeIndex].alternatives[0].words.length
-            activeWordIndex = len - 1
-        }
-        if (caretPosition === -1) {
-            caretPosition = editorData[activeIndex].alternatives[0].words[activeWordIndex].word.length + 1
-        }
-        console.log(`changeActiveIndex activeIndex: ${activeIndex} activeWordIndex: ${activeWordIndex} caretPosition: ${caretPosition}`)
-        //this.props.setEditorFocus(activeIndex, activeWordIndex, caretPosition)
-    } */
-
-    mergeData = (activeIndex) => {
-        const { editorData } = this.state;
-
-        if (activeIndex === 0) return;
-
-        let prevData = editorData[activeIndex - 1];
-        let currentData = editorData[activeIndex];
-
-        prevData.alternatives[0].words = prevData.alternatives[0].words.concat(currentData.alternatives[0].words);
-        let wordLength = prevData.alternatives[0].words.length;
-        prevData.alternatives[0].endTime = prevData.alternatives[0].words[wordLength - 1].endTime;
-        prevData.alternatives[0].transcript = this.getTranscriptionText(prevData.alternatives[0].words);
-
-        editorData[activeIndex - 1] = prevData;
-        editorData.splice(activeIndex, 1);
-        console.log('After merge new editorData>', editorData)
-
-        this.setState({
-            editorData,
-            /* activeIndex: activeIndex - 1,
-            activeWordIndex: prevWordLength,
-            caretPosition: 0, */
             isSaved: false,
-        });
-        //this.props.setEditorFocus(activeIndex - 1, prevWordLength, 0)
-
+            savingState: -1
+        })
     }
 
-    renderResults = () => {
-        const { editorData, isSaved } = this.state;
-        console.log('renderResults editorData', editorData)
-        if (editorData === null) return;
-        if (_.isEmpty(editorData)) return 'Sorry :/ There is no identifiable speech in your audio! Try with a better quality recording.'
-        const { formatMessage } = this.props.intl;
-        return (
-            <div className=''>
-                <div className={'float-left saved-editing-text ' + (isSaved ? 'saved' : 'editing')}>
-                    {isSaved === undefined ? '' : isSaved ? 'Saved!' : 'Editing...'}
-                </div>
-                <div className='d-flex flex-col justify-content-end align-items-center'>
-                    {
-                        this.state.showDownloadSpinner &&
-                        <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className='margin-right-5'
-                        />
-                    }
-                    <DropdownButton id="dropdown-item-button" title={formatMessage({ id: 'Transcription.Download.text' })}>
-                        <Dropdown.Item as="button" onClick={this.downloadAsTxt}>
-                            <FormattedMessage id='Transcription.Download.option1' />
-                        </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={this.downloadAsDocx}>
-                            <FormattedMessage id='Transcription.Download.option2' />
-                        </Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={this.downloadAsSrt}>
-                            <FormattedMessage id='Transcription.Download.option3' />
-                        </Dropdown.Item>
-                    </DropdownButton>
-                </div>
-                <br />
-                <SpeechTextEditor
-                    key={editorData.length}
-                    editorData={editorData ? editorData : []}
-                    //changeActiveIndex={this.changeActiveIndex}
-                    handleEditorChange={this.handleEditorChange}
-                    splitData={this.splitData}
-                    mergeData={this.mergeData}
-                    //suppressContentEditableWarning
-                    //playerTime={this.state.playerTime}
-                    editorClicked={this.editorClicked}
-                    //isPlaying={this.state.isPlaying}
-                />
-            </div>
-        );
+    handleTimeUpdate = (time) => {
+        this.setState({ currentTime: time });
     }
 
-    editorClicked = (seconds) => {
-        this.setState({
-            timeToSeek: seconds
-        }, () => {
+    onTextChange = (editorState) => {
+        if (this.state.editorState !== editorState) {
             this.setState({
-                timeToSeek: undefined
+                editorState,
+                isSaved: false,
+                savingState: -1
             })
+        }
+    }
+
+    editSpeaker = (newSpeaker, index) => {
+        var { speakers } = this.state;
+        speakers = speakers.update(index, (item) => {
+            return item.set('name', newSpeaker);
+        })
+        speakers = this.removeEmptySpeakers(speakers);
+        this.setState({
+            speakers
+        })
+    }
+
+    addNewSpeaker = (newSpeaker) => {
+        var { speakers } = this.state;
+        var speakersJSON = speakers.toJS();
+        speakersJSON[speakersJSON.length] = { name: newSpeaker };
+        speakers = fromJS(speakersJSON);
+        this.setState({
+            speakers
+        })
+    }
+
+    setSpeaker = (blockIndex, speakerIndex) => {
+        console.log("Editor state ", this.state.editorState)
+        var contentState = this.state.editorState.getCurrentContent()
+        var contentStateJSON = convertToRaw(contentState);
+        if (!contentStateJSON.blocks[blockIndex])
+            contentStateJSON.blocks[blockIndex] = {};
+        if (!contentStateJSON.blocks[blockIndex].data)
+            contentStateJSON.blocks[blockIndex].data = {};
+        contentStateJSON.blocks[blockIndex].data.speaker = speakerIndex;
+        contentState = convertFromRaw(contentStateJSON);
+        this.setState({
+            editorState: EditorState.createWithContent(contentState)
         })
     }
 
     render() {
-        console.log('Transcription Rendering...')
-        var { selectedFile } = this.props;
+        var { selectedFile, intl } = this.props;
+        const { editorData, editorState, speakers, fileSrc, currentTime } = this.state;
         if (_.isEmpty(selectedFile)) selectedFile = {};
-        let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
-        if(selectedFile.options && selectedFile.options.type.startsWith('video')) {
-            if(selectedFile.resizedFile && selectedFile.resizedFile.publicUrl) {
-                fileSrc = selectedFile.resizedFile.publicUrl;
-            }
-        }
         return (
             <div>
                 <UserHeader />
-                <Container className='dashboard-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
-                    <div className='transcription-title'>
-                        <div className='selected-file-name'>
-                            {selectedFile.name}
-                        </div>
-                        <Media>
-                            <SpeechTextPlayer
-                                key={selectedFile.id}
-                                src={fileSrc}
-                                duration={selectedFile.originalFile && selectedFile.originalFile.duration ? selectedFile.originalFile.duration : undefined}
-                                type={selectedFile.options ? selectedFile.options.type : ''}
-                                timeToSeek={this.state.timeToSeek}
-                                editorData={this.state.editorData}
-                            />
-                        </Media>
-                    </div>
+                <div className='transcription-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
                     {
                         this.state.showSpinner &&
                         <div className="d-flex justify-content-center mt-5">
@@ -413,12 +440,56 @@ class TranscriptionResult extends Component {
                         </div>
                     }
                     {
-                        !this.state.showSpinner &&
-                        <div className='transcription'>
-                            {this.renderResults()}
-                        </div>
+                        !this.state.showSpinner && (
+                            <div className='transcription p-2 flex-fill'>
+                                <div>
+                                    <div className="d-flex flex-col">
+                                        <div className="p-2 flex-fill">
+                                            <div className='row'>
+                                                <div className='col-4 text-center' >
+                                                    {selectedFile.name}
+                                                    <VideoPlayer
+                                                        //thumbnail TODO Put Thumbnail of video, undefined for audio 
+                                                        src={fileSrc}
+                                                        onTimeUpdate={this.handleTimeUpdate}
+                                                    />
+                                                    {
+                                                        !this.state.showSpinner && !_.isEmpty(editorData) &&
+                                                        <Export
+                                                            downloadAsDocx={this.downloadAsDocx}
+                                                            downloadAsTxt={this.downloadAsTxt}
+                                                            downloadAsSrt={this.downloadAsSrt}
+                                                            onSave={this.updateTranscribedFile}
+                                                            savingState={this.state.savingState}
+                                                            fileType={selectedFile.options ? selectedFile.options.type : ''}
+                                                        />
+                                                    }
+                                                </div>
+                                                <div className='col-8 editor-container'>
+                                                    <SpeechTextEditor
+                                                        editorState={editorState}
+                                                        speakers={speakers}
+                                                        currentTime={currentTime}
+                                                        onTextChange={this.onTextChange}
+                                                        editSpeaker={this.editSpeaker}
+                                                        addNewSpeaker={this.addNewSpeaker}
+                                                        setSpeaker={this.setSpeaker}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <React.Fragment>
+                                        <Prompt
+                                            when={this.state.blockNavigation}
+                                            message={intl.formatMessage({ id: "Editor.leaveMessage" })}
+                                        />
+                                    </React.Fragment>
+                                </div>
+                            </div>
+                        )
                     }
-                </Container>
+                </div>
             </div>
         );
     }
@@ -428,4 +499,4 @@ const mapStateToProps = ({ user, selectedFile }) => {
     return { user, selectedFile };
 }
 
-export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus, getFile })(injectIntl(TranscriptionResult));
+export default connect(mapStateToProps, { handleTimeChange, isPlaying, setEditorFocus, getFile })(injectIntl(withRouter(TranscriptionResult)));

@@ -72,8 +72,9 @@ export const submitContactForm = (form) => {
 }
 
 export const getErrorDefinitions = (language) => {
+    const lang = language.split('-')[0]
     return dispatch => {
-        firestore().collection('error_definitions').doc(language)
+        firestore().collection('error_definitions').doc(lang)
             .get()
             .then(snapshot => {
                 if (snapshot) {

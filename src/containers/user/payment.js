@@ -152,7 +152,6 @@ class Payment extends Component {
     }
 
     sellingContractClicked = (e) => {
-        console.log('sellingContractClicked')
         e.preventDefault();
         e.stopPropagation();
 
@@ -160,7 +159,6 @@ class Payment extends Component {
     }
 
     refundContractClicked = (e) => {
-        console.log('refundContractClicked')
         e.preventDefault();
         e.stopPropagation();
 
@@ -183,28 +181,23 @@ class Payment extends Component {
         return (
             <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
                 <p>
-                    {/* this.props.language !== 'tr' ? "I'm accepting " : '' */}
                     <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={ this.sellingContractClicked }>
-                        {this.props.language === 'tr' ? 'Satış Sözleşmesi' : 'Selling Contract'}
+                        {this.props.language === 'tr-TR' ? 'Satış Sözleşmesi' : 'Selling Contract'}
                     </span>
-                    {this.props.language !== 'tr' ? ' and ' : ' ve '}
+                    {this.props.language !== 'tr-TR' ? ' and ' : ' ve '}
                     <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
-                        {this.props.language === 'tr' ? 'İade Koşulları' : 'Refund Policy'}
+                        {this.props.language === 'tr-TR' ? 'İade Koşulları' : 'Refund Policy'}
                     </span>
-                    {/* this.props.language === 'tr' ? "'ini kabul ediyorum." : '' */}
                 </p>
             </div>
         )
     }
 
     onHide = () => {
-        console.log('onHide')
         this.setState({ showCheckoutForm: false })
     }
 
-
     showForm = () => {
-        console.log("Duration" + this.state.duration)
         if (parseInt(this.state.duration) >= 50) {
             this.setState({
                 showContactForm: true
@@ -212,7 +205,8 @@ class Payment extends Component {
         }
         else {
             this.setState({
-                showCheckOutForm: true
+                showCheckOutForm: true,
+                state:'PAYMENT'
             })
         }
     }
@@ -233,7 +227,6 @@ class Payment extends Component {
 
     startPayment = async (obj) => {
         //TODO add payment function
-        console.log("Start payment called", obj)
         const { values, cardNumber, expiry, cvc } = obj;
         var card = {
             cardHolderName: values.displayName,
@@ -242,10 +235,8 @@ class Payment extends Component {
             expireYear: expiry.substring(5, 7),
             cvc
         }
-        console.log("Card", card)
         var that = this;
         const { language, user } = this.props;
-        console.log("User", user);
         var { duration, basketId } = this.state;
         // let durationInMinutes = undefined;
         // if (selectedPlanType === 'PayAsYouGo')
@@ -268,7 +259,6 @@ class Payment extends Component {
             card
         }).then(({ data }) => {
             const { basketId, result, error } = data;
-            console.log("Data", data);
             let errorMessage = '';
             if (error)
                 errorMessage = error.errorMessage;

@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { injectIntl } from 'react-intl';
 import '../styles/editor.css';
 import Editable2 from './editable2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import SpeakerBox from './speaker-box';
+import OutsideAlerter from '../utils/outside-alerter';
+import { connect } from 'react-redux';
+import { setCurrentSpeakerBox } from '../actions';
 
 class SpeechTextEditor extends Component {
     constructor(props) {
@@ -10,20 +17,39 @@ class SpeechTextEditor extends Component {
         this.state = {
             activeIndex: -1,
             activeWordIndex: -1,
+            openedEditable: -1,
+            speakerList: ["Speaker 1", "Speaker 2"]
         }
+    }
+
+    componentDidMount() {
+        console.log("Editor data");
+        console.log(this.props.editorData);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         let prevLength = this.props.editorData.length
         let nextLength = nextProps.editorData.length
         if (prevLength !== nextLength) return true
+        var prevData = this.props.editorData;
+        var nextData = nextProps.editorData;
+        console.log("Prev data");
+        console.log(prevData)
+        console.log("Next data");
+        console.log(nextData)
+        if (nextState.speakerEdited) {
+            this.setState({
+                speakerEdited: false
+            })
+            return true
+        }
         return false
     }
 
-    changePlayerTime = (index, wordIndex) => {
-        const { editorData } = this.props;
-        let word = editorData[index].alternatives[0].words[wordIndex];
-        this.props.editorClicked(parseFloat(word.startTime.seconds + '.' + word.startTime.nanos));
+    changePlayerTime = (seconds) => {
+        // const { editorData } = this.props;
+        // let word = editorData[index].alternatives[0].words[wordIndex];
+        this.props.editorClicked(seconds);
     }
 
     getTranscriptionText = (words) => words.map((theword, i) => theword.word ? theword.word : '').join(' ')
@@ -57,6 +83,22 @@ class SpeechTextEditor extends Component {
         return formattedTime;
     }
 
+    onSpeakerChange = (speakerTag, index) => {
+        console.log("On speaker change")
+        this.props.editorData[index].alternatives["0"]["speakerTag"] = speakerTag;
+        for (var i = 0; i < this.props.editorData.length; i++) {
+            var tmpSpeakers = new Set(this.props.editorData[i].alternatives["0"].speakerList);
+            if (speakerTag)
+                tmpSpeakers.add(speakerTag)
+            this.props.editorData[i].alternatives["0"]["speakerList"] = Array.from(tmpSpeakers);
+        }
+        console.log(this.props.editorData[index]);
+        this.props.speakerTagChanged();
+        this.setState({
+            speakerEdited: true
+        })
+    }
+
     /*     handleWordChange = (index, wordIndex, text) => {
             if(!text || _.isEmpty(text.trim())) {
                 let activeWordIndex = wordIndex;
@@ -73,21 +115,38 @@ class SpeechTextEditor extends Component {
         } */
 
     render() {
-        const { editorData, handleEditorChange, splitData, mergeData } = this.props;
+        const { editorData, handleEditorChange, splitData, mergeData, mergeSpans } = this.props;
         console.log('SpeechTextEditor Rendering')
         return (
             _.map(editorData, (data, index) => {
                 let alternative = data.alternatives[0];
+                // console.log("Alternative index", index);
+                // console.log(alternative);
                 if (alternative && alternative.startTime && alternative.endTime) {
-                    let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult': 'conversionResult'
+                    let className = editorData.length === 1 ? 'first-conversionResult last-conversionResult' : index === 0 ? 'first-conversionResult' : index === editorData.length - 1 ? 'last-conversionResult' : 'conversionResult'
+                    var id = "input_" + index;
                     return (
                         <div className={className} key={index} onClick={(e) => { }} >
                             <div
                                 id={'conversionTime_' + index}
-                                className='conversionTime'
+                                className='d-flex justify-content-between conversionTime'
                                 disabled={true}
                             >
-                                {'Speaker: ' + alternative.words[0].speakerTag} {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
+                                <div>
+                                    {/* <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' /> */}
+                                    {/* <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input> */}
+                                    {/* <OutsideAlerter handleClickOutside={this.props.setCurrentSpeakerBox}> */}
+                                    <SpeakerBox
+                                        index={index}
+                                        openedEditable={this.state.openedEditable}
+                                        speaker={alternative.speakerTag ? alternative.speakerTag : undefined}
+                                        onSpeakerChange={this.onSpeakerChange}
+                                        speakerList={alternative.speakerList}
+                                    />
+                                    {/* </OutsideAlerter> */}
+
+                                </div>
+                                {this.formatTime(alternative.startTime) + ' - ' + this.formatTime(alternative.endTime)}
                             </div>
                             <div
                                 id={'editable-content-' + index}
@@ -101,17 +160,18 @@ class SpeechTextEditor extends Component {
                                     transcript={alternative}
                                     splitData={splitData}
                                     mergeData={mergeData}
+                                    mergeSpans={mergeSpans}
                                     isLastEditable={index === editorData.length - 1}
                                     handleEditorChange={handleEditorChange}
+                                    changePlayerTime={this.changePlayerTime}
                                 />
                             </div>
                         </div>
                     )
-
                 }
             })
         )
     }
 }
 
-export default SpeechTextEditor;
+export default connect(null, { setCurrentSpeakerBox })(injectIntl(SpeechTextEditor));

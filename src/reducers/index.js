@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import AppReducer from './app-reducer';
 import AuthReducer from './auth-reducer';
 import { getFileList, setSelectedFile, setUploadingFiles } from './file-reducer';
-import { handleTimeChange, getPlayerStatus, setEditorFocus } from "./editor-reducer";
+import { handleTimeChange, getPlayerStatus, setEditorFocus, setCurrentSpeakerBox } from "./editor-reducer";
 import { getTransactions } from './user';
 
 export default combineReducers({
@@ -18,4 +18,5 @@ export default combineReducers({
     playerStatus: getPlayerStatus,
     editorFocus: setEditorFocus,
     transactions: getTransactions,
+    selectedSpeakerBox: setCurrentSpeakerBox
 })

@@ -9,16 +9,16 @@ const Footer = () => {
     return (
         <footer className='bg-dark'>
             <div className="container">
-                <a href="https://www.google.com/maps/dir//39.8986893,32.7742932/@39.8987893,32.7722978,17z" target="_blank" rel="noopener noreferrer"
-                    className="float-left text-white">
-                    <FontAwesomeIcon icon={ faMapMarkedAlt } size="2x" />
-                </a>
-                <p className="float-left" style={{ marginLeft: '20px' }}>
-                    support@speechtext.io
-                    <br />
-                    +90 554 242 14 17
-                </p>
-                <p className="float-right" style={{ paddingTop: '10px' }}>
+                <div className='footer-left'>
+                    <a href="https://www.google.com/maps/dir//39.8986893,32.7742932/@39.8987893,32.7722978,17z" target="_blank" rel="noopener noreferrer"
+                        className="float-left text-white">
+                        <FontAwesomeIcon icon={ faMapMarkedAlt } size="2x" />
+                    </a>
+                    <p className="float-left">
+                        support@speechtext.io
+                    </p>
+                </div>
+                <p className="float-right footer-right">
                     Copyright &copy; SpeechText 2019<br />
                     <span className="float-right">
                         <Link to='/faq' className='footer-link'><FormattedMessage id="Footer.faq" /></Link>

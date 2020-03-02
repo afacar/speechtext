@@ -20,3 +20,12 @@ footer a {
 footer > .container {
     min-height: 100px;
 }
+
+.footer-left p {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.footer-right {
+    padding-top: 10px;
+}

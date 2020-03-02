@@ -4,7 +4,7 @@
     height: 100vh;
     background-image: url('../assets//banner/features-banner.jpg');
     background-size: cover;
-    filter: brightness(.5) blur(2px);
+    filter: brightness(.3);
 }
 
 .features-content {
