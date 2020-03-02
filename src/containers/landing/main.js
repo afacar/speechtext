@@ -33,7 +33,7 @@ const Main = () => {
         <div>
             <Helmet>
                 <meta name="description" content="Transcribe All Audio/Video Records into Text with Speechtext.io" />
-                <title>Speechtext.io | Speech to Text Audio/Video Transcription</title>
+                <title>Speechtext.io | Online Audio/Video Transcription Software</title>
                 <link rel="canonical" href="https://speechtext.io" />
             </Helmet>
             <Header goToRef={goToRef} showLinks={true} />
