@@ -12,7 +12,7 @@ import App from './containers/app';
 const { supportedLanguages, currentLanguage, messages } = Utils.Localization;
 Utils.initGoogleAnalytics();
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = compose;
 const store = createStore(reducers, composeEnhancers(
     applyMiddleware(thunk)
 ));
