@@ -25,7 +25,7 @@
 .file-actions-container input[type='text'] {
     float: right;
     height: 40px;
-    width: 300px;
+    width: 30%;
     background-color: rgb(242, 246, 248);
     border: .5px solid rgb(242, 246, 248);
     padding-left: 10px;

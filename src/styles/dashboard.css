@@ -38,7 +38,7 @@
 }
 
 .editor-container {
-    height: 720px;
+    height: 650px;
     overflow-y: auto;
 }
 
@@ -78,23 +78,32 @@ ol.selling-contract-list { counter-reset: item }
 .selling-contract-list > li:before { content: counters(item, ".") "."; counter-increment: item }
 
 @media only screen and (max-height: 882px) {
-    .transcription,
-    .editor-container {
+    .transcription {
         height: 670px !important;
+    }
+
+    .editor-container {
+        height: 600px !important;
     }
 }
 
 @media only screen and (max-height: 830px) {
-    .transcription,
-    .editor-container {
+    .transcription {
         height: 570px !important;
+    }
+
+    .editor-container {
+        height: 500px !important;
     }
 }
 
 @media only screen and (max-height: 730px) {
-    .transcription,
-    .editor-container {
+    .transcription {
         height: 470px !important;
+    }
+
+    .editor-container {
+        height: 400px !important;
     }
 }
 
