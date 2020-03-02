@@ -277,10 +277,16 @@
 .speaker-input{
     border: none;
     border-bottom: 1px;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid black;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .speaker-input:focus{
     outline: none !important;
+    border-color: green;
 }
 
 
@@ -337,16 +343,6 @@
     padding-bottom: 4px;
 }
 
-.speaker-input {
-    border: 0;
-    outline: 0;
-    background: transparent;
-    border-bottom: 1px solid black;
-  }
-
-  .speaker-input:focus {
-    border-color: green
-  }
 
 /* RESPONSIVE */
 @media only screen and (max-width: 1400px) {

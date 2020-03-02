@@ -89,7 +89,7 @@ class SpeakerBox2 extends Component {
                     <Button variant="primary" className="btn-circle" ref={c => this.refButton = c} onClick={() => setCurrentSpeakerBox(-1)}>
                         {speakerName.toUpperCase()}
                     </Button>
-                    <Overlay target={this.refButton} show={true} placement="right">
+                    <Overlay target={this.refButton} show={true} placement="right" rootClose={true} onHide={ () => setCurrentSpeakerBox(-1)}>
                         <div>
                             <Popover id="popover-basic">
                                 <Popover.Title as="h3">
@@ -121,10 +121,9 @@ class SpeakerBox2 extends Component {
                                             return (
                                                 <ListGroup.Item key={speakerIndex}>
                                                     <div className="list-item">
-                                                        <Button variant="primary" className="btn-circle list-btn-circle" onClick={() => this.setSpeaker(index, speakerIndex)}>
+                                                        <Button variant="primary" className="btn-circle speaker-tag-button list-btn-circle" onClick={() => this.setSpeaker(index, speakerIndex)}>
                                                             {speakerName.toUpperCase()}
                                                         </Button>
-
                                                         <input
                                                             id={speakerIndex}
                                                             className={speakerIndex === 0 ? "no-speaker-input": "speaker-input"}
