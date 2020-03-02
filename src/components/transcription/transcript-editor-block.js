@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { EditorBlock } from 'draft-js';
 import PropTypes from 'prop-types';
 import SpeakerBox from '../../components/speaker-box';
+import SpeakerBox2 from '../speaker-box2';
 
 const TranscriptEditorBlock = (props) => {
   const { openedEditable, setOpenedEditable } = useState(false);
-/*   const { contentState } = props;
-  const entity = contentState.getEntity(entityKey);
-  const titleString = `${entity.data.start.toFixed(2)} - ${entity.data.end.toFixed(2)}`; */
+  /*   const { contentState } = props;
+    const entity = contentState.getEntity(entityKey);
+    const titleString = `${entity.data.start.toFixed(2)} - ${entity.data.end.toFixed(2)}`; */
   const characterList = props.block.getCharacterList();
   const contentState = props.contentState;
   const start = contentState.getEntity(characterList.first().entity).data.start;
@@ -15,7 +16,7 @@ const TranscriptEditorBlock = (props) => {
 
   const addZero = (value, length) => {
     if (value === 0) {
-        return length === 3 ? '000' : '00';
+      return length === 3 ? '000' : '00';
     }
     if (value < 10) return length === 3 ? '00' : '0' + value.toString();
     return value;
@@ -26,20 +27,20 @@ const TranscriptEditorBlock = (props) => {
     let nanos = parseInt(time % 1 * 100);
     let formattedTime = '';
     if (seconds > 60) {
-        let minutes = parseInt(seconds / 60);
-        seconds = seconds % 60;
-        if (minutes > 60) {
-            let hours = parseInt(minutes / 60);
-            minutes = minutes % 60;
-            formattedTime = addZero(hours) + ':';
-        } else {
-            formattedTime = '00:';
-        }
-        formattedTime += addZero(minutes) + ':';
+      let minutes = parseInt(seconds / 60);
+      seconds = seconds % 60;
+      if (minutes > 60) {
+        let hours = parseInt(minutes / 60);
+        minutes = minutes % 60;
+        formattedTime = addZero(hours) + ':';
+      } else {
+        formattedTime = '00:';
+      }
+      formattedTime += addZero(minutes) + ':';
     } else {
-        formattedTime += '00:00:';
+      formattedTime += '00:00:';
     }
-    formattedTime += addZero(seconds) + ',' + addZero(nanos, 3);
+    formattedTime += addZero(seconds)
 
     return formattedTime;
   }
@@ -51,26 +52,37 @@ const TranscriptEditorBlock = (props) => {
       disabled={true}
     >
       <div>
-          {/* <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' /> */}
-          {/* <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input> */}
-          {/* <OutsideAlerter handleClickOutside={this.props.setCurrentSpeakerBox}> */}
-          <SpeakerBox
-              index={ props.index }
-              openedEditable={openedEditable}
-              speaker={ props.block.data.get('speaker') + 1 }
-              // onSpeakerChange={this.onSpeakerChange}
-              // speakerList={ alternative.speakerList }
-          />
-          {/* </OutsideAlerter> */}
+        {/* <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' /> */}
+        {/* <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input> */}
+        {/* <OutsideAlerter handleClickOutside={this.props.setCurrentSpeakerBox}> */}
+        <SpeakerBox2
+          index={props.index}
+          openedEditable={openedEditable}
+          speaker={props.block.data.get('speaker') + 1}
+        // onSpeakerChange={this.onSpeakerChange}
+        // speakerList={ alternative.speakerList }
+        />
+        {/* </OutsideAlerter> */}
 
       </div>
-      { formatTime(start) + ' - ' + formatTime(end) }
+      {start}
     </div>
   ) : null;
 
   return (
-    <div className="transcript-editor-block">
-      {speakerSection}
+    <div className="transcript-editor-block row">
+      <div className="transcript-editor-speaker" contentEditable={false}>
+        <SpeakerBox2
+          index={props.block.get('key')}
+          openedEditable={openedEditable}
+          speaker={props.block.data.get('speaker')}
+          speakerList={props.blockProps.speakers}
+          editSpeaker={props.blockProps.editSpeaker}
+          addNewSpeaker={props.blockProps.addNewSpeaker}
+          setSpeaker={props.blockProps.setSpeaker}
+        />
+        <div contentEditable={false}>{formatTime(start)}</div>
+      </div>
       <div className="transcript-editor-text">
         <EditorBlock {...props} />
       </div>

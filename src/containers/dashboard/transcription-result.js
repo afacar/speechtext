@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
+import { fromJS } from 'immutable'
 import { Container, Spinner } from 'react-bootstrap';
 import { Media } from 'react-media-player';
 import { injectIntl } from 'react-intl';
@@ -15,12 +16,12 @@ import {
     convertFromTranscript,
     convertToTranscript,
     convertToJSON
-  } from '../../components/transcription';
+} from '../../components/transcription';
 import Export from '../../components/editor-export';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
 import UserHeader from '../user-header';
 import "../../styles/user.css";
-
+import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 class TranscriptionResult extends Component {
     constructor(props) {
         super(props);
@@ -75,7 +76,8 @@ class TranscriptionResult extends Component {
                             //this.props.setEditorFocus(-1, -1, -1)
                             // this.props.handleTimeChange(data, -1);
                             let editorData = data;
-                            const { editorState, speakers } = that.formatDataForEditor(editorData);
+                            var { editorState, speakers } = that.formatDataForEditor(editorData);
+                            speakers = this.removeEmptySpeakers(speakers);
                             that.setState({
                                 editorData,
                                 editorState,
@@ -84,10 +86,10 @@ class TranscriptionResult extends Component {
                             });
                         });
                 })
-                .catch(error => {
-                    // TODO: GET_DOWNLOAD_URL_ERROR
-                    console.log(error);
-                })
+                    .catch(error => {
+                        // TODO: GET_DOWNLOAD_URL_ERROR
+                        console.log(error);
+                    })
             } else {
                 this.setState({
                     editorData: null,
@@ -100,18 +102,17 @@ class TranscriptionResult extends Component {
             }
 
             let fileSrc = selectedFile.originalFile && selectedFile.originalFile.url ? selectedFile.originalFile.url : '';
-            if (selectedFile.options && selectedFile.options.type.startsWith('video')) {
-                if (selectedFile.resizedFile) {
-                    var ref = firebase.storage().ref(selectedFile.resizedFile.filePath);
-                    ref.getDownloadURL().then((downloadUrl) => {
-                        Axios.get(downloadUrl)
-                            .then((url) => {
-                                fileSrc = url.config.url;
-                                that.setState({
-                                    fileSrc
-                                })
-                            });
-                    })
+            if (selectedFile.resizedFile) {
+                var ref = firebase.storage().ref(selectedFile.resizedFile.filePath);
+                ref.getDownloadURL().then((downloadUrl) => {
+                    Axios.get(downloadUrl)
+                        .then((url) => {
+                            fileSrc = url.config.url;
+                            that.setState({
+                                fileSrc
+                            })
+                        });
+                })
                     .catch(error => {
                         // TODO: GET_DOWNLOAD_URL_ERROR
                         console.log(error);
@@ -119,23 +120,38 @@ class TranscriptionResult extends Component {
                             fileSrc
                         })
                     })
-                } else {
-                    this.setState({
-                        fileSrc
-                    })
-                }
+            } else {
+                this.setState({
+                    fileSrc
+                })
             }
         }
     }
 
+    removeEmptySpeakers(speakers) {
+        var filtered = speakers.toJS().filter(function (speaker) {
+            return speaker.name !== '';
+        });
+        // console.log("Not Filtered ", speakers)
+        // console.log("Filtered ", fromJS(filtered))
+        // return speakers
+        if (filtered.length === 0) {
+            filtered.push({ name: '' })
+        } else {
+            if (filtered[0].name !== '')
+                filtered.unshift({ name: '' })
+        }
+        return fromJS(filtered)
+    }
+
     formatDataForEditor = (data) => {
-        if(data) {
-          const transcriptJson2 = convertToJSON(data)
-          const transcript = Transcript.fromJson(transcriptJson2);
-          return convertFromTranscript(transcript);
+        if (data) {
+            const transcriptJson2 = convertToJSON(data)
+            const transcript = Transcript.fromJson(transcriptJson2);
+            return convertFromTranscript(transcript);
         }
         return {};
-      }
+    }
 
     componentDidUpdate() {
         const { savingState } = this.state;
@@ -246,9 +262,9 @@ class TranscriptionResult extends Component {
             formattedTime += '00:00:';
         }
         formattedTime += this.addZero(seconds) + ',' + this.addZero(nanos, 3);
-    
+
         return formattedTime;
-      }
+    }
 
     downloadAsTxt = async () => {
         this.setState({ showDownloadSpinner: true });
@@ -256,14 +272,14 @@ class TranscriptionResult extends Component {
         await this.updateTranscribedFile();
         const { selectedFile } = this.props;
         const { editorState } = this.state;
-        
+
         let dataToExport = convertToTranscript(
             this.state.editorState.getCurrentContent(),
             this.state.speakers
         );
         var textData = '';
 
-        for(var i = 0;i < dataToExport.segments.size;i++) {
+        for (var i = 0; i < dataToExport.segments.size; i++) {
             let segment = dataToExport.segments.get(i);
             let start = segment.getStart();
             let end = segment.getEnd();
@@ -362,13 +378,49 @@ class TranscriptionResult extends Component {
     }
 
     onTextChange = (editorState) => {
-        if(this.state.editorState !== editorState) {
+        if (this.state.editorState !== editorState) {
             this.setState({
                 editorState,
                 isSaved: false,
                 savingState: -1
             })
         }
+    }
+
+    editSpeaker = (newSpeaker, index) => {
+        var { speakers } = this.state;
+        speakers = speakers.update(index, (item) => {
+            return item.set('name', newSpeaker);
+        })
+        speakers = this.removeEmptySpeakers(speakers);
+        this.setState({
+            speakers
+        })
+    }
+
+    addNewSpeaker = (newSpeaker) => {
+        var { speakers } = this.state;
+        var speakersJSON = speakers.toJS();
+        speakersJSON[speakersJSON.length] = { name: newSpeaker };
+        speakers = fromJS(speakersJSON);
+        this.setState({
+            speakers
+        })
+    }
+
+    setSpeaker = (blockIndex, speakerIndex) => {
+        console.log("Editor state ", this.state.editorState)
+        var contentState = this.state.editorState.getCurrentContent()
+        var contentStateJSON = convertToRaw(contentState);
+        if (!contentStateJSON.blocks[blockIndex])
+            contentStateJSON.blocks[blockIndex] = {};
+        if (!contentStateJSON.blocks[blockIndex].data)
+            contentStateJSON.blocks[blockIndex].data = {};
+        contentStateJSON.blocks[blockIndex].data.speaker = speakerIndex;
+        contentState = convertFromRaw(contentStateJSON);
+        this.setState({
+            editorState: EditorState.createWithContent(contentState)
+        })
     }
 
     render() {
@@ -394,16 +446,12 @@ class TranscriptionResult extends Component {
                                     <div className="d-flex flex-col">
                                         <div className="p-2 flex-fill">
                                             <div className='row'>
-                                                <div className='col-12 transcription-title'>
-                                                    { selectedFile.name }
-                                                </div>
-                                            </div>
-                                            <div className='row'>
-                                                <div className='col-4'>
+                                                <div className='col-4 text-center' >
+                                                    {selectedFile.name}
                                                     <VideoPlayer
                                                         //thumbnail TODO Put Thumbnail of video, undefined for audio 
-                                                        src={ fileSrc }
-                                                        onTimeUpdate={ this.handleTimeUpdate }
+                                                        src={fileSrc}
+                                                        onTimeUpdate={this.handleTimeUpdate}
                                                     />
                                                     {
                                                         !this.state.showSpinner && !_.isEmpty(editorData) &&
@@ -419,10 +467,13 @@ class TranscriptionResult extends Component {
                                                 </div>
                                                 <div className='col-8 editor-container'>
                                                     <SpeechTextEditor
-                                                        editorState={ editorState }
-                                                        speakers={ speakers }
-                                                        currentTime={ currentTime }
-                                                        onTextChange={ this.onTextChange }
+                                                        editorState={editorState}
+                                                        speakers={speakers}
+                                                        currentTime={currentTime}
+                                                        onTextChange={this.onTextChange}
+                                                        editSpeaker={this.editSpeaker}
+                                                        addNewSpeaker={this.addNewSpeaker}
+                                                        setSpeaker={this.setSpeaker}
                                                     />
                                                 </div>
                                             </div>

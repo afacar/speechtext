@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Player, BigPlayButton, PlayToggle, ReplayControl, ForwardControl, VolumeMenuButton, PlaybackRateMenuButton, ControlBar } from 'video-react';
+import { Player, BigPlayButton, PlayToggle, ReplayControl, ForwardControl, VolumeMenuButton, PlaybackRateMenuButton, ControlBar , PosterImage} from 'video-react';
 import 'video-react/dist/video-react.css'; // import css
 
 class VideoPlayer extends Component {
@@ -39,7 +39,7 @@ class VideoPlayer extends Component {
           src={this.props.src}
           controls
           style={{ width: '100%' }}
-          poster={this.props.poster ||'../assets/audio_thumbnail.png'}
+          //poster="this.props.poster ||'../assets/audio_thumbnail.png'"
         >
           <BigPlayButton position="center" />
           <ControlBar>
@@ -60,6 +60,12 @@ VideoPlayer.propTypes = {
   src: PropTypes.string.isRequired,
   onTimeUpdate: PropTypes.func,
 };
+
+PosterImage.propTypes = {
+  // The poster image url
+  poster: PropTypes.string,
+
+}
 
 VideoPlayer.defaultProps = {
   onTimeUpdate: null,

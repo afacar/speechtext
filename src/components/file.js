@@ -334,10 +334,10 @@ class File extends Component {
                 }
                 {
                     file.status === 'DONE' &&
-                    <span class={`checkmark ${this.props.isSelected ? 'active' : ''}`} onClick={this.fileSelected}>
-                        <div class="circle"></div>
-                        <div class="stem"></div>
-                        <div class="kick"></div>
+                    <span className={`checkmark ${this.props.isSelected ? 'active' : ''}`} onClick={this.fileSelected}>
+                        <div className="circle"></div>
+                        <div className="stem"></div>
+                        <div className="kick"></div>
                     </span>
                 }
                 <div onClick={this.openInEditor}>
@@ -356,19 +356,19 @@ class File extends Component {
                             <FontAwesomeIcon
                                 icon={faDatabase}
                                 title='File Size'
-                                className='file-info-image' size="x" />
+                                className='file-info-image' size="1x" />
                             {size}
                             <br />
                             <FontAwesomeIcon
                                 icon={faClock}
                                 title='File Duration'
-                                className='file-info-image' size="x" />
+                                className='file-info-image' size="1x" />
                             {duration}
                             <br />
                             <FontAwesomeIcon
                                 icon={faCalendar}
                                 title='File Size'
-                                className='file-info-image' size="x" />
+                                className='file-info-image' size="1x" />
                             {createDate}
                             {
                                 file.status === 'UPLOADING' && progress < 100 &&

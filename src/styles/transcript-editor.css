@@ -7,11 +7,14 @@
 .transcript-editor-block {
   margin: 10px 0px;
   line-height: 1.7;
-  margin-bottom: 50px;
-}
+  }
 
 .transcript-editor-speaker {
   width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 
 .transcript-editor-text {

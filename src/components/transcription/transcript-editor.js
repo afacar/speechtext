@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Editor, EditorState, CharacterMetadata, getDefaultKeyBinding } from 'draft-js';
+import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 
@@ -58,7 +59,7 @@ class TranscriptEditor extends Component {
             // Do we have two adjacent words?
             if (
               contentState.getEntity(newContentBlock.characterList.get(startOffset).entity).type ===
-                TRANSCRIPT_WORD &&
+              TRANSCRIPT_WORD &&
               contentState.getEntity(newContentBlock.characterList.get(startOffset - 1).entity)
                 .type === TRANSCRIPT_WORD
             ) {
@@ -84,7 +85,7 @@ class TranscriptEditor extends Component {
                 .set(
                   'text',
                   `${newContentBlock.text.slice(0, startOffset)}` +
-                    ` ${newContentBlock.text.slice(startOffset)}`,
+                  ` ${newContentBlock.text.slice(startOffset)}`,
                 );
             }
           }
@@ -172,7 +173,10 @@ class TranscriptEditor extends Component {
       props: {
         speakers: this.props.speakers,
         showSpeakers: this.props.showSpeakers,
-        index: map.key
+        index: map.key,
+        addNewSpeaker: this.props.addNewSpeaker,
+        editSpeaker: this.props.editSpeaker,
+        setSpeaker: this.props.setSpeaker
       },
     };
   }
@@ -233,7 +237,7 @@ class TranscriptEditor extends Component {
   }
 
   render() {
-    const { editorState } = this.props;
+    const { editorState, openedIndex } = this.props;
     return (
       <div className="transcript-editor">
         <Editor
@@ -247,6 +251,7 @@ class TranscriptEditor extends Component {
           keyBindingFn={this.handleKeyboardEvent}
           handlePastedText={this.handlePastedText}
           blockRendererFn={this.blockRenderer}
+          readOnly={(openedIndex && openedIndex !== -1) ? true : false}
         />
       </div>
     );
@@ -272,4 +277,10 @@ TranscriptEditor.defaultProps = {
   showSpeakers: false,
 };
 
-export default TranscriptEditor;
+const mapStateToProps = ({ selectedSpeakerBox }) => {
+  return ({
+    openedIndex: selectedSpeakerBox.index
+  })
+}
+
+export default connect(mapStateToProps, null)(TranscriptEditor);

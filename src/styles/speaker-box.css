@@ -1,0 +1,30 @@
+.badge-container{
+    width: 40px;
+    height: 40px;
+    background-color: #384D60;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    color: white;
+}
+
+.btn-circle {
+    width: 40px;
+    height: 40px;
+    padding: 6px 0px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+    background-color: #384D60;
+    color: white;
+}
+.list-btn-circle{
+    margin-right: 10px;
+}
+
+.list-item{
+    display: flex;
+    flex-direction: row;
+}
