@@ -2,7 +2,7 @@
     position: absolute;
     width: 100%;
     height: 100vh;
-    background-image: url('../assets//banner/features-banner.jpg');
+    background-image: url('../assets//banner/features-banner-small.png');
     background-size: cover;
     filter: brightness(.3);
 }

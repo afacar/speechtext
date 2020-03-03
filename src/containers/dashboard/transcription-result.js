@@ -48,11 +48,16 @@ class TranscriptionResult extends Component {
         }
     }
 
+    componentDidMount() {
+        this.updateInterval = setInterval(this.updateTranscribedFile, 60000)
+    }
+
     componentWillUnmount = async () => {
         await this.updateTranscribedFile();
         if (this.state.intervalHolder) {
             clearInterval(this.state.intervalHolder);
         }
+        clearInterval(this.updateInterval)
     }
 
     componentWillReceiveProps = async ({ user, selectedFile }) => {
@@ -179,6 +184,7 @@ class TranscriptionResult extends Component {
     updateTranscribedFile = async () => {
         const { editorState, isSaved, savingState } = this.state;
         const { selectedFile } = this.props;
+        console.log('updateTranscribedFile called')
         if (!_.isEmpty(editorState) && !isSaved && savingState === -1) {
             this.setState({ savingState: 2 })
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
@@ -288,7 +294,7 @@ class TranscriptionResult extends Component {
             textData += `${this.formatTimeForExport(start)} - ${this.formatTimeForExport(end)}\n${text}\n\n`;
         }
 
-        var fileName = selectedFile.name;
+        var fileName = selectedFile.name.replace(/,/g,'').replace(/'/g,'').replace(/ /g,'_');
         fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
 
         const element = document.createElement("a");
@@ -314,7 +320,7 @@ class TranscriptionResult extends Component {
         })
             .then(({ data }) => {
                 var storageRef = firebase.storage().ref(data.filePath);
-                var fileName = selectedFile.name;
+                var fileName = selectedFile.name.replace(/,/g,'').replace(/'/g,'').replace(/ /g,'_');
                 fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
                 var newMetadata = {
                     contentDisposition: `attachment;filename=${fileName}`
@@ -346,7 +352,7 @@ class TranscriptionResult extends Component {
         })
             .then(({ data }) => {
                 var storageRef = firebase.storage().ref(data.filePath);
-                var fileName = selectedFile.name.replace(',', '').split(' ').join('_');
+                var fileName = selectedFile.name.replace(/,/g,'').replace(/'/g,'').replace(/ /g,'_');
                 fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
                 var newMetadata = {
                     contentDisposition: `attachment;filename=${fileName}`
@@ -409,7 +415,6 @@ class TranscriptionResult extends Component {
     }
 
     setSpeaker = (blockIndex, speakerIndex) => {
-        console.log("Editor state ", this.state.editorState)
         var contentState = this.state.editorState.getCurrentContent()
         var contentStateJSON = convertToRaw(contentState);
         if (!contentStateJSON.blocks[blockIndex])
@@ -462,6 +467,7 @@ class TranscriptionResult extends Component {
                                                             onSave={this.updateTranscribedFile}
                                                             savingState={this.state.savingState}
                                                             fileType={selectedFile.options ? selectedFile.options.type : ''}
+                                                            showDownloadSpinner = {this.state.showDownloadSpinner}
                                                         />
                                                     }
                                                 </div>

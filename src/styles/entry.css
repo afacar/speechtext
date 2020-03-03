@@ -7,7 +7,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: url("../assets/banner/banner-1.jpeg");
+    background-image: url("../assets/banner/banner-small.png");
     background-size: cover;
     filter: brightness(.4);
 }

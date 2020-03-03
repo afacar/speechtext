@@ -60,7 +60,7 @@ class Header extends Component {
                 that.props.login(loginInfo);
 
                 bake_cookie(process.env.REACT_APP_LOGIN_INFO_NAME, loginInfo);
-                if(sinceLogin < 4500) {
+                if(sinceLogin < 7500) {
                     // Redirect new user to dashboard 
                     this.props.history.push('/dashboard')
                 }
