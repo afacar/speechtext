@@ -228,7 +228,7 @@ class TranscriptEditor extends Component {
     ) {
       return false;
     }
-    return true;
+    return false;
   }
 
   // eslint-disable-next-line
