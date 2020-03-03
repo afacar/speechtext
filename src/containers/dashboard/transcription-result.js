@@ -48,11 +48,16 @@ class TranscriptionResult extends Component {
         }
     }
 
+    componentDidMount() {
+        this.updateInterval = setInterval(this.updateTranscribedFile, 10000)
+    }
+
     componentWillUnmount = async () => {
         await this.updateTranscribedFile();
         if (this.state.intervalHolder) {
             clearInterval(this.state.intervalHolder);
         }
+        clearInterval(this.updateInterval)
     }
 
     componentWillReceiveProps = async ({ user, selectedFile }) => {
@@ -179,6 +184,7 @@ class TranscriptionResult extends Component {
     updateTranscribedFile = async () => {
         const { editorState, isSaved, savingState } = this.state;
         const { selectedFile } = this.props;
+        console.log('updateTranscribedFile called')
         if (!_.isEmpty(editorState) && !isSaved && savingState === -1) {
             this.setState({ savingState: 2 })
             var storageRef = firebase.storage().ref(selectedFile.transcribedFile.filePath);
