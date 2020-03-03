@@ -49,7 +49,7 @@ class TranscriptionResult extends Component {
     }
 
     componentDidMount() {
-        this.updateInterval = setInterval(this.updateTranscribedFile, 10000)
+        this.updateInterval = setInterval(this.updateTranscribedFile, 60000)
     }
 
     componentWillUnmount = async () => {
