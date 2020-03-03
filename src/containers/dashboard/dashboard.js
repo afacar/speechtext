@@ -14,7 +14,7 @@ const { auth } = Utils.firebase;
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             emailVerified: true,
             isSent: false,
@@ -26,15 +26,17 @@ class Dashboard extends Component {
         this.clearUploadingFiles();
     }
 
-    /* componentDidMount() {
-        this.checkEmailVerified(this.props.user);
-    } */
+    componentDidMount() {
+        //this.checkEmailVerified();
+        if (!_.isEmpty(this.props.user)) this.props.getFileList();
+    }
 
-/*     componentWillReceiveProps({ user }) {
+    componentWillReceiveProps({ user }) {
         if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
-            this.checkEmailVerified(user);
+            //this.checkEmailVerified(user);
+            this.props.getFileList();
         }
-    } */
+    }
 
     componentDidUpdate() {
         if(!this.state.blockNavigation && !_.isEmpty(this.props.uploadingFiles)) {
@@ -68,13 +70,13 @@ class Dashboard extends Component {
         }
     }
 
-/*     checkEmailVerified = (user) => {
-        if (!_.isEmpty(user)) {
-            const { emailVerified } = user;
-            this.setState({ emailVerified })
-            this.props.getFileList();
-        }
-    } */
+    /*     checkEmailVerified = (user) => {
+            if (!_.isEmpty(user)) {
+                const { emailVerified } = user;
+                this.setState({ emailVerified })
+                this.props.getFileList();
+            }
+        } */
 
     resendVerificationEmail = async () => {
         let { currentUser } = auth();
@@ -100,9 +102,9 @@ class Dashboard extends Component {
                     {!this.state.emailVerified &&
                         <Alert variant='warning'>
                             <div>{verification}</div>
-                             <br />
-                            {'If you do not recieve email in few minutes, You can '} 
-                            <Alert.Link onClick={this.resendVerificationEmail}>resend verification email!</Alert.Link> 
+                            <br />
+                            {'If you do not recieve email in few minutes, You can '}
+                            <Alert.Link onClick={this.resendVerificationEmail}>resend verification email!</Alert.Link>
                             {this.state.isSent === null && <Spinner size='sm' />}
                         </Alert>
                     }
