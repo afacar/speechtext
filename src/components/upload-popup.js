@@ -413,6 +413,7 @@ class UploadPopup extends Component {
                     className='file-input'
                     type="file"
                     onChange={ this.onFileAdded }
+                    accept="audio/*, video/*"
                 />
             </Modal>
         )
