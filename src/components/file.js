@@ -241,16 +241,16 @@ class File extends Component {
         }
     }
 
-    exportClicked = (e) => {
+    /* exportClicked = (e) => {
         e.preventDefault();
         e.stopPropagation();
 
         this.setState({ showExportPopup: true })
-    }
+    } */
 
-    closeExportModal = (e) => {
+    /* closeExportModal = (e) => {
         this.setState({ showExportPopup: false });
-    }
+    } */
 
     showDropdownMenu = (e) => {
         e.stopPropagation();
@@ -387,11 +387,6 @@ class File extends Component {
                         }
                     </span>
                 </div>
-                <ExportPopup
-                    show={this.state.showExportPopup}
-                    file={this.props.file}
-                    closeModal={this.closeExportModal}
-                />
             </div>
         )
     }

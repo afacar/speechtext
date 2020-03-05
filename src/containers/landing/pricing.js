@@ -53,24 +53,24 @@ class Pricing extends Component {
                     <br />
                     <Row>
                         <Col lg='7' md='7'>
-                            <svg version="1.2" class="graph" aria-labelledby="title" role="img">
+                            <svg version="1.2" className="graph" aria-labelledby="title" role="img">
                                 <polyline
                                     fill="none"
                                     stroke="#384d60"
-                                    stroke-width="5"
+                                    strokeWidth="5"
                                     points="
                                     90,77
                                     392,161
                                     684,245
                                     850,287
                                     900,287"/>
-                                <g class="grid x-grid" id="xGrid">
+                                <g className="grid x-grid" id="xGrid">
                                 <line x1="90" x2="90" y1="5" y2="371"></line>
                                 </g>
-                                <g class="grid y-grid" id="yGrid">
+                                <g className="grid y-grid" id="yGrid">
                                     <line x1="90" x2="905" y1="370" y2="370"></line>
                                 </g>
-                                <g class="labels x-labels">
+                                <g className="labels x-labels">
                                     <text x="100" y="400">1</text>
                                     <text x="186" y="400">10</text>
                                     <text x="326" y="400">20</text>
@@ -80,17 +80,17 @@ class Pricing extends Component {
                                     <text x="850" y="400">
                                         <FormattedMessage id='Pricing.contactUs' />
                                     </text>
-                                    <text x="450" y="440" class="label-title">
+                                    <text x="450" y="440" className="label-title">
                                         <FormattedMessage id='Pricing.hoursLabel' />
                                     </text>
                                 </g>
-                                <g class="labels y-labels">
+                                <g className="labels y-labels">
                                     <text x="86" y="77">$9 <FormattedMessage id='Pricing.hourSubText' /></text>
-                                    <text x="60" y="200" class="label-title">
+                                    <text x="60" y="200" className="label-title">
                                         <FormattedMessage id='Pricing.priceLabel' />
                                     </text>
                                 </g>
-                                <g class="data" data-setname="Our first data set">
+                                <g className="data" data-setname="Our first data set">
                                     <circle cx="186" cy="104" data-value="8.1" r="5"></circle>
                                     <text x='156' y='132'>$8 <FormattedMessage id='Pricing.hourSubText' /></text>
                                     <circle cx="326" cy="142" data-value="7.7" r="5"></circle>
@@ -131,11 +131,11 @@ class Pricing extends Component {
                         <i><FormattedMessage id='Pricing.message' /></i>
                     </h3>
                     <br />
-                    <svg version="1.2" class="graph" aria-labelledby="title" role="img">
+                    <svg version="1.2" className="graph" aria-labelledby="title" role="img">
                         <polyline
                             fill="none"
                             stroke="#384d60"
-                            stroke-width="5"
+                            strokeWidth="5"
                             points="
                             90,56
                             130,98
@@ -144,27 +144,27 @@ class Pricing extends Component {
                             280,224,
                             330,266,
                             430,266"/>
-                        <g class="grid x-grid" id="xGrid">
+                        <g className="grid x-grid" id="xGrid">
                         <line x1="90" x2="90" y1="5" y2="371"></line>
                         </g>
-                        <g class="grid y-grid" id="yGrid">
+                        <g className="grid y-grid" id="yGrid">
                             <line x1="90" x2="1005" y1="370" y2="370"></line>
                         </g>
-                        <g class="labels x-labels">
+                        <g className="labels x-labels">
                             <text x="100" y="400">1</text>
                             <text x="130" y="400">10</text>
                             <text x="180" y="400">20</text>
                             <text x="230" y="400">30</text>
                             <text x="280" y="400">40</text>
                             <text x="330" y="400">50+</text>
-                            <text x="230" y="440" class="label-title">
+                            <text x="230" y="440" className="label-title">
                                 <FormattedMessage id='Pricing.hoursLabel' />
                             </text>
                         </g>
-                        <g class="labels y-labels">
+                        <g className="labels y-labels">
                             <text x="80" y="55">$9 <FormattedMessage id='Pricing.hourSubText' /></text>
                         </g>
-                        <g class="data" data-setname="Our first data set">
+                        <g className="data" data-setname="Our first data set">
                             <circle cx="130" cy="98" data-value="8.1" r="5"></circle>
                             <text x='110' y='122'>$8 <FormattedMessage id='Pricing.hourSubText' /></text>
                             <circle cx="180" cy="140" data-value="7.7" r="5"></circle>

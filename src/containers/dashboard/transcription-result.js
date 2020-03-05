@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
-import { fromJS } from 'immutable'
-import { Container, Spinner } from 'react-bootstrap';
-import { Media } from 'react-media-player';
+import { fromJS } from 'immutable';
 import { injectIntl } from 'react-intl';
 import Axios from 'axios';
 import { Transcript } from 'transcript-model';
