@@ -9,6 +9,7 @@ import '../../styles/dashboard.css';
 import UserHeader from '../user-header';
 import FileList from './file-list';
 import Utils from '../../utils';
+import ManualEditor from '../../components/editor/manual-editor';
 const { auth } = Utils.firebase;
 
 class Dashboard extends Component {
@@ -108,6 +109,7 @@ class Dashboard extends Component {
                             <FileList emailVerified={this.state.emailVerified} />
                         </Col>
                     </Row>
+                    {/* <ManualEditor /> */}
                 </Container>
                 <React.Fragment>
                     <Prompt

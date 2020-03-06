@@ -331,6 +331,28 @@
     padding-bottom: 4px;
 }
 
+.textbox-container{
+    display: block;
+    overflow-y:scroll;
+    position:fixed;
+    height:calc(100% - 36px);
+    background:#eee;
+    top:36px;
+    width:100%
+}
+.link-input{
+    display: inline-flex;
+    width: 100%;
+    margin: 10px;
+    justify-content: center;
+}
+.link-inner{
+    width: 100%;
+}
+.player-container{
+    width: 100%;
+}
+
 /* RESPONSIVE */
 @media only screen and (max-width: 1400px) {
     .export {
