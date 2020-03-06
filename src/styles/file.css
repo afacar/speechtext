@@ -148,15 +148,20 @@
     font-size: 14px;
     border: none;
     cursor: pointer;
+    height: 100px;
 }
 
 .dropbtn .dropdown-menu {
     top: 20px;
-    right: 0px !important;
     left: auto;
     background-color: #DDE1E4;
     min-width: 70px;
     font-size: 12px;
+    opacity: 100 !important;
+}
+
+.dropbtn .dropdown-menu .dropdown-item {
+    pointer-events: all !important;
 }
 
 .dropbtn .dropdown-menu .dropdown-item:hover {
