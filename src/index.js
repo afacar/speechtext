@@ -11,6 +11,7 @@ import App from './containers/app';
 
 const { supportedLanguages, currentLanguage, messages } = Utils.Localization;
 Utils.initGoogleAnalytics();
+Utils.initSentry();
 
 const composeEnhancers = compose;
 const store = createStore(reducers, composeEnhancers(
