@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import Utils from '../utils';
 
 export const setEditorFocus = (activeIndex, activeWordIndex, caretPosition) => {
@@ -11,8 +10,6 @@ export const setEditorFocus = (activeIndex, activeWordIndex, caretPosition) => {
         })
     }
 }
-
-let lastPlayerIndex = ''
 
 export const handleTimeChange = (editorData, currentTime) => {
     // return (dispatch, getState) => {

@@ -1,10 +1,6 @@
 import Utils from '../utils';
 const { ActionTypes } = Utils;
 
-const INITIAL_STATE = {
-    openedIndex: -1
-}
-
 export const setEditorFocus = (state = {}, action) => {
     switch (action.type) {
         case ActionTypes.EDITOR_FOCUS:

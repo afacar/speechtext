@@ -236,7 +236,7 @@ class Payment extends Component {
             cvc
         }
         var that = this;
-        const { language, user } = this.props;
+        const { language } = this.props;
         var { duration, basketId } = this.state;
         // let durationInMinutes = undefined;
         // if (selectedPlanType === 'PayAsYouGo')

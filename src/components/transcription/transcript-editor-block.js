@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { EditorBlock } from 'draft-js';
 import PropTypes from 'prop-types';
-import SpeakerBox from '../../components/speaker-box';
 import SpeakerBox2 from '../speaker-box2';
 
 const TranscriptEditorBlock = (props) => {
-  const { openedEditable, setOpenedEditable } = useState(false);
+  const { openedEditable } = useState(false);
   /*   const { contentState } = props;
     const entity = contentState.getEntity(entityKey);
     const titleString = `${entity.data.start.toFixed(2)} - ${entity.data.end.toFixed(2)}`; */
   const characterList = props.block.getCharacterList();
   const contentState = props.contentState;
   const start = contentState.getEntity(characterList.first().entity).data.start;
-  const end = contentState.getEntity(characterList.last().entity).data.end;
 
   const addZero = (value, length) => {
     if (value === 0) {
@@ -24,7 +22,6 @@ const TranscriptEditorBlock = (props) => {
 
   const formatTime = (time) => {
     let seconds = Math.floor(time);
-    let nanos = parseInt(time % 1 * 100);
     let formattedTime = '';
     if (seconds > 60) {
       let minutes = parseInt(seconds / 60);

@@ -94,7 +94,6 @@ class Dashboard extends Component {
     render() {
         const { user } = this.props;
         const verification = `Check [${user.email}], verify your email then refresh this page.`
-        const another = this.state.isSent ? 'another' : ''
         return (
             <div>
                 <UserHeader />
