@@ -98,7 +98,11 @@ class UploadPopup extends Component {
     
     handleOptionsChange = (name, value) => {
         var { options } = this.state;
-        options[name] = value;
+        let val = value
+        if (name === 'speakerCount' && value < 1) {
+            val = 1
+        }
+        options[name] = val;
         this.setState({
             options
         });
@@ -309,8 +313,8 @@ class UploadPopup extends Component {
                                         type='number'
                                         required
                                         disabled={ disabled }
-                                        min='1'
-                                        max='10'
+                                        min={1}
+                                        max={10}
                                         value={ options.speakerCount }
                                         onChange={ (e) => this.handleOptionsChange('speakerCount', e.target.value) }
                                     />
