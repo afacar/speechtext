@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Button, Overlay } from 'react-bootstrap';
-import { Popover, OverlayTrigger } from 'react-bootstrap';
+import { Popover } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setCurrentSpeakerBox } from '../actions';
 import { ListGroup } from 'react-bootstrap';
-import { Form } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import '../styles/speaker-box.css';
 
 
@@ -37,7 +33,7 @@ class SpeakerBox2 extends Component {
             console.log('Not Enter')
             return
         }
-        const { speakers, speakerTag } = this.state;
+        const { speakerTag } = this.state;
         if (speakerTag && !this.state.speakers.includes(speakerTag)) {
             this.setState({
                 speakerTag: ''

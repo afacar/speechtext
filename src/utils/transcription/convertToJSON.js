@@ -7,7 +7,7 @@ const convertToJSON = (transcript) => {
 
   for (let i = 0; i < transcript.length; i++) {
     var { alternatives } = transcript[i];
-    var { words, confidence, startTime, endTime } = alternatives[0];
+    var { words } = alternatives[0];
     if (words) {
       let speaker = words[0].speakerTag
       let newWords = words.map((word, ind) => {

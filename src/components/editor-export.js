@@ -43,7 +43,7 @@ class Export extends Component {
     }
 
     render() {
-        const { intl, savingState, showDownloadSpinner, fileType } = this.props;
+        const { intl, savingState, showDownloadSpinner } = this.props;
         const { formatMessage } = intl;
         return (
             <div className='export'>

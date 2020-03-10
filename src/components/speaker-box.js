@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Button } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -32,7 +32,7 @@ class SpeakerBox extends Component {
     }
 
     render() {
-        const { openedIndex, index, speaker, onSpeakerChange, speakerList, setCurrentSpeakerBox } = this.props;
+        const { openedIndex, index, speaker, speakerList, setCurrentSpeakerBox } = this.props;
         if (openedIndex === index) {
             return (
                 <div className="d-flex flex-column speaker-box opened" ref={this.setWrapperRef}>

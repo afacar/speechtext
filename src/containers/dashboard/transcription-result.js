@@ -64,7 +64,6 @@ class TranscriptionResult extends Component {
             this.props.getFile(this.state.fileId);
         }
         if (_.isEmpty(this.props.selectedFile) && !_.isEmpty(selectedFile)) {
-            var that = this;
             var { intervalHolder } = this.state;
             this.props.isPlaying(false)
             clearInterval(intervalHolder);
@@ -275,7 +274,6 @@ class TranscriptionResult extends Component {
 
         await this.updateTranscribedFile();
         const { selectedFile } = this.props;
-        const { editorState } = this.state;
 
         let dataToExport = convertToTranscript(
             this.state.editorState.getCurrentContent(),
