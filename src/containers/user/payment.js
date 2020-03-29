@@ -66,6 +66,7 @@ class Payment extends Component {
                 duration: 1,
                 durationType: 'hours',
                 calculatedPrice,
+                unitPrice: calculatedPrice,
                 state: 'INITIAL',
                 basketId: undefined,
                 checkoutForm: undefined,
