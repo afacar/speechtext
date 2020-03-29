@@ -79,9 +79,16 @@ class Payment extends Component {
 
     calculatePrice = (duration) => {
         let calculatedPrice = 0;
-        const { pricePerHour, minPricePerHour } = this.props.plans;
         const { formatMessage } = this.props.intl;
-        let unitPrice = this.calculateStandardPrice(pricePerHour, minPricePerHour, duration)
+        const { pricePerHour, minPricePerHour } = this.props.plans;
+        let { currentPlan } = this.props.user;
+
+        let unitPrice;
+        if(!_.isEmpty(currentPlan) && currentPlan.planId === 'custom') {
+            unitPrice = this.calculateCustomPrice(currentPlan.pricePerHour, duration)
+        } else {
+            unitPrice = this.calculateStandardPrice(pricePerHour, minPricePerHour, duration)
+        }
         if (duration < 1) {
             Alert.error(formatMessage({ id: 'Payment.Error.durationLength' }));
         } else if (duration <= 50) {
@@ -107,6 +114,13 @@ class Payment extends Component {
         const numOf5s = parseInt(hours / 5)
         const price = pricePerHour - numOf5s * 0.5
         return price
+    }
+
+    calculateCustomPrice = (pricePerHour, hours) => {
+        // Calculates unit price/hour based on base price and hours
+        if (hours <= 0)
+            return 0
+        return pricePerHour;
     }
 
     renderSuccess = () => {
