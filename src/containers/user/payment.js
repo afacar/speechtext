@@ -27,6 +27,15 @@ class Payment extends Component {
         }
     }
 
+    componentWillReceiveProps({ user }) {
+        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            if(!_.isEmpty(user.currentPlan) && user.currentPlan.planId === 'custom') {
+                this.durationChanged(this.state.duration, user.currentPlan);
+            }
+        }
+    }
+
+
     initializePage = () => {
         this.setState({
             duration: 1,
@@ -48,12 +57,15 @@ class Payment extends Component {
     }
 
     componentDidMount() {
-        const { plans } = this.props
+        const { plans, user } = this.props;
+        let calculatedPrice = 9;
+        if(plans.standard) calculatedPrice = plans.standarddard.hourPrice;
+        if(user && user.currentPlan && user.currentPlan.planId === 'custom') calculatedPrice = user.currentPlan.pricePerHour;
         if(!_.isEmpty(plans)) {
             this.setState({
                 duration: 1,
                 durationType: 'hours',
-                calculatedPrice: plans.standard ? plans.standard.hourPrice : 9,
+                calculatedPrice,
                 state: 'INITIAL',
                 basketId: undefined,
                 checkoutForm: undefined,
@@ -65,10 +77,10 @@ class Payment extends Component {
         }
     }
 
-    durationChanged = (e) => {
+    durationChanged = (e, userPlan) => {
         if (!e.target) {
-            this.setState({ duration: e })
-            this.calculatePrice(e)
+            this.setState({ duration: e });
+            this.calculatePrice(e, userPlan);
         }
         else {
             this.setState({ duration: e.target.value })
@@ -77,12 +89,14 @@ class Payment extends Component {
     }
 
 
-    calculatePrice = (duration) => {
+    calculatePrice = (duration, userPlan) => {
         let calculatedPrice = 0;
         const { formatMessage } = this.props.intl;
         const { pricePerHour, minPricePerHour } = this.props.plans;
         let { currentPlan } = this.props.user;
-
+        if(_.isEmpty(currentPlan)) {
+            currentPlan = userPlan;
+        }
         let unitPrice;
         if(!_.isEmpty(currentPlan) && currentPlan.planId === 'custom') {
             unitPrice = this.calculateCustomPrice(currentPlan.pricePerHour, duration)
