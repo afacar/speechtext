@@ -152,7 +152,11 @@ class StandardPaymentCard extends Component {
 
   render() {
     var { currentPlan, unitPrice } = this.props;
-    if (_.isEmpty(currentPlan)) currentPlan = {};
+    if (_.isEmpty(currentPlan)) {
+      currentPlan = {};
+    } else if(currentPlan.planId === 'custom') {
+      unitPrice = currentPlan.pricePerHour;
+    }
     const { showSellingContract, showRefundContract } = this.state
     return (
       <div className="d-flex justify-content-center" style={{ width: "100%", height: "100%" }}>
