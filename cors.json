@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["https://speechtext.io"],
+    "origin": ["https://app.speechtext.io"],
     "method": ["GET"],
     "maxAgeSeconds": 3600
   }
