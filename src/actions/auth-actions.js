@@ -18,12 +18,17 @@ export const login = (data) => {
                 }
             } else if (data.isNewUser) {
                 var fncCreateUser = functions().httpsCallable('createNewUser');
-                let ip = await publicIp.v4();
+                let ip = '';
+                try {
+                    ip = await publicIp.v4();
+                } catch (error) {
+                    console.log('Cannot get user IP adress')
+                }
                 //const demoPlan = _.find(getState()['plans'], ['type', 'Demo']);
                 userData = { ...data, ip };
                 delete userData.isNewUser;
                 try {
-                    console.log('Creating new user...')
+                    console.log('Creating new user... userData:', userData)
                     let res = await fncCreateUser(userData).data
                     !data.emailVerified && auth().currentUser.sendEmailVerification()
                     console.log('res of new user creation:', res)
