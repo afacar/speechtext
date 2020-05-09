@@ -28,7 +28,7 @@ export const login = (data) => {
                 userData = { ...data, ip };
                 delete userData.isNewUser;
                 try {
-                    console.log('Creating new user...')
+                    console.log('Creating new user... userData:', userData)
                     let res = await fncCreateUser(userData).data
                     !data.emailVerified && auth().currentUser.sendEmailVerification()
                     console.log('res of new user creation:', res)
