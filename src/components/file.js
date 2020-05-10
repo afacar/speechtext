@@ -27,7 +27,6 @@ class File extends Component {
 
     downloadThumbnail() {
         const { file } = this.state;
-        console.log("FILe", file);
         if (file && file.thumbnail) {
             var ref = firebase.storage().ref(file.thumbnail.filePath);
             ref.getDownloadURL().then((downloadUrl) => {

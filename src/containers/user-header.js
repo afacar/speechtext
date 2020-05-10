@@ -7,7 +7,7 @@ import '../styles/header.css';
 import '../styles/user.css';
 
 import UserBox from './dashboard/user-box';
-import LogoContainer from './landing/logo-container';
+import LogoContainer from '../components/logo-container';
 
 class UserHeader extends Component {
 
