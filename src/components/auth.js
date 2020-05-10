@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import FirebaseUIAuth from "react-firebaseui-localized";
 import { withRouter } from 'react-router';
+import _ from "lodash";
 
 import { login } from '../actions';
 import Utils from '../utils';
-import LogoContainer from '../containers/landing/logo-container';
+import LogoContainer from './logo-container';
 import '../styles/auth.css';
 
 const { firebase } = Utils;
@@ -27,9 +28,22 @@ const uiConfig = {
 };
 
 class Auth extends Component {
+    componentDidMount() {
+        this.unsubscribe = firebase.auth().onAuthStateChanged(currentUser => {
+            console.log('authDidMount currentUser', currentUser)
+            if (currentUser) {
+                this.props.history.push('/')
+            }
+        })
+    }
 
+    componentWillUnmount() {
+        this.unsubscribe()
+    }
+    
     render() {
         console.log('Auth Renders', this.props)
+        console.log('Auth Renders currentUser', firebase.auth().currentUser)
         return (
             <div className="container">
                 <Row>
@@ -48,4 +62,8 @@ class Auth extends Component {
     }
 }
 
-export default connect(null, { login })(withRouter(Auth));
+const mapStateToProps = ({ user }) => {
+    return { user }
+}
+
+export default connect(mapStateToProps, { login })(withRouter(Auth));

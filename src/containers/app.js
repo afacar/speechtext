@@ -9,6 +9,7 @@ import User from './user/user';
 import TranscriptionResult from './dashboard/transcription-result'
 import Evaluate from './../components/evaluation-popup';
 import Auth from '../components/auth';
+import Splash from '../components/splash';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
@@ -26,7 +27,8 @@ class App extends Component {
             <div className='app-container'>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path='/' component={Dashboard} />} />
+                        <Route exact path='/' component={Splash} /> />
+                        <Route path='/dashboard' component={Dashboard} /> />
                         <Route path='/auth' component={Auth} />
                         <Route path='/user' component={User} />
                         <Route path='/edit' component={TranscriptionResult} />

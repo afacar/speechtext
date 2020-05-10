@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
-import { bake_cookie } from 'sfcookies';
 import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
 
 import { getFileList, updateFileState, removeFromUploadingFiles, login } from '../../actions';
 import '../../styles/dashboard.css';
 import UserHeader from '../user-header';
-import Header from '../../containers/header';
 import FileList from './file-list';
 import Utils from '../../utils';
 const { auth } = Utils.firebase;
@@ -29,41 +27,8 @@ class Dashboard extends Component {
         this.clearUploadingFiles();
     }
 
-    async componentDidMount() {
-        console.log('dashboard didMount', this.props)
-        await this.checkUser()
-        //this.checkEmailVerified();
+    componentDidMount() {
         if (!_.isEmpty(this.props.user)) this.props.getFileList();
-    }
-
-    checkUser = async () => {
-        const { user, history } = this.props
-        var that = this;
-        auth().onAuthStateChanged(user => {
-            const currentUser = user ? user : '';
-            that.setState({ user: currentUser });
-            if (currentUser) {
-                console.log('currentUser at Dashboard....')
-                const { uid, displayName, email, emailVerified, metadata } = currentUser;
-                const { lastSignInTime, creationTime } = metadata;
-                const isNewUser = creationTime === lastSignInTime
-                let now = new Date()
-                let sinceLogin = now.getTime() - new Date(lastSignInTime).getTime()
-                console.log('sinceLogin:', sinceLogin)
-                const loginInfo = {
-                    uid,
-                    displayName,
-                    email,
-                    isNewUser,
-                    emailVerified,
-                    creationTime: new Date(creationTime),
-                };
-                that.props.login(loginInfo);
-                bake_cookie('speechtext-dev-login', loginInfo);
-            } else {
-                history.push('/auth')
-            }
-        });
     }
 
     componentWillReceiveProps({ user }) {
@@ -130,13 +95,6 @@ class Dashboard extends Component {
         const { user } = this.props;
         console.log('Dashboard renders', user)
         const verification = `Check [${user.email}], verify your email then refresh this page.`
-        if (_.isEmpty(user)) {
-            return (
-                <div className='dashboard-container'>
-                    <Spinner animation="grow" />
-                </div>
-            )
-        }
         return (
             <div>
                 <UserHeader />
