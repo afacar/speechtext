@@ -1,8 +1,13 @@
 .dashboard-container,
 .transcription-container,
 .profile-container {
-    padding-top: 90px;
+    margin-top: 100px;
     max-width: 65%;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: center;
 }
 
 .transcription-container {
