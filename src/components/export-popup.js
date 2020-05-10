@@ -23,67 +23,63 @@ class ExportPopup extends Component {
         return value;
     }
 
-    formatTime = ({ seconds, nanos }) => {
-        let formattedTime = '';
-        if (seconds > 60) {
-            let minutes = parseInt(seconds / 60);
-            seconds = seconds % 60;
-            if (minutes > 60) {
-                let hours = parseInt(minutes / 60);
-                minutes = minutes % 60;
-                formattedTime = this.addZero(hours) + ':';
-            } else {
-                formattedTime = '00:';
-            }
-            formattedTime += this.addZero(minutes) + ':';
-        } else {
-            formattedTime += '00:00:';
-        }
-        formattedTime += this.addZero(seconds) + '.' + this.addZero(nanos, 3);
+    formatTime = (time) => {
+        time = Math.round(time)
 
-        return formattedTime;
+        if (time < 60) return `00:${this.addZero(time)}`
+
+        let minutes = Math.floor(time / 60)
+        let seconds = Math.round(time - (minutes * 60))
+
+        if (minutes < 60) return `${this.addZero(minutes)}:${this.addZero(seconds)}`
+
+        let hours = Math.floor(minutes / 60)
+        minutes = minutes - (hours * 60)
+
+        return `${this.addZero(hours)}:${this.addZero(minutes)}:${this.addZero(seconds)}`
     }
 
-    getTranscriptionData = () => {
-        var that = this;
+    getTranscriptionData = async () => {
         const { file } = this.props;
-        var storageRef = firebase.storage().ref(file.transcribedFile.filePath);
-        storageRef.getDownloadURL().then((downloadUrl) => {
-            Axios.get(downloadUrl)
-                .then(({ data }) => {
-                    that.downloadAsTxt(data);
-                });
-        })
-        .catch(error => {
-            // TODO: GET_DOWNLOAD_URL_ERROR
-            console.log(error);
-        })
+        try {
+            var storageRef = firebase.storage().ref(file.transcribedFile.filePath);
+            console.log('fetching downloadURL...')
+            let downloadUrl = await storageRef.getDownloadURL()
+            console.log('fetching data with downloadUrl', downloadUrl)
+            let { data } = await Axios.get(downloadUrl)
+            return data
+        } catch (error) {
+            console.log('getTranscriptionData err:', error)
+        }
     }
 
-    downloadAsTxt = (editorData) => {
-        if(_.isEmpty(editorData)) editorData = this.state.editorData;
-        if(_.isEmpty(editorData)) {
-            this.getTranscriptionData();
-        } else {
-            const { file } = this.props;
-            var textData = '';
-            _.each(editorData, data => {
-                let alternative = data.alternatives[0];
-                let { startTime, endTime, transcript } = alternative;
-                textData += `${this.formatTime(startTime)} - ${this.formatTime(endTime)}\n${transcript}\n\n`;
-            });
-    
-            var fileName = file.name;
-            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
-    
-            const element = document.createElement("a");
-            const fileToUpload = new Blob([textData], { type: 'text/plain' });
-            element.href = URL.createObjectURL(fileToUpload);
-            element.download = fileName;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-            this.props.closeModal();
-        }
+    downloadAsTxt = async () => {
+        var { file } = this.props;
+        console.log('downloadAsTxt');
+
+        let editorData = await this.getTranscriptionData()
+        console.log('downloadAsTxt res', editorData);
+
+        var textData = '';
+        _.each(editorData.segments, segment => {
+            let { words } = segment;
+            let startTime = words[0].start
+            let endTime = words[words.length - 1].end
+            let transcript = words.map(word => word.text).join(' ')
+            textData += `${this.formatTime(startTime)} - ${this.formatTime(endTime)}\n${transcript}\n\n`;
+        });
+
+        var fileName = file.name;
+        fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
+
+        const element = document.createElement("a");
+        const fileToUpload = new Blob([textData], { type: 'text/plain' });
+        element.href = URL.createObjectURL(fileToUpload);
+        element.download = fileName;
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+        this.props.closeModal();
+
     }
 
     downloadAsDocx = async () => {
@@ -150,7 +146,7 @@ class ExportPopup extends Component {
 
     downloadFile = () => {
         const { exportType } = this.state;
-        switch(exportType) {
+        switch (exportType) {
             case 'srt':
                 this.downloadAsSrt();
                 break;
@@ -174,7 +170,7 @@ class ExportPopup extends Component {
     render() {
         const { formatMessage } = this.props.intl;
         return (
-            <Modal show={ this.props.show } onHide={ this.props.closeModal } size='md' className='export-modal' centered dialogClassName="export-modal">
+            <Modal show={this.props.show} onHide={this.props.closeModal} size='md' className='export-modal' centered dialogClassName="export-modal">
                 <div>
                     <Modal.Header closeButton>
                         <div className='export-info-page-header'>
@@ -188,17 +184,17 @@ class ExportPopup extends Component {
                                     as='select'
                                     defaultValue='txt'
                                     required
-                                    onChange={this.handleExportTypeChange }
+                                    onChange={this.handleExportTypeChange}
                                 >
                                     <option></option>
                                     <option key='txt' value='txt'>
-                                        { formatMessage({ id:'Transcription.Download.option1' }) }
+                                        {formatMessage({ id: 'Transcription.Download.option1' })}
                                     </option>
                                     <option key='docx' value='docx'>
-                                        { formatMessage({ id:'Transcription.Download.option2' }) }
+                                        {formatMessage({ id: 'Transcription.Download.option2' })}
                                     </option>
                                     <option key='srt' value='srt'>
-                                        { formatMessage({ id:'Transcription.Download.option3' }) }
+                                        {formatMessage({ id: 'Transcription.Download.option3' })}
                                     </option>
                                 </Form.Control>
                                 <Form.Control.Feedback type="invalid">
@@ -208,10 +204,10 @@ class ExportPopup extends Component {
                         </Container>
                     </Modal.Body>
                     <Modal.Footer className='float-right'>
-                        <Button variant="danger" onClick={ this.props.closeModal }>
+                        <Button variant="danger" onClick={this.props.closeModal}>
                             <FormattedMessage id='UploadPopup.cancelButton' />
                         </Button>
-                        <Button type='submit' variant="success" onClick={ this.downloadFile }>
+                        <Button type='submit' variant="success" onClick={this.downloadFile}>
                             {
                                 this.state.showSpinner &&
                                 <Spinner

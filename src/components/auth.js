@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import FirebaseUIAuth from "react-firebaseui-localized";
 import { withRouter } from 'react-router';
-import _ from "lodash";
 
 import { login } from '../actions';
 import Utils from '../utils';
