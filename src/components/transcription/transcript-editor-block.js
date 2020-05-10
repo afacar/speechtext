@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { EditorBlock } from 'draft-js';
 import PropTypes from 'prop-types';
-import SpeakerBox2 from '../speaker-box2';
+import SpeakerBox from '../speaker-box';
 
 const TranscriptEditorBlock = (props) => {
   const { openedEditable } = useState(false);
@@ -52,7 +52,7 @@ const TranscriptEditorBlock = (props) => {
         {/* <FontAwesomeIcon icon={faPen} className='speaker-pen-icon' /> */}
         {/* <input className="input-speaker" ref={id} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} onChange={(text) => this.onSpeakerChange(text, index)} value={alternative.speakerTag}></input> */}
         {/* <OutsideAlerter handleClickOutside={this.props.setCurrentSpeakerBox}> */}
-        <SpeakerBox2
+        <SpeakerBox
           index={props.index}
           openedEditable={openedEditable}
           speaker={props.block.data.get('speaker') + 1}
@@ -69,7 +69,7 @@ const TranscriptEditorBlock = (props) => {
   return (
     <div className="transcript-editor-block row">
       <div className="transcript-editor-speaker" contentEditable={false}>
-        <SpeakerBox2
+        <SpeakerBox
           index={props.block.get('key')}
           openedEditable={openedEditable}
           speaker={props.block.data.get('speaker')}

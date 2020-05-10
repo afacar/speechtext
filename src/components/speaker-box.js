@@ -1,132 +1,154 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import { injectIntl } from 'react-intl';
-import { Button } from 'react-bootstrap';
-import { FormControl } from 'react-bootstrap';
+import { Button, Overlay } from 'react-bootstrap';
+import { Popover } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setCurrentSpeakerBox } from '../actions';
 import { ListGroup } from 'react-bootstrap';
-import { Form } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+import '../styles/speaker-box.css';
+
 
 class SpeakerBox extends Component {
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (nextState.editing)
-    //         return true;
-    //     return false;
-    // }
     state = {
-        editing: true,
-        speakerTag: ''
+        speakers: undefined,
+        speakerTag: '',
+        show: false,
+        useState: false,
     }
 
-    submitSpeaker = (speakerTag, index, editingFlag) => {
-        this.props.onSpeakerChange(speakerTag, index)
-        this.props.setCurrentSpeakerBox(- 1)
+    ref = null;
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.speakerList) {
+            this.setState({
+                speakers: nextProps.speakerList,
+                useState: false
+            })
+        }
+    }
+
+    addNew = (e, addButton) => {
+        // console.log('New speaker submit', e)
+        if (e.key !== 'Enter' && !addButton) {
+            console.log('Not Enter')
+            return
+        }
+        const { speakerTag } = this.state;
+        if (speakerTag && !this.state.speakers.includes(speakerTag)) {
+            this.setState({
+                speakerTag: ''
+            })
+            this.props.addNewSpeaker(speakerTag)
+        }
+    }
+
+    editLocalSpeaker = (e, index) => {
+        var { speakers } = this.state;
+        speakers = speakers.update(index, (item) => {
+            return item.set('name', e.target.value);
+        })
         this.setState({
-            editing: editingFlag,
-            speakerTag: ''
+            speakers,
+            useState: true
         })
     }
 
+    checkSubmit = (e, index) => {
+        if (e.key === 'Enter') {
+            this.props.editSpeaker(e.target.value, index)
+            this.props.setCurrentSpeakerBox(-1);
+            return
+        }
+    }
+
+    setSpeaker = (blockIndex, speakerIndex) => {
+        this.props.setSpeaker(blockIndex, speakerIndex);
+        this.props.setCurrentSpeakerBox(-1);
+    }
+
     render() {
-        const { openedIndex, index, speaker, speakerList, setCurrentSpeakerBox } = this.props;
+        var { openedIndex, index, speaker, speakerList, setCurrentSpeakerBox } = this.props;
+        const { speakers, useState } = this.state;
+        if (speaker >= speakerList.toJS().length) {
+            speaker = 0;
+        }
+        var speakerName = speakerList.toJS()[speaker].name;
+        if (!speakerName)
+            speakerName = '>';
+
+        if (speakerName.length > 3)
+            speakerName = speakerName.substring(0, 3);
+
         if (openedIndex === index) {
             return (
-                <div className="d-flex flex-column speaker-box opened" ref={this.setWrapperRef}>
-                    {
-                        speaker && (
-                            <Form className='speaker-input-container'>
-                                <FormControl className="speaker-input" readOnly={true} autoFocus={!speaker} placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })} value={speaker || this.state.speakerTag} onChange={(event) => this.setState({ speakerTag: event.target.value })} />
-                                <Button className='speaker-button' onClick={() => {
-                                    this.submitSpeaker(undefined, index, true)
-                                    // onSpeakerChange(undefined, index)
-                                    // setCurrentSpeakerBox(-1)
-                                    // this.setState({
-                                    //     editing: true,
-                                    //     speakerTag: ''
-                                    // })
-                                }}
-                                >
-                                    <FontAwesomeIcon icon={faTimes} />
-                                </Button>
-                            </Form>
-                        )
-                    }
-                    {
-                        !speaker && (
-                            <Form className='speaker-input-container'
-                                onSubmit={(event) => {
-                                    console.log("On submit")
-                                    event.preventDefault();
-                                    this.submitSpeaker(this.state.speakerTag, index, false)
-                                }}>
-                                <FormControl className="speaker-input"
-                                    readOnly={false}
-                                    autoFocus
-                                    placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })}
-                                    value={speaker}
-                                    onChange={(event) => this.setState({ speakerTag: event.target.value })} />
-                                <Button className='speaker-button active' onClick={() => {
-                                    this.submitSpeaker(this.state.speakerTag, index, false)
-                                    // onSpeakerChange(this.state.speakerTag, index)
-                                    // setCurrentSpeakerBox(-1)
-                                    // this.setState({
-                                    //     editing: false,
-                                    //     speakerTag: ''
-                                    // })
-                                }
-                                }>
-                                    <FontAwesomeIcon icon={faPlus} />
-                                </Button>
-                            </Form>
-                        )
-                    }
-                    <div className="speaker-box-content">
-                        <ListGroup as="ul">
-                            {
-                                _.map(speakerList, (data) => {
-                                    return (
-                                        <ListGroup.Item action onClick={() => {
-                                            console.log("Item clicked with data and index ", data, " ", index)
-                                            this.submitSpeaker(data, index, false)
-                                            // onSpeakerChange(data, index)
-                                            // setCurrentSpeakerBox(-1);
-                                            // this.setState({
-                                            //     editing: false,
-                                            //     speakerTag: ''
-                                            // })
+                <div>
+                    <Button variant="primary" className="btn-circle" ref={c => this.refButton = c} onClick={() => setCurrentSpeakerBox(-1)}>
+                        {speakerName.toUpperCase()}
+                    </Button>
+                    <Overlay target={this.refButton} show={true} placement="right" rootClose={true} onHide={ () => setCurrentSpeakerBox(-1)}>
+                        <div>
+                            <Popover id="popover-basic">
+                                <Popover.Title as="h3">
+                                    <Button variant="primary"
+                                        className="btn-circle list-btn-circle"
+                                        onClick={() => this.addNew(index, true)}>
+                                        +
+                                    </Button>
+                                    <input
+                                        id={'speakerTag'}
+                                        type="text"
+                                        className="speaker-input"
+                                        contentEditable={false}
+                                        onChange={(e) => this.setState({ speakerTag: e.target.value })}
+                                        onKeyDown={this.addNew}
+                                        value={this.state.speakerTag}
+                                        placeholder={this.props.intl.formatMessage({ id: "Editor.Speaker.Input" })}
+                                    />
+                                </Popover.Title>
+                                <Popover.Content>
+                                    <ListGroup>
+                                        {speakerList.map((speaker, speakerIndex) => {
+                                            var speakerName = speaker.get('name');
+                                            if (!speakerName)
+                                                speakerName = '>';
+
+                                            if (speakerName.length > 3)
+                                                speakerName = speakerName.substring(0, 3);
+                                            return (
+                                                <ListGroup.Item key={speakerIndex}>
+                                                    <div className="list-item">
+                                                        <Button variant="primary" className="btn-circle speaker-tag-button list-btn-circle" onClick={() => this.setSpeaker(index, speakerIndex)}>
+                                                            {speakerName.toUpperCase()}
+                                                        </Button>
+                                                        <input
+                                                            id={speakerIndex}
+                                                            className={speakerIndex === 0 ? "no-speaker-input": "speaker-input"}
+                                                            type="text"
+                                                            placeholder={'No speaker'}
+                                                            disabled={speakerIndex === 0 ? true : false}
+                                                            onKeyDown={(e) => this.checkSubmit(e, speakerIndex)}
+                                                            onChange={(e) => this.editLocalSpeaker(e, speakerIndex)}
+                                                            value={useState ? speakers.toJS()[speakerIndex].name : speaker.get('name')}
+                                                        />
+                                                    </div>
+                                                </ListGroup.Item>
+                                            )
                                         }
+                                        )
                                         }
-                                        >
-                                            {data}
-                                        </ListGroup.Item>
-                                    )
-                                })
-                            }
-                        </ListGroup>
-                    </div>
+                                    </ListGroup>
+                                </Popover.Content>
+                            </Popover>
+                        </div>
+                    </Overlay>
                 </div>
-            )
+            );
         }
         return (
-            <div className="speaker-box closed" ref={this.setWrapperRef}>
-                <div className="d-flex justify-content-center align-items-center header">
-                    <Button className="header-button" onClick={() => { setCurrentSpeakerBox(index) }}>
-                        <span className={speaker ? 'speaker' : ''}>
-                            {speaker || this.props.intl.formatMessage({ id: "Editor.Speaker.Button" })}
-                        </span>
-                        {
-                            !speaker && (
-                                <span className="header-button-icon">
-                                    <svg fill="#AFAFAF" width="12px" height="12px" viewBox="0 0 13 13" class=""><path d="M6.5,0.127252432 C5.90171111,0.127252432 5.41666667,0.599187568 5.41666667,1.18130649 L5.41666667,5.3975227 L1.08333333,5.3975227 C0.485044444,5.3975227 0,5.86942973 0,6.45158378 C0,7.0337027 0.485044444,7.50563784 1.08333333,7.50563784 L5.41666667,7.50563784 L5.41666667,11.7218541 C5.41666667,12.3040081 5.90171111,12.7759081 6.5,12.7759081 C7.098325,12.7759081 7.58333333,12.3040081 7.58333333,11.7218541 L7.58333333,7.50563784 L11.9166667,7.50563784 C12.5149556,7.50563784 13,7.0337027 13,6.45158378 C13,5.86942973 12.5149556,5.3975227 11.9166667,5.3975227 L7.58333333,5.3975227 L7.58333333,1.18130649 C7.58333333,0.599187568 7.098325,0.127252432 6.5,0.127252432 Z"></path></svg>
-                                </span>
-                            )
-                        }
-                    </Button>
-                </div>
+            <div>
+                <Button variant="primary" className="btn-circle" ref={c => this.refButton = c} onClick={() => setCurrentSpeakerBox(index)}>
+                    {speakerName.toUpperCase()}
+                </Button>
             </div>
         )
     }
@@ -138,4 +160,4 @@ const mapStateToProps = ({ selectedSpeakerBox }) => {
     })
 }
 
-export default connect(mapStateToProps, { setCurrentSpeakerBox })((injectIntl(SpeakerBox)));
+export default connect(mapStateToProps, { setCurrentSpeakerBox })(injectIntl(SpeakerBox));
