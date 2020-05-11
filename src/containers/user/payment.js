@@ -28,8 +28,8 @@ class Payment extends Component {
     }
 
     componentWillReceiveProps({ user }) {
-        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
-            if(!_.isEmpty(user.currentPlan) && user.currentPlan.planId === 'custom') {
+        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            if (!_.isEmpty(user.currentPlan) && user.currentPlan.planId === 'custom') {
                 this.durationChanged(this.state.duration, user.currentPlan);
             }
         }
@@ -59,9 +59,9 @@ class Payment extends Component {
     componentDidMount() {
         const { plans, user } = this.props;
         let calculatedPrice = 9;
-        if(plans.standard) calculatedPrice = plans.standarddard.hourPrice;
-        if(user && user.currentPlan && user.currentPlan.planId === 'custom') calculatedPrice = user.currentPlan.pricePerHour;
-        if(!_.isEmpty(plans)) {
+        if (plans.standard) calculatedPrice = plans.standarddard.hourPrice;
+        if (user && user.currentPlan && user.currentPlan.planId === 'custom') calculatedPrice = user.currentPlan.pricePerHour;
+        if (!_.isEmpty(plans)) {
             this.setState({
                 duration: 1,
                 durationType: 'hours',
@@ -95,11 +95,11 @@ class Payment extends Component {
         const { formatMessage } = this.props.intl;
         const { pricePerHour, minPricePerHour } = this.props.plans;
         let { currentPlan } = this.props.user;
-        if(_.isEmpty(currentPlan)) {
+        if (_.isEmpty(currentPlan)) {
             currentPlan = userPlan;
         }
         let unitPrice;
-        if(!_.isEmpty(currentPlan) && currentPlan.planId === 'custom') {
+        if (!_.isEmpty(currentPlan) && currentPlan.planId === 'custom') {
             unitPrice = this.calculateCustomPrice(currentPlan.pricePerHour, duration)
         } else {
             unitPrice = this.calculateStandardPrice(pricePerHour, minPricePerHour, duration)
@@ -210,7 +210,7 @@ class Payment extends Component {
         return (
             <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
                 <p>
-                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={ this.sellingContractClicked }>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
                         {this.props.language === 'tr-TR' ? 'Satış Sözleşmesi' : 'Selling Contract'}
                     </span>
                     {this.props.language !== 'tr-TR' ? ' and ' : ' ve '}
@@ -235,7 +235,7 @@ class Payment extends Component {
         else {
             this.setState({
                 showCheckOutForm: true,
-                state:'PAYMENT'
+                state: 'PAYMENT'
             })
         }
     }
@@ -269,15 +269,19 @@ class Payment extends Component {
         var { duration, basketId } = this.state;
         // let durationInMinutes = undefined;
         // if (selectedPlanType === 'PayAsYouGo')
-            // durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        // durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         this.setState({
             state: 'PAYMENT',
             loading: true,
             disabled: true,
             showCheckOutForm: true,
         });
-
-        var ip = await publicIp.v4();
+        let ip = '';
+        try {
+            ip = await publicIp.v4();
+        } catch (error) {
+            console.log('Cannot get user IP adress')
+        }
         var fncAddBasket = firebase.functions().httpsCallable('addToBasketSecondary');
         fncAddBasket({
             hours: duration,
