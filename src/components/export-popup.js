@@ -43,9 +43,7 @@ class ExportPopup extends Component {
         const { file } = this.props;
         try {
             var storageRef = firebase.storage().ref(file.transcribedFile.filePath);
-            console.log('fetching downloadURL...')
             let downloadUrl = await storageRef.getDownloadURL()
-            console.log('fetching data with downloadUrl', downloadUrl)
             let { data } = await Axios.get(downloadUrl)
             return data
         } catch (error) {
@@ -55,12 +53,9 @@ class ExportPopup extends Component {
 
     downloadAsTxt = async () => {
         var { file } = this.props;
-        console.log('downloadAsTxt');
-
         let editorData = await this.getTranscriptionData()
-        console.log('downloadAsTxt res', editorData);
-
         var textData = '';
+
         _.each(editorData.segments, segment => {
             let { words } = segment;
             let startTime = words[0].start

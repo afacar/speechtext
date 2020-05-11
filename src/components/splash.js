@@ -53,7 +53,7 @@ class Splash extends Component {
                     src={language === 'tr-TR' ? LogoTr : LogoEn}
                     className='logo-style'
                 />
-                <h3>Loading...</h3>
+                <h4>Loading...</h4>
             </div>
         )
     }
