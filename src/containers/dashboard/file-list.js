@@ -11,6 +11,8 @@ import Alert from 'react-s-alert';
 import firebase from '../../utils/firebase';
 import { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles } from '../../actions';
 import '../../styles/file.css';
+import '../../styles/dashboard.css';
+
 import File from '../../components/file';
 import ApprovementPopup from '../../components/approvement-popup';
 import UploadPopup from '../../components/upload-popup';
@@ -239,7 +241,7 @@ class FileList extends Component {
         const currentPlan = user.currentPlan || {};
         const { selectedFiles } = this.state;
         return (
-            <div>
+            <div className='col-xs-12 col-md-11 col-lg-10 col-xl-9 align-self-center border border-primary dasboard-content-container' >
                 <div className='file-actions-container'>
                     <Button onClick={ this.uploadClicked } className='primary'>
                         <FontAwesomeIcon icon={ faCloudUploadAlt } />
@@ -340,6 +342,7 @@ class FileList extends Component {
 }
 
 const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLanguages, uploadingFiles }) => {
+    console.log('file-list mapstatetoprops', user)
     return {
         user,
         language,

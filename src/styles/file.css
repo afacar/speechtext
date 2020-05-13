@@ -1,13 +1,9 @@
 .file-actions-container {
     width: 100%;
     height: 80px;
-    background-color: #DDE1E4;
+    background-color: rgb(26, 124, 199);
     padding: 22.5px;
-    padding-left: 30px;
-}
-
-.file-actions-container .btn svg {
-    margin-right: 10px;
+    border-radius: 5px;
 }
 
 .file-actions-container .btn {
@@ -18,7 +14,7 @@
     font-weight: bold;
     height: 40px;
     margin-right: 10px;
-    border-radius: 8px;
+    border-radius: 5px;
     outline: 0;
 }
 
@@ -30,7 +26,7 @@
     border: .5px solid rgb(242, 246, 248);
     padding-left: 10px;
     color: #384d60;
-    border-radius: 15px;
+    border-radius: 5px;
     outline: 0;
 }
 
@@ -58,12 +54,11 @@
 }
 
 .file-list-container {
-    background-color: white;
+    background-color: rgb(245, 255, 110);
     overflow-y: auto;
     overflow-x: hidden;
-    height: 700px;
-    border: 5px solid rgba(0,0,0,.125);
-    padding: 30px;
+    border: 3px solid rgba(250, 40, 40);
+    padding: 5px;
 }
 
 .file-container {
@@ -424,21 +419,21 @@
 
 /**** responsive ****/
 @media only screen and (max-height: 882px) {
-    .file-list-container {
+    /* .file-list-container {
         height: 650px !important;
-    }
+    } */
 }
 
 @media only screen and (max-height: 1024px) {
-    .file-list-container {
+    /* .file-list-container {
         height: 700px !important;
-    }
+    } */
 }
 
 @media only screen and (max-width: 1200px) {
-    .file-list-container {
+    /* .file-list-container {
         height: 450px !important;
-    }
+    } */
     
     .file-container {
         height: 120px;
@@ -493,15 +488,15 @@
 }
 
 @media only screen and (max-width: 768px) {
-    .file-list-container {
+    /* .file-list-container {
         height: 450px !important;
-    }
+    } */
 }
 
 @media only screen and (max-width: 600px) {
-    .file-list-container {
+    /* .file-list-container {
         height: 450px !important;
-    }
+    } */
     
     .file-image-container img {
         width: 80px;
