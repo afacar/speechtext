@@ -12,7 +12,6 @@ const { auth } = Utils.firebase;
 
 class Splash extends Component {
     componentDidMount() {
-        console.log('Splash didMount', this.props)
         setTimeout(this.checkUser, 1000)
         //this.checkEmailVerified();
         if (!_.isEmpty(this.props.user)) this.props.getFileList();
@@ -53,7 +52,7 @@ class Splash extends Component {
                     src={language === 'tr-TR' ? LogoTr : LogoEn}
                     className='logo-style'
                 />
-                <h4>Loading...</h4>
+                <span className='spinner-border text-dark'></span>
             </div>
         )
     }
