@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { Container, Tab, Row, Col, Nav, Pagination } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import UserHeader from '../user-header';
+import DashboardHeader from '../dashboard-header';
 import Profile from './profile';
 import Payment from './payment';
 import TransactionHistory from './transaction-history';
@@ -66,7 +66,7 @@ class User extends Component {
     render() {
         return (
             <div>
-                <UserHeader />
+                <DashboardHeader />
                 <Container className='profile-container'>
                     <Tab.Container id="left-tabs-example" activeKey={this.state.activeTabKey} onSelect={this.onSelectTab}>
                         <Row>

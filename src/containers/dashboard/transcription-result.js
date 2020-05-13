@@ -17,7 +17,7 @@ import {
 } from '../../components/transcription';
 import Export from '../../components/editor-export';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
-import UserHeader from '../user-header';
+import Dashboard from '../dashboard-header';
 import "../../styles/user.css";
 import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 class TranscriptionResult extends Component {
@@ -430,7 +430,7 @@ class TranscriptionResult extends Component {
         if (_.isEmpty(selectedFile)) selectedFile = {};
         return (
             <div>
-                <UserHeader />
+                <Dashboard />
                 <div className='transcription-container'>{/* TODO: change this!!!!!!!!!!!!!!!!!!!!!!*/}
                     {
                         this.state.showSpinner &&

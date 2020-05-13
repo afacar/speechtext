@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Prompt } from 'react-router';
 import _ from 'lodash';
-import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
 
 import { getFileList, updateFileState, removeFromUploadingFiles, login } from '../../actions';
-import '../../styles/dashboard.css';
-import UserHeader from '../user-header';
+import DashboardHeader from '../dashboard-header';
 import FileList from './file-list';
 import Utils from '../../utils';
+import '../../styles/dashboard.css';
+
 const { auth } = Utils.firebase;
 
 
@@ -92,28 +92,13 @@ class Dashboard extends Component {
 
 
     render() {
-        const { user } = this.props;
-        console.log('Dashboard renders', user)
-        const verification = `Check [${user.email}], verify your email then refresh this page.`
+        //const { user } = this.props;
+        //const verification = `Check [${user.email}], verify your email then refresh this page.`
         return (
-            <div>
-                <UserHeader />
-                <Container className='dashboard-container'>
-                    {!this.state.emailVerified &&
-                        <Alert variant='warning'>
-                            <div>{verification}</div>
-                            <br />
-                            {'If you do not recieve email in few minutes, You can '}
-                            <Alert.Link onClick={this.resendVerificationEmail}>resend verification email!</Alert.Link>
-                            {this.state.isSent === null && <Spinner size='sm' />}
-                        </Alert>
-                    }
-                    <Row>
-                        <Col lg="12" md="12" sm="12" xs="12">
-                            <FileList emailVerified={this.state.emailVerified} />
-                        </Col>
-                    </Row>
-                </Container>
+            <div className='dashboard-container'>
+                <DashboardHeader />
+                <FileList emailVerified={this.state.emailVerified} />
+
                 <React.Fragment>
                     <Prompt
                         when={this.state.blockNavigation}
