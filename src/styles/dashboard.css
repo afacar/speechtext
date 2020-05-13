@@ -1,3 +1,16 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    background-color: lightgoldenrodyellow;
+    height: 100%;
+}
+
+.dasboard-content-container {
+    background-color: rgb(245, 217, 206);
+    flex: 1;
+    padding-top: 15px;
+}
+
 .drop-zone {
     width: 100%;
     height: 80px;
