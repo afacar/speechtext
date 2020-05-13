@@ -1,13 +1,7 @@
-.dashboard-container,
 .transcription-container,
 .profile-container {
     margin-top: 100px;
     max-width: 65%;
-}
-
-.dashboard-container {
-    display: flex;
-    justify-content: center;
 }
 
 .transcription-container {
@@ -132,14 +126,12 @@
 }
 
 @media only screen and (max-width: 1400px) {
-    .dashboard-container,
     .transcription-container {
         max-width: 80% !important;
     }
 }
 
 @media only screen and (max-width: 1200px) {
-    .dashboard-container,
     .transcription-container {
         max-width: 85% !important;
         margin-top: 80px;
@@ -147,7 +139,6 @@
 }
 
 @media only screen and (max-width: 1024px) {
-    .dashboard-container,
     .transcription-container {
         max-width: 85% !important;
     }

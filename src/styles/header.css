@@ -1,3 +1,8 @@
+.dashboard-header-container {
+    height: 75px;
+    width: 100%;
+}
+
 .logo-container {
     margin-top: -10px;
 }
@@ -12,15 +17,6 @@
     margin-top: -5px;
 }
 
-.fixed-top-style {
-    z-index: 1000;
-    height: 100px;
-}
-
-.user-header-container {
-    height: 70px;
-}
-
 .user-header-container .logo-container {
     margin-top: 0px;
 }
@@ -28,22 +24,6 @@
 .user-header-container .logo-container img {
     height: 80px;
 }
-
-/* .fixed-top-style {
-    z-index: 1000;
-    background-color: #0B1115 !important;
-    height: 100px;
-    padding-top: 10px;
-} */
-
-/* .fixed-top-style a {
-    color: #607180 !important;
-    font-weight: bold;
-}
-
-.fixed-top-style a:hover {
-    color: white;
-} */
 
 .dashboard-link {
     color: black;
