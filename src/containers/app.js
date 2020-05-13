@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Alert from 'react-s-alert';
 
-import { setLanguage, setSupportedLanguages, getPlans, getErrorDefinitions, login } from '../actions';
+import { setLanguage, setSupportedLanguages, getPlans, getErrorDefinitions } from '../actions';
 import Dashboard from './dashboard/dashboard';
 import User from './user/user';
 import TranscriptionResult from './dashboard/transcription-result'
@@ -42,8 +42,4 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = ({ user }) => {
-    return { user }
-}
-
-export default connect(mapStateToProps, { setLanguage, setSupportedLanguages, getPlans, getErrorDefinitions, login })(App);
+export default connect(null, { setLanguage, setSupportedLanguages, getPlans, getErrorDefinitions })(App);
