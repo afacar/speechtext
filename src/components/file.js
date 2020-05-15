@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { Card, ProgressBar, Dropdown, Spinner } from 'react-bootstrap';
+import { Card, ProgressBar, Dropdown, Spinner, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDatabase, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase, faClock, faCalendar, faTrash, faFileDownload, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import ExportPopup from '../components/export-popup';
-import FileLogo from '../assets/default-file-thumbnail.png';
+import FileLogo from '../assets/default-file-image.png';
 import firebase from '../utils/firebase';
 import Utils from '../utils';
 import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
@@ -193,15 +193,20 @@ class File extends Component {
     }
 
     getFileStatus = (status) => {
+        const { progress } = this.state;
+        console.log('status', status)
         switch (status) {
             case 'ERROR':
                 return 'Error';
-            case 'UPLOADED':
+            case 'UPLOADING':
+                return `Uploading ${progress}`
             case 'READY':
             case 'CONVERTING':
+                return 'Converting...';
             case 'PROCESSING':
-            case 'TRANSCRIBING':
                 return 'Processing...';
+            case 'TRANSCRIBING':
+                return 'Transcribing...';
             default:
                 return '';
         }
@@ -233,7 +238,6 @@ class File extends Component {
     openInEditor = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
         const { file } = this.props;
         if (file.status === 'DONE') {
             this.props.openInEditor(this.props.file.id);
@@ -265,48 +269,42 @@ class File extends Component {
         })
     }
 
-    renderDropdown = () => {
-        return (
-            <div>
-                <ul
-                    className='dropbtn icons btn-right'
-                    onClick={this.showDropdownMenu}
-                    onMouseEnter={this.showDropdownMenu}
-                    onMouseLeave={this.hideDropdownMenu}
-                >
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <Dropdown.Menu
-                        show={this.state.showDropdownMenu}
+    /*     renderDropdown = () => {
+            return (
+                <div className='dropbtn icons btn-right'>
+                    <ul
+                        onClick={this.showDropdownMenu}
+                        onMouseEnter={this.showDropdownMenu}
+                        onMouseLeave={this.hideDropdownMenu}
                     >
-                        <Dropdown.Item eventKey="1" onClick={this.openInEditor}>
-                            <FormattedMessage id='File.Options.edit' />
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="2" onClick={this.exportClicked}>
-                            <FormattedMessage id='File.Options.export' />
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="3" onClick={this.deleteFile}>
-                            <FormattedMessage id='File.Options.delete' />
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </ul>
-            </div>
-        )
-    }
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <Dropdown.Menu
+                            show={this.state.showDropdownMenu}
+                        >
+                            <Dropdown.Item eventKey="1" onClick={this.openInEditor}>
+                                <FormattedMessage id='File.Options.edit' />
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="2" onClick={this.exportClicked}>
+                                <FormattedMessage id='File.Options.export' />
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="3" onClick={this.deleteFile}>
+                                <FormattedMessage id='File.Options.delete' />
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </ul>
+                </div>
+            )
+        } */
 
     fileSelected = (e) => {
+        console.log('fileSelected')
         this.props.onSelected(this.state.file);
     }
 
     render() {
         const { file, progress, fileSrc } = this.state;
-
-        // let errorText = this.getErrorMessage(file);
-        let fileImageContainerClass = 'file-image-container';
-        if (!fileSrc) {
-            fileImageContainerClass += ' default';
-        }
 
         let duration = '';
         let size = '';
@@ -324,67 +322,82 @@ class File extends Component {
             }
         }
         return (
-            <div className={`file-container ${file.status === 'DONE' ? 'completed ' : ''}${this.props.isSelected ? 'active' : ''}`}>
+            <div onClick={this.openInEditor} className={`file-container ${file.status === 'DONE' ? 'completed ' : ''}${this.props.isSelected ? 'active' : ''}`}>
                 {
                     (this.state.showSpinner || this.props.showSpinner) &&
                     <span className='file-spinner'>
                         <Spinner animation="border" role="status" size='sm' variant='danger' />
                     </span>
                 }
-                {
-                    file.status === 'DONE' &&
-                    <span className={`checkmark ${this.props.isSelected ? 'active' : ''}`} onClick={this.fileSelected}>
-                        <div className="circle"></div>
-                        <div className="stem"></div>
-                        <div className="kick"></div>
-                    </span>
-                }
-                <div onClick={this.openInEditor}>
-                    <div className={fileImageContainerClass}>
-                        <Card.Img variant="left" src={fileSrc} alt={file.name + ' thumbnail'} />
+                <div className='file-image-container'>
+                    <img src={fileSrc} alt={file.name + ' thumbnail'} />
+                </div>
+                <div className='file-body-container'>
+                    <div className='file-header'>
+                        {file.name}
                     </div>
-                    <div className='file-body-container'>
-                        {
-                            file.status === 'DONE' &&
-                            this.renderDropdown()
-                        }
-                        <div className='file-header'>
-                            <label title={file.name}>{file.name}</label>
-                        </div>
-                        <div className='file-body'>
+                    <div className='file-body'>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faDatabase}
                                 title='File Size'
-                                className='file-info-image' size="1x" />
+                                className='file-info-image'
+                            />
                             {size}
-                            <br />
+                        </div>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faClock}
                                 title='File Duration'
-                                className='file-info-image' size="1x" />
+                                className='file-info-image'
+                            />
                             {duration}
-                            <br />
+                        </div>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faCalendar}
                                 title='File Size'
-                                className='file-info-image' size="1x" />
+                                className='file-info-image'
+                            />
                             {createDate}
+                        </div>
+                    </div>
+                    <div className={`file-footer`}>
+                        <div className='file-buttons'>
+                            <div className='file-button' id='export' onClick={this.fileSelected}>
+                                <FontAwesomeIcon
+                                    icon={faCheck}
+                                    title='Select'
+                                    className='file-info-image'
+                                    style={{ color: 'teal' }}
+                                />
+                                Select
+                            </div>
+                            <div className='file-button' id='export' onClick={this.exportClicked}>
+                                <FontAwesomeIcon
+                                    icon={faFileDownload}
+                                    title='Export'
+                                    className='file-info-image'
+                                    style={{ color: 'darkslateblue' }}
+                                />
+                                Export
+                            </div>
+                            <div className='file-button' id='delete' onClick={this.deleteFile}>
+                                <FontAwesomeIcon
+                                    icon={faTrash}
+                                    title='Delete'
+                                    className='file-info-image'
+                                    style={{ color: '#EA2753' }}
+                                />
+                                Delete
+                            </div>
+                        </div>
+                        <div className='file-status'>
                             {
-                                file.status === 'UPLOADING' && progress < 100 &&
-                                <div className={'file-progress'}>
-                                    <span>{'Uploading...'}</span>
-                                    <ProgressBar striped now={progress} />
-                                </div>
+                                this.getFileStatus(file.status)
                             }
                         </div>
                     </div>
-                </div>
-                <div className={`file-footer ${this.getFileStatusClassName(file.status)}`}>
-                    <span>
-                        {
-                            this.getFileStatus(file.status)
-                        }
-                    </span>
                 </div>
                 <ExportPopup
                     show={this.state.showExportPopup}
