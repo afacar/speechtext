@@ -354,7 +354,6 @@ class FileList extends Component {
 }
 
 const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLanguages, uploadingFiles }) => {
-    console.log('file-list mapstatetoprops', user)
     return {
         user,
         language,

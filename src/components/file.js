@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { FormattedMessage } from 'react-intl';
-import { Card, ProgressBar, Dropdown, Spinner, Button } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDatabase, faClock, faCalendar, faTrash, faFileDownload, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase, faClock, faCalendar, faFileDownload, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 
 import ExportPopup from '../components/export-popup';
 import FileLogo from '../assets/default-file-image.png';
@@ -199,7 +198,7 @@ class File extends Component {
             case 'ERROR':
                 return 'Error';
             case 'UPLOADING':
-                return `Uploading ${progress}`
+                return `Uploading (${progress})`
             case 'READY':
             case 'CONVERTING':
                 return 'Converting...';
@@ -254,49 +253,6 @@ class File extends Component {
     closeExportModal = (e) => {
         this.setState({ showExportPopup: false });
     }
-
-    showDropdownMenu = (e) => {
-        e.stopPropagation();
-        this.setState({
-            showDropdownMenu: true
-        })
-    }
-
-    hideDropdownMenu = (e) => {
-        e.stopPropagation();
-        this.setState({
-            showDropdownMenu: false
-        })
-    }
-
-    /*     renderDropdown = () => {
-            return (
-                <div className='dropbtn icons btn-right'>
-                    <ul
-                        onClick={this.showDropdownMenu}
-                        onMouseEnter={this.showDropdownMenu}
-                        onMouseLeave={this.hideDropdownMenu}
-                    >
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <Dropdown.Menu
-                            show={this.state.showDropdownMenu}
-                        >
-                            <Dropdown.Item eventKey="1" onClick={this.openInEditor}>
-                                <FormattedMessage id='File.Options.edit' />
-                            </Dropdown.Item>
-                            <Dropdown.Item eventKey="2" onClick={this.exportClicked}>
-                                <FormattedMessage id='File.Options.export' />
-                            </Dropdown.Item>
-                            <Dropdown.Item eventKey="3" onClick={this.deleteFile}>
-                                <FormattedMessage id='File.Options.delete' />
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </ul>
-                </div>
-            )
-        } */
 
     fileSelected = (e) => {
         console.log('fileSelected')
@@ -366,7 +322,7 @@ class File extends Component {
                         <div className='file-buttons'>
                             <div className='file-button' id='export' onClick={this.fileSelected}>
                                 <FontAwesomeIcon
-                                    icon={faCheck}
+                                    icon={faCheckSquare}
                                     title='Select'
                                     className='file-info-image'
                                     style={{ color: 'teal' }}
@@ -382,17 +338,8 @@ class File extends Component {
                                 />
                                 Export
                             </div>
-                            <div className='file-button' id='delete' onClick={this.deleteFile}>
-                                <FontAwesomeIcon
-                                    icon={faTrash}
-                                    title='Delete'
-                                    className='file-info-image'
-                                    style={{ color: '#EA2753' }}
-                                />
-                                Delete
-                            </div>
                         </div>
-                        <div className='file-status'>
+                        <div className={`file-status ${this.getFileStatusClassName(file.status)}`}>
                             {
                                 this.getFileStatus(file.status)
                             }
