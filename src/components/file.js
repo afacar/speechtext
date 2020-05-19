@@ -26,7 +26,14 @@ class File extends Component {
 
     downloadThumbnail() {
         const { file } = this.state;
-        if (file && file.thumbnail) {
+
+        if (!file || !file.thumbnail) return;
+
+        if (file.thumbnail.publicUrl) {
+            this.setState({
+                fileSrc: file.thumbnail.publicUrl
+            })
+        } else {
             var ref = firebase.storage().ref(file.thumbnail.filePath);
             ref.getDownloadURL().then((downloadUrl) => {
                 Axios.get(downloadUrl)
