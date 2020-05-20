@@ -6,6 +6,7 @@ import { fromJS } from 'immutable';
 import { injectIntl } from 'react-intl';
 import Axios from 'axios';
 import { Transcript } from 'transcript-model';
+import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 
 import firebase from '../../utils/firebase';
 import VideoPlayer from '../../components/editor/video-player';
@@ -18,8 +19,10 @@ import {
 import Export from '../../components/editor-export';
 import { handleTimeChange, isPlaying, setEditorFocus, getFile } from "../../actions";
 import Dashboard from '../dashboard-header';
+import Utils from '../../utils';
 import "../../styles/user.css";
-import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
+
+
 class TranscriptionResult extends Component {
     constructor(props) {
         super(props);
@@ -225,50 +228,6 @@ class TranscriptionResult extends Component {
         return value;
     }
 
-    formatTime = ({ seconds, nanos }) => {
-        let formattedTime = '';
-        if (seconds > 60) {
-            let minutes = parseInt(seconds / 60);
-            seconds = seconds % 60;
-            if (minutes > 60) {
-                let hours = parseInt(minutes / 60);
-                minutes = minutes % 60;
-                formattedTime = this.addZero(hours) + ':';
-            } else {
-                formattedTime = '00:';
-            }
-            formattedTime += this.addZero(minutes) + ':';
-        } else {
-            formattedTime += '00:00:';
-        }
-        formattedTime += this.addZero(seconds) + '.' + this.addZero(nanos, 3);
-
-        return formattedTime;
-    }
-
-    formatTimeForExport = (time) => {
-        let seconds = Math.floor(time);
-        let nanos = parseInt(time % 1 * 100);
-        let formattedTime = '';
-        if (seconds > 60) {
-            let minutes = parseInt(seconds / 60);
-            seconds = seconds % 60;
-            if (minutes > 60) {
-                let hours = parseInt(minutes / 60);
-                minutes = minutes % 60;
-                formattedTime = this.addZero(hours) + ':';
-            } else {
-                formattedTime = '00:';
-            }
-            formattedTime += this.addZero(minutes) + ':';
-        } else {
-            formattedTime += '00:00:';
-        }
-        formattedTime += this.addZero(seconds) + ',' + this.addZero(nanos, 3);
-
-        return formattedTime;
-    }
-
     downloadAsTxt = async () => {
         this.setState({ showDownloadSpinner: true });
 
@@ -287,7 +246,7 @@ class TranscriptionResult extends Component {
             let end = segment.getEnd();
             let text = segment.getText();
 
-            textData += `${this.formatTimeForExport(start)} - ${this.formatTimeForExport(end)}\n${text}\n\n`;
+            textData += `${Utils.formatTime(start)} - ${Utils.formatTime(end)}\n${text}\n\n`;
         }
 
         var fileName = selectedFile.name.replace(/,/g,'').replace(/'/g,'').replace(/ /g,'_');

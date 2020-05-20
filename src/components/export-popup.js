@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import Axios from 'axios';
 
 import firebase from '../utils/firebase';
+import Utils from '../utils';
 
 class ExportPopup extends Component {
     constructor(props) {
@@ -13,30 +14,6 @@ class ExportPopup extends Component {
         this.state = {
             exportType: 'txt'
         }
-    }
-
-    addZero = (value, length) => {
-        if (value === 0) {
-            return length === 3 ? '000' : '00';
-        }
-        if (value < 10) return length === 3 ? '00' : '0' + value.toString();
-        return value;
-    }
-
-    formatTime = (time) => {
-        time = Math.round(time)
-
-        if (time < 60) return `00:${this.addZero(time)}`
-
-        let minutes = Math.floor(time / 60)
-        let seconds = Math.round(time - (minutes * 60))
-
-        if (minutes < 60) return `${this.addZero(minutes)}:${this.addZero(seconds)}`
-
-        let hours = Math.floor(minutes / 60)
-        minutes = minutes - (hours * 60)
-
-        return `${this.addZero(hours)}:${this.addZero(minutes)}:${this.addZero(seconds)}`
     }
 
     getTranscriptionData = async () => {
@@ -61,7 +38,7 @@ class ExportPopup extends Component {
             let startTime = words[0].start
             let endTime = words[words.length - 1].end
             let transcript = words.map(word => word.text).join(' ')
-            textData += `${this.formatTime(startTime)} - ${this.formatTime(endTime)}\n${transcript}\n\n`;
+            textData += `${Utils.formatTime(startTime)} - ${Utils.formatTime(endTime)}\n${transcript}\n\n`;
         });
 
         var fileName = file.name;

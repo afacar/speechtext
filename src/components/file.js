@@ -143,33 +143,33 @@ class File extends Component {
         });
     }
 
-    pauseUpload = () => {
+    /* pauseUpload = () => {
         this.setState({
             paused: true
         });
         this.state.uploadTask.pause();
-    }
+    } */
 
-    resumeUpload = () => {
+    /* resumeUpload = () => {
         this.setState({
             paused: false
         });
         this.state.uploadTask.resume();
-    }
+    } */
 
-    editFile = (e) => {
+    /* editFile = (e) => {
         e.preventDefault();
         this.props.editFile(this.state.file.index);
-    }
+    } */
 
-    transcribeFile = () => {
+    /* transcribeFile = () => {
         var { file } = this.state;
         if (_.isEmpty(file.options) || !file.options.language) {
             this.props.onSelected(this.props.index);
         } else {
             this.props.updateFileState(file.id, 'READY');
         }
-    }
+    } */
 
     getErrorMessage = (file) => {
         const { errorDefinitions } = this.props;
@@ -180,22 +180,6 @@ class File extends Component {
             return error.value;
         }
         return '';
-    }
-
-    formatTime = (time) => {
-        let seconds = Math.floor(time % 60);
-        let minutes = Math.floor(time / 60);
-        let hours = Math.floor(minutes / 60)
-        if (hours > 0) {
-            minutes = Math.floor(minutes % 60);
-        }
-        if (hours < 10) hours = `0${hours}`;
-        if (minutes < 10) minutes = `0${minutes}`;
-        if (seconds < 10) seconds = `0${seconds}`;
-        if (!hours) hours = '00';
-        if (!minutes) minutes = '00';
-        if (!seconds) seconds = '00';
-        return `${hours}:${minutes}:${seconds}`;
     }
 
     getFileStatus = (status) => {
@@ -274,7 +258,7 @@ class File extends Component {
         if (file && file.originalFile) {
             const { originalFile } = file;
             if (originalFile.originalDuration) {
-                duration = this.formatTime(originalFile.originalDuration);
+                duration = Utils.formatTime(originalFile.originalDuration);
             }
             if (originalFile.size) {
                 size = Utils.formatSizeByteToMB(originalFile.size) + ' MB';
