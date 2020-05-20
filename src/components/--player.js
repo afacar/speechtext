@@ -5,7 +5,7 @@ import { PlayerIcon } from 'react-player-controls';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 
-import Slider from './slider';
+import Slider from './--slider';
 import { handleTimeChange, isPlaying } from "../actions";
 
 import Backward from '../assets/five_seconds_backward.png';
