@@ -198,7 +198,7 @@
     "UserBox.remainingMinutes": "Kalan: {remainingMinutes} dakika",
     "UserBox.dashboard": "Editör",
     "UserBox.profile": "Profil",
-    "UserBox.payment": "Desifre Satil Al",
+    "UserBox.payment": "Deşifre Al",
     "UserBox.transactions": "Ödemelerim",
     "UserBox.logout": "Çıkış"
 }

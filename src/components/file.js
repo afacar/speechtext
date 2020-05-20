@@ -205,14 +205,13 @@ class File extends Component {
             case 'ERROR':
                 return 'Error';
             case 'UPLOADING':
-                return `Uploading (${progress})`
+                return `Uploading (${progress}%)`
             case 'READY':
+            case 'UPLOADED':
             case 'CONVERTING':
-                return 'Converting...';
             case 'PROCESSING':
-                return 'Processing...';
             case 'TRANSCRIBING':
-                return 'Transcribing...';
+                return 'Processing...';
             default:
                 return '';
         }
