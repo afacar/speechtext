@@ -29,25 +29,19 @@ class File extends Component {
 
         if (!file || !file.thumbnail) return;
 
-        if (file.thumbnail.publicUrl) {
-            this.setState({
-                fileSrc: file.thumbnail.publicUrl
+        var ref = firebase.storage().ref(file.thumbnail.filePath);
+        ref.getDownloadURL().then((downloadUrl) => {
+            Axios.get(downloadUrl)
+                .then((url) => {
+                    this.setState({
+                        fileSrc: url.config.url
+                    })
+                });
+        })
+            .catch(error => {
+                // TODO: GET_DOWNLOAD_URL_ERROR
+                console.log(error);
             })
-        } else {
-            var ref = firebase.storage().ref(file.thumbnail.filePath);
-            ref.getDownloadURL().then((downloadUrl) => {
-                Axios.get(downloadUrl)
-                    .then((url) => {
-                        this.setState({
-                            fileSrc: url.config.url
-                        })
-                    });
-            })
-                .catch(error => {
-                    // TODO: GET_DOWNLOAD_URL_ERROR
-                    console.log(error);
-                })
-        }
     }
 
     componentDidMount() {
@@ -196,6 +190,8 @@ class File extends Component {
             case 'PROCESSING':
             case 'TRANSCRIBING':
                 return 'Processing...';
+            case 'DONE':
+                return 'Transcribed ✓'
             default:
                 return '';
         }
@@ -211,6 +207,8 @@ class File extends Component {
             case 'PROCESSING':
             case 'TRANSCRIBING':
                 return 'processing';
+            case 'DONE':
+                return 'transcribed'
             default:
                 return '';
         }
@@ -268,14 +266,14 @@ class File extends Component {
             }
         }
         return (
-            <div onClick={this.openInEditor} className={`file-container ${file.status === 'DONE' ? 'completed ' : ''}${this.props.isSelected ? 'active' : ''}`}>
+            <div className={`file-container ${file.status === 'DONE' ? 'completed ' : ''}${this.props.isSelected ? 'active' : ''}`}>
                 {
                     (this.state.showSpinner || this.props.showSpinner) &&
                     <span className='file-spinner'>
                         <Spinner animation="border" role="status" size='sm' variant='danger' />
                     </span>
                 }
-                <div className='file-image-container'>
+                <div onClick={this.openInEditor} className='file-image-container'>
                     <img src={fileSrc} alt={file.name + ' thumbnail'} />
                 </div>
                 <div className='file-body-container'>

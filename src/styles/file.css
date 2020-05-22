@@ -34,7 +34,7 @@
 .file-container.active {
     border: 3px solid #508450;
 }
-.file-container.completed {
+.file-image-container {
     cursor: pointer;
 }
 .file-body-container {
@@ -106,8 +106,13 @@
     color: #e9ecef;
     border-top-left-radius: 5px;
 }
-.file-footer.error {
-    background-color: #EA2753;
+.file-footer .error {
+    background-color: rgb(177, 2, 43);
+    filter: saturate(80%)
+}
+.file-footer .transcribed {
+    background-color: rgb(14, 135, 139);
+    font-weight: bold;
     filter: saturate(80%)
 }
 .file-info {
