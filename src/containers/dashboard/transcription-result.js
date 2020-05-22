@@ -220,14 +220,6 @@ class TranscriptionResult extends Component {
         }, 1250)
     }
 
-    addZero = (value, length) => {
-        if (value === 0) {
-            return length === 3 ? '000' : '00';
-        }
-        if (value < 10) return length === 3 ? '00' : '0' + value.toString();
-        return value;
-    }
-
     downloadAsTxt = async () => {
         this.setState({ showDownloadSpinner: true });
 
