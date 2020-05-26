@@ -27,14 +27,14 @@ class FileList extends Component {
     }
 
     componentWillReceiveProps({ files, uploadingFiles }) {
-        if(!_.isEmpty(files)) {
+        if (!_.isEmpty(files)) {
             _.each(files, file => {
-                if(file.status === 'INITIAL' && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { 'id': file.id })))) {
+                if (file.status === 'INITIAL' && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { 'id': file.id })))) {
                     this.props.updateFileState(file.id, 'DELETED');
                 }
             })
         }
-        if(!_.isEmpty(this.state.filterValue)) {
+        if (!_.isEmpty(this.state.filterValue)) {
             files = _.filter(files, (file) => {
                 return file.name.toLowerCase().indexOf(this.state.filterValue.toLowerCase()) > -1
             });
@@ -55,7 +55,8 @@ class FileList extends Component {
             const { currentPlan } = this.props.user;
             let fileDurationInSeconds = parseInt(media.duration);
             let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
-            if (currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
+            // TODO: file duration check should be active for only existing users
+            if (currentPlan.remainingMinutes <= 0) {
                 that.setState({
                     selectedFileDuration: fileDurationInMinutes,
                     showApprovement: true
@@ -76,7 +77,7 @@ class FileList extends Component {
     }
 
     uploadClicked = () => {
-        if(!_.isEmpty(this.props.uploadingFiles)) {
+        if (!_.isEmpty(this.props.uploadingFiles)) {
             Alert.error(this.props.intl.formatMessage({
                 id: 'FileUpload.multipleFileError'
             }));
@@ -146,12 +147,12 @@ class FileList extends Component {
     }
 
     onFileSelected = (file) => {
-        if(file.status === 'DONE') {
+        if (file.status === 'DONE') {
             // const { files } = this.state;
             // const selectedFile = files[index];
             // this.props.setSelectedFile(selectedFile);
             const { selectedFiles } = this.state;
-            if(!selectedFiles.includes(file.id)) {
+            if (!selectedFiles.includes(file.id)) {
                 selectedFiles.push(file.id);
             } else {
                 selectedFiles.splice(selectedFiles.indexOf(file.id), 1);
@@ -165,10 +166,10 @@ class FileList extends Component {
     filterFiles = (e) => {
         let value = e.target.value;
         let { files } = this.state;
-        if(_.isEmpty(value)) {
+        if (_.isEmpty(value)) {
             files = this.props.files;
         } else {
-            files = _.filter(files, function(file) {
+            files = _.filter(files, function (file) {
                 return file.name.toLowerCase().indexOf(value.toLowerCase()) > -1;
             });
         }
@@ -182,9 +183,9 @@ class FileList extends Component {
         const filesToDelete = [];
         const { selectedFiles } = this.state;
 
-        if(!_.isEmpty(fileId)) {
+        if (!_.isEmpty(fileId)) {
             filesToDelete.push(fileId);
-        } else if(!_.isEmpty(selectedFiles)) {
+        } else if (!_.isEmpty(selectedFiles)) {
             selectedFiles.forEach(fileId => {
                 filesToDelete.push(fileId);
             });
@@ -198,7 +199,7 @@ class FileList extends Component {
 
     deleteFilesAfterApproval = () => {
         const { filesToDelete } = this.state;
-        if(!_.isEmpty(filesToDelete)) {
+        if (!_.isEmpty(filesToDelete)) {
             filesToDelete.forEach(fileId => {
                 this.props.updateFileState(fileId, 'DELETED');
                 this.props.removeFromUploadingFiles(fileId);
@@ -219,17 +220,17 @@ class FileList extends Component {
 
     getSelectedFileToExport = () => {
         const { files, selectedFiles } = this.state;
-        return _.find(files, { id: selectedFiles[0]});
+        return _.find(files, { id: selectedFiles[0] });
     }
 
     openInEditor = (fileId) => {
         const { selectedFiles } = this.state;
-        if(_.isEmpty(fileId)) {
-            if(!_.isEmpty(selectedFiles) && selectedFiles.length === 1) {
+        if (_.isEmpty(fileId)) {
+            if (!_.isEmpty(selectedFiles) && selectedFiles.length === 1) {
                 fileId = selectedFiles[0];
             }
         }
-        if(!_.isEmpty(fileId)) {
+        if (!_.isEmpty(fileId)) {
             window.open(`/edit/${fileId}`, '_blank');
         }
     }
@@ -241,23 +242,23 @@ class FileList extends Component {
         return (
             <div>
                 <div className='file-actions-container'>
-                    <Button onClick={ this.uploadClicked } className='primary'>
-                        <FontAwesomeIcon icon={ faCloudUploadAlt } />
+                    <Button onClick={this.uploadClicked} className='primary'>
+                        <FontAwesomeIcon icon={faCloudUploadAlt} />
                         Upload New File
                     </Button>
-                    <Button disabled={ selectedFiles.length !== 1 } className='secondary' onClick={ () => this.openInEditor() }>
-                        <FontAwesomeIcon icon={ faEdit } />
+                    <Button disabled={selectedFiles.length !== 1} className='secondary' onClick={() => this.openInEditor()}>
+                        <FontAwesomeIcon icon={faEdit} />
                         Open in Editor
                     </Button>
-                    <Button disabled={ selectedFiles.length !== 1 } className='secondary' onClick={ () => { this.setState({ showExportPopup: true }) } }>
-                        <FontAwesomeIcon icon={ faCloudDownloadAlt } />
+                    <Button disabled={selectedFiles.length !== 1} className='secondary' onClick={() => { this.setState({ showExportPopup: true }) }}>
+                        <FontAwesomeIcon icon={faCloudDownloadAlt} />
                         Export
                     </Button>
-                    <Button disabled={ selectedFiles.length === 0 } className='secondary' onClick={ () => this.deleteFiles() }>
-                        <FontAwesomeIcon icon={ faTrash } />
+                    <Button disabled={selectedFiles.length === 0} className='secondary' onClick={() => this.deleteFiles()}>
+                        <FontAwesomeIcon icon={faTrash} />
                         Delete
                     </Button>
-                    <input type='text' placeholder='Type to Search' onChange={ this.filterFiles } />
+                    <input type='text' placeholder='Type to Search' onChange={this.filterFiles} />
                 </div>
                 <div className='file-list-container'>
                     <Row>
@@ -272,9 +273,9 @@ class FileList extends Component {
                                                 file={file}
                                                 index={index}
                                                 onSelected={this.onFileSelected}
-                                                isSelected={ selectedFiles.includes(file.id) }
-                                                deleteFile={ this.deleteFiles }
-                                                openInEditor={ this.openInEditor }
+                                                isSelected={selectedFiles.includes(file.id)}
+                                                deleteFile={this.deleteFiles}
+                                                openInEditor={this.openInEditor}
                                             />
                                         </div>
                                     </Col>
@@ -309,30 +310,30 @@ class FileList extends Component {
                     handleCancel={this.cancelFileUpload}
                 />
                 <UploadPopup
-                    show={ this.state.showUploadPopup }
-                    file={ this.state.fileToUpload }
-                    language={ this.props.language }
-                    supportedLanguages={ this.props.supportedLanguages }
-                    approveFileUpload={ this.approveFileUpload }
-                    cancelFileUpload={ this.cancelFileUpload }
-                    closeFileUploadPopup={ this.closeFileUploadPopup }
-                    onFileAdded={ this.onFileAdded }
+                    show={this.state.showUploadPopup}
+                    file={this.state.fileToUpload}
+                    language={this.props.language}
+                    supportedLanguages={this.props.supportedLanguages}
+                    approveFileUpload={this.approveFileUpload}
+                    cancelFileUpload={this.cancelFileUpload}
+                    closeFileUploadPopup={this.closeFileUploadPopup}
+                    onFileAdded={this.onFileAdded}
                 />
                 <ExportPopup
-                    show={ this.state.showExportPopup }
-                    file={ this.getSelectedFileToExport() }
-                    closeModal={ () => this.setState({ showExportPopup: false}) }
+                    show={this.state.showExportPopup}
+                    file={this.getSelectedFileToExport()}
+                    closeModal={() => this.setState({ showExportPopup: false })}
                 />
                 <ApprovementPopup
-                    show={ this.state.showDeleteApprovement }
+                    show={this.state.showDeleteApprovement}
                     headerText={{
                         id: 'File.Delete.Approval.title'
                     }}
                     bodyText={{
                         id: 'File.Delete.Approval.body'
                     }}
-                    handleSuccess={ this.deleteFilesAfterApproval }
-                    handleCancel={ this.cancelFileDeletion }
+                    handleSuccess={this.deleteFilesAfterApproval}
+                    handleCancel={this.cancelFileDeletion}
                 />
             </div>
         )

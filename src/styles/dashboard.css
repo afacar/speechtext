@@ -77,34 +77,25 @@ ol.selling-contract-list { counter-reset: item }
 .selling-contract-list > li { display: block }
 .selling-contract-list > li:before { content: counters(item, ".") "."; counter-increment: item }
 
-@media only screen and (max-height: 882px) {
-    .transcription {
-        height: 670px !important;
-    }
-
-    .editor-container {
-        height: 600px !important;
-    }
+.missing-credits-container {
+    background-color: #E3E7E9;
+    margin-top: 30px;
+    font-size: 14px;
+    padding: 15px;
+    border-radius: 10px;
 }
 
-@media only screen and (max-height: 830px) {
-    .transcription {
-        height: 570px !important;
-    }
-
-    .editor-container {
-        height: 500px !important;
-    }
+.missing-credits-container button {
+    font-size: 12px;
+    margin-top: 10px;
+    background-color: #EA2753;
+    border-color: #EA2753;
+    font-weight: bold;
 }
 
-@media only screen and (max-height: 730px) {
-    .transcription {
-        height: 470px !important;
-    }
-
-    .editor-container {
-        height: 400px !important;
-    }
+.missing-credits-container button:hover {
+    background-color: #384d60;
+    border-color: #384d60;
 }
 
 .userbox-dropdown {
@@ -152,4 +143,39 @@ ol.selling-contract-list { counter-reset: item }
 
 .card-details {
     display: inline-block;
+}
+
+@media only screen and (max-height: 882px) {
+    .transcription {
+        height: 670px !important;
+    }
+
+    .editor-container {
+        height: 600px !important;
+    }
+
+    .missing-credits-container {
+        font-size: 10px;
+        margin-top: 10px;
+    }
+}
+
+@media only screen and (max-height: 830px) {
+    .transcription {
+        height: 570px !important;
+    }
+
+    .editor-container {
+        height: 500px !important;
+    }
+}
+
+@media only screen and (max-height: 730px) {
+    .transcription {
+        height: 470px !important;
+    }
+
+    .editor-container {
+        height: 400px !important;
+    }
 }
