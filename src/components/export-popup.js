@@ -41,7 +41,7 @@ class ExportPopup extends Component {
             textData += `${Utils.formatTime(startTime)} - ${Utils.formatTime(endTime)}\n${transcript}\n\n`;
         });
 
-        var fileName = file.name;
+        var fileName = file.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
         fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
 
         const element = document.createElement("a");
@@ -64,7 +64,7 @@ class ExportPopup extends Component {
             fileId: file.id
         }).then(({ data }) => {
             var storageRef = firebase.storage().ref(data.filePath);
-            var fileName = file.name;
+            var fileName = file.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
             fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
             var newMetadata = {
                 contentDisposition: `attachment;filename=${fileName}`
@@ -95,7 +95,7 @@ class ExportPopup extends Component {
             fileId: file.id
         }).then(({ data }) => {
             var storageRef = firebase.storage().ref(data.filePath);
-            var fileName = file.name.replace(',', '').split(' ').join('_');
+            var fileName = file.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
             fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
             var newMetadata = {
                 contentDisposition: `attachment;filename=${fileName}`
