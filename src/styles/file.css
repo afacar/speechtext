@@ -1,3 +1,15 @@
+.file-actions-container {
+    width: 100%;
+    height: 80px;
+    background-color: #DDE1E4;
+    padding: 22.5px;
+    padding-left: 30px;
+}
+
+.file-actions-container .btn svg {
+    margin-right: 10px;
+}
+
 .file-actions-container .btn {
     color: #E3E7E9;
     background-color: #607180;
