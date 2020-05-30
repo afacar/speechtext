@@ -17,10 +17,9 @@ class UploadPopup extends Component {
     constructor(props) {
         super(props);
         this.fileInputRef = React.createRef();
-        
+
         var options = !_.isEmpty(props.file) ? props.file.options : {};
-        if(!options.speakerCount) options.speakerCount = 1;
-        if(!options.context) options.context= [];
+        if (!options.context) options.context = [];
         this.state = {
             editFileName: false,
             options,
@@ -31,11 +30,11 @@ class UploadPopup extends Component {
         this.textRef = null;
         this.setTextRef = element => {
             this.textRef = element;
-        }        
+        }
     }
 
     componentWillReceiveProps({ file }) {
-        if(_.isEmpty(file)) return;
+        if (_.isEmpty(file)) return;
         var options = file.options || {};
         options.context = options.context || [];
         this.setState({
@@ -47,7 +46,7 @@ class UploadPopup extends Component {
 
     openFileDialog = () => {
         const { intl } = this.props;
-        if(!_.isEmpty(this.props.uploadingFiles)) {
+        if (!_.isEmpty(this.props.uploadingFiles)) {
             Alert.error(intl.formatMessage({
                 id: 'Dropzone.multipleFileError'
             }));
@@ -63,7 +62,7 @@ class UploadPopup extends Component {
             const file = files[0];
 
             const sizeInMB = Utils.formatSizeByteToMB(file.size);
-            if(sizeInMB > 500) {
+            if (sizeInMB > 500) {
                 this.setState({
                     activeWindow: ModalPageNames.ERROR
                 });
@@ -85,7 +84,7 @@ class UploadPopup extends Component {
     saveFileName = () => {
         const { formatMessage } = this.props.intl;
         const { fileName, options } = this.state;
-        if(_.isEmpty(fileName)) {
+        if (_.isEmpty(fileName)) {
             SAlert.error(formatMessage({ id: 'UploadPopup.Error.emptyFileName' }));
             return;
         }
@@ -95,7 +94,7 @@ class UploadPopup extends Component {
             options
         });
     }
-    
+
     handleOptionsChange = (name, value) => {
         var { options } = this.state;
         let val = value
@@ -114,7 +113,7 @@ class UploadPopup extends Component {
 
     renderFileName = () => {
         const { fileName } = this.state;
-        if(this.state.editFileName) {
+        if (this.state.editFileName) {
             return (
                 <div>
                     <Form.Group>
@@ -124,14 +123,14 @@ class UploadPopup extends Component {
                         <div className='d-flex'>
                             <Form.Control
                                 type='text'
-                                value={ fileName || '' }
-                                onChange={ this.handleFileNameChange }
-                                onBlur={ this.saveFileName }
-                                ref={ i => i ? ReactDOM.findDOMNode(i).focus() : '' }
+                                value={fileName || ''}
+                                onChange={this.handleFileNameChange}
+                                onBlur={this.saveFileName}
+                                ref={i => i ? ReactDOM.findDOMNode(i).focus() : ''}
                                 className='file-name-edit'
                             />
-                            <Button variant='success' className='float-right ml-3' onClick={ () => this.setState({ editFileName: false })}>
-                                <FontAwesomeIcon icon={ faCheck } onClick={ this.saveFileName } />
+                            <Button variant='success' className='float-right ml-3' onClick={() => this.setState({ editFileName: false })}>
+                                <FontAwesomeIcon icon={faCheck} onClick={this.saveFileName} />
                             </Button>
                         </div>
                     </Form.Group>
@@ -145,8 +144,8 @@ class UploadPopup extends Component {
                             <FormattedMessage id='UploadPopup.Label.fileName' />
                         </Form.Label>
                         <br />
-                        <Form.Label onClick={ this.editFileName } className='name'>
-                            { fileName }
+                        <Form.Label onClick={this.editFileName} className='name'>
+                            {fileName}
                         </Form.Label>
                         {/* <span className='float-right'>
                             <FontAwesomeIcon icon={ faEdit } onClick={ this.editFileName } size='2x' color='blue' />
@@ -162,19 +161,21 @@ class UploadPopup extends Component {
         event.preventDefault();
         event.stopPropagation();
         if (form.checkValidity() === true) {
-            const { language, file } = this.props;
+            const { file } = this.props;
             var { options } = this.state;
-            if(!options.language) options.language = language;
             options.autoTranscribe = true;
-            if(!options.speakerCount) options.speakerCount = 1;
             file.options = _.merge(file.options, options);
-    
+
             this.props.approveFileUpload(file.options);
+            this.setState({
+                validated: true,
+                activeWindow: ModalPageNames.SUCCESS
+            });
+        } else {
+            this.setState({
+                validated: false
+            });
         }
-        this.setState({
-            validated: true,
-            activeWindow: ModalPageNames.SUCCESS
-        });
     }
 
     cancelClicked = () => {
@@ -196,13 +197,13 @@ class UploadPopup extends Component {
     renderWindows = () => {
         const { activeWindow } = this.state;
 
-        if(activeWindow === ModalPageNames.INFO) {
+        if (activeWindow === ModalPageNames.INFO) {
             return this.renderInfoWindow();
-        } else if(activeWindow === ModalPageNames.UPLOAD) {
+        } else if (activeWindow === ModalPageNames.UPLOAD) {
             return this.renderUploadUptions();
-        } else if(activeWindow === ModalPageNames.ERROR) {
+        } else if (activeWindow === ModalPageNames.ERROR) {
             return this.renderError();
-        } else if(activeWindow === ModalPageNames.SUCCESS) {
+        } else if (activeWindow === ModalPageNames.SUCCESS) {
             return this.renderSuccess();
         }
     }
@@ -246,10 +247,10 @@ class UploadPopup extends Component {
                     </Container>
                 </Modal.Body>
                 <Modal.Footer className='float-right'>
-                    <Button variant="danger" onClick={ this.cancelClicked }>
+                    <Button variant="danger" onClick={this.cancelClicked}>
                         <FormattedMessage id='UploadPopup.cancelButton' />
                     </Button>
-                    <Button variant="success" onClick={ this.openFileDialog }>
+                    <Button variant="success" onClick={this.openFileDialog}>
                         <FormattedMessage id='UploadPopup.infoConfirmButton' />
                         <span>
                             <i className='fa fa-arrow-right'></i>
@@ -261,21 +262,21 @@ class UploadPopup extends Component {
     }
 
     renderUploadUptions = () => {
-        const { language, supportedLanguages, intl } = this.props;
+        const { supportedLanguages, intl } = this.props;
         const { options } = this.state;
         const disabled = false;//file.status === 'PROCESSING' || file.status === 'DONE';
-        let selectedLanguage = options.language || language;
+        let selectedLanguage = options.language;
         // if(selectedLanguage.indexOf('-') > -1) selectedLanguage = selectedLanguage.substr(0, selectedLanguage.indexOf('-'));
-        
+
         return (
             <div>
                 <Modal.Header>
                     <b><FormattedMessage id='UploadPopup.header' /></b>
                 </Modal.Header>
-                <Form className='form-options' noValidate validated={ this.state.validated } onSubmit={ this.submitForm }>
+                <Form className='form-options' validated={this.state.validated} onSubmit={this.submitForm}>
                     <Modal.Body>
                         <Container className='upload-popup-filename'>
-                            { this.renderFileName() }
+                            {this.renderFileName()}
                         </Container>
                         <Card>
                             <Card.Body>
@@ -285,16 +286,17 @@ class UploadPopup extends Component {
                                     </Form.Label>
                                     <Form.Control
                                         as='select'
-                                        defaultValue={ selectedLanguage }
-                                        disabled={ disabled }
+                                        defaultValue={selectedLanguage}
+                                        disabled={disabled}
                                         required
                                         onChange={(e) => this.handleOptionsChange('language', e.target.value)}
                                     >
+                                        <option key="" value=""></option>
                                         {
                                             supportedLanguages.map(lang => {
                                                 return (
-                                                    <option key={ lang.key } value={ lang.key } className={ lang.key.startsWith('ar-') ? 'direction-rtl' : ''}>
-                                                        { lang.value }
+                                                    <option key={lang.key} value={lang.key} className={lang.key.startsWith('ar-') ? 'direction-rtl' : ''}>
+                                                        {lang.value}
                                                     </option>
                                                 )
                                             })
@@ -312,11 +314,11 @@ class UploadPopup extends Component {
                                     <Form.Control
                                         type='number'
                                         required
-                                        disabled={ disabled }
+                                        disabled={disabled}
                                         min={1}
                                         max={10}
-                                        value={ options.speakerCount }
-                                        onChange={ (e) => this.handleOptionsChange('speakerCount', e.target.value) }
+                                        value={options.speakerCount}
+                                        onChange={(e) => this.handleOptionsChange('speakerCount', e.target.value)}
                                     />
                                     <Form.Control.Feedback type="invalid">
                                         <FormattedMessage id='UploadPopup.Feedback.numberOfSpeakers' />
@@ -328,22 +330,22 @@ class UploadPopup extends Component {
                                         <FormattedMessage id='UploadPopup.Label.context' />
                                     </Form.Label>
                                     <TagsInput
-                                        value={ options.context }
-                                        disabled= { disabled }
-                                        className={ `react-tagsinput ${disabled ? 'disabled' : ''}` }
-                                        onChange={ (tags) => this.handleOptionsChange('context', tags) }
-                                        addOnBlur={ true }
+                                        value={options.context}
+                                        disabled={disabled}
+                                        className={`react-tagsinput ${disabled ? 'disabled' : ''}`}
+                                        onChange={(tags) => this.handleOptionsChange('context', tags)}
+                                        addOnBlur={true}
                                     />
                                 </Form.Group>
                                 <br />
                                 <Form.Group>
-                                    <Alert variant='success'>{ intl.formatMessage({ id: 'UploadPopup.infoText' }) }</Alert>
+                                    <Alert variant='success'>{intl.formatMessage({ id: 'UploadPopup.infoText' })}</Alert>
                                 </Form.Group>
                             </Card.Body>
                         </Card>
                     </Modal.Body>
                     <Modal.Footer className='float-right'>
-                        <Button variant="danger" onClick={ this.cancelClicked }>
+                        <Button variant="danger" onClick={this.cancelClicked}>
                             <FormattedMessage id='UploadPopup.cancelButton' />
                         </Button>
                         <Button type='submit' variant="success">
@@ -371,10 +373,10 @@ class UploadPopup extends Component {
                     </Container>
                 </Modal.Body>
                 <Modal.Footer className='float-right'>
-                    <Button variant="danger" onClick={ this.cancelClicked }>
+                    <Button variant="danger" onClick={this.cancelClicked}>
                         <FormattedMessage id='UploadPopup.cancelButton' />
                     </Button>
-                    <Button onClick={ this.openFileDialog }>
+                    <Button onClick={this.openFileDialog}>
                         <FormattedMessage id='UploadPopup.retryButton' />
                     </Button>
                 </Modal.Footer>
@@ -398,7 +400,7 @@ class UploadPopup extends Component {
                     </Container>
                 </Modal.Body>
                 <Modal.Footer className='float-right'>
-                    <Button variant="success" onClick={ this.closePopup }>
+                    <Button variant="success" onClick={this.closePopup}>
                         <FormattedMessage id='UploadPopup.closeButton' />
                     </Button>
                 </Modal.Footer>
@@ -408,15 +410,15 @@ class UploadPopup extends Component {
 
     render() {
         return (
-            <Modal show={ this.props.show } size='lg' className={ this.state.activeWindow === ModalPageNames.ERROR ? '' : 'upload-modal' } centered>
+            <Modal show={this.props.show} size='lg' className={this.state.activeWindow === ModalPageNames.ERROR ? '' : 'upload-modal'} centered>
                 {
                     this.renderWindows()
                 }
                 <input
-                    ref={ this.fileInputRef }
+                    ref={this.fileInputRef}
                     className='file-input'
                     type="file"
-                    onChange={ this.onFileAdded }
+                    onChange={this.onFileAdded}
                     accept="audio/*, video/*"
                 />
             </Modal>
