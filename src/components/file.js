@@ -309,7 +309,7 @@ class File extends Component {
                     <div className={`file-footer`}>
                         <div className='file-buttons'>
                             <div className='file-button' id='select' onClick={this.fileSelected}>
-                                <input type="checkbox" checked={this.props.isSelected} />
+                                <input readOnly type="checkbox" checked={this.props.isSelected} />
                                 <span>Select</span>
                             </div>
                             <div className='file-button' id='export' onClick={this.exportClicked}>
