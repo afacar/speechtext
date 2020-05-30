@@ -64,7 +64,7 @@
 .transcription {
     padding: 10px;
     padding-left: 30px;
-    height: 720px;
+    height: 750px;
     border: 1px solid rgba(0,0,0,.125);
     /* overflow-y: auto; */
 }
@@ -80,7 +80,7 @@
 }
 
 .editor-container {
-    height: 650px;
+    height: 710px;
     overflow-y: auto;
 }
 
@@ -193,7 +193,7 @@ ol.selling-contract-list { counter-reset: item }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
+    box-shadow: inset 0 0 5px #DDE1E4; 
     border-radius: 10px;
 }
 
@@ -210,11 +210,11 @@ ol.selling-contract-list { counter-reset: item }
 
 @media only screen and (max-height: 882px) {
     .transcription {
-        height: 670px !important;
+        height: 700px !important;
     }
 
     .editor-container {
-        height: 600px !important;
+        height: 660px !important;
     }
 
     .missing-credits-container {
@@ -225,20 +225,20 @@ ol.selling-contract-list { counter-reset: item }
 
 @media only screen and (max-height: 830px) {
     .transcription {
-        height: 570px !important;
+        height: 600px !important;
     }
 
     .editor-container {
-        height: 500px !important;
+        height: 560px !important;
     }
 }
 
 @media only screen and (max-height: 730px) {
     .transcription {
-        height: 470px !important;
+        height: 500px !important;
     }
 
     .editor-container {
-        height: 400px !important;
+        height: 460px !important;
     }
 }
