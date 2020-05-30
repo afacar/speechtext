@@ -39,12 +39,12 @@ class Auth extends Component {
     componentWillUnmount() {
         this.unsubscribe()
     }
-    
+
     render() {
         console.log('Auth Renders', this.props)
         console.log('Auth Renders currentUser', firebase.auth().currentUser)
         return (
-            <div className="container">
+            <div className="container auth-container">
                 <Row>
                     <Col className='login-container'>
                         <LogoContainer />
