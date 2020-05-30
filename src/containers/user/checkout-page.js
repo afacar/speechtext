@@ -17,7 +17,6 @@ import MasterVisaLogo from '../../assets/mastercard-visa-logo.png';
 import '../../styles/dashboard.css';
 import '../../styles/payment.css';
 
-
 class CheckOutPage extends Component {
 
     constructor(props) {
@@ -56,8 +55,6 @@ class CheckOutPage extends Component {
         this.initializeValues()
     }
     componentWillReceiveProps({ user, state }) {
-        console.log("new props arrived ", user);
-        console.log("new props arrived ", state);
         if (!_.isEmpty(user) && state !== 'PAYMENT') {
             this.initializeValues(user);
         }
@@ -86,7 +83,6 @@ class CheckOutPage extends Component {
     }
 
     handleCardNumberChange = (cardNumberEvent) => {
-        console.log("card number changed ", cardNumberEvent.target.value)
         this.props.toggleSubmit(false)
         this.setState({
             cardNumber: cardNumberEvent.target.value
@@ -117,9 +113,6 @@ class CheckOutPage extends Component {
         if (!this.props.validateInput()) return;
         const { values, cardNumber, expiry, cvc, } = this.state
         if (values && cardNumber && expiry && cvc.length === 3 && this.validateBillingDetails()) {
-            console.log("Cardnumber", cardNumber)
-            console.log("expiry", expiry)
-            console.log("cvc", cvc)
             let paymentObj = {
                 values,
                 cardNumber,

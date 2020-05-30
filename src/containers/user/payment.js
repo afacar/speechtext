@@ -12,6 +12,7 @@ import firebase from '../../utils/firebase';
 import CheckOutPage from '../../containers/user/checkout-page';
 import SellingContract from './selling-contract';
 import RefundContract from './refund-contract';
+import './../../styles/pricing.css';
 
 
 class Payment extends Component {
