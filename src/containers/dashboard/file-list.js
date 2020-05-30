@@ -135,7 +135,9 @@ class FileList extends Component {
         var { fileToUpload, selectedFile } = this.state;
         if (fileToUpload && selectedFile) {
             fileToUpload.options = Object.assign({}, fileToUpload.options, options);
-            fileToUpload.name = options.fileName;
+            if (options.fileName) {
+                fileToUpload.name = options.fileName;
+            }
 
             this.props.addFile(fileToUpload);
 
