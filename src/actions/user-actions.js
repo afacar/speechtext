@@ -35,7 +35,6 @@ export const getTransactions = (user) => {
                     var transactions = [];
                     snapshot.docs.forEach(doc => {
                         var transcriptionData = doc.data();
-                        console.log("doc data ", transcriptionData);
                         var price = transcriptionData.request.price;
                         var currency = transcriptionData.request.currency;
                         if (currency === "USD")
@@ -51,7 +50,6 @@ export const getTransactions = (user) => {
                             else
                                 status = "fail"
                         }
-                        console.log("Date ", transcriptionData.requestDate.toDate());
                         var date = transcriptionData.requestDate.toDate();
                         var dateStr = date.toLocaleDateString();
 

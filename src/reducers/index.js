@@ -5,12 +5,13 @@ import { getFileList, setSelectedFile, setUploadingFiles } from './file-reducer'
 import { handleTimeChange, getPlayerStatus, setEditorFocus, setCurrentSpeakerBox } from "./editor-reducer";
 import { getTransactions } from './user';
 
+const { setLanguage, setSupportedLanguages, plans, errorDefinitions, trimmedFileInfo } = AppReducer;
 export default combineReducers({
-    language: AppReducer.setLanguage,
-    supportedLanguages: AppReducer.setSupportedLanguages,
+    language: setLanguage,
+    supportedLanguages: setSupportedLanguages,
     user: AuthReducer,
-    plans: AppReducer.plans,
-    errorDefinitions: AppReducer.errorDefinitions,
+    plans,
+    errorDefinitions,
     userFiles: getFileList,
     selectedFile: setSelectedFile,
     uploadingFiles: setUploadingFiles,
@@ -18,5 +19,6 @@ export default combineReducers({
     playerStatus: getPlayerStatus,
     editorFocus: setEditorFocus,
     transactions: getTransactions,
-    selectedSpeakerBox: setCurrentSpeakerBox
+    selectedSpeakerBox: setCurrentSpeakerBox,
+    trimmedFileInfo
 })

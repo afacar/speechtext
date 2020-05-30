@@ -57,7 +57,8 @@ class FileList extends Component {
             const { currentPlan } = this.props.user;
             let fileDurationInSeconds = parseInt(media.duration);
             let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
-            if (currentPlan.remainingMinutes - fileDurationInMinutes < 0) {
+            // TODO: file duration check should be active for only existing users
+            if (currentPlan.remainingMinutes <= 0) {
                 that.setState({
                     selectedFileDuration: fileDurationInMinutes,
                     showApprovement: true
@@ -149,14 +150,14 @@ class FileList extends Component {
 
     onFileSelected = (file) => {
         const { selectedFiles } = this.state;
-            if (!selectedFiles.includes(file.id)) {
-                selectedFiles.push(file.id);
-            } else {
-                selectedFiles.splice(selectedFiles.indexOf(file.id), 1);
-            }
-            this.setState({
-                selectedFiles
-            })
+        if (!selectedFiles.includes(file.id)) {
+            selectedFiles.push(file.id);
+        } else {
+            selectedFiles.splice(selectedFiles.indexOf(file.id), 1);
+        }
+        this.setState({
+            selectedFiles
+        })
         /* if (file.status === 'DONE') {
             // const { files } = this.state;
             // const selectedFile = files[index];

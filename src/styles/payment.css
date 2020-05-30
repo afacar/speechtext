@@ -24,6 +24,8 @@
 
 .card-logo {
     transform: scale(.5);
+    float: right;
+    margin-top: 15px;
 }
 
 .buy-button-surrounding{
@@ -106,6 +108,10 @@
     height: calc(1.5em + .75rem + 2px);
 }
 
+.order-summary-container .summary-label {
+    text-align: left;
+}
+
 /* CREDIT CARD NUMBER*/
 .sc-bwzfXH > .hlTfmo {
     width: 60%;
@@ -114,4 +120,27 @@
 
 .sc-bwzfXH > .hlTfmo ~ .hlTfmo {
     width: auto;
+}
+
+.price {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.payment-duration {
+    width: 150px;
+}
+
+.payment-amount-to-buy {
+    width: 150px;
+}
+
+.payment-duration,
+.payment-amount-to-buy {
+    margin-left: 20px;
+}
+
+.payment-success-message {
+    margin-top: 40px;
 }

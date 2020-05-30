@@ -103,3 +103,21 @@ export const getErrorDefinitions = (language) => {
             })
     }
 }
+
+export const setTrimmedFileInfo = (fileId, minutesToBePaid) => {
+    return {
+        type: Utils.ActionTypes.SET_TRIMMED_FILE_INFO,
+        payload: {
+            fileId, minutesToBePaid
+        }
+    }
+}
+
+export const clearTrimmedFileInfo = (fileId) => {
+    return {
+        type: Utils.ActionTypes.SET_TRIMMED_FILE_INFO,
+        payload: {
+            fileId
+        }
+    }
+}

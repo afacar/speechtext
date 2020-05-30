@@ -13,20 +13,36 @@ class User extends Component {
     constructor(props) {
         super(props);
 
-        let hashValue = props.location.hash ? props.location.hash.substr(1) : '';
+        let { hashValue, fileId } = this.calculateHashValue(props);
         this.state = {
             activeTabKey: hashValue ? hashValue : 'profile',
             transactionHistory: [],
             activePage: 1,
             pageItems: [],
+            fileId
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let hashValue = nextProps.location.hash ? nextProps.location.hash.substr(1) : 'profile';
+        let { hashValue } = this.calculateHashValue(nextProps);
         this.setState({
             activeTabKey: hashValue
         });
+    }
+
+    calculateHashValue = (props) => {
+        let hashValue = props.location.hash ? props.location.hash.substr(1) : '';
+        let hashSplit = hashValue.split('?');
+        hashValue = hashSplit[0];
+        let queryParam = hashSplit[1];
+        let fileId = undefined;
+        if (queryParam) {
+            queryParam = queryParam.substr(1);
+            fileId = queryParam.split('=')[1];
+        }
+        return {
+            hashValue, fileId
+        }
     }
 
     changeTab = (tabName) => {
@@ -99,7 +115,7 @@ class User extends Component {
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="transaction">
                                         <TransactionHistory className="user-tab-transaction-history"
-                                         setArraySize={this.setArraySize} activePage={this.state.activePage} />
+                                            setArraySize={this.setArraySize} activePage={this.state.activePage} />
                                         {
                                             this.state.arraySize > 1 && (
                                                 <Container className="user-tab-transaction-history-paging d-flex justify-content-end" >
