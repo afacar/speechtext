@@ -199,13 +199,13 @@ ol.selling-contract-list { counter-reset: item }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #384d60; 
+    background: #DDE1E4; 
     border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: lightslategray; 
+    background: #384d60; 
 }
 
 @media only screen and (max-height: 882px) {
