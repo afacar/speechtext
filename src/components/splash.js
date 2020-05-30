@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { bake_cookie } from 'sfcookies';
 
 import { login } from '../actions';
 import LogoEn from '../assets/logo-en.png';
@@ -36,6 +37,7 @@ class Splash extends Component {
                     creationTime: new Date(creationTime),
                 };
                 that.props.login(loginInfo);
+                bake_cookie(process.env.REACT_APP_LOGIN_INFO_NAME, loginInfo);
                 history.push('/dashboard')
             } else {
                 history.push('/auth')
