@@ -21,6 +21,8 @@
     color: #384d60;
     border-radius: 5px;
     outline: 0;
+    margin-right: 10px;
+    width: 250px;
 }
 
 .file-container {
