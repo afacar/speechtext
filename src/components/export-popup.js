@@ -29,29 +29,34 @@ class ExportPopup extends Component {
     }
 
     downloadAsTxt = async () => {
+        var that = this;
         var { file } = this.props;
-        let editorData = await this.getTranscriptionData()
-        var textData = '';
+        this.setState({ showSpinner: true });
 
-        _.each(editorData.segments, segment => {
-            let { words } = segment;
-            let startTime = words[0].start
-            let endTime = words[words.length - 1].end
-            let transcript = words.map(word => word.text).join(' ')
-            textData += `${Utils.formatTime(startTime)} - ${Utils.formatTime(endTime)}\n${transcript}\n\n`;
+        var getTxtFile = firebase.functions().httpsCallable('getTxtFile');
+        getTxtFile({
+            fileId: file.id
+        }).then(({ data }) => {
+            var storageRef = firebase.storage().ref(data.filePath);
+            var fileName = file.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
+            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
+            var newMetadata = {
+                contentDisposition: `attachment;filename=${fileName}`
+            }
+            storageRef.updateMetadata(newMetadata)
+                .then((metadata) => {
+                    storageRef.getDownloadURL().then((downloadUrl) => {
+                        const element = document.createElement("a");
+                        element.href = downloadUrl;
+                        element.click();
+                        that.props.closeModal();
+                        this.setState({ showSpinner: false });
+                    });
+                })
+        }).catch((err) => {
+            // TODO: GET_SRT_FILE_ERROR
+            console.log(err);
         });
-
-        var fileName = file.name;
-        fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
-
-        const element = document.createElement("a");
-        const fileToUpload = new Blob([textData], { type: 'text/plain' });
-        element.href = URL.createObjectURL(fileToUpload);
-        element.download = fileName;
-        document.body.appendChild(element); // Required for this to work in FireFox
-        element.click();
-        this.props.closeModal();
-
     }
 
     downloadAsDocx = async () => {
@@ -64,7 +69,7 @@ class ExportPopup extends Component {
             fileId: file.id
         }).then(({ data }) => {
             var storageRef = firebase.storage().ref(data.filePath);
-            var fileName = file.name;
+            var fileName = file.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
             fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.docx';
             var newMetadata = {
                 contentDisposition: `attachment;filename=${fileName}`
@@ -95,7 +100,7 @@ class ExportPopup extends Component {
             fileId: file.id
         }).then(({ data }) => {
             var storageRef = firebase.storage().ref(data.filePath);
-            var fileName = file.name.replace(',', '').split(' ').join('_');
+            var fileName = file.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
             fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.srt';
             var newMetadata = {
                 contentDisposition: `attachment;filename=${fileName}`

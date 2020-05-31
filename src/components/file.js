@@ -308,14 +308,9 @@ class File extends Component {
                     </div>
                     <div className={`file-footer`}>
                         <div className='file-buttons'>
-                            <div className='file-button' id='export' onClick={this.fileSelected}>
-                                <FontAwesomeIcon
-                                    icon={faCheckSquare}
-                                    title='Select'
-                                    className='file-info-image'
-                                    style={{ color: 'teal' }}
-                                />
-                                Select
+                            <div className='file-button' id='select' onClick={this.fileSelected}>
+                                <input readOnly type="checkbox" checked={this.props.isSelected} />
+                                <span>Select</span>
                             </div>
                             <div className='file-button' id='export' onClick={this.exportClicked}>
                                 <FontAwesomeIcon

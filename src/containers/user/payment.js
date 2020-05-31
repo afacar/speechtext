@@ -335,7 +335,7 @@ class Payment extends Component {
         } catch (error) {
             console.log('Cannot get user IP adress')
         }
-        var fncAddBasket = firebase.functions().httpsCallable('addToBasketSecondary');
+        var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
         fncAddBasket({
             hours: durationType === 'hours' ? parseInt(duration) : undefined,
             minutes: durationType === 'minutes' ? parseInt(duration) : undefined,
