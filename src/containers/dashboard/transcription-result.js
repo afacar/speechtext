@@ -230,32 +230,29 @@ class TranscriptionResult extends Component {
         await this.updateTranscribedFile();
         const { selectedFile } = this.props;
 
-        let dataToExport = convertToTranscript(
-            this.state.editorState.getCurrentContent(),
-            this.state.speakers
-        );
-        var textData = '';
-
-        for (var i = 0; i < dataToExport.segments.size; i++) {
-            let segment = dataToExport.segments.get(i);
-            let start = segment.getStart();
-            let end = segment.getEnd();
-            let text = segment.getText();
-
-            textData += `${Utils.formatTime(start)} - ${Utils.formatTime(end)}\n${text}\n\n`;
-        }
-
-        var fileName = selectedFile.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
-        fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
-
-        const element = document.createElement("a");
-        const file = new Blob([textData], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        element.download = fileName;
-        document.body.appendChild(element); // Required for this to work in FireFox
-        element.click();
-        this.setState({ showDownloadSpinner: false });
-
+        var getTxtFile = firebase.functions().httpsCallable('getTxtFile');
+        getTxtFile({
+            fileId: selectedFile.id
+        }).then(({ data }) => {
+            var storageRef = firebase.storage().ref(data.filePath);
+            var fileName = selectedFile.name.replace(/,/g, '').replace(/'/g, '').replace(/ /g, '_');
+            fileName = fileName.substr(0, fileName.lastIndexOf('.')) + '.txt';
+            var newMetadata = {
+                contentDisposition: `attachment;filename=${fileName}`
+            }
+            storageRef.updateMetadata(newMetadata)
+                .then((metadata) => {
+                    storageRef.getDownloadURL().then((downloadUrl) => {
+                        const element = document.createElement("a");
+                        element.href = downloadUrl;
+                        element.click();
+                        this.setState({ showDownloadSpinner: false });
+                    });
+                })
+        }).catch((err) => {
+            // TODO: GET_SRT_FILE_ERROR
+            console.log(err);
+        });
     }
 
     downloadAsDocx = async () => {
