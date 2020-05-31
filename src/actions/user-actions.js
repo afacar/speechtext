@@ -56,7 +56,7 @@ export const getTransactions = (user) => {
                         var transaction = {
                             basketId: transcriptionData.request.basketId,
                             date: dateStr,
-                            amount: transcriptionData.minutes / 60,
+                            amount: transcriptionData.minutes,
                             price: parseFloat(price).toFixed(2),
                             currency,
                             status

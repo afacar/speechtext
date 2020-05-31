@@ -14,15 +14,15 @@ import {
 class Transaction extends Component {
 
     componentDidMount() {
-        if(!_.isEmpty(this.props.user)) {
+        if (!_.isEmpty(this.props.user)) {
             this.props.getTransactions(this.props.user);
         }
     }
 
     componentWillReceiveProps({ transactions, user }) {
-        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
             this.props.getTransactions(user);
-        } else if(!_.isEmpty(transactions)) {
+        } else if (!_.isEmpty(transactions)) {
             var size = transactions.length || 0;
             var sizeTmp = transactions.length || 0;
             size = parseInt(size / 10);
@@ -38,7 +38,7 @@ class Transaction extends Component {
         return (
             <tr key={index}>
                 <td className="text-center">{transaction.date}</td>
-                <td className="text-center">{transaction.amount + " hour(s)"}</td>
+                <td className="text-center">{transaction.amount + " minutes"}</td>
                 <td className="text-center">{transaction.currency + " " + transaction.price}</td>
                 <td className="text-center">{transaction.card}</td>
                 <td className="text-center">
