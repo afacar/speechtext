@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Alert from 'react-s-alert';
 
 import { setLanguage, setSupportedLanguages, getPlans, getErrorDefinitions } from '../actions';
 import Dashboard from './dashboard/dashboard';
@@ -35,6 +36,7 @@ class App extends Component {
                         <Route exact path='/feedback' component={Evaluate} />
                     </Switch>
                 </BrowserRouter>
+                <Alert stack={{ limit: 3 }} timeout={5000} html={true} effect={'slide'} position={'top-right'} />
             </div>
         )
     }
