@@ -232,9 +232,9 @@ class FileList extends Component {
         })
     }
 
-    getSelectedFileToExport = () => {
+    getSelectedFileToExport = (fileId) => {
         const { files, selectedFiles } = this.state;
-        return _.find(files, { id: selectedFiles[0] });
+        return _.find(files, { id: fileId ? fileId : selectedFiles[0] });
     }
 
     openInEditor = (fileId) => {
@@ -245,7 +245,15 @@ class FileList extends Component {
             }
         }
         if (!_.isEmpty(fileId)) {
-            window.open(`/edit/${fileId}`, '_blank');
+            let selectedFile = this.getSelectedFileToExport(fileId);
+            if (selectedFile && selectedFile.transcribedFile && _.isEmpty(selectedFile.transcribedFile.filePath)) {
+                // transcription result is empty
+                this.setState({
+                    showTranscriptionEmptyMessage: true
+                });
+            } else {
+                window.open(`/edit/${fileId}`, '_blank');
+            }
         }
     }
 
@@ -351,6 +359,20 @@ class FileList extends Component {
                     }}
                     handleSuccess={this.deleteFilesAfterApproval}
                     handleCancel={this.cancelFileDeletion}
+                />
+                <ApprovementPopup
+                    show={this.state.showTranscriptionEmptyMessage}
+                    size='lg'
+                    headerText={{
+                        id: 'File.Error.emptyTranscription.title'
+                    }}
+                    bodyText={{
+                        id: 'File.Error.emptyTranscription.body'
+                    }}
+                    successButton={{ id: 'File.Error.emptyTranscription.button' }}
+                    successButtonVariant='primary'
+                    handleSuccess={() => this.setState({ showTranscriptionEmptyMessage: false })}
+                    hideCancelButton={true}
                 />
             </div>
         )

@@ -132,6 +132,11 @@
     margin-right: 15px;
     text-align: center;
 }
+
+.file-footer .file-button > span {
+    margin-left: 10px;
+}
+
 .file-info-image {
     color: #607180;
     margin-right: 5px;
