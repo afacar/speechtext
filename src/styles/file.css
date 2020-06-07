@@ -133,7 +133,12 @@
     text-align: center;
 }
 
+.file-select-checkbox-container {
+    float: left;
+}
+
 .file-footer .file-button > span {
+    float: right;
     margin-left: 10px;
 }
 
