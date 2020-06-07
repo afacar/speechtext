@@ -80,6 +80,8 @@
     "File.Error.emptyTranscription.button": "Close",
     "FileUpload.fileSizeErrorTitle": "File Size Error",
     "FileUpload.fileSizeError": "Maximum allowed file size is 1 GB!",
+    "FileUpload.fileDurationErrorTitle": "File Duration Error",
+    "FileUpload.fileDurationError": "Maximum allowed file duration is 180 minutes!",
     "FileUpload.successTitle": "File Upload Started",
     "FileUpload.successMessage": "Your transcription will automatically start after upload is complete.<br /><br />In the mean time, you can continue working on your other transcribed files.",
     "Editor.Speaker.Input": "Add New Speaker...",

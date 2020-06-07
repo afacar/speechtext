@@ -64,15 +64,36 @@ class UploadPopup extends Component {
             const sizeInMB = Utils.formatSizeByteToMB(file.size);
             if (sizeInMB > 1024) {
                 this.setState({
-                    activeWindow: ModalPageNames.ERROR
+                    activeWindow: ModalPageNames.ERROR,
+                    fileValidationErrorTitleId: 'FileUpload.fileSizeErrorTitle',
+                    fileValidationErrorId: 'FileUpload.fileSizeError'
                 });
             } else {
-                this.props.onFileAdded(files[0]);
+                this.validateFileDuration(file);
+            }
+        }
+    }
+
+    validateFileDuration = (file) => {
+        var media = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
+        media.onloadedmetadata = () => {
+            let fileDurationInSeconds = parseInt(media.duration);
+            let fileDurationInMinutes = Math.ceil(fileDurationInSeconds / 60);
+
+            if (fileDurationInMinutes > 180) {
+                this.setState({
+                    activeWindow: ModalPageNames.ERROR,
+                    fileValidationErrorTitleId: 'FileUpload.fileDurationErrorTitle',
+                    fileValidationErrorId: 'FileUpload.fileDurationError'
+                });
+            } else {
+                this.props.onFileAdded(file);
                 this.setState({
                     activeWindow: ModalPageNames.UPLOAD
                 });
             }
-        }
+        };
+        media.src = URL.createObjectURL(file);
     }
 
     handleFileNameChange = (event) => {
@@ -355,17 +376,21 @@ class UploadPopup extends Component {
     }
 
     renderError = () => {
+        let { fileValidationErrorTitleId, fileValidationErrorId } = this.state;
+        if (!fileValidationErrorTitleId) fileValidationErrorTitleId = 'FileUpload.fileSizeErrorTitle';
+        if (!fileValidationErrorId) fileValidationErrorId = 'FileUpload.fileSizeError';
+
         return (
             <div>
                 <Modal.Header>
                     <b>
-                        <FormattedMessage id='FileUpload.fileSizeErrorTitle' />
+                        <FormattedMessage id={fileValidationErrorTitleId} />
                     </b>
                 </Modal.Header>
                 <Modal.Body>
                     <Container>
                         <p>
-                            <FormattedMessage id='FileUpload.fileSizeError' />
+                            <FormattedMessage id={fileValidationErrorId} />
                         </p>
                     </Container>
                 </Modal.Body>
