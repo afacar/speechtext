@@ -80,7 +80,7 @@
     "File.Error.emptyTranscription.button": "Kapat",
     "FileUpload.multipleFileError": "Lütfen mevcut dosya yüklemesinin bitmesini bekleyiniz.",
     "FileUpload.fileSizeErrorTitle": "Dosya Boyutu Hatası",
-    "FileUpload.fileSizeError": "Lütfen boyutu 500 megabyte'ı geçmeyen bir dosya seçiniz!",
+    "FileUpload.fileSizeError": "Lütfen boyutu 1 gigabyte'ı geçmeyen bir dosya seçiniz!",
     "FileUpload.successTitle": "Dosya Yükleme Başladı",
     "FileUpload.successMessage": "Yükleme tamamlandıktan sonra, çeviri otomatik olarak başlayacaktır.<br /><br />Bu sırada, yüklemiş olduğunuz diğer dosyalarda çalışmaya devam edebilirsiniz.",
     "Editor.Speaker.Input": "Yeni Konuşmacı Girin...",

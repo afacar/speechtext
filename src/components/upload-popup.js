@@ -62,7 +62,7 @@ class UploadPopup extends Component {
             const file = files[0];
 
             const sizeInMB = Utils.formatSizeByteToMB(file.size);
-            if (sizeInMB > 500) {
+            if (sizeInMB > 1024) {
                 this.setState({
                     activeWindow: ModalPageNames.ERROR
                 });
@@ -147,9 +147,6 @@ class UploadPopup extends Component {
                         <Form.Label onClick={this.editFileName} className='name'>
                             {fileName}
                         </Form.Label>
-                        {/* <span className='float-right'>
-                            <FontAwesomeIcon icon={ faEdit } onClick={ this.editFileName } size='2x' color='blue' />
-                        </span> */}
                     </Form.Group>
                 </div>
             )
