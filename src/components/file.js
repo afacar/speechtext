@@ -309,17 +309,21 @@ class File extends Component {
                     <div className={`file-footer`}>
                         <div className='file-buttons'>
                             <div className='file-button' id='select' onClick={this.fileSelected}>
-                                <input readOnly type="checkbox" checked={this.props.isSelected} />
+                                <div>
+                                    <input readOnly type="checkbox" checked={this.props.isSelected} />
+                                </div>
                                 <span>Select</span>
                             </div>
                             <div className='file-button' id='export' onClick={this.exportClicked}>
-                                <FontAwesomeIcon
-                                    icon={faFileDownload}
-                                    title='Export'
-                                    className='file-info-image'
-                                    style={{ color: 'darkslateblue' }}
-                                />
-                                Export
+                                <div>
+                                    <FontAwesomeIcon
+                                        icon={faFileDownload}
+                                        title='Export'
+                                        className='file-info-image'
+                                        style={{ color: 'darkslateblue' }}
+                                    />
+                                </div>
+                                <span>Export</span>
                             </div>
                         </div>
                         <div className={`file-status ${this.getFileStatusClassName(file.status)}`}>
