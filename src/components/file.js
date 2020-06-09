@@ -178,7 +178,6 @@ class File extends Component {
 
     getFileStatus = (status) => {
         const { progress } = this.state;
-        console.log('status', status)
         switch (status) {
             case 'ERROR':
                 return 'Error';

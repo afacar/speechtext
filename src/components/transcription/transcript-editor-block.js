@@ -12,7 +12,13 @@ const TranscriptEditorBlock = (props) => {
     const titleString = `${entity.data.start.toFixed(2)} - ${entity.data.end.toFixed(2)}`; */
   const characterList = props.block.getCharacterList();
   const contentState = props.contentState;
-  const start = contentState.getEntity(characterList.first().entity).data.start;
+  let start = 0;
+
+  if (characterList && characterList.first()) {
+    start = contentState.getEntity(characterList.first().entity).data.start;
+  } else {
+    return <div></div>;
+  }
 
   return (
     <div className="transcript-editor-block row">
