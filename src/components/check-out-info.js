@@ -14,7 +14,7 @@ class CheckOutInfo extends Component {
     }
 
     render() {
-        var { calculatedPrice, pricePerHour, duration, durationType } = this.props
+        var { calculatedPrice, unitPrice, duration, durationType } = this.props
         if (duration === 1) {
             durationType = durationType.substring(0, durationType.length - 1);
         }
@@ -25,30 +25,30 @@ class CheckOutInfo extends Component {
                         <FormattedMessage id="Payment.Summary.Title" />
                     </h4>
                     <Row>
-                        <Col lg="8" md="8" sm="6" xs="6">
+                        <Col lg="7" md="7" sm="6" xs="6" className='summary-label'>
                             <FormattedMessage id={"Payment.Summary.Total.Duration"} />
                         </Col>
-                        <Col lg="4" md="4" sm="6" xs="6" align='right'>
-                            {duration + " " + durationType}
+                        <Col lg="5" md="5" sm="6" xs="6" align='right'>
+                            {duration ? duration + " " + durationType : 0}
                         </Col>
                     </Row>
                     <Row>
-                        <Col lg="8" md="8" sm="6" xs="6">
+                        <Col lg="7" md="7" sm="6" xs="6" className='summary-label'>
                             <FormattedMessage id={"Payment.Summary.pricePerHour"} />
                         </Col>
-                        <Col lg="4" md="4" sm="6" xs="6" align='right'>
-                            {'$' + pricePerHour}
+                        <Col lg="5" md="5" sm="6" xs="6" align='right'>
+                            {'$ ' + (unitPrice ? unitPrice : 0)}
                         </Col>
                     </Row>
                     <Row className='payment-total-container container'>
-                        <Col lg="8" md="8" sm="6" xs="6">
+                        <Col lg="7" md="7" sm="6" xs="6" className='summary-label'>
                             <h4>
                                 <FormattedMessage id={"Payment.Summary.Total.Price"} />
                             </h4>
                         </Col>
-                        <Col lg="4" md="4" sm="6" xs="6" align='right'>
+                        <Col lg="5" md="5" sm="6" xs="6" align='right'>
                             <h4>
-                                {'$' + calculatedPrice}
+                                {'$ ' + (calculatedPrice ? calculatedPrice : 0)}
                             </h4>
                         </Col>
                     </Row>

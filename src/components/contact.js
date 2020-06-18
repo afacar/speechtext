@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faTwitterSquare, faFacebookSquare, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { submitContactForm } from '../../actions';
-import '../../styles/contact.css';
+import { submitContactForm } from '../actions';
+import '../styles/contact.css';
 
 class Contact extends Component {
     constructor(props) {
@@ -71,25 +71,25 @@ class Contact extends Component {
                         </div> */}
                         <br />
                         <div>
-                            <FontAwesomeIcon icon={ faEnvelope } size='2x' className='float-left' />
+                            <FontAwesomeIcon icon={faEnvelope} size='2x' className='float-left' />
                             <p className='contact-info-data'>
                                 <a href='mailto:support@speechtext.io' target='_blank' rel="noopener noreferrer">support@speechtext.io</a>
                             </p>
                         </div>
                         <div>
-                            <FontAwesomeIcon icon={ faTwitterSquare } size='2x' className='float-left' />
+                            <FontAwesomeIcon icon={faTwitterSquare} size='2x' className='float-left' />
                             <p className='contact-info-data'>
                                 <a href='https://twitter.com/speechtext_io' target='_blank' rel="noopener noreferrer">/speechtext.io</a>
                             </p>
                         </div>
                         <div>
-                            <FontAwesomeIcon icon={ faFacebookSquare } size='2x' className='float-left' />
+                            <FontAwesomeIcon icon={faFacebookSquare} size='2x' className='float-left' />
                             <p className='contact-info-data'>
                                 <a href='https://www.facebook.com/speechtext.io' target='_blank' rel="noopener noreferrer">/speechtext.io</a>
                             </p>
                         </div>
                         <div>
-                            <FontAwesomeIcon icon={ faLinkedin } size='2x' className='float-left' />
+                            <FontAwesomeIcon icon={faLinkedin} size='2x' className='float-left' />
                             <p className='contact-info-data'>
                                 <a href='https://www.linkedin.com/in/speechtext-io-425b28195/' target='_blank' rel="noopener noreferrer">/speechtext.io</a>
                             </p>
@@ -128,7 +128,7 @@ class Contact extends Component {
                                         <FormattedMessage id="Contact.Form.Feedback.email" />
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                
+
                                 <Form.Group controlId="formUsageNeeded">
                                     <Form.Label>
                                         <FormattedMessage id="Contact.Form.Label.opinions" />

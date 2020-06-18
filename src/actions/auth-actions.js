@@ -17,7 +17,6 @@ export const login = (data) => {
                     userData.emailVerified = true
                 }
             } else if (data.isNewUser) {
-                var fncCreateUser = functions().httpsCallable('createNewUser');
                 let ip = '';
                 try {
                     ip = await publicIp.v4();
@@ -29,6 +28,7 @@ export const login = (data) => {
                 delete userData.isNewUser;
                 try {
                     console.log('Creating new user... userData:', userData)
+                    var fncCreateUser = functions().httpsCallable('createNewUser');
                     let res = await fncCreateUser(userData).data
                     !data.emailVerified && auth().currentUser.sendEmailVerification()
                     console.log('res of new user creation:', res)

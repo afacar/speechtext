@@ -9,6 +9,8 @@ import reducers from './reducers';
 import Utils from './utils';
 import App from './containers/app';
 
+import './styles/app.css';
+
 const { supportedLanguages, currentLanguage, messages } = Utils.Localization;
 Utils.initGoogleAnalytics();
 Utils.initSentry();

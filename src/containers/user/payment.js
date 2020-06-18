@@ -3,44 +3,60 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Container, Button, Modal, Alert as BootstrapAlert } from 'react-bootstrap';
+import { Container, Button, Alert as BootstrapAlert, Row, Col, Form } from 'react-bootstrap';
 import Alert from 'react-s-alert';
 import publicIp from 'public-ip';
 
+import { clearTrimmedFileInfo } from '../../actions';
 import firebase from '../../utils/firebase';
-import ApprovementPopup from '../../components/approvement-popup';
-import { StandardPaymentCard } from '../../components/pricing-cards';
-import CheckOutModal from '../../components/check-out-modal';
-import ContactFormModal from '../../components/contact-form-modal';
+import CheckOutPage from '../../containers/user/checkout-page';
+import SellingContract from './selling-contract';
+import RefundContract from './refund-contract';
+import './../../styles/pricing.css';
+
 
 class Payment extends Component {
     constructor(props) {
         super(props);
-
+        let fileId;
+        let minAmountToPay = undefined;
+        let duration = 1;
+        let durationType = 'hours';
+        if (props.location && props.location.hash) {
+            fileId = props.location.hash.substr('#payment?fileId='.length);
+            if (!_.isEmpty(props.trimmedFileInfo) && props.trimmedFileInfo.fileId === fileId) {
+                minAmountToPay = props.trimmedFileInfo.minutesToBePaid;
+                duration = props.trimmedFileInfo.minutesToBePaid;
+                durationType = 'minutes';
+            }
+        }
         this.state = {
-            duration: 1,
-            durationType: 'hours',
-            unitPrice: 9,
-            calculatedPrice: 9,
+            duration,
+            durationType,
+            minAmountToPay,
+            unitPrice: 6,
+            calculatedPrice: 6,
             state: 'INITIAL',
-            selectedPlanType: undefined
+            selectedPlanType: undefined,
+            fileId,
+            showSellingContract: false,
+            showRefundContract: false
         }
     }
 
     componentWillReceiveProps({ user }) {
-        if(_.isEmpty(this.props.user) && !_.isEmpty(user)) {
-            if(!_.isEmpty(user.currentPlan) && user.currentPlan.planId === 'custom') {
+        if (_.isEmpty(this.props.user) && !_.isEmpty(user)) {
+            if (!_.isEmpty(user.currentPlan) && user.currentPlan.planId === 'custom') {
                 this.durationChanged(this.state.duration, user.currentPlan);
             }
         }
     }
 
-
     initializePage = () => {
         this.setState({
             duration: 1,
             durationType: 'hours',
-            calculatedPrice: 9,
+            calculatedPrice: 6,
             state: 'INITIAL',
             basketId: undefined,
             checkoutForm: undefined,
@@ -49,7 +65,6 @@ class Payment extends Component {
             sellingContractAccepted: false,
             refundContractAccepted: false,
             showCheckOutForm: false, // new
-            loading: false,
             errorMessage: '',
             disabled: false,
             showContactForm: false,
@@ -57,16 +72,22 @@ class Payment extends Component {
     }
 
     componentDidMount() {
-        const { plans, user } = this.props;
-        let calculatedPrice = 9;
-        if(plans.standard) calculatedPrice = plans.standarddard.hourPrice;
-        if(user && user.currentPlan && user.currentPlan.planId === 'custom') calculatedPrice = user.currentPlan.pricePerHour;
-        if(!_.isEmpty(plans)) {
+        const { plans, user, trimmedFileInfo } = this.props;
+        let calculatedPrice = 6;
+        let duration = 1;
+        let durationType = 'hours';
+        if (!_.isEmpty(trimmedFileInfo) && this.state.fileId === trimmedFileInfo.fileId) {
+            duration = trimmedFileInfo.minutesToBePaid;
+            durationType = 'minutes';
+        }
+        if (plans.standard) calculatedPrice = plans.standarddard.hourPrice;
+        if (user && user.currentPlan && user.currentPlan.planId === 'custom') calculatedPrice = user.currentPlan.pricePerHour;
+        if (!_.isEmpty(plans)) {
             this.setState({
-                duration: 1,
-                durationType: 'hours',
+                duration,
+                durationType,
                 calculatedPrice,
-                unitPrice: calculatedPrice,
+                unitPrice: user.currentPlan.pricePerHour,
                 state: 'INITIAL',
                 basketId: undefined,
                 checkoutForm: undefined,
@@ -75,43 +96,46 @@ class Payment extends Component {
                 sellingContractAccepted: false,
                 refundContractAccepted: false
             })
+            this.calculatePrice(duration);
         }
     }
 
     durationChanged = (e, userPlan) => {
+        let duration;
         if (!e.target) {
-            this.setState({ duration: e });
-            this.calculatePrice(e, userPlan);
-        }
-        else {
-            this.setState({ duration: e.target.value })
-            this.calculatePrice(e.target.value)
+            duration = e;
+            if (duration < 1) duration = 1;
+            this.setState({ duration });
+            this.calculatePrice(duration, userPlan);
+        } else {
+            duration = e.target.value;
+            if (duration < 1) duration = 1;
+            this.setState({ duration })
+            this.calculatePrice(duration)
         }
     }
 
+    durationTypeChanged = (e) => {
+        let duration = this.state.duration;
+        let durationType = e;
+        if (e.target) {
+            durationType = e.target.value;
+        }
+        this.setState({ durationType }, () => {
+            this.calculatePrice(duration)
+        })
+    }
 
     calculatePrice = (duration, userPlan) => {
+        const { durationType } = this.state;
         let calculatedPrice = 0;
-        const { formatMessage } = this.props.intl;
-        const { pricePerHour, minPricePerHour } = this.props.plans;
         let { currentPlan } = this.props.user;
-        if(_.isEmpty(currentPlan)) {
+        if (_.isEmpty(currentPlan)) {
             currentPlan = userPlan;
         }
-        let unitPrice;
-        if(!_.isEmpty(currentPlan) && currentPlan.planId === 'custom') {
-            unitPrice = this.calculateCustomPrice(currentPlan.pricePerHour, duration)
-        } else {
-            unitPrice = this.calculateStandardPrice(pricePerHour, minPricePerHour, duration)
-        }
-        if (duration < 1) {
-            Alert.error(formatMessage({ id: 'Payment.Error.durationLength' }));
-        } else if (duration <= 50) {
-            calculatedPrice = unitPrice * duration;
-        } else {
-            unitPrice = minPricePerHour;
-            calculatedPrice = unitPrice * duration;
-        }
+        let durationInMinutes = durationType === 'minutes' ? duration : duration * 60;
+        let unitPrice = currentPlan.pricePerHour;
+        calculatedPrice = this.calculateStandardPrice(unitPrice, durationInMinutes);
         this.setState({
             calculatedPrice,
             unitPrice,
@@ -120,15 +144,11 @@ class Payment extends Component {
         })
     }
 
-    calculateStandardPrice = (pricePerHour, minPricePerHour, hours) => {
+    calculateStandardPrice = (pricePerHour, minutes) => {
         // Calculates unit price/hour based on base price and hours
-        if (hours <= 0)
-            return 0
-        if (hours >= 50)
-            return minPricePerHour
-        const numOf5s = parseInt(hours / 5)
-        const price = pricePerHour - numOf5s * 0.5
-        return price
+        if (minutes <= 0)
+            return 0;
+        return pricePerHour * minutes / 60
     }
 
     calculateCustomPrice = (pricePerHour, hours) => {
@@ -138,11 +158,17 @@ class Payment extends Component {
         return pricePerHour;
     }
 
+    continueFileEdit = () => {
+        const { fileId } = this.state;
+        window.open(`/edit/${fileId}`, '_self');
+    }
+
     renderSuccess = () => {
-        if (this.state.state !== 'SUCCESS' && this.state.state !== 'ERROR' && this.state.state !== 'FAILURE') return null;
-        if (this.state.state !== 'SUCCESS') {
+        const { state, error, fileId } = this.state;
+        if (state !== 'SUCCESS' && state !== 'ERROR' && state !== 'FAILURE') return null;
+        if (state !== 'SUCCESS') {
             const { formatMessage } = this.props.intl;
-            let errorKey = this.state.error ? this.state.error.key : undefined;
+            let errorKey = error ? error.key : undefined;
             let errorDef = _.find(this.props.errorDefinitions, { key: errorKey });
             let errorMessage = errorKey ? errorDef.value : formatMessage({ id: 'Payment.Message.error' });
             return (
@@ -163,7 +189,13 @@ class Payment extends Component {
             )
         };
         return (
-            <div>
+            <div className='payment-success-message'>
+                {
+                    !_.isEmpty(fileId) &&
+                    <Button variant='link' onClick={this.continueFileEdit}>
+                        <FormattedMessage id='Payment.Button.continueEditing' />
+                    </Button>
+                }
                 <BootstrapAlert variant='success'>
                     <FormattedMessage id='Payment.Message.success' />
                 </BootstrapAlert>
@@ -210,7 +242,7 @@ class Payment extends Component {
         return (
             <div className='d-flex flex-row contract-text text-center' style={{ fontSize: 'small' }}>
                 <p>
-                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={ this.sellingContractClicked }>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
                         {this.props.language === 'tr-TR' ? 'Satış Sözleşmesi' : 'Selling Contract'}
                     </span>
                     {this.props.language !== 'tr-TR' ? ' and ' : ' ve '}
@@ -235,13 +267,13 @@ class Payment extends Component {
         else {
             this.setState({
                 showCheckOutForm: true,
-                state:'PAYMENT'
+                state: 'PAYMENT'
             })
         }
     }
 
     closeCheckOutForm = () => {
-        if (!this.state.loading) {
+        if (!this.state.showSpinner) {
             this.setState({
                 showCheckOutForm: false
             })
@@ -252,6 +284,28 @@ class Payment extends Component {
         this.setState({
             showContactForm: false
         })
+    }
+
+    validateInput = () => {
+        const { duration, durationType } = this.state;
+        const { trimmedFileInfo } = this.props;
+        let calculatedPrice = 0;
+        let { currentPlan } = this.props.user;
+        let durationInMinutes = durationType === 'minutes' ? duration : duration * 60;
+        let unitPrice = currentPlan.pricePerHour;
+        calculatedPrice = this.calculateStandardPrice(unitPrice, durationInMinutes);
+        if (!_.isEmpty(trimmedFileInfo) && durationInMinutes < trimmedFileInfo.minutesToBePaid) {
+            const { formatMessage } = this.props.intl;
+            Alert.error(formatMessage({ id: 'Payment.Error.minDurationLength' }, { minAmountToPay: trimmedFileInfo.minutesToBePaid }));
+            calculatedPrice = this.calculateStandardPrice(unitPrice, durationInMinutes);
+            this.setState({
+                duration: trimmedFileInfo.minutesToBePaid,
+                durationType: 'minutes',
+                calculatedPrice
+            });
+            return false;
+        }
+        return true;
     }
 
     startPayment = async (obj) => {
@@ -266,26 +320,30 @@ class Payment extends Component {
         }
         var that = this;
         const { language } = this.props;
-        var { duration, basketId } = this.state;
+        var { duration, durationType, basketId, fileId, state } = this.state;
         // let durationInMinutes = undefined;
         // if (selectedPlanType === 'PayAsYouGo')
-            // durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
+        // durationInMinutes = parseFloat(duration) * (durationType === 'hours' ? 60 : 1);
         this.setState({
-            state: 'PAYMENT',
-            loading: true,
+            showSpinner: true,
             disabled: true,
             showCheckOutForm: true,
         });
-
-        var ip = await publicIp.v4();
-        var fncAddBasket = firebase.functions().httpsCallable('addToBasketSecondary');
+        let ip = '';
+        try {
+            ip = await publicIp.v4();
+        } catch (error) {
+            console.log('Cannot get user IP adress')
+        }
+        var fncAddBasket = firebase.functions().httpsCallable('addToBasket');
         fncAddBasket({
-            hours: duration,
-            // minutes: durationInMinutes === 0 ? undefined : durationInMinutes,
+            hours: durationType === 'hours' ? parseInt(duration) : undefined,
+            minutes: durationType === 'minutes' ? parseInt(duration) : undefined,
             locale: language,
             ip,
             basketId,
-            card
+            card,
+            fileId
         }).then(({ data }) => {
             const { basketId, result, error } = data;
             let errorMessage = '';
@@ -294,42 +352,34 @@ class Payment extends Component {
             else if (result && result.status === 'failure') {
                 errorMessage = "Bilinmedik Hata Oluştu"
             }
+            if (!_.isEmpty(errorMessage)) {
+                Alert.error(errorMessage);
+            }
             that.setState({
                 basketId,
                 result,
-                state: result ? result.status : error.status,
+                state: _.isEmpty(errorMessage) ? 'SUCCESS' : state,
                 errorMessage,
-                loading: false,
+                showSpinner: false,
                 spinnerText: '',
                 disabled: false,
             })
-            setTimeout(() => {
-                this.initializePage();
-            }, 2500)
-            // firebase.firestore().collection('payments').doc(user.uid).collection('userbasket').doc(basketId)
-            //     .onSnapshot((snapshot) => {
-            //         if (snapshot && snapshot.data) {
-            //             let data = snapshot.data();
-            //             that.setState({
-            //                 error: data.error
-            //             });
-            //         }
-            //     }, (error) => {
-            //         // TODO: GET_PAYMENT_RESULT_ERROR
-            //         console.log(error)
-            //     });
+            // setTimeout(() => {
+            //     this.initializePage();
+            // }, 2500)
         })
             .catch(error => {
                 // TODO: ADD_TO_BASKET_ERROR
                 // NOTE: This function need to thwrow an error on firebase to catch here!
                 console.log("Error burada\n" + error)
+                let errorMessage = 'Bilinmedik Hata Oluştu';
                 this.setState({
-                    state: 'failure',
-                    errorMessage: 'Bilinmedik Hata Oluştu'
+                    errorMessage
                 })
-                setTimeout(() => {
-                    this.initializePage();
-                }, 2500)
+                Alert.error(errorMessage);
+                // setTimeout(() => {
+                //     this.initializePage();
+                // }, 2500)
             })
     }
 
@@ -339,91 +389,134 @@ class Payment extends Component {
         })
     }
 
+    showError = (message) => {
+        Alert.error(message);
+    }
+
+    renderTerms = () => {
+        return (
+            <div className='float-right' style={{ fontSize: 'small', width: '100%', marginTop: '25px' }}>
+                <p>
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.sellingContractClicked}>
+                        {this.props.language === 'tr-TR' ? 'Satış Sözleşmesi' : 'Selling Contract'}
+                    </span>
+                    {this.props.language !== 'tr-TR' ? ' and ' : ' ve '}
+                    <span style={{ color: 'blue', textDecorationLine: 'underline', cursor: 'pointer' }} variant='link' onClick={this.refundContractClicked}>
+                        {this.props.language === 'tr-TR' ? 'İade Koşulları' : 'Refund Policy'}
+                    </span>
+                </p>
+            </div>
+        )
+    }
+
     render() {
-        const { showCheckOutForm, duration, durationType, unitPrice, calculatedPrice, error, showSpinner, showContactForm } = this.state
-        const { user } = this.props;
+        const { duration, durationType, unitPrice, calculatedPrice, showSpinner, showSellingContract, showRefundContract, minAmountToPay, state } = this.state
+        const { user, intl } = this.props;
+        const { formatMessage } = intl;
         return (
             <Container>
-                <div className="pricing card-deck flex-column flex-md-row mb-3">
-                    <StandardPaymentCard
-                        duration={duration}
-                        unitPrice={unitPrice}
-                        price={calculatedPrice}
-                        durationChanged={this.durationChanged}
-                        handleBuy={this.showForm}
-                        showSpinner={showSpinner}
-                        renderContract={this.renderContract}
-                        currentPlan={user.currentPlan}
-                    />
+                <div className="d-flex justify-content-center" style={{ width: "100%", height: "100%" }}>
+                    <div className="card-pricing text-center px-3 mb-2" style={{ width: "100%", height: "100%" }}>
+                        <span className="h6 w-60 mx-auto px-4 py-3 rounded bg-primary text-white">
+                            <FormattedMessage id="Pricing.Standard.title" />
+                            <span className="price">$ {unitPrice}</span>
+                            <span className="h6 ml-2">/
+                                <FormattedMessage id="Pricing.Standard.timeText" />
+                            </span>
+                        </span>
+                        {
+                            state === 'INITIAL' &&
+                            <div>
+                                <div className="card-body pt-0">
+                                    <Container>
+                                        <Row className="d-flex justify-content-md-center buy-button-surrounding mb-3 mt-5 align-items-center">
+                                            <Col className="d-flex justify-content-center" md>
+                                                <h3>
+                                                    <FormattedMessage id='Payment.Label.totalSizeToBuy' />
+                                                </h3>
+                                                <Form.Control
+                                                    type='number'
+                                                    className='payment-amount-to-buy'
+                                                    value={duration || minAmountToPay}
+                                                    onChange={this.durationChanged}
+                                                />
+                                                <Form.Control as='select'
+                                                    defaultValue='minutes'
+                                                    required
+                                                    value={durationType}
+                                                    onChange={this.durationTypeChanged}
+                                                    className='payment-duration'>
+                                                    < option key='minutes' value='minutes'>
+                                                        {formatMessage({ id: 'Payment.DurationType.minutes' })}
+                                                    </option>
+                                                    <option key='hours' value='hours'>
+                                                        {formatMessage({ id: 'Payment.DurationType.hours' })}
+                                                    </option>
+                                                </Form.Control>
+                                                <h3>
+                                                    <div className="price">{this.props.price}</div>
+                                                </h3>
+                                                <br />
+                                            </Col>
+                                        </Row>
+                                    </Container>
+                                </div>
+                                <CheckOutPage
+                                    duration={duration}
+                                    durationType={durationType}
+                                    unitPrice={unitPrice}
+                                    calculatedPrice={calculatedPrice}
+                                    durationChanged={this.durationChanged}
+                                    handleBuy={this.showForm}
+                                    showSpinner={showSpinner}
+                                    currentPlan={user.currentPlan}
+                                    state={this.state.state}
+                                    toggleSubmit={this.toggleSubmit}
+                                    startPayment={this.startPayment}
+                                    showError={this.showError}
+                                    validateInput={this.validateInput}
+                                />
+                                {this.renderTerms()}
+                            </div>
+                        }
+                        {
+                            state === 'SUCCESS' &&
+                            this.renderSuccess()
+                        }
+                        {
+                            showSellingContract &&
+                            <SellingContract
+                                show={showSellingContract}
+                                handleVisibility={this.handleSellingContractVisibility}
+                                duration={this.props.duration}
+                                durationType={this.props.durationType}
+                                calculatedPrice={this.props.price}
+                                unitPrice={this.props.unitPrice}
+                            />
+                        }
+                        {
+                            showRefundContract &&
+                            <RefundContract
+                                show={showRefundContract}
+                                handleVisibility={this.handleRefundContractVisibility}
+                            />
+                        }
+                    </div>
                 </div>
-                <br />
-                {
-                    <div>
-                        <CheckOutModal show={showCheckOutForm}
-                            handleClose={this.closeCheckOutForm}
-                            calculatedPrice={calculatedPrice}
-                            startPayment={this.startPayment}
-                            duration={duration}
-                            durationType={durationType}
-                            pricePerHour={unitPrice}
-                            errorMessage={this.state.errorMessage}
-                            loading={this.state.loading}
-                            disabled={this.state.disabled}
-                            state={this.state.state}
-                            toggleSubmit={this.toggleSubmit} />
-                    </div>
-                }
-                {
-                    <div>
-                        <ContactFormModal show={showContactForm}
-                            handleClose={this.closeContactForm}
-                            closeContactForm={this.closeContactForm} />
-                    </div>
-                }
-                {
-                    error && <Modal show={this.state.showCheckoutForm} size='lg' onHide={this.onHide}>
-                        <Modal.Header>Some error happened!</Modal.Header>
-                        <Modal.Body>
-                            {error.errorMessage}
-                        </Modal.Body>
-                    </Modal>
-                }
-                {
-                    this.renderSuccess()
-                }
-                {
-                    this.state.showApprovement &&
-                    <ApprovementPopup
-                        show={this.state.showApprovement}
-                        headerText={{
-                            id: 'Plan.Change.confirmationTitle'
-                        }}
-                        bodyText={{
-                            id: this.state.confirmationBody2 ? 'Plan.Change.confirmationBody2' : 'Plan.Change.confirmationBody'
-                        }}
-                        successButton={{
-                            id: 'Plan.Change.confirm'
-                        }}
-                        handleSuccess={this.submitPlanChange}
-                        cancelButton={{
-                            id: 'Plan.Change.cancel'
-                        }}
-                        handleCancel={this.cancelPlanChange}
-                    />
-                }
-            </Container>
+            </Container >
         )
     }
 }
 
-const mapStateToProps = ({ user, language, plans, errorDefinitions }) => {
+const mapStateToProps = ({ user, language, plans, errorDefinitions, trimmedFileInfo }) => {
     return {
         user,
         language,
         plans,
-        errorDefinitions
+        errorDefinitions,
+        trimmedFileInfo
     }
 }
 
-export default connect(mapStateToProps)(withRouter(injectIntl(Payment)));
+export default connect(mapStateToProps, { clearTrimmedFileInfo })(withRouter(injectIntl(Payment)));
 

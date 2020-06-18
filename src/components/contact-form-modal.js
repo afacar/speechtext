@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
 
 import '../styles/dashboard.css';
-import Contact from '../containers/landing/contact';
+import Contact from './contact';
 
 class ContactFormModal extends Component {
 

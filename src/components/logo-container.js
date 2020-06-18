@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import LogoEn from '../../assets/logo-en.png';
-import LogoTr from '../../assets/logo-tr.png';
+import LogoEn from '../assets/logo-en.png';
+import LogoTr from '../assets/logo-tr.png';
 
 class LogoContainer extends Component {
     render() {

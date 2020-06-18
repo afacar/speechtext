@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { FormattedMessage } from 'react-intl';
-import { Card, ProgressBar, Dropdown, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDatabase, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase, faClock, faCalendar, faFileDownload, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 
 import ExportPopup from '../components/export-popup';
-import FileLogo from '../assets/default-file-thumbnail.png';
+import FileLogo from '../assets/default-file-image.png';
 import firebase from '../utils/firebase';
 import Utils from '../utils';
 import { addFile, updateFile, updateFileState, updateFileInState, removeFromUploadingFiles, setUploadingFileProgress } from '../actions';
@@ -27,22 +26,22 @@ class File extends Component {
 
     downloadThumbnail() {
         const { file } = this.state;
-        console.log("FILe", file);
-        if (file && file.thumbnail) {
-            var ref = firebase.storage().ref(file.thumbnail.filePath);
-            ref.getDownloadURL().then((downloadUrl) => {
-                Axios.get(downloadUrl)
-                    .then((url) => {
-                        this.setState({
-                            fileSrc: url.config.url
-                        })
-                    });
+
+        if (!file || !file.thumbnail) return;
+
+        var ref = firebase.storage().ref(file.thumbnail.filePath);
+        ref.getDownloadURL().then((downloadUrl) => {
+            Axios.get(downloadUrl)
+                .then((url) => {
+                    this.setState({
+                        fileSrc: url.config.url
+                    })
+                });
+        })
+            .catch(error => {
+                // TODO: GET_DOWNLOAD_URL_ERROR
+                console.log(error);
             })
-                .catch(error => {
-                    // TODO: GET_DOWNLOAD_URL_ERROR
-                    console.log(error);
-                })
-        }
     }
 
     componentDidMount() {
@@ -138,33 +137,33 @@ class File extends Component {
         });
     }
 
-    pauseUpload = () => {
+    /* pauseUpload = () => {
         this.setState({
             paused: true
         });
         this.state.uploadTask.pause();
-    }
+    } */
 
-    resumeUpload = () => {
+    /* resumeUpload = () => {
         this.setState({
             paused: false
         });
         this.state.uploadTask.resume();
-    }
+    } */
 
-    editFile = (e) => {
+    /* editFile = (e) => {
         e.preventDefault();
         this.props.editFile(this.state.file.index);
-    }
+    } */
 
-    transcribeFile = () => {
+    /* transcribeFile = () => {
         var { file } = this.state;
         if (_.isEmpty(file.options) || !file.options.language) {
             this.props.onSelected(this.props.index);
         } else {
             this.props.updateFileState(file.id, 'READY');
         }
-    }
+    } */
 
     getErrorMessage = (file) => {
         const { errorDefinitions } = this.props;
@@ -177,32 +176,21 @@ class File extends Component {
         return '';
     }
 
-    formatTime = (time) => {
-        let seconds = Math.floor(time % 60);
-        let minutes = Math.floor(time / 60);
-        let hours = Math.floor(minutes / 60)
-        if (hours > 0) {
-            minutes = Math.floor(minutes % 60);
-        }
-        if (hours < 10) hours = `0${hours}`;
-        if (minutes < 10) minutes = `0${minutes}`;
-        if (seconds < 10) seconds = `0${seconds}`;
-        if (!hours) hours = '00';
-        if (!minutes) minutes = '00';
-        if (!seconds) seconds = '00';
-        return `${hours}:${minutes}:${seconds}`;
-    }
-
     getFileStatus = (status) => {
+        const { progress } = this.state;
         switch (status) {
             case 'ERROR':
                 return 'Error';
-            case 'UPLOADED':
+            case 'UPLOADING':
+                return `Uploading (${progress}%)`
             case 'READY':
+            case 'UPLOADED':
             case 'CONVERTING':
             case 'PROCESSING':
             case 'TRANSCRIBING':
                 return 'Processing...';
+            case 'DONE':
+                return 'Transcribed ✓'
             default:
                 return '';
         }
@@ -218,6 +206,8 @@ class File extends Component {
             case 'PROCESSING':
             case 'TRANSCRIBING':
                 return 'processing';
+            case 'DONE':
+                return 'transcribed'
             default:
                 return '';
         }
@@ -234,7 +224,6 @@ class File extends Component {
     openInEditor = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
         const { file } = this.props;
         if (file.status === 'DONE') {
             this.props.openInEditor(this.props.file.id);
@@ -252,62 +241,13 @@ class File extends Component {
         this.setState({ showExportPopup: false });
     }
 
-    showDropdownMenu = (e) => {
-        e.stopPropagation();
-        this.setState({
-            showDropdownMenu: true
-        })
-    }
-
-    hideDropdownMenu = (e) => {
-        e.stopPropagation();
-        this.setState({
-            showDropdownMenu: false
-        })
-    }
-
-    renderDropdown = () => {
-        return (
-            <div>
-                <ul
-                    className='dropbtn icons btn-right'
-                    onClick={this.showDropdownMenu}
-                    onMouseEnter={this.showDropdownMenu}
-                    onMouseLeave={this.hideDropdownMenu}
-                >
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <Dropdown.Menu
-                        show={this.state.showDropdownMenu}
-                    >
-                        <Dropdown.Item eventKey="1" onClick={this.openInEditor}>
-                            <FormattedMessage id='File.Options.edit' />
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="2" onClick={this.exportClicked}>
-                            <FormattedMessage id='File.Options.export' />
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="3" onClick={this.deleteFile}>
-                            <FormattedMessage id='File.Options.delete' />
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </ul>
-            </div>
-        )
-    }
-
     fileSelected = (e) => {
+        console.log('fileSelected')
         this.props.onSelected(this.state.file);
     }
 
     render() {
         const { file, progress, fileSrc } = this.state;
-
-        // let errorText = this.getErrorMessage(file);
-        let fileImageContainerClass = 'file-image-container';
-        if (!fileSrc) {
-            fileImageContainerClass += ' default';
-        }
 
         let duration = '';
         let size = '';
@@ -315,7 +255,7 @@ class File extends Component {
         if (file && file.originalFile) {
             const { originalFile } = file;
             if (originalFile.originalDuration) {
-                duration = this.formatTime(originalFile.originalDuration);
+                duration = Utils.formatTime(originalFile.originalDuration);
             }
             if (originalFile.size) {
                 size = Utils.formatSizeByteToMB(originalFile.size) + ' MB';
@@ -332,60 +272,65 @@ class File extends Component {
                         <Spinner animation="border" role="status" size='sm' variant='danger' />
                     </span>
                 }
-                {
-                    file.status === 'DONE' &&
-                    <span className={`checkmark ${this.props.isSelected ? 'active' : ''}`} onClick={this.fileSelected}>
-                        <div className="circle"></div>
-                        <div className="stem"></div>
-                        <div className="kick"></div>
-                    </span>
-                }
-                <div onClick={this.openInEditor}>
-                    <div className={fileImageContainerClass}>
-                        <Card.Img variant="left" src={fileSrc} alt={file.name + ' thumbnail'} />
+                <div onClick={this.openInEditor} className='file-image-container'>
+                    <img src={fileSrc} alt={file.name + ' thumbnail'} />
+                </div>
+                <div className='file-body-container'>
+                    <div className='file-header'>
+                        {file.name}
                     </div>
-                    <div className='file-body-container'>
-                        {
-                            file.status === 'DONE' &&
-                            this.renderDropdown()
-                        }
-                        <div className='file-header'>
-                            <label title={file.name}>{file.name}</label>
-                        </div>
-                        <div className='file-body'>
+                    <div className='file-body'>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faDatabase}
                                 title='File Size'
-                                className='file-info-image' size="1x" />
+                                className='file-info-image'
+                            />
                             {size}
-                            <br />
+                        </div>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faClock}
                                 title='File Duration'
-                                className='file-info-image' size="1x" />
+                                className='file-info-image'
+                            />
                             {duration}
-                            <br />
+                        </div>
+                        <div>
                             <FontAwesomeIcon
                                 icon={faCalendar}
                                 title='File Size'
-                                className='file-info-image' size="1x" />
+                                className='file-info-image'
+                            />
                             {createDate}
-                            {
-                                file.status === 'UPLOADING' && progress < 100 &&
-                                <div className={'file-progress'}>
-                                    <span>{'Uploading...'}</span>
-                                    <ProgressBar striped now={progress} />
+                        </div>
+                    </div>
+                    <div className={`file-footer`}>
+                        <div className='file-buttons'>
+                            <div className='file-button' id='select' onClick={this.fileSelected}>
+                                <div className='file-select-checkbox-container'>
+                                    <input readOnly type="checkbox" checked={this.props.isSelected} />
                                 </div>
+                                <span>Select</span>
+                            </div>
+                            <div className='file-button' id='export' onClick={this.exportClicked}>
+                                <div>
+                                    <FontAwesomeIcon
+                                        icon={faFileDownload}
+                                        title='Export'
+                                        className='file-info-image'
+                                        style={{ color: 'darkslateblue' }}
+                                    />
+                                </div>
+                                <span>Export</span>
+                            </div>
+                        </div>
+                        <div className={`file-status ${this.getFileStatusClassName(file.status)}`}>
+                            {
+                                this.getFileStatus(file.status)
                             }
                         </div>
                     </div>
-                </div>
-                <div className={`file-footer ${this.getFileStatusClassName(file.status)}`}>
-                    <span>
-                        {
-                            this.getFileStatus(file.status)
-                        }
-                    </span>
                 </div>
                 <ExportPopup
                     show={this.state.showExportPopup}

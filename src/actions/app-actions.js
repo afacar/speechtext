@@ -40,7 +40,12 @@ export const getPlans = () => {
 
 export const submitContactForm = (form) => {
     return async (dispatch) => {
-        var ip = await publicIp.v4();
+        let ip = '';
+        try {
+            ip = await publicIp.v4();
+        } catch (error) {
+            console.log('Cannot get user IP adress')
+        }
         console.log('client ip is:', ip)
         return new Promise(async (resolve, reject) => {
             if (!ip)
@@ -96,5 +101,23 @@ export const getErrorDefinitions = (language) => {
                 // TODO: GET_PLANS_ERROR
                 console.log(error);
             })
+    }
+}
+
+export const setTrimmedFileInfo = (fileId, minutesToBePaid) => {
+    return {
+        type: Utils.ActionTypes.SET_TRIMMED_FILE_INFO,
+        payload: {
+            fileId, minutesToBePaid
+        }
+    }
+}
+
+export const clearTrimmedFileInfo = (fileId) => {
+    return {
+        type: Utils.ActionTypes.SET_TRIMMED_FILE_INFO,
+        payload: {
+            fileId
+        }
     }
 }
