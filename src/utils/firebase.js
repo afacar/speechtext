@@ -11,7 +11,7 @@ import firebase from 'firebase';
 // };
 // dev
 const firebaseConfig = {
-    apiKey: "AIzaSyC-T0mV_YcAgxtReCakCPbNkAcafpiP3Us",
+    apiKey: "AIzaSyAxFnX8s5XDtthKQDtnPanghyegQP7XvAY",
     authDomain: "speechtext-dev0.firebaseapp.com",
     databaseURL: "https://speechtext-dev0.firebaseio.com",
     projectId: "speechtext-dev0",
