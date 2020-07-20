@@ -127,9 +127,9 @@ class File extends Component {
                     file.options = this.props.selectedFileOptions;
                 }
 
-                this.props.removeFromUploadingFiles(file.id);
                 await this.props.updateFile(file, { originalFile: file.originalFile });
                 await this.props.updateFileState(file.id, 'UPLOADED');
+                this.props.removeFromUploadingFiles(file.id);
             });
         });
         this.setState({
