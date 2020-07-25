@@ -33,7 +33,12 @@ class UploadPopup extends Component {
         }
     }
 
-    componentWillReceiveProps({ file }) {
+    componentWillReceiveProps({ file, initUploadPopup }) {
+        if (initUploadPopup) {
+            this.setState({
+                activeWindow: ModalPageNames.INFO
+            })
+        }
         if (_.isEmpty(file)) return;
         var options = file.options || {};
         options.context = options.context || [];
@@ -57,6 +62,10 @@ class UploadPopup extends Component {
     }
 
     onFileAdded = (evt) => {
+        let newOptions = { context: [] };
+        this.setState({
+            options: newOptions
+        })
         const files = evt.target.files;
         if (this.props.onFileAdded && !_.isEmpty(files)) {
             const file = files[0];

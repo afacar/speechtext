@@ -100,7 +100,9 @@ class File extends Component {
         uploadTask.on('state_changed', (snapshot) => {
             var progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             this.props.setUploadingFileProgress(file.id, progress);
-            that.setState({ progress });
+            if (progress < 100) {
+                that.setState({ progress });
+            }
 
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED:
@@ -117,19 +119,21 @@ class File extends Component {
             that.setState({ error })
         }, () => {
             uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
-                that.setState({ progress: 100 });
-                file.originalFile.filePath = uploadTask.location_.path_;
-                file.originalFile.url = downloadURL;
-                file = _.omit(file, 'file');
-                file.status = 'UPLOADED';
+                if (that.state.progress < 100) {
+                    that.setState({ progress: 100 });
+                    file.originalFile.filePath = uploadTask.location_.path_;
+                    file.originalFile.url = downloadURL;
+                    file = _.omit(file, 'file');
+                    file.status = 'UPLOADED';
 
-                if (!_.isEmpty(this.props.selectedFileOptions)) {
-                    file.options = this.props.selectedFileOptions;
+                    if (!_.isEmpty(this.props.selectedFileOptions)) {
+                        file.options = this.props.selectedFileOptions;
+                    }
+
+                    await this.props.updateFile(file, { originalFile: file.originalFile });
+                    await this.props.updateFileState(file.id, 'UPLOADED');
+                    this.props.removeFromUploadingFiles(file.id);
                 }
-
-                this.props.removeFromUploadingFiles(file.id);
-                await this.props.updateFile(file, { originalFile: file.originalFile });
-                await this.props.updateFileState(file.id, 'UPLOADED');
             });
         });
         this.setState({

@@ -430,7 +430,7 @@ class TranscriptionResult extends Component {
                                         <div className="p-2 flex-fill">
                                             <div className='row'>
                                                 <div className='col-4 text-center' >
-                                                    {selectedFile.name}
+                                                    <span className='result-file-name' title={selectedFile.name}>{selectedFile.name}</span>
                                                     <VideoPlayer
                                                         //thumbnail TODO Put Thumbnail of video, undefined for audio
                                                         src={fileSrc}

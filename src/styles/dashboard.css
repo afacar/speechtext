@@ -207,6 +207,13 @@ ol.selling-contract-list { counter-reset: item }
     background: #384d60; 
 }
 
+.result-file-name {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media only screen and (max-height: 882px) {
     .transcription {
         height: 700px !important;

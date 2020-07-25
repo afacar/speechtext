@@ -61,7 +61,9 @@ class FileList extends Component {
             if (currentPlan.remainingMinutes <= 0) {
                 that.setState({
                     selectedFileDuration: fileDurationInMinutes,
-                    showApprovement: true
+                    showApprovement: true,
+                    showUploadPopup: false,
+                    initUploadPopup: true
                 });
             } else {
                 this.onFileValidated(file, fileDurationInMinutes, media.duration);
@@ -94,7 +96,8 @@ class FileList extends Component {
         this.setState({
             selectedFileDuration: '',
             showApprovement: false,
-            showUploadPopup: false
+            showUploadPopup: false,
+            initUploadPopup: true
         });
     }
 
@@ -126,6 +129,7 @@ class FileList extends Component {
         fileObj.id = id;
         this.setState({
             showUploadPopup: true,
+            initUploadPopup: false,
             fileToUpload: fileObj,
             selectedFile: file
         })
@@ -343,6 +347,7 @@ class FileList extends Component {
                     cancelFileUpload={this.cancelFileUpload}
                     closeFileUploadPopup={this.closeFileUploadPopup}
                     onFileAdded={this.onFileAdded}
+                    initUploadPopup={this.state.initUploadPopup}
                 />
                 <ExportPopup
                     show={this.state.showExportPopup}
