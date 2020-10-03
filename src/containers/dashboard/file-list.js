@@ -25,20 +25,20 @@ class FileList extends Component {
         this.state = {
             files: [],
             selectedFiles: []
-        }
+        };
     }
 
     componentWillReceiveProps({ files, uploadingFiles }) {
         if (!_.isEmpty(files)) {
-            _.each(files, file => {
-                if (file.status === 'INITIAL' && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { 'id': file.id })))) {
+            _.each(files, (file) => {
+                if (file.status === 'INITIAL' && (_.isEmpty(uploadingFiles) || _.isEmpty(_.find(uploadingFiles, { id: file.id })))) {
                     this.props.updateFileState(file.id, 'DELETED');
                 }
-            })
+            });
         }
         if (!_.isEmpty(this.state.filterValue)) {
             files = _.filter(files, (file) => {
-                return file.name.toLowerCase().indexOf(this.state.filterValue.toLowerCase()) > -1
+                return file.name.toLowerCase().indexOf(this.state.filterValue.toLowerCase()) > -1;
             });
         }
         this.setState({
@@ -70,7 +70,7 @@ class FileList extends Component {
             }
         };
         media.src = URL.createObjectURL(file);
-    }
+    };
 
     goToPayment = () => {
         this.setState({
@@ -78,19 +78,21 @@ class FileList extends Component {
             showApprovement: false
         });
         this.props.history.push('/user#payment');
-    }
+    };
 
     uploadClicked = () => {
         if (!_.isEmpty(this.props.uploadingFiles)) {
-            Alert.error(this.props.intl.formatMessage({
-                id: 'FileUpload.multipleFileError'
-            }));
+            Alert.error(
+                this.props.intl.formatMessage({
+                    id: 'FileUpload.multipleFileError'
+                })
+            );
             return;
         }
         this.setState({
             showUploadPopup: true
-        })
-    }
+        });
+    };
 
     cancelFileUpload = () => {
         this.setState({
@@ -99,14 +101,14 @@ class FileList extends Component {
             showUploadPopup: false,
             initUploadPopup: true
         });
-    }
+    };
 
     closeFileUploadPopup = () => {
         this.setState({
             selectedFileDuration: '',
             showUploadPopup: false
         });
-    }
+    };
 
     onFileValidated = async (file, fileDurationInMinutes, durationInNanoSeconds) => {
         var { name, size, type } = file;
@@ -123,7 +125,7 @@ class FileList extends Component {
             },
             name,
             status: 'INITIAL'
-        }
+        };
 
         const { id } = await firebase.firestore().collection('userfiles').doc(this.props.user.uid).collection('files').doc();
         fileObj.id = id;
@@ -132,8 +134,8 @@ class FileList extends Component {
             initUploadPopup: false,
             fileToUpload: fileObj,
             selectedFile: file
-        })
-    }
+        });
+    };
 
     approveFileUpload = (options) => {
         var { fileToUpload, selectedFile } = this.state;
@@ -153,7 +155,7 @@ class FileList extends Component {
                 selectedFile: undefined
             });
         }
-    }
+    };
 
     onFileSelected = (file) => {
         const { selectedFiles } = this.state;
@@ -164,7 +166,7 @@ class FileList extends Component {
         }
         this.setState({
             selectedFiles
-        })
+        });
         /* if (file.status === 'DONE') {
             // const { files } = this.state;
             // const selectedFile = files[index];
@@ -179,7 +181,7 @@ class FileList extends Component {
                 selectedFiles
             })
         } */
-    }
+    };
 
     filterFiles = (e) => {
         let value = e.target.value;
@@ -194,8 +196,8 @@ class FileList extends Component {
         this.setState({
             files,
             filterValue: value
-        })
-    }
+        });
+    };
 
     deleteFiles = (fileId) => {
         const filesToDelete = [];
@@ -204,7 +206,7 @@ class FileList extends Component {
         if (!_.isEmpty(fileId)) {
             filesToDelete.push(fileId);
         } else if (!_.isEmpty(selectedFiles)) {
-            selectedFiles.forEach(fileId => {
+            selectedFiles.forEach((fileId) => {
                 filesToDelete.push(fileId);
             });
         }
@@ -212,13 +214,13 @@ class FileList extends Component {
         this.setState({
             filesToDelete,
             showDeleteApprovement: true
-        })
-    }
+        });
+    };
 
     deleteFilesAfterApproval = () => {
         const { filesToDelete } = this.state;
         if (!_.isEmpty(filesToDelete)) {
-            filesToDelete.forEach(fileId => {
+            filesToDelete.forEach((fileId) => {
                 this.props.updateFileState(fileId, 'DELETED');
                 this.props.removeFromUploadingFiles(fileId);
             });
@@ -226,20 +228,20 @@ class FileList extends Component {
         this.setState({
             filesToDelete: [],
             showDeleteApprovement: false
-        })
-    }
+        });
+    };
 
     cancelFileDeletion = () => {
         this.setState({
             filesToDelete: [],
             showDeleteApprovement: false
-        })
-    }
+        });
+    };
 
     getSelectedFileToExport = (fileId) => {
         const { files, selectedFiles } = this.state;
         return _.find(files, { id: fileId ? fileId : selectedFiles[0] });
-    }
+    };
 
     openInEditor = (fileId) => {
         const { selectedFiles } = this.state;
@@ -259,14 +261,14 @@ class FileList extends Component {
                 window.open(`/edit/${fileId}`, '_blank');
             }
         }
-    }
+    };
 
     render() {
         var { user } = this.props;
         const currentPlan = user.currentPlan || {};
         const { selectedFiles } = this.state;
         return (
-            <div className='col-xs-12 col-md-11 col-lg-10 col-xl-9 align-self-center dasboard-content-container' >
+            <div className='col-xs-12 col-md-11 col-lg-10 col-xl-9 align-self-center dasboard-content-container'>
                 <div className='file-actions-container'>
                     <div className='file-actions-buttons'>
                         <Button onClick={this.uploadClicked} className='primary'>
@@ -277,7 +279,13 @@ class FileList extends Component {
                             <FontAwesomeIcon icon={faEdit} />
                             Open in Editor
                         </Button>
-                        <Button disabled={selectedFiles.length !== 1} className='secondary' onClick={() => { this.setState({ showExportPopup: true }) }}>
+                        <Button
+                            disabled={selectedFiles.length !== 1}
+                            className='secondary'
+                            onClick={() => {
+                                this.setState({ showExportPopup: true });
+                            }}
+                        >
                             <FontAwesomeIcon icon={faCloudDownloadAlt} />
                             Export
                         </Button>
@@ -287,31 +295,24 @@ class FileList extends Component {
                         </Button>
                     </div>
                     <div className='file-actions-search'>
-                        <input
-                            type='text'
-                            placeholder='Type to Search'
-                            onChange={this.filterFiles}
-                        />
+                        <input type='text' placeholder='Type to Search' onChange={this.filterFiles} />
                     </div>
-
                 </div>
                 <div className='file-list-container'>
-                    {
-                        this.state.files.map((file, index) => {
-                            // var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
-                            return (
-                                <File
-                                    key={file.id}
-                                    file={file}
-                                    index={index}
-                                    onSelected={this.onFileSelected}
-                                    isSelected={selectedFiles.includes(file.id)}
-                                    deleteFile={this.deleteFiles}
-                                    openInEditor={this.openInEditor}
-                                />
-                            )
-                        })
-                    }
+                    {this.state.files.map((file, index) => {
+                        // var isSelected = !_.isEmpty(this.props.selectedFile) ? this.props.selectedFile.id === file.id : false;
+                        return (
+                            <File
+                                key={file.id}
+                                file={file}
+                                index={index}
+                                onSelected={this.onFileSelected}
+                                isSelected={selectedFiles.includes(file.id)}
+                                deleteFile={this.deleteFiles}
+                                openInEditor={this.openInEditor}
+                            />
+                        );
+                    })}
                 </div>
                 <ApprovementPopup
                     show={this.state.showApprovement}
@@ -341,6 +342,7 @@ class FileList extends Component {
                 <UploadPopup
                     show={this.state.showUploadPopup}
                     file={this.state.fileToUpload}
+                    user={this.props.user}
                     language={this.props.language}
                     supportedLanguages={this.props.supportedLanguages}
                     approveFileUpload={this.approveFileUpload}
@@ -380,7 +382,7 @@ class FileList extends Component {
                     hideCancelButton={true}
                 />
             </div>
-        )
+        );
     }
 }
 
@@ -392,7 +394,9 @@ const mapStateToProps = ({ user, userFiles, selectedFile, language, supportedLan
         files: userFiles,
         selectedFile,
         uploadingFiles
-    }
-}
+    };
+};
 
-export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })(withRouter(injectIntl(FileList)));
+export default connect(mapStateToProps, { getFileList, addFile, setSelectedFile, addToUploadingFiles, updateFileState, removeFromUploadingFiles })(
+    withRouter(injectIntl(FileList))
+);
