@@ -5,7 +5,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Container, Card, Form, Button, Modal, Alert } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import * as SAlert from 'react-s-alert';
+import SAlert from 'react-s-alert';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
@@ -459,7 +459,13 @@ class UploadPopup extends Component {
 
     render() {
         return (
-            <Modal show={this.props.show} size='lg' className={this.state.activeWindow === ModalPageNames.ERROR ? '' : 'upload-modal'} centered>
+            <Modal
+                show={this.props.show}
+                onHide={() => {}}
+                size='lg'
+                className={this.state.activeWindow === ModalPageNames.ERROR ? '' : 'upload-modal'}
+                centered
+            >
                 {this.renderWindows()}
                 <input ref={this.fileInputRef} className='file-input' type='file' onChange={this.onFileAdded} accept='audio/*, video/*' />
             </Modal>
